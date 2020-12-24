@@ -10,9 +10,9 @@ jobs:
       - uses: actions/setup-node@v2
         with:
           node-version: '12'
-      - runs: npm ci
-      - runs: npm test
-      - runs: npm run build
+      - run: npm ci
+      - run: npm test
+      - run: npm run build
   deploy_to_vercel:
     needs: test_pull_request
     runs-on: ubuntu-latest
