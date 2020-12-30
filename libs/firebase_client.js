@@ -4,12 +4,12 @@ import "firebase/auth";
 // initialize firebase app
 if (firebase.apps.length === 0) {
   firebase.initializeApp({
-    apiKey: "AIzaSyCReQZnej1675Dg71u3BG5bNEn10vrMdjA",
+    apiKey: process.env.FIREBASE_API_KEY,
     authDomain: "online-code-exercise.firebaseapp.com",
-    projectId: "online-code-exercise",
+    projectId: process.env.FIREBASE_PROJECT_ID,
     storageBucket: "online-code-exercise.appspot.com",
     messagingSenderId: "522789307318",
-    appId: "1:522789307318:web:9afdbda5c00ea81654b717",
+    appId: process.env.FIREBASE_PROJECT_APP_ID,
   });
 }
 
