@@ -1,18 +1,18 @@
 import React from "react";
 import Head from "next/head";
-import firebase from "../libs/firebase";
+import firebase from "../libs/firebase_client";
 export default class Login extends React.Component {
   constructor(props) {
     super(props);
     this.uiConfig = {
       callbacks: {
-        signInSuccessWithAuthResult: function(authResult, redirectUrl) {
+        signInSuccessWithAuthResult: function (authResult, redirectUrl) {
           // User successfully signed in.
           // Return type determines whether we continue the redirect automatically
           // or whether we leave that to developer to handle.
           return true;
         },
-        uiShown: function() {
+        uiShown: function () {
           // The widget is rendered.
           // Hide the loader.
           document.getElementById("loader").style.display = "none";
@@ -37,6 +37,7 @@ export default class Login extends React.Component {
   componentDidMount() {
     const firebaseui = require("firebaseui");
     if (!this.ui) this.ui = new firebaseui.auth.AuthUI(firebase.auth());
+    this.ui.start("#firebaseui-auth-container", this.uiConfig);
   }
   render() {
     return (
@@ -49,13 +50,6 @@ export default class Login extends React.Component {
           />
         </Head>
         <h1>Welcome to My Awesome App</h1>
-        <button
-          onClick={() => {
-            this.ui.start("#firebaseui-auth-container", this.uiConfig);
-          }}
-        >
-          Sign in with prebuild firebaseui
-        </button>
         <div id="firebaseui-auth-container" />
         <div id="loader">Loading...</div>
       </div>
