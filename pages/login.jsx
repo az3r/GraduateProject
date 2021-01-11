@@ -1,11 +1,4 @@
-import {
-  Box,
-  Button,
-  Container,
-  Link as MaterialLink,
-  makeStyles,
-  Typography,
-} from "@material-ui/core";
+import { Box, Link as MaterialLink, Typography } from "@material-ui/core";
 import React from "react";
 import firebase from "../libs/firebase_client";
 import Head from "next/head";
@@ -56,22 +49,20 @@ export default class Login extends React.Component {
   }
   render() {
     return (
-      <>
+      <Box
+        style={{
+          paddingTop: "2em",
+        }}
+      >
         <Head>
           <title>Login</title>
           <meta property="og-title" content="Login" />
         </Head>
-        <Container
-          style={{
-            paddingTop: "2em",
-          }}
-        >
-          <Typography align="center" variant="h4">
-            Sign into your account
-          </Typography>
-          <Box id="firebaseui-auth-container" />
-          <Box id="loader">Loading...</Box>
-        </Container>
+        <Typography align="center" variant="h4">
+          Sign into your account
+        </Typography>
+        <Box id="firebaseui-auth-container" />
+        <Box id="loader">Loading...</Box>
         <Typography align="center">
           Does not have an account?
           <Box style={{ marginLeft: "0.5em" }}>
@@ -82,7 +73,8 @@ export default class Login extends React.Component {
             </Link>
           </Box>
         </Typography>
-      </>
+      </Box>
     );
   }
 }
+Box;
