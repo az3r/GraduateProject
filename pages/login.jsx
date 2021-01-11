@@ -1,5 +1,4 @@
 import React from "react";
-import Head from "next/head";
 import firebase from "../libs/firebase_client";
 export default class Login extends React.Component {
   constructor(props) {
@@ -42,13 +41,6 @@ export default class Login extends React.Component {
   render() {
     return (
       <div>
-        <Head>
-          <link
-            type="text/css"
-            rel="stylesheet"
-            href="https://www.gstatic.com/firebasejs/ui/4.6.1/firebase-ui-auth.css"
-          />
-        </Head>
         <h1>Welcome to My Awesome App</h1>
         <div id="firebaseui-auth-container" />
         <div id="loader">Loading...</div>
