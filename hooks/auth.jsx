@@ -1,5 +1,5 @@
 import * as React from "react";
-import { FirebaseAuth } from "../libs/firebase_client";
+import FirebaseAuth from "../libs/firebase_client";
 const authContext = React.createContext(null);
 
 export function AuthProvider({ children }) {
@@ -12,4 +12,8 @@ export function AuthProvider({ children }) {
 
 export function useAuth() {
   return React.useContext(authContext);
+}
+
+export function logout() {
+  return FirebaseAuth().signOut();
 }

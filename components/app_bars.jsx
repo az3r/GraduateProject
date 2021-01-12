@@ -28,7 +28,7 @@ function GuestAppBar() {
         </Link>
         <Link href="/register">
           <Button className={styles.action} href="/register">
-            Login
+            Register
           </Button>
         </Link>
       </Toolbar>

@@ -19,10 +19,7 @@ export default class Login extends React.Component {
       },
       // Will use popup for IDP Providers sign-in flow instead of the default, redirect.
       signInFlow: "popup",
-      signInSuccessUrl:
-        process.env.NODE_ENV === "development"
-          ? "http://localhost:3000/"
-          : "https://graduate-project.vercel.app/",
+      signInSuccessUrl: "/",
       signInOptions: [
         // Leave the lines as is for the providers you want to offer your users.
         FirebaseAuth.EmailAuthProvider.PROVIDER_ID,
