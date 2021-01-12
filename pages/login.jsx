@@ -1,18 +1,14 @@
 import { Box, Link as MaterialLink, Typography } from "@material-ui/core";
 import React from "react";
-import firebase from "../libs/firebase_client";
 import Head from "next/head";
 import Link from "next/link";
-
+import FirebaseAuth from "../libs/firebase_client";
 export default class Login extends React.Component {
   constructor(props) {
     super(props);
     this.uiConfig = {
       callbacks: {
         signInSuccessWithAuthResult: function (authResult, redirectUrl) {
-          // User successfully signed in.
-          // Return type determines whether we continue the redirect automatically
-          // or whether we leave that to developer to handle.
           return true;
         },
         uiShown: function () {
@@ -23,13 +19,16 @@ export default class Login extends React.Component {
       },
       // Will use popup for IDP Providers sign-in flow instead of the default, redirect.
       signInFlow: "popup",
-      signInSuccessUrl: "https://graduate-project.vercel.app/",
+      signInSuccessUrl:
+        process.env.NODE_ENV === "development"
+          ? "http://localhost:3000/"
+          : "https://graduate-project.vercel.app/",
       signInOptions: [
         // Leave the lines as is for the providers you want to offer your users.
-        firebase.auth.EmailAuthProvider.PROVIDER_ID,
-        firebase.auth.GoogleAuthProvider.PROVIDER_ID,
-        firebase.auth.FacebookAuthProvider.PROVIDER_ID,
-        firebase.auth.GithubAuthProvider.PROVIDER_ID,
+        FirebaseAuth.EmailAuthProvider.PROVIDER_ID,
+        FirebaseAuth.GoogleAuthProvider.PROVIDER_ID,
+        FirebaseAuth.FacebookAuthProvider.PROVIDER_ID,
+        FirebaseAuth.GithubAuthProvider.PROVIDER_ID,
       ],
       // Terms of service url.
       tosUrl: "https://www.example.com",
@@ -43,7 +42,7 @@ export default class Login extends React.Component {
       const ui = firebaseui.auth.AuthUI.getInstance();
       ui.start("#firebaseui-auth-container", this.uiConfig);
     } else {
-      const ui = new firebaseui.auth.AuthUI(firebase.auth());
+      const ui = new firebaseui.auth.AuthUI(FirebaseAuth());
       ui.start("#firebaseui-auth-container", this.uiConfig);
     }
   }
