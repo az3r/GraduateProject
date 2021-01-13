@@ -16,6 +16,7 @@
     "firebaseui": "^4.7.1",
     "next": "10.0.4",
     "react": "17.0.1",
-    "react-dom": "17.0.1"
+    "react-dom": "17.0.1",
+    "react-firebaseui": "^4.1.0"
   }
 }
