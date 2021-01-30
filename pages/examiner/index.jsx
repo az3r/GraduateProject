@@ -10,11 +10,10 @@ export default function ExaminerPage(props){
         <Head>
             <title>HCMUSCoder - Examiner</title>
             <link rel="icon" href="/favicon.ico" />
-            <meta charSet="utf-8" />
         </Head>
 
+        <MyAppBar isExaminer={true}></MyAppBar>
         <Container>
-            <MyAppBar isExaminer={true}></MyAppBar>
             <Examiner></Examiner>
         </Container>
         </>

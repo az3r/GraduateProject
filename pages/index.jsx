@@ -9,8 +9,8 @@ export default function HomePage() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
+      <MyAppBar isExaminer={true}></MyAppBar>
       <Container>
-         <MyAppBar isExaminer={true}></MyAppBar>
          
       </Container>
     </>

@@ -1,16 +1,9 @@
 import { Button, Grid, Typography } from '@material-ui/core';
-import { Editor, EditorState } from 'draft-js';
 import { useRouter } from 'next/router';
 import React , {useState} from 'react';
-import CodeEditor from '../CodeEditor';
 
-export default function Examiner(props){
-    const [editorState, setEditorState] = useState(
-        () => EditorState.createEmpty(),
-    );
-    
+export default function Examiner(props){    
     const router = useRouter();
-
 
     const goToAddPage = (e) => {
         e.preventDefault();
@@ -24,11 +17,7 @@ export default function Examiner(props){
                     <Typography>Tests report</Typography>
                 </Grid>
                 <Grid item lg={9}>
-                {
-                    <div>
-                        <Editor editorState={editorState} onChange={setEditorState} />
-                    </div>
-                }
+               
                 </Grid>
             </Grid>
         </>

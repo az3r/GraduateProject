@@ -1,5 +1,4 @@
 import firebase from "firebase/app";
-import { validate } from "email-validator";
 import "firebase/auth";
 
 // initialize firebase app for browser

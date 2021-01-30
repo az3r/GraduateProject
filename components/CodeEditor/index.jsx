@@ -9,38 +9,33 @@ import "ace-builds/src-noconflict/snippets/csharp";
 import "ace-builds/src-noconflict/snippets/javascript";
 import "ace-builds/src-noconflict/snippets/java";
 import "ace-builds/src-noconflict/snippets/c_cpp";
+import "ace-builds/src-noconflict/ext-language_tools";
 import "ace-builds/src-noconflict/theme-xcode";
+import { Typography } from '@material-ui/core';
 
-export default function CodeEditor(props){
-
-
-    const onChange = (newCode) => {
-        console.log(newCode);
-    }
-
-
+export default function CodeEditor({language,initialCode,onChange}){
     return (
-        <AceEditor
-            placeholder="Placeholder Text"
-            mode="javascript"
-            theme="xcode"
-            name="blah2"
-            //onLoad={this.onLoad}
-            onChange={onChange}
-            fontSize={14}
-            showPrintMargin={true}
-            showGutter={true}
-            highlightActiveLine={true}
-            value={`function onLoad(editor) {
-            console.log("i've loaded");
-            }`}
-            setOptions={{
-                enableBasicAutocompletion: true,
-                enableLiveAutocompletion: true,
-                enableSnippets: true,
-                showLineNumbers: true,
-                tabSize: 2,
-            }}>
-        </AceEditor>             
+        <>
+            <Typography> Programming Language: {language}</Typography>
+            <AceEditor
+                placeholder="Write your code here..."
+                mode={language}
+                theme="xcode"
+                name="blah2"
+                onChange={onChange}
+                fontSize={14}
+                showPrintMargin={true}
+                showGutter={true}
+                highlightActiveLine={true}
+                value={initialCode}
+                setOptions={{
+                    enableBasicAutocompletion: true,
+                    enableLiveAutocompletion: true,
+                    enableSnippets: true,
+                    showLineNumbers: true,
+                    tabSize: 2,
+                }}>
+            </AceEditor>   
+        </>          
     );
 }
