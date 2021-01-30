@@ -15,10 +15,10 @@
     "ace-builds": "^1.4.12",
     "firebase": "^8.2.1",
     "firebase-admin": "^9.4.2",
-    "firebaseui": "^4.7.1",
     "next": "10.0.4",
     "react": "^17.0.1",
     "react-ace": "^9.2.1",
-    "react-dom": "^17.0.1"
+    "react-dom": "^17.0.1",
+    "react-firebaseui": "^4.1.0"
   }
 }

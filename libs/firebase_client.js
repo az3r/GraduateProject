@@ -14,7 +14,7 @@ if (firebase.apps.length === 0) {
 }
 const FirebaseAuth = firebase.auth;
 
-async function register({ username, email, password }) {
+async function register({username, email, password}) {
   if (validate(email)) {
     try {
       const auth = FirebaseAuth();
@@ -28,7 +28,7 @@ async function register({ username, email, password }) {
       throw error;
     }
   } else {
-    throw { error: "Email is invalid" };
+    throw {error: "Email is invalid"};
   }
 }
 
