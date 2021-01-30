@@ -11,6 +11,7 @@ import {
 } from "@material-ui/core";
 import Head from "next/head";
 import Link from "next/link";
+
 export default function Register() {
   const styles = useStyles();
   return (
@@ -62,7 +63,6 @@ export default function Register() {
         <Button variant="contained" color="primary" type="submit" fullWidth>
           Register
         </Button>
-
         <Box
           className={styles.seperator}
           display="flex"
@@ -80,14 +80,14 @@ export default function Register() {
               Login to start now
             </Button>
           </Link>
-
+          <CircularProgress color="secondary" className={styles.seperator} />
         </Box>
       </Container>
     </form>
   );
   function onSubmit(e) {
     e.preventDefault();
-
+    console.log(e.target.value);
   }
 }
 
