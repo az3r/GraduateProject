@@ -57,13 +57,13 @@ export default function AddTestPage(props){
                     <CKEditor
                         editor={ ClassicEditor }
                         data=""
-                        onChange={handleChangeTestIntro}>
+                        onChange={handleChangeTestIntro}>    
                     </CKEditor>
                 </Box>
 
                 <Box boxShadow={1} p={2} m={3}>
                     <Typography variant={"h5"}>Choose programming language: </Typography>
-                    <NativeSelect
+                    <NativeSelect              
                         inputProps={{ 'aria-label': 'age' }}
                         onChange={handleChangeLanguague}>
                         <option value={"csharp"}>C#</option>
@@ -74,15 +74,15 @@ export default function AddTestPage(props){
                 <Box boxShadow={1} p={2} m={3}>
                     <Typography variant={"h5"}>Enter initial function: </Typography>
                     <CodeEditor language={language} onChange={handleOnChangeCode} ></CodeEditor>
-                </Box>
+                </Box>      
 
                 <Box boxShadow={1} p={2} m={3}>
                     <Typography variant={"h5"}>Submit test cases file: </Typography>
                     <input type="file" name="testFile" onChange={handleChangeTestFile}></input>
-                </Box>
+                </Box>  
 
-                <Button type="submit">Add Test</Button>
-            </form>
+                <Button type="submit">Add Test</Button>      
+            </form>   
         </Box>
     );
 }

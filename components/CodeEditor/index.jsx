@@ -35,7 +35,7 @@ export default function CodeEditor({language,initialCode,onChange}){
                     showLineNumbers: true,
                     tabSize: 2,
                 }}>
-            </AceEditor>
-        </>
+            </AceEditor>   
+        </>          
     );
 }
