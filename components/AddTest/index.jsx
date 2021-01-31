@@ -9,7 +9,9 @@ export default function AddTestPage(props){
     const [testIntro,setTestIntro] = useState('');
     const [language,setLanguage] = useState('csharp');
     const [code,setCode] = useState('');
-    const [testFile,setTestFile] = useState('');
+    const [inputFile,setInputFile] = useState('');
+    const [outputFile,setOutputFile] = useState('');
+
 
     const handleChangeTestName = (event,editor)=>{
         setTestName(editor.getData());
@@ -27,8 +29,12 @@ export default function AddTestPage(props){
         setCode(newCode);
     }
 
-    const handleChangeTestFile = (e) => {
-        setTestFile(e.target.files[0]);
+    const handleChangeInputFile = (e) => {
+        setInputFile(e.target.files[0]);
+    }
+
+    const handleChangeOutputFile = (e) => {
+        setOutputFile(e.target.files[0]);
     }
 
     const handleSubmitAddTest = (e) => {
@@ -37,7 +43,8 @@ export default function AddTestPage(props){
         console.log(testIntro);
         console.log(language);
         console.log(code);
-        console.log(testFile);
+        console.log(inputFile);
+        console.log(outputFile);
     }
 
     return(
@@ -72,16 +79,20 @@ export default function AddTestPage(props){
                     </NativeSelect>
                 </Box>
                 <Box boxShadow={1} p={2} m={3}>
-                    <Typography variant={"h5"}>Enter initial function: </Typography>
+                    <Typography variant={"h5"}>Enter code: </Typography>
                     <CodeEditor language={language} onChange={handleOnChangeCode} ></CodeEditor>
                 </Box>      
 
                 <Box boxShadow={1} p={2} m={3}>
-                    <Typography variant={"h5"}>Submit test cases file: </Typography>
-                    <input type="file" name="testFile" onChange={handleChangeTestFile}></input>
+                    <Typography variant={"h5"}>Submit input file: </Typography>
+                    <input type="file" name="inputFile" onChange={handleChangeInputFile}></input>
                 </Box>  
-
-                <Button type="submit">Add Test</Button>      
+                <Box boxShadow={1} p={2} m={3}>
+                    <Typography variant={"h5"}>Submit expected output file: </Typography>
+                    <input type="file" name="outputFile" onChange={handleChangeOutputFile}></input>
+                </Box>  
+                <Button type="submit">Test</Button>     
+                <Button type="submit">Submit</Button>      
             </form>   
         </Box>
     );
