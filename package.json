@@ -8,6 +8,7 @@
     "start": "next start"
   },
   "dependencies": {
+    "base-64": "^1.0.0",
     "firebase": "^8.2.1",
     "firebase-admin": "^9.4.2",
     "firebaseui": "^4.7.1",
