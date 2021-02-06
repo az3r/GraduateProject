@@ -52,7 +52,7 @@ const useStyles = makeStyles( {
     }
 });
 
-export default function Test(props) {
+export default function Test({props}) {
     const classes = useStyles();
 
     const [testName, setTestName] = useState('Sum 2 integer number');
