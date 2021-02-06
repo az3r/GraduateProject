@@ -69,9 +69,9 @@ export default function Problems() {
         cases: '',
     });
 
-    useEffect(() => {
-
-    })
+    // useEffect(() => {
+    //
+    // })
 
 
     return (
