@@ -1,13 +1,15 @@
 
 
-export default function createTestModel(title, language, input, output, content)
+export default function createTestModel(title, language, score, content, difficulty, code, cases)
 {
     let testData = {
         title: title,
         language: language,
-        input: input,
-        outputExpect: output,
-        content : content
+        content : content,
+        difficulty: difficulty,
+        code: code,
+        cases: cases,
+        score: score
     }
 
     return testData
