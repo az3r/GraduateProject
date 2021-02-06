@@ -22,9 +22,12 @@ export default function Layout(props) {
             <br />
             <Container>
                 <div className={classes.root}>
+
+            <div className={classes.root}>
                     {props.children}
                 </div>
             </Container>
+            </div>
         </>
     );
-}
+}}}

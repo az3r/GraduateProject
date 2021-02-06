@@ -59,6 +59,7 @@ const rows = [
 export default function Problems() {
     const classes = useStyles();
 
+
     return (
         <TableContainer component={Paper}>
             <Search />
@@ -78,6 +79,7 @@ export default function Problems() {
                                 <TableCell>{index}</TableCell>
                                 <TableCell component="th" scope="row">
                                     <Link href="/test" underline={'none'} className={classes.link}>{row.problem}</Link>
+                                    <Link href="/test_problem" underline={'none'} className={classes.link}>{row.problem}</Link>
                                 </TableCell>
                                 <TableCell>
                                     <Box component="span" display="inline" p={'4px'}   borderRadius={16} className={classes.box}
