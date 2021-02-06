@@ -8,7 +8,7 @@ export default async function handler(req, res){
 
     const testId = req.body.examId
     const uuid = req.body.userId
-    const codeContent = req.body.content
+    const codeContent = req.body.code
 
     const baseUrl = 'https://online-code-exercise.herokuapp.com/'
 
@@ -29,29 +29,35 @@ export default async function handler(req, res){
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
-            'Authorization' : uuid
+            'Authorization' : 'Bearer ' + uuid
         },
         body: JSON.stringify({
-            'code' : base64.encode(codeContent),
-            'input': base64.encode(examData.input),
-            'expected' : base64.encode(examData.outputExpect)
+            'code' : codeContent,
+            'testcases' : req.body.cases
         })
     })
 
     if(respone.status == 401)
         res.status(401).json({'error': 'Unauthorized'})
     else if(respone.status == 400)
-        res.status(500).json({error: 'Compile failed'})
+    {
+        const message = respone.json()
+        res.status(500).json(message)
+    }
     else if(respone.status != 200)
-        res.status(respone.status).json({respone, comeFrom: 'compiler api'})
+    {
+        const result = respone.json()
+        res.status(respone.status).json({message, comeFrom: 'compiler api'})
+    }
     else if(respone.status == 200)
     {      
-        const historyData = createHistoryInstance(uuid, testId, respone.result, codeContent)
+        const result = respone.json()
+        const historyData = createHistoryInstance(uuid, testId, result, codeContent)
         database.collection('History').set(historyData)
         .then(() => {
-            res.status(200).json(respone.result)
+            res.status(200).json(result)
         }).then((error) => {
-            res.status(200).json(respone.result, {message: 'failed to log history to database', error: error})
+            res.status(200).json(result, {message: 'failed to log history to database', error: error})
         })
     }       
     else
