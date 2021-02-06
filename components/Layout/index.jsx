@@ -20,14 +20,11 @@ export default function Layout(props) {
         <>
             <MyAppBar isExaminer={true} />
             <br />
-            <Container>
-                <div className={classes.root}>
+
 
             <div className={classes.root}>
                     {props.children}
-                </div>
-            </Container>
             </div>
         </>
     );
-}}}
+}

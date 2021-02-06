@@ -78,7 +78,6 @@ export default function Problems() {
                             <TableRow key={row.name} className={classes.tableRow} hover style={index % 2? { background : 'rgb(250, 250, 250)' }:{ background : "white"}}>
                                 <TableCell>{index}</TableCell>
                                 <TableCell component="th" scope="row">
-                                    <Link href="/test" underline={'none'} className={classes.link}>{row.problem}</Link>
                                     <Link href="/test_problem" underline={'none'} className={classes.link}>{row.problem}</Link>
                                 </TableCell>
                                 <TableCell>
