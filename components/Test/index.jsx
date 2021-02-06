@@ -1,7 +1,7 @@
 import { Box, Grid, Typography, Button } from '@material-ui/core';
 import React,{useState} from 'react';
 import dynamic from 'next/dynamic';
-import Console from "../Console";
+// import Console from "../Console";
 import makeStyles from "@material-ui/core/styles/makeStyles";
 
 const CodeEditor = dynamic(
@@ -76,7 +76,7 @@ export default function Test(props) {
                     </form>
                 </Box>
                 <Box m={1}>
-                    <Console/>
+                    {/*<Console/>*/}
                 </Box>
                 <Box m={1}>
                     <Button type="submit" variant="text" className={classes.submitButton}>Submit</Button>
