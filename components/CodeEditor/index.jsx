@@ -13,7 +13,7 @@ import "ace-builds/src-noconflict/ext-language_tools";
 import "ace-builds/src-noconflict/theme-xcode";
 import { Typography } from '@material-ui/core';
 
-export default function CodeEditor({language,initialCode,onChange}){
+export default function CodeEditor({language,code,onChange}){
     return (
         <>
             <Typography> Programming Language: {language}</Typography>
@@ -27,7 +27,7 @@ export default function CodeEditor({language,initialCode,onChange}){
                 showPrintMargin={true}
                 showGutter={true}
                 highlightActiveLine={true}
-                value={initialCode}
+                value={code}
                 setOptions={{
                     enableBasicAutocompletion: true,
                     enableLiveAutocompletion: true,
