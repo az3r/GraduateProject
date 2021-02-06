@@ -28,7 +28,7 @@ class HelloWorld {
     }
 }`,
     java:
-`public class Main
+`public class Program
 {
     public static void main(String[] args) {
         System.out.println("Hello World");
