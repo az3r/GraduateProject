@@ -15,7 +15,7 @@ export default async function handler(req, res){
     const examRef = await database.collection('Exam').doc(testId)
     const examData = await (await examRef.get()).data()
 
-    const apiUrl = baseUrl + (examData.language == 'C#' ? 'csharp' : examData.language.toLowerCase())
+    const apiUrl = baseUrl + (examData.language == 'python' ? 'py3' : examData.language.toLowerCase())
    
 
     if(!uuid)
