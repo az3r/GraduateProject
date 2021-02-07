@@ -1,7 +1,7 @@
 
 export default async function handler(req, res){
     const baseUrl = 'https://online-code-exercise.herokuapp.com/'
-    const apiUrl = baseUrl + req.body.language.toLowerCase()
+    const apiUrl = baseUrl + (req.body.language == 'python' ? 'py3' : req.body.language.toLowerCase())
 
     const userId = req.body.userId
 
