@@ -19,7 +19,21 @@
     <select />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="73bd1854-2930-493b-bbd0-fb90442d9327" name="Default Changelist" comment="" />
+    <list default="true" id="73bd1854-2930-493b-bbd0-fb90442d9327" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/components/Problems/index.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/Problems/index.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/components/TestProblem/CodeEditor/index.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/TestProblem/CodeEditor/index.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/components/TestProblem/Console/index.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/TestProblem/Console/index.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/components/TestProblem/Problem/index.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/TestProblem/Problem/index.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/components/TestProblem/index.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/TestProblem/index.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/components/URL.js" beforeDir="false" afterPath="$PROJECT_DIR$/components/URL.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pages/api/get-all-test.js" beforeDir="false" afterPath="$PROJECT_DIR$/pages/api/get-all-test.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pages/api/test-exam.js" beforeDir="false" afterPath="$PROJECT_DIR$/pages/api/test-exam.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pages/problem/[id].jsx" beforeDir="false" afterPath="$PROJECT_DIR$/pages/problem/[id].jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/yarn.lock" beforeDir="false" afterPath="$PROJECT_DIR$/yarn.lock" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -36,7 +50,7 @@
   <component name="PropertiesComponent">
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/../../../../../PTUDWNC/Gia Tuấn/1712867_1712872/1712867_1712872/user/user-frontend" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="node.js.detected.package.eslint" value="true" />
     <property name="node.js.detected.package.tslint" value="true" />
     <property name="node.js.path.for.package.eslint" value="project" />
@@ -93,6 +107,8 @@
       <workItem from="1612620005991" duration="10093000" />
       <workItem from="1612665377309" duration="25829000" />
       <workItem from="1612695129294" duration="2935000" />
+      <workItem from="1612698438485" duration="3233000" />
+      <workItem from="1612709698259" duration="6713000" />
     </task>
     <servers />
   </component>
@@ -112,11 +128,11 @@
     <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="WindowStateProjectService">
-    <state x="1829" y="124" key="FileChooserDialogImpl" timestamp="1612685826341">
+    <state x="1829" y="124" key="FileChooserDialogImpl" timestamp="1612698749575">
       <screen x="1366" y="0" width="1366" height="738" />
     </state>
     <state x="463" y="124" key="FileChooserDialogImpl/0.0.1366.738/1366.0.1366.738@0.0.1366.738" timestamp="1612066063244" />
-    <state x="1829" y="124" key="FileChooserDialogImpl/0.0.1366.738/1366.0.1366.738@1366.0.1366.738" timestamp="1612685826341" />
+    <state x="1829" y="124" key="FileChooserDialogImpl/0.0.1366.738/1366.0.1366.738@1366.0.1366.738" timestamp="1612698749575" />
     <state x="500" y="283" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2" timestamp="1612509227348">
       <screen x="0" y="0" width="1366" height="738" />
     </state>
@@ -125,5 +141,15 @@
       <screen x="1366" y="0" width="1366" height="738" />
     </state>
     <state x="1756" y="102" width="585" height="534" key="find.popup/0.0.1366.738/1366.0.1366.738@1366.0.1366.738" timestamp="1612632160254" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="javascript">
+          <url>file://$PROJECT_DIR$/components/AddTest/index.jsx</url>
+          <option name="timeStamp" value="1" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
   </component>
 </project>

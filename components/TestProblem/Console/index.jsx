@@ -12,9 +12,6 @@ function TabPanel(props) {
   return (
     <div>
       {value === index && (
-        // <Box p={3}>
-        //   <Typography>{children}</Typography>
-        // </Box>
         <Paper style={{height: 160, overflow: 'auto'}}>
           <Typography>{children}</Typography>
         </Paper>
@@ -38,7 +35,7 @@ const useStyles = makeStyles({
   },
 });
 
-export default function Console(props){
+export default function Console({testCodeResult}){
   const classes = useStyles();
 
   const [value, setValue] = React.useState(0);
@@ -63,7 +60,7 @@ export default function Console(props){
         </Tabs>
       </AppBar>
       <TabPanel value={value} index={0}>
-        Item One
+        {testCodeResult}
       </TabPanel>
     </>
   );

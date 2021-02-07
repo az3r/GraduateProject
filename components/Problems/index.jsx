@@ -12,6 +12,8 @@ import Link from '@material-ui/core/Link';
 import Box from '@material-ui/core/Box';
 import Search from './Search/index';
 
+
+
 const useStyles = makeStyles((theme) => ({
     table: {
         minWidth: 650,
@@ -28,50 +30,31 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 
-
-function createData(id, problem, difficulty, domain, score) {
-    return { id, problem, difficulty, domain, score };
-}
-
-const rows = [
-    createData('1', 'Sum 2 interger number', 'Easy', 'C#', 67),
-    createData('2', 'Sum 2 float number', 'Easy', 'C/C++', 51),
-    createData('3', 'Birthday party', 'Medium', 'Java', 24),
-    createData('4', 'Way to my house', 'Easy', "C#", 24),
-    createData('5','Car or plane', 'Easy', 'Java', 49),
-    createData('6','Find my password', 'Hard', 'Java', 87),
-    createData('7','30 second', 'Hard', "C#", 37),
-    createData('8','How many apple', 'Hard', "C/C++", 94),
-    createData('9','The left mouse', 'Easy', 'Javascript', 65),
-    createData('10','Red button', 'Medium', 'Java', 98),
-    createData('11','Sum 2 interger number', 'Easy', 'C#', 67),
-    createData('12','Sum 2 float number', 'Easy', 'C/C++', 51),
-    createData('13','Birthday party', 'Medium', 'Java', 24),
-    createData('14','Way to my house', 'Easy', "C#", 24),
-    createData('15','Car or plane', 'Easy', 'Java', 49),
-    createData('16','Find my password', 'Hard', 'Java', 87),
-    createData('17','30 second', 'Hard', "C#", 37),
-    createData('18','How many apple', 'Hard', "C/C++", 94),
-    createData('19','The left mouse', 'Easy', 'Javascript', 65),
-    createData('20','Red button', 'Medium', 'Java', 98),
-];
-
 export default function Problems() {
     const classes = useStyles();
-    const [problems, setProblems] = useState({
-        id: '',
-        title: '',
-        content: '',
-        difficulty: '',
-        score: '',
-        language: '',
-        code: '',
-        cases: '',
-    });
+    const [problems, setProblems] = useState([]);
 
-    // useEffect(() => {
-    //
-    // })
+    useEffect( ( ) => {
+
+        async function getProblems() {
+            const response = await fetch('/api/get-all-test', {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Bearer ' + 'uuid'
+                },
+            });
+
+            const data = await response.json()
+            if (response.status === 200) {
+                setProblems(data);
+            } else {
+                setProblems('');
+            }
+        }
+
+        getProblems();
+    }, []);
 
 
     return (
@@ -83,27 +66,29 @@ export default function Problems() {
                         <TableCell>#</TableCell>
                         <TableCell>Title</TableCell>
                         <TableCell>Difficulty</TableCell>
-                        <TableCell>Domain</TableCell>
+                        <TableCell>Language</TableCell>
                         <TableCell>Score</TableCell>
                     </TableRow>
                 </TableHead>
                 <TableBody>
-                    {rows.map((row, index) => (
-                            <TableRow key={row.name} className={classes.tableRow} hover style={index % 2? { background : 'rgb(250, 250, 250)' }:{ background : "white"}}>
+                    {problems.map((problem, index) => (
+                            <TableRow key={problems.id} className={classes.tableRow} hover style={index % 2? { background : 'rgb(250, 250, 250)' }:{ background : "white"}}>
                                 <TableCell>{index}</TableCell>
                                 <TableCell component="th" scope="row">
-                                    <Link href={`/problem/${row.id}`} underline={'none'} className={classes.link}>{row.problem}</Link>
+                                    <Link href={`/problem/${problem.id}`} underline={'none'} className={classes.link}>{problem.data.title}</Link>
                                 </TableCell>
                                 <TableCell>
                                     <Box component="span" display="inline" p={'4px'}   borderRadius={16} className={classes.box}
-                                         bgcolor={ row.difficulty == 'Easy' ? "green" : row.difficulty == 'Medium' ? "orange" : "red"}>
-                                        {row.difficulty}
+                                         bgcolor={ problem.data.difficulty == 0 ? "green" : problem.data.difficulty == 1 ? "orange" : "red"}>
+                                        {
+                                            problem.data.difficulty == 0 ? "Easy" : problem.data.difficulty == 1 ? "Medium" : "Hard"
+                                        }
                                     </Box>
                                 </TableCell>
                                 <TableCell>
-                                    {row.domain}
+                                    {problem.data.language}
                                 </TableCell>
-                                <TableCell>{row.score}</TableCell>
+                                <TableCell>{problem.data.score}</TableCell>
                             </TableRow>
                     ))}
                 </TableBody>

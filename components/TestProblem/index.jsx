@@ -1,18 +1,13 @@
 import { Box, Grid, Typography, Button } from '@material-ui/core';
-import React,{useState} from 'react';
+import React,{useState, useEffect} from 'react';
 import dynamic from 'next/dynamic';
 import Console from './Console';
 import makeStyles from "@material-ui/core/styles/makeStyles";
 import Problem from './Problem/';
 import Container from '@material-ui/core/Container';
 import Paper from '@material-ui/core/Paper';
+import CodeEditor from './CodeEditor';
 
-const CodeEditor = dynamic(
-    () => {
-        return import('./CodeEditor');
-    },
-    { ssr: false }
-);
 
 const useStyles = makeStyles( {
     consoleButton: {
@@ -52,42 +47,109 @@ const useStyles = makeStyles( {
     }
 });
 
-export default function Test({props}) {
+export default function Test({problemId}) {
     const classes = useStyles();
 
-    const [testName, setTestName] = useState('Sum 2 integer number');
-    const [testIntro, setTestIntro] = useState('Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quos blanditiis tenetur\n' +
-      '                        unde suscipit, quam beatae rerum inventore consectetur, neque doloribus, cupiditate numquam\n' +
-      '                        dignissimos laborum fugiat deleniti? Eum quasi quidem quibusdam.');
-    const [language, setLanguage] = useState('csharp');
+    console.log(problemId);
+    // const [problemData, setProblemData] = useState('');
+    const [title, setTitle] = useState(''); //
+    const [content, setContent] = useState(''); //
+    const [language, setLanguage] = useState('c_cpp');
+    const [cases, setCases] = useState('cases');
+    const [difficulty, setDifficulty] = useState(1);   //
+    const [score, setScore] = useState(100); //
+
     const [code, setCode] = useState('');
-    const [testFile, setTestFile] = useState('');
+
+    const [testCodeResult, setTestCodeResult] = useState('');
     const [openConsole, setOpenConsole] = useState('hidden');
+
+
+    useEffect(() => {
+        async function getProblemData() {
+            const response = await fetch('/api/get-test', {
+                method: 'POST',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Bearer ' + 'uuid',
+                },
+                body: JSON.stringify({
+                    'examId': problemId})
+            });
+
+            const data = await response.json();
+            if (response.status === 200) {
+                setTitle(data.title);
+                setContent(data.content);
+                setDifficulty(data.difficulty);
+                setScore(data.score);
+                setLanguage(data.language);
+                setCases(data.cases);
+                setCode(data.code);
+            } else {
+                console.log("Error");
+            }
+        }
+
+        getProblemData();
+    }, []);
 
 
     const handleSubmitAddTest = (e) => {
         e.preventDefault();
-        console.log(testName);
-        console.log(testIntro);
-        console.log(language);
-        console.log(code);
-        console.log(testFile);
     }
 
     const handleOpenConsoleChange = (e) => {
-        if(openConsole == 'visible'){
+        if (openConsole == 'visible') {
             setOpenConsole('hidden');
-        }
-        else{
+        } else {
             setOpenConsole('visible');
         }
+    }
+
+    const handleRunCode = async (e) => {
+        setOpenConsole('visible');
+
+        const response = await fetch("/api/test-exam",{
+            method: "POST",
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type':'application/json',
+                'Authorization': 'Bearer ' + 'uuid',
+            },
+            body: JSON.stringify({
+                "userId": 1,
+                "code": code,
+                "language": language,
+                "cases": cases,
+            })})
+
+
+        const data = await response.json();
+        console.log(data);
+        if(response.status === 200){
+            setTestCodeResult("Correct!");
+        }
+        else{
+            setTestCodeResult(data.stderr);
+        }
+    }
+
+    const handleSubmit = async (e) => {
+
+    }
+
+    const handleCodeChange = (newCode) => {
+        console.log(newCode);
+        setCode(newCode);
     }
 
     return (
       <Container disableGutters={true} maxWidth={false}>
           <Grid container>
               <Grid item lg={5}>
-                  <Problem></Problem>
+                  <Problem title={title} content={content} difficulty={difficulty} score={score}></Problem>
               </Grid>
               <Grid item lg={7}>
                   <Paper square>
@@ -95,28 +157,21 @@ export default function Test({props}) {
                           Programming Language: {language}
                       </Box>
                       <Box boxShadow={1}>
-                          <CodeEditor language={language}></CodeEditor>
+                          <CodeEditor language={language} code={code}
+                                      onCodeChange={handleCodeChange}></CodeEditor>
                       </Box>
                       <Box className={classes.compileBox}>
                           <Box className={classes.consoleBox} component="div" visibility={openConsole}>
-                              <Console></Console>
+                              <Console testCodeResult={testCodeResult}></Console>
                           </Box>
-                          <Button size={'small'} onClick={handleOpenConsoleChange}  variant="outlined" className={classes.consoleButton}>Console</Button>
-                          <Button size={'small'} type="submit" variant="outlined" className={classes.submitButton}>Submit</Button>
-                          <Button size={'small'} type="submit" variant="outlined" className={classes.runCodeButton}>Run Code</Button>
+                          <Button size={'small'} onClick={handleOpenConsoleChange} variant="outlined"
+                                  className={classes.consoleButton}>Console</Button>
+                          <Button size={'small'} type="submit" variant="outlined" onClick={handleSubmit}
+                                  className={classes.submitButton}>Submit</Button>
+                          <Button size={'small'} type="submit" variant="outlined" onClick={handleRunCode}
+                                  className={classes.runCodeButton}>Run Code</Button>
                       </Box>
                   </Paper>
-
-                  {/*<Box boxShadow={1} p={3}>*/}
-                  {/*      <CodeEditor language={language}></CodeEditor>*/}
-                  {/*</Box>*/}
-                  {/*<Box m={1}>*/}
-                  {/*    <Console />*/}
-                  {/*</Box>*/}
-                  {/*<Box m={1}>*/}
-                  {/*    <Button type="submit" variant="text" className={classes.submitButton}>Submit</Button>*/}
-                  {/*    <Button type="submit" variant="text" className={classes.runCodeButton}>Run Code</Button>*/}
-                  {/*</Box>*/}
               </Grid>
           </Grid>
       </Container>

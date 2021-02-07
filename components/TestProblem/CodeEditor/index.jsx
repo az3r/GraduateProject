@@ -3,20 +3,19 @@ import AceEditor from "react-ace";
 
 import "ace-builds/src-noconflict/mode-java";
 import "ace-builds/src-noconflict/mode-csharp";
-import "ace-builds/src-noconflict/mode-javascript";
+import "ace-builds/src-noconflict/mode-python";
 import "ace-builds/src-noconflict/mode-c_cpp";
 import "ace-builds/src-noconflict/snippets/csharp";
-import "ace-builds/src-noconflict/snippets/javascript";
+import "ace-builds/src-noconflict/snippets/python";
 import "ace-builds/src-noconflict/snippets/java";
 import "ace-builds/src-noconflict/snippets/c_cpp";
 import "ace-builds/src-noconflict/ext-language_tools";
 import "ace-builds/src-noconflict/theme-xcode";
-import { Typography } from '@material-ui/core';
 
-export default function CodeEditor({language,initialCode,onChange}){
+export default function CodeEditor({language,code, onCodeChange}){
+
   return (
     <>
-      {/*<Typography> Programming Language: {language}</Typography>*/}
       <AceEditor
         width={760}
         height={510}
@@ -24,12 +23,12 @@ export default function CodeEditor({language,initialCode,onChange}){
         mode={language}
         theme="xcode"
         name="blah2"
-        onChange={onChange}
-        fontSize={16}
+        onChange={onCodeChange}
+        fontSize={14}
         showPrintMargin={true}
         showGutter={true}
         highlightActiveLine={true}
-        value={initialCode}
+        value={code}
         setOptions={{
           enableBasicAutocompletion: true,
           enableLiveAutocompletion: true,

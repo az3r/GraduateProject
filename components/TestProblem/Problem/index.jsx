@@ -7,6 +7,9 @@ import Box from '@material-ui/core/Box';
 import Typography from '@material-ui/core/Typography';
 import List from '@material-ui/core/List';
 import makeStyles from "@material-ui/core/styles/makeStyles";
+import Avatar from '@material-ui/core/Avatar';
+
+
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -14,11 +17,10 @@ function TabPanel(props) {
   return (
     <div>
       {value === index && (
-        // <Box p={3}>
-        //   <Typography>{children}</Typography>
-        // </Box>
         <Paper style={{maxHeight: 1000, height: 510, overflow: 'auto'}}>
-          <Typography>{children}</Typography>
+          <pre>
+            {children}
+          </pre>
         </Paper>
       )}
     </div>
@@ -38,12 +40,29 @@ const useStyles = makeStyles({
     width: 100,
     minWidth: 100,
   },
+  difficultyBox: {
+    color: 'white',
+  },
+  scoreBox: {
+    display: 'flex',
+    fontSize: 18,
+  },
+  scoreAvatar: {
+    height: 25,
+    width: 25,
+  },
+  subTitle: {
+    display: 'flex',
+    justifyContent: 'space-between',
+  }
 });
 
 
-export default function Problem() {
+export default function Problem(props) {
   const classes = useStyles();
   const [value, setValue] = React.useState(0);
+
+  // console.log(props);
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
@@ -60,13 +79,31 @@ export default function Problem() {
           onChange={handleChange}
           aria-label="tabs example"
         >
-          <Tab className={classes.Tab}  label="Description" />
+          <Tab className={classes.Tab} label="Description" />
           <Tab className={classes.Tab} label="Discuss" />
           <Tab className={classes.Tab} label="Submissions" />
         </Tabs>
       </AppBar>
       <TabPanel value={value} index={0}>
-        Item One
+        <Typography>{props.title}</Typography>
+
+        <div className={classes.subTitle}>
+          <Box component="span" display="inline" p={'4px'} borderRadius={16} className={classes.difficultyBox}
+               bgcolor={props.difficulty == 0 ? "green" : props.difficulty == 1 ? "orange" : "red"}>
+            {
+              props.difficulty == 0 ? "Easy" : props.difficulty == 1 ? "Medium" : "Hard"
+            }
+          </Box>
+
+          <Box className={classes.scoreBox}>
+            <Box>
+              Score: {props.score}
+            </Box>
+            <Avatar className={classes.scoreAvatar} alt="Score" src={'/coins_48px.png'} />
+          </Box>
+        </div>
+        <hr />
+        {props.content}
       </TabPanel>
       <TabPanel value={value} index={1}>
         Item Two
