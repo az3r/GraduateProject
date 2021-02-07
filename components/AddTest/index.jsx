@@ -1,10 +1,20 @@
-import { Box, Button, Container, Grid, NativeSelect, TextField, Typography } from '@material-ui/core';
+import { Box, Button, Container, Grid, makeStyles, NativeSelect, TextField, Typography } from '@material-ui/core';
 import React,{useState} from 'react';
 import { CKEditor } from '@ckeditor/ckeditor5-react';
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
+import SkewLoader from "react-spinners/SkewLoader";
 import CodeEditor from '../CodeEditor';
-import { FormatAlignJustify, Score } from '@material-ui/icons';
-import { split } from 'react-ace';
+import URL from '../URL';
+
+
+const useStyles = makeStyles({
+    textSuccess: {
+        color: '#52C41A'
+    },
+    textFail: {
+        color: '#F74B4D'
+    }
+})
 
 export default function AddTestPage(props){
     const [testName,setTestName] = useState('');
@@ -20,22 +30,23 @@ int main()
     printf("Hello World");
     return 0;
 }`,
-    csharp: 
+    Csharp: 
 `using System;
 class HelloWorld {
     static void Main() {
         Console.WriteLine("Hello World");
     }
 }`,
-    java:
-`public class Program
+    Java:
+`import java.util.Scanner;
+public class Program
 {
     public static void main(String[] args) {
         System.out.println("Hello World");
     }
 }`,
-    javascript:
-`print('Hello World');`
+    Python:
+`print("Hello world!")`
         
     });
     const [input,setInput] = useState([]);
@@ -43,7 +54,11 @@ class HelloWorld {
     const [message,setMessage] = useState('');
     const [simpleInput,setSimpleInput] = useState('');
     const [simpleOutput,setSimpleOutput] = useState('');
-
+    const [testResponse,setTestReponse] = useState('');
+    const [isLoading,setIsLoading] = useState(false);
+    const [isTestSuccess,setIsTestSuccess] = useState(false);
+    const [isAddSuccess,setIsAddSuccess] = useState(false);
+    const classes = useStyles();
 
     const handleChangeTestName = (event,editor)=>{
         setTestName(editor.getData());
@@ -68,12 +83,12 @@ class HelloWorld {
     const handleOnChangeCode = (newCode) => {
         if(language === "c_cpp")
             setCode({...code, c_cpp: newCode});
-        if(language === "csharp")
-         setCode({...code, csharp: newCode});
-        if(language === "java")
-            setCode({...code, java: newCode});
-        if(language === "javascript")
-            setCode({...code, javascript: newCode});
+        if(language === "Csharp")
+         setCode({...code, Csharp: newCode});
+        if(language === "Java")
+            setCode({...code, Java: newCode});
+        if(language === "Python")
+            setCode({...code, Python: newCode});
     }
 
     function getFormatResultFromFile(text){
@@ -129,17 +144,24 @@ class HelloWorld {
 
     const handleSubmitAddTest =  async (e) => {
         e.preventDefault();
+        if(!isTestSuccess)
+        {
+            setIsAddSuccess(false);
+            setMessage("Exam has not tested with the passed result yet!");
+            return;
+        }
         if(testIntro === "" || testName === "" || input === [] || output === [])
         {
-            setMessage("Not filling in sufficient information for the test");
+            setIsAddSuccess(false);
+            setMessage("Not filling in enough information for the test");
             return;
         }
         if(input.length !== output.length)
         {
+            setIsAddSuccess(false);
             setMessage("Number of input and output not equal");
             return;
         }
-
 
         let cases = [];
         for(let i = 0 ; i < input.length ; i++)
@@ -151,15 +173,15 @@ class HelloWorld {
                 }
             ]
         }
-        console.log(cases);
 
-        const response = await fetch("http://localhost:3000/api/text",{
+        const response = await fetch(URL.GetURL()+"add-test",{
             method: "POST",
             headers: {
                 'Accept': 'application/json',
                 'Content-Type':'application/json'
             },
             body: JSON.stringify({
+                "userId": 1,
                 "title": testName,
                 "content": testIntro,
                 "difficulty": difficulty,
@@ -168,6 +190,17 @@ class HelloWorld {
                 "code": code[language],
                 "cases": cases,
             })})
+
+        if(response.status === 200)
+        {
+            setIsAddSuccess(true);
+            setMessage("Add test success!");
+        }
+        else
+        {
+            setIsAddSuccess(false);
+            setMessage("Add test failed due to server error. Please try again later");
+        }
     }
 
     const handleChangeSimpleInput = (e) => {
@@ -182,24 +215,47 @@ class HelloWorld {
     const handleTestCode = async (e) => {
         if(simpleInput === '' || simpleOutput === '')
         {
-            alert("you have not submited simple input or output yet");
+            setTestReponse("Have not submited simple input or output yet");
             return;
         }
-        const response = await fetch("http://localhost:3000/api/testcode",{
+        setIsLoading(true);
+        const response = await fetch(URL.GetURL()+"test-exam",{
             method: "POST",
             headers: {
                 'Accept': 'application/json',
                 'Content-Type':'application/json'
             },
             body: JSON.stringify({
-                
+                "userId": 1,
                 "code": code[language],
                 "language": language,
-                "cases": {
+                "cases": [{
                     input: simpleInput,
                     output: simpleOutput
-                },
+                }],
             })})
+
+        setIsLoading(false);
+        if(response.status === 200)
+        {
+            const data = await response.json();
+            if(data.results[0].passed)
+            {
+                setIsTestSuccess(true);
+                setTestReponse("Test passed! Now proceed with deleting answer in the code editor \nThen, submiting input and output files with the same format as current simple test cases\n(Note: test cases in files must be devided by a blank line)");
+            }
+            else
+            {
+                setIsTestSuccess(false);
+                setTestReponse("Test failed! \nExpected output: " + data.results[0].expected + "\nActual: " + data.results[0].actual);
+            }
+            
+        }
+        else
+        {
+            setIsTestSuccess(false);
+            setTestReponse("Error! Please check again");
+        }
     }
 
     return(
@@ -244,10 +300,10 @@ class HelloWorld {
                     <NativeSelect              
                         inputProps={{ 'aria-label': 'age' }}
                         onChange={handleChangeLanguague}>
-                        <option value={"c_cpp"}>C++</option>
-                        <option value={"csharp"}>C#</option>
-                        <option value={"java"}>Java</option>
-                        <option value={"javascript"}>Javascript</option>
+                        {/* <option value={"c_cpp"}>C++</option> */}
+                        <option value={"Csharp"}>C#</option>
+                        <option value={"Java"}>Java</option>
+                        <option value={"Python"}>Python</option>
                     </NativeSelect>
                 </Box>
 
@@ -265,8 +321,6 @@ class HelloWorld {
                                 <li><Typography>Write full your code in the coding editor</Typography></li>
                                 <li><Typography>Enter simple input and output to test your code (include only one test case)</Typography></li>
                                 <li><Typography>Click "Test code" button to test your code and input, output</Typography></li>
-                                <li><Typography>Delete answer of your code</Typography></li>
-                                <li><Typography>Submit the test</Typography></li>
                             </ul>
 
                             <div>
@@ -277,8 +331,13 @@ class HelloWorld {
                                 <TextField multiline label="Enter simple output" onChange={handleChangeSimpleOutput}>
                                 </TextField>
                             </div>
+                            <br></br>
                             
-                            <Button variant="primary" onClick={handleTestCode}>Test code</Button>    
+                            <div>
+                            <Button variant="primary" onClick={handleTestCode}>Test code</Button>
+                            <SkewLoader color={"#088247"}  loading={isLoading} size={20} />
+                            </div>
+                            <Typography className={isTestSuccess ? classes.textSuccess : classes.textFail}>{testResponse}</Typography> 
                         </Grid>
                     </Grid>
                 </Box>      
@@ -291,8 +350,15 @@ class HelloWorld {
                     <Typography variant={"h5"}>Submit expected output file: </Typography>
                     <input type="file" name="outputFile" onChange={handleChangeOutputFile}></input>
                 </Box>  
-                <Typography>{message}</Typography>
-                <Button type="submit">Submit</Button>      
+
+                <Box variant="contained" display="flex" justifyContent="center" p={2} m={3}>
+                    <Typography  className={isAddSuccess ? classes.textSuccess : classes.textFail}>{message}</Typography>
+
+                </Box>
+
+                <Box variant="contained" display="flex" justifyContent="center" boxShadow={1} p={2} m={3}>
+                    <Button color="primary" type="submit">Submit</Button>    
+                </Box>  
             </form>   
         </Box>
     );
