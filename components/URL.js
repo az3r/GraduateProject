@@ -6,9 +6,9 @@ class URL{
     GetURL(){
         if(this.isDevelopment)
         {
-            return "http://localhost:3000/api/";
+            return window.location.protocol + "//" + window.location.hostname+":3000/api/";
         }
-        return "https://graduate-project-edvhz221m.vercel.app/api/"
+        return window.location.protocol + "//" + window.location.hostname+".vercel.app/api/";
     }
 }
 
