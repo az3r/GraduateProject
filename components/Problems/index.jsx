@@ -11,6 +11,7 @@ import Paper from '@material-ui/core/Paper';
 import Link from '@material-ui/core/Link';
 import Box from '@material-ui/core/Box';
 import Search from './Search/index';
+import URL from '../URL';
 
 
 
@@ -37,7 +38,7 @@ export default function Problems() {
     useEffect( ( ) => {
 
         async function getProblems() {
-            const response = await fetch('/api/get-all-test', {
+            const response = await fetch(URL.GetURL() + 'get-all-test', {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',

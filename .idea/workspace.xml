@@ -22,17 +22,7 @@
     <list default="true" id="73bd1854-2930-493b-bbd0-fb90442d9327" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/components/Problems/index.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/Problems/index.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/components/TestProblem/CodeEditor/index.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/TestProblem/CodeEditor/index.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/components/TestProblem/Console/index.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/TestProblem/Console/index.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/components/TestProblem/Problem/index.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/TestProblem/Problem/index.jsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/components/TestProblem/index.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/TestProblem/index.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/components/URL.js" beforeDir="false" afterPath="$PROJECT_DIR$/components/URL.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pages/api/get-all-test.js" beforeDir="false" afterPath="$PROJECT_DIR$/pages/api/get-all-test.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pages/api/test-exam.js" beforeDir="false" afterPath="$PROJECT_DIR$/pages/api/test-exam.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pages/problem/[id].jsx" beforeDir="false" afterPath="$PROJECT_DIR$/pages/problem/[id].jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/yarn.lock" beforeDir="false" afterPath="$PROJECT_DIR$/yarn.lock" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -108,7 +98,7 @@
       <workItem from="1612665377309" duration="25829000" />
       <workItem from="1612695129294" duration="2935000" />
       <workItem from="1612698438485" duration="3233000" />
-      <workItem from="1612709698259" duration="6713000" />
+      <workItem from="1612709698259" duration="7606000" />
     </task>
     <servers />
   </component>

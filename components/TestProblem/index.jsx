@@ -7,6 +7,7 @@ import Problem from './Problem/';
 import Container from '@material-ui/core/Container';
 import Paper from '@material-ui/core/Paper';
 import CodeEditor from './CodeEditor';
+import URL from '../URL';
 
 
 const useStyles = makeStyles( {
@@ -67,7 +68,7 @@ export default function Test({problemId}) {
 
     useEffect(() => {
         async function getProblemData() {
-            const response = await fetch('/api/get-test', {
+            const response = await fetch(URL.GetURL() + 'get-test', {
                 method: 'POST',
                 headers: {
                     'Accept': 'application/json',
@@ -111,7 +112,7 @@ export default function Test({problemId}) {
     const handleRunCode = async (e) => {
         setOpenConsole('visible');
 
-        const response = await fetch("/api/test-exam",{
+        const response = await fetch(URL.GetURL() + "test-exam",{
             method: "POST",
             headers: {
                 'Accept': 'application/json',
