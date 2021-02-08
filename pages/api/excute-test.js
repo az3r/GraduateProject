@@ -17,6 +17,7 @@ export default async function handler(req, res){
 
     const apiUrl = baseUrl + (examData.language == 'python' ? 'py3' : examData.language.toLowerCase())
 
+
     if(!uuid)
     {
         res.status(401).json({'error': 'Unauthorized'})
@@ -32,27 +33,28 @@ export default async function handler(req, res){
         },
         body: JSON.stringify({
             'code' : codeContent,
-            'testcases' : req.body.cases
+            'testcases' : examData.cases
         })
     })
+
 
     if(respone.status == 401)
         res.status(401).json({'error': 'Unauthorized'})
     else if(respone.status == 400)
     {
-        const message = respone.json()
+        const message = await respone.json()
         res.status(500).json(message)
     }
     else if(respone.status != 200)
     {
-        const result = respone.json()
+        const result = await respone.json()
         res.status(respone.status).json({message, comeFrom: 'compiler api'})
     }
     else if(respone.status == 200)
     {
-        const result = respone.json()
+        const result = await respone.json()
         const historyData = createHistoryInstance(uuid, testId, result, codeContent)
-        database.collection('History').set(historyData)
+        database.collection('History').doc().set(historyData)
         .then(() => {
             res.status(200).json(result)
         }).then((error) => {

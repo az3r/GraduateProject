@@ -99,7 +99,6 @@ export default function Test({problemId}) {
                 headers: {
                     'Accept': 'application/json',
                     'Content-Type': 'application/json',
-                    'Authorization': 'Bearer ' + 'uuid',
                 },
                 body: JSON.stringify({
                     'examId': problemId})
@@ -140,7 +139,6 @@ export default function Test({problemId}) {
             headers: {
                 'Accept': 'application/json',
                 'Content-Type':'application/json',
-                'Authorization': 'Bearer ' + 'uuid',
             },
             body: JSON.stringify({
                 "userId": 1,
@@ -170,17 +168,20 @@ export default function Test({problemId}) {
             headers: {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json',
-                'Authorization': 'Bearer ' + 'uuid',
             },
             body: JSON.stringify({
                 "userId": 1,
                 "examId": problemId,
-                "code": code,
-                "cases": cases
+                "code": code
             })
         })
 
-        Router.push('/');
+        if(response.status === 200){
+            Router.push('/');
+        }
+        else{
+            console.log("Error");
+        }
     }
 
     const handleCodeChange = (newCode) => {
