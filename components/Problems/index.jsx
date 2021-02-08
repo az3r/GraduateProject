@@ -37,6 +37,7 @@ export default function Problems() {
     useEffect( async ( ) => {
 
         async function getProblems() {
+            setTimeout(function(){ console.log("Waiting 3s!"); }, 3000);
             const response = await fetch(URL.GetURL()+"get-all-test", {
                 method: 'GET',
                 headers: {

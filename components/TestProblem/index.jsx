@@ -94,6 +94,7 @@ export default function Test({problemId}) {
 
     useEffect(async () => {
         async function getProblemData() {
+            setTimeout(function(){ console.log("Waiting 3s!"); }, 3000);
             const response = await fetch(URL.GetURL()+"get-test", {
                 method: 'POST',
                 headers: {
