@@ -21,7 +21,7 @@
   <component name="ChangeListManager">
     <list default="true" id="73bd1854-2930-493b-bbd0-fb90442d9327" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/components/Problems/index.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/Problems/index.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/libs/firebase_server.js" beforeDir="false" afterPath="$PROJECT_DIR$/libs/firebase_server.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -47,6 +47,7 @@
     <property name="node.js.selected.package.eslint" value="(autodetect)" />
     <property name="node.js.selected.package.tslint" value="(autodetect)" />
     <property name="nodejs_package_manager_path" value="yarn" />
+    <property name="ts.external.directory.path" value="E:\JetBrains\WebStorm 2020.2.3\plugins\JavaScriptLanguage\jsLanguageServicesImpl\external" />
     <property name="vue.rearranger.settings.migration" value="true" />
   </component>
   <component name="RecentsManager">
@@ -98,7 +99,7 @@
       <workItem from="1612695129294" duration="2935000" />
       <workItem from="1612698438485" duration="3233000" />
       <workItem from="1612709698259" duration="8185000" />
-      <workItem from="1612754682119" duration="14887000" />
+      <workItem from="1612754682119" duration="16124000" />
     </task>
     <servers />
   </component>
@@ -127,10 +128,10 @@
       <screen x="0" y="0" width="1366" height="738" />
     </state>
     <state x="500" y="283" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2/0.0.1366.738/1366.0.1366.738@0.0.1366.738" timestamp="1612509227348" />
-    <state x="1756" y="102" width="585" height="534" key="find.popup" timestamp="1612632160254">
+    <state x="1756" y="102" width="630" height="534" key="find.popup" timestamp="1612773235568">
       <screen x="1366" y="0" width="1366" height="738" />
     </state>
-    <state x="1756" y="102" width="585" height="534" key="find.popup/0.0.1366.738/1366.0.1366.738@1366.0.1366.738" timestamp="1612632160254" />
+    <state x="1756" y="102" width="630" height="534" key="find.popup/0.0.1366.738/1366.0.1366.738@1366.0.1366.738" timestamp="1612773235568" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
