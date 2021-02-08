@@ -13,7 +13,7 @@ function TabPanel(props) {
     <div>
       {value === index && (
         <Paper style={{height: 160, overflow: 'auto'}}>
-          <Typography>{children}</Typography>
+          <pre>{children}</pre>
         </Paper>
       )}
     </div>
