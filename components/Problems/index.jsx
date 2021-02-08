@@ -37,11 +37,11 @@ export default function Problems() {
     useEffect( async ( ) => {
 
         async function getProblems() {
-            const response = await fetch(URL.GetURL() + 'get-all-test', {
+            const response = await fetch(URL.GetURL()+"get-all-test", {
                 method: 'GET',
                 headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': 'Bearer ' + 'uuid'
+                    'Accept': 'application/json',
+                    'Content-Type':'application/json'
                 },
             });
 

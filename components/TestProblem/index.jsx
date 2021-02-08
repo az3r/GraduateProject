@@ -94,11 +94,11 @@ export default function Test({problemId}) {
 
     useEffect(async () => {
         async function getProblemData() {
-            const response = await fetch(URL.GetURL() + 'get-test', {
+            const response = await fetch(URL.GetURL()+"get-test", {
                 method: 'POST',
                 headers: {
                     'Accept': 'application/json',
-                    'Content-Type': 'application/json',
+                    'Content-Type':'application/json'
                 },
                 body: JSON.stringify({
                     'examId': problemId})
@@ -134,11 +134,11 @@ export default function Test({problemId}) {
         setOpenConsole('visible');
 
 
-        const response = await fetch(URL.GetURL() + "test-exam",{
+        const response = await fetch(URL.GetURL()+"test-exam",{
             method: "POST",
             headers: {
                 'Accept': 'application/json',
-                'Content-Type':'application/json',
+                'Content-Type':'application/json'
             },
             body: JSON.stringify({
                 "userId": 1,
@@ -163,11 +163,11 @@ export default function Test({problemId}) {
     }
 
     const handleSubmit = async (e) => {
-        const response = await fetch(URL.GetURL() + "excute-test", {
+        const response = await fetch(URL.GetURL()+"excute-test", {
             method: "POST",
             headers: {
                 'Accept': 'application/json',
-                'Content-Type': 'application/json',
+                'Content-Type':'application/json'
             },
             body: JSON.stringify({
                 "userId": 1,
