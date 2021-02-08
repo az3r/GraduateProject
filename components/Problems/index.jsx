@@ -49,7 +49,7 @@ export default function Problems() {
             if (response.status === 200) {
                 setProblems(data);
             } else {
-                setProblems('');
+                setProblems([]);
             }
         }
 
