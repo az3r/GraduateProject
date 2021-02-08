@@ -34,7 +34,7 @@ export default function Problems() {
     const classes = useStyles();
     const [problems, setProblems] = useState([]);
 
-    useEffect( async ( ) => {
+    useEffect(  ( ) => {
 
         async function getProblems() {
             setTimeout(function(){ console.log("Waiting 3s!"); }, 3000);
@@ -54,7 +54,7 @@ export default function Problems() {
             }
         }
 
-        await getProblems();
+        getProblems();
     }, []);
 
 

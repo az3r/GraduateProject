@@ -92,9 +92,9 @@ export default function Test({problemId}) {
     const [openConsole, setOpenConsole] = useState('hidden');
 
 
-    useEffect(async () => {
+    useEffect( () => {
         async function getProblemData() {
-            setTimeout(function(){ console.log("Waiting 3s!"); }, 3000);
+            //setTimeout(function(){ console.log("Waiting 3s!"); }, 3000);
             const response = await fetch(URL.GetURL()+"get-test", {
                 method: 'POST',
                 headers: {
@@ -119,7 +119,7 @@ export default function Test({problemId}) {
             }
         }
 
-        await getProblemData();
+        getProblemData();
     }, []);
 
 
