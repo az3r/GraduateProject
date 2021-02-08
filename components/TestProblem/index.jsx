@@ -66,7 +66,7 @@ export default function Test({problemId}) {
     const [openConsole, setOpenConsole] = useState('hidden');
 
 
-    useEffect(() => {
+    useEffect(async () => {
         async function getProblemData() {
             const response = await fetch(URL.GetURL() + 'get-test', {
                 method: 'POST',
@@ -93,7 +93,7 @@ export default function Test({problemId}) {
             }
         }
 
-        getProblemData();
+        await getProblemData();
     }, []);
 
 

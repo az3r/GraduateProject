@@ -35,7 +35,7 @@ export default function Problems() {
     const classes = useStyles();
     const [problems, setProblems] = useState([]);
 
-    useEffect( ( ) => {
+    useEffect( async ( ) => {
 
         async function getProblems() {
             const response = await fetch(URL.GetURL() + 'get-all-test', {
@@ -54,7 +54,7 @@ export default function Problems() {
             }
         }
 
-        getProblems();
+        await getProblems();
     }, []);
 
 
