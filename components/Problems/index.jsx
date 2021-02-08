@@ -37,7 +37,7 @@ export default function Problems() {
     useEffect(  ( ) => {
 
         async function getProblems() {
-            const response = await fetch("/get-all-test", {
+            const response = await fetch("/api/get-all-test", {
                 method: 'GET',
                 headers: {
                     'Accept': 'application/json',
