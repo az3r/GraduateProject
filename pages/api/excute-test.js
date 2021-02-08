@@ -16,14 +16,13 @@ export default async function handler(req, res){
     const examData = await (await examRef.get()).data()
 
     const apiUrl = baseUrl + (examData.language == 'python' ? 'py3' : examData.language.toLowerCase())
-   
 
     if(!uuid)
     {
         res.status(401).json({'error': 'Unauthorized'})
-        return 
+        return
     }
-        
+
 
     const respone = await fetch(apiUrl, {
         method: 'POST',
@@ -50,7 +49,7 @@ export default async function handler(req, res){
         res.status(respone.status).json({message, comeFrom: 'compiler api'})
     }
     else if(respone.status == 200)
-    {      
+    {
         const result = respone.json()
         const historyData = createHistoryInstance(uuid, testId, result, codeContent)
         database.collection('History').set(historyData)
@@ -59,8 +58,8 @@ export default async function handler(req, res){
         }).then((error) => {
             res.status(200).json(result, {message: 'failed to log history to database', error: error})
         })
-    }       
+    }
     else
         res.status(500).json({'error': 'server error'})
-    
+
 }

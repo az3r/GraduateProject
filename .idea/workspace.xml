@@ -22,7 +22,11 @@
     <list default="true" id="73bd1854-2930-493b-bbd0-fb90442d9327" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/components/Problems/index.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/Problems/index.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/components/TestProblem/CodeEditor/index.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/TestProblem/CodeEditor/index.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/components/TestProblem/Console/index.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/TestProblem/Console/index.jsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/components/TestProblem/index.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/TestProblem/index.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/components/URL.js" beforeDir="false" afterPath="$PROJECT_DIR$/components/URL.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pages/api/excute-test.js" beforeDir="false" afterPath="$PROJECT_DIR$/pages/api/excute-test.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -51,13 +55,13 @@
     <property name="vue.rearranger.settings.migration" value="true" />
   </component>
   <component name="RecentsManager">
-    <key name="MoveFile.RECENT_KEYS">
-      <recent name="D:\OneDrive\Desktop\GraduateProject\Source\GraduateProject\libs\server" />
-      <recent name="D:\OneDrive\Desktop\GraduateProject\Source\GraduateProject\public" />
-    </key>
     <key name="CopyFile.RECENT_KEYS">
       <recent name="D:\OneDrive\Desktop\GraduateProject\Source\GraduateProject\public" />
       <recent name="D:\OneDrive\Desktop\GraduateProject\Source\GraduateProject\components\YourProgress\Images" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="D:\OneDrive\Desktop\GraduateProject\Source\GraduateProject\libs\server" />
+      <recent name="D:\OneDrive\Desktop\GraduateProject\Source\GraduateProject\public" />
     </key>
   </component>
   <component name="RunManager">
@@ -99,7 +103,7 @@
       <workItem from="1612695129294" duration="2935000" />
       <workItem from="1612698438485" duration="3233000" />
       <workItem from="1612709698259" duration="8185000" />
-      <workItem from="1612754682119" duration="337000" />
+      <workItem from="1612754682119" duration="8390000" />
     </task>
     <servers />
   </component>

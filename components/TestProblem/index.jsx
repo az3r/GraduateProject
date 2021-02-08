@@ -8,6 +8,7 @@ import Container from '@material-ui/core/Container';
 import Paper from '@material-ui/core/Paper';
 import CodeEditor from './CodeEditor';
 import URL from '../URL';
+import Router from 'next/router';
 
 
 const useStyles = makeStyles( {
@@ -48,20 +49,45 @@ const useStyles = makeStyles( {
     }
 });
 
+const codePattern = {
+    c_cpp:
+      `#include <stdio.h>
+int main()
+{
+    printf("Hello World");
+    return 0;
+}`,
+    csharp:
+      `using System;
+class HelloWorld {
+    static void Main() {
+        Console.WriteLine("Hello World");
+    }
+}`,
+    java:
+      `import java.util.Scanner;
+public class Program
+{
+    public static void main(String[] args) {
+        System.out.println("Hello World");
+    }
+}`,
+    python:
+      `print("Hello world!")`
+
+};
+
 export default function Test({problemId}) {
     const classes = useStyles();
 
-    console.log(problemId);
-    // const [problemData, setProblemData] = useState('');
-    const [title, setTitle] = useState(''); //
-    const [content, setContent] = useState(''); //
+
+    const [title, setTitle] = useState('');
+    const [content, setContent] = useState('');
     const [language, setLanguage] = useState('c_cpp');
     const [cases, setCases] = useState('cases');
-    const [difficulty, setDifficulty] = useState(1);   //
-    const [score, setScore] = useState(100); //
-
+    const [difficulty, setDifficulty] = useState(1);
+    const [score, setScore] = useState(100);
     const [code, setCode] = useState('');
-
     const [testCodeResult, setTestCodeResult] = useState('');
     const [openConsole, setOpenConsole] = useState('hidden');
 
@@ -85,9 +111,9 @@ export default function Test({problemId}) {
                 setContent(data.content);
                 setDifficulty(data.difficulty);
                 setScore(data.score);
-                setLanguage(data.language);
                 setCases(data.cases);
-                setCode(data.code);
+                setLanguage(data.language);
+                setCode(codePattern[data.language]);
             } else {
                 console.log("Error");
             }
@@ -96,10 +122,6 @@ export default function Test({problemId}) {
         await getProblemData();
     }, []);
 
-
-    const handleSubmitAddTest = (e) => {
-        e.preventDefault();
-    }
 
     const handleOpenConsoleChange = (e) => {
         if (openConsole == 'visible') {
@@ -111,6 +133,7 @@ export default function Test({problemId}) {
 
     const handleRunCode = async (e) => {
         setOpenConsole('visible');
+
 
         const response = await fetch(URL.GetURL() + "test-exam",{
             method: "POST",
@@ -128,9 +151,13 @@ export default function Test({problemId}) {
 
 
         const data = await response.json();
-        console.log(data);
         if(response.status === 200){
-            setTestCodeResult("Correct!");
+            if(data.failed == 0){
+                setTestCodeResult("Correct!");
+            }
+            else{
+                setTestCodeResult("Incorrect! \nTest Cases: \n" + JSON.stringify(cases));
+            }
         }
         else{
             setTestCodeResult(data.stderr);
@@ -138,11 +165,25 @@ export default function Test({problemId}) {
     }
 
     const handleSubmit = async (e) => {
+        const response = await fetch(URL.GetURL() + "excute-test", {
+            method: "POST",
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + 'uuid',
+            },
+            body: JSON.stringify({
+                "userId": 1,
+                "examId": problemId,
+                "code": code,
+                "cases": cases
+            })
+        })
 
+        Router.push('/');
     }
 
     const handleCodeChange = (newCode) => {
-        console.log(newCode);
         setCode(newCode);
     }
 

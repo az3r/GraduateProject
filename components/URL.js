@@ -1,6 +1,6 @@
 class URL{
     constructor(){
-        this.isDevelopment = false;
+        this.isDevelopment = true;
     }
 
     GetURL(){

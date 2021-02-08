@@ -13,7 +13,6 @@ import "ace-builds/src-noconflict/ext-language_tools";
 import "ace-builds/src-noconflict/theme-xcode";
 
 export default function CodeEditor({language,code, onCodeChange}){
-
   return (
     <>
       <AceEditor
