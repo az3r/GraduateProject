@@ -134,7 +134,7 @@ export default function Test({problemId}) {
         setOpenConsole('visible');
 
 
-        const response = await fetch(URL.GetURL()+"test-exam",{
+        const response = await fetch("/api/test-exam",{
             method: "POST",
             headers: {
                 'Accept': 'application/json',
@@ -166,7 +166,7 @@ export default function Test({problemId}) {
     const handleSubmit = async (e) => {
         console.log(problemId);
         console.log(code);
-        const response = await fetch(URL.GetURL()+"excute-test", {
+        const response = await fetch("/api/excute-test", {
             method: "POST",
             headers: {
                 'Accept': 'application/json',
