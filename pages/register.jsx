@@ -62,6 +62,7 @@ export default function Register() {
         <Button variant="contained" color="primary" type="submit" fullWidth>
           Register
         </Button>
+
         <Box
           className={styles.seperator}
           display="flex"
@@ -79,14 +80,14 @@ export default function Register() {
               Login to start now
             </Button>
           </Link>
-          <CircularProgress color="secondary" className={styles.seperator} />
+
         </Box>
       </Container>
     </form>
   );
   function onSubmit(e) {
     e.preventDefault();
-    console.log(e.target.value);
+
   }
 }
 
