@@ -1,7 +1,7 @@
 
 export default async function handler(req, res){
     const baseUrl = 'https://online-code-exercise.herokuapp.com/'
-    const apiUrl = baseUrl + (req.body.language == 'python' ? 'py3' : req.body.language.toLowerCase())
+    const apiUrl = baseUrl + (req.body.language === 'Python' ? 'py3' : req.body.language.toLowerCase())
 
     const userId = req.body.userId
 
@@ -11,9 +11,6 @@ export default async function handler(req, res){
         return
     }
 
-    //const a = req.body.cases.map(element => element)
-               
-   // res.status(200).json(a)
     
     const respone = await fetch(apiUrl, {
         method: 'POST',
@@ -27,9 +24,9 @@ export default async function handler(req, res){
         })
     })
    
-    if(respone.status == 401)
+    if(respone.status === 401)
         res.status(401).json({'error': 'Unauthorized'})
-    else if(respone.status == 400)
+    else if(respone.status === 400)
     {
         const message = await respone.json()
         res.status(500).json(message)
@@ -39,7 +36,7 @@ export default async function handler(req, res){
         const message = await respone.json()
         res.status(respone.status).json({message, comeFrom: 'compiler api'})
     }
-    else if(respone.status == 200)
+    else if(respone.status === 200)
             res.status(200).json(respone.result)
     else
         res.status(500).json({'error': 'server error'})
