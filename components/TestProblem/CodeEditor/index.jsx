@@ -1,25 +1,23 @@
 import React, { Component } from 'react';
-import AceEditor from "react-ace";
+import AceEditor from 'react-ace';
 
-import "ace-builds/src-noconflict/mode-java";
-import "ace-builds/src-noconflict/mode-csharp";
-import "ace-builds/src-noconflict/mode-python";
-import "ace-builds/src-noconflict/mode-c_cpp";
-import "ace-builds/src-noconflict/snippets/csharp";
-import "ace-builds/src-noconflict/snippets/python";
-import "ace-builds/src-noconflict/snippets/java";
-import "ace-builds/src-noconflict/snippets/c_cpp";
-import "ace-builds/src-noconflict/ext-language_tools";
-import "ace-builds/src-noconflict/theme-xcode";
+import 'ace-builds/src-noconflict/mode-java';
+import 'ace-builds/src-noconflict/mode-csharp';
+import 'ace-builds/src-noconflict/mode-python';
+import 'ace-builds/src-noconflict/mode-c_cpp';
+import 'ace-builds/src-noconflict/snippets/csharp';
+import 'ace-builds/src-noconflict/snippets/python';
+import 'ace-builds/src-noconflict/snippets/java';
+import 'ace-builds/src-noconflict/snippets/c_cpp';
+import 'ace-builds/src-noconflict/ext-language_tools';
+import 'ace-builds/src-noconflict/theme-xcode';
 
-export default function CodeEditor({language,code, onCodeChange}){
+export default function CodeEditor({ language, code, onCodeChange }) {
   return (
     <>
       <AceEditor
-        width={760}
-        height={510}
         placeholder="Write your code here..."
-        mode={language}
+        mode={language.toLowerCase()}
         theme="xcode"
         name="blah2"
         onChange={onCodeChange}
@@ -34,8 +32,8 @@ export default function CodeEditor({language,code, onCodeChange}){
           enableSnippets: true,
           showLineNumbers: true,
           tabSize: 2,
-        }}>
-      </AceEditor>
+        }}
+      ></AceEditor>
     </>
   );
 }
