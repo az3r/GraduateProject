@@ -19,7 +19,7 @@ const useStyles = makeStyles( {
         marginLeft: 10,
     },
     submitButton: {
-        color: 'white',
+        color: 'black',
         backgroundColor: 'green',
         float: 'right',
         marginRight: 10,
@@ -83,7 +83,7 @@ export default function Test({problemId}) {
 
     const [title, setTitle] = useState('');
     const [content, setContent] = useState('');
-    const [language, setLanguage] = useState('c_cpp');
+    const [language, setLanguage] = useState('Csharp');
     const [cases, setCases] = useState('cases');
     const [difficulty, setDifficulty] = useState(1);
     const [score, setScore] = useState(100);
@@ -186,7 +186,7 @@ export default function Test({problemId}) {
         }
         else{
             console.log("Error");
-            alert('API ERROR');
+            alert('ERROR');
         }
     }
 

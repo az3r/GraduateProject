@@ -21,16 +21,16 @@ export default function AddTestPage(props){
     const [testIntro,setTestIntro] = useState('');
     const [difficulty,setDifficulty] = useState(0);
     const [score,setScore] = useState(0);
-    const [language,setLanguage] = useState('c_cpp');
+    const [language,setLanguage] = useState('Csharp');
     const [code,setCode] = useState({
-    c_cpp: 
+    c_cpp:
 `#include <stdio.h>
 int main()
 {
     printf("Hello World");
     return 0;
 }`,
-    Csharp: 
+    Csharp:
 `using System;
 class HelloWorld {
     static void Main() {
@@ -47,7 +47,7 @@ public class Program
 }`,
     Python:
 `print("Hello world!")`
-        
+
     });
     const [input,setInput] = useState([]);
     const [output,setOutput] = useState([]);
@@ -96,7 +96,7 @@ public class Program
         let result = [];
         let arrayOfVariables = [];
         for(let i = 0 ; i < splitedText.length ; i++)
-        {   
+        {
             if(splitedText[i] !== "\n")
             {
                 arrayOfVariables = [...arrayOfVariables, splitedText[i]];
@@ -119,7 +119,7 @@ public class Program
         if(e.target.files[0] !== undefined)
         {
             const fileReader = new FileReader();
-            fileReader.onload = async (e) => { 
+            fileReader.onload = async (e) => {
                 const text = (e.target.result);
                 const testCases = getFormatResultFromFile(text);
                 setInput(testCases);
@@ -132,11 +132,11 @@ public class Program
         if(e.target.files[0] !== undefined)
         {
             const fileReader = new FileReader();
-            fileReader.onload = async (e) => { 
+            fileReader.onload = async (e) => {
                 const text = (e.target.result);
                 const expectedOutputs = getFormatResultFromFile(text);
                 setOutput(expectedOutputs);
-                
+
             };
             fileReader.readAsText(e.target.files[0])
         }
@@ -249,7 +249,7 @@ public class Program
                 setIsTestSuccess(false);
                 setTestReponse("Test failed! \nExpected output: " + data.results[0].expected + "\nActual: " + data.results[0].actual);
             }
-            
+
         }
         else
         {
@@ -275,13 +275,13 @@ public class Program
                     <CKEditor
                         editor={ ClassicEditor }
                         data=""
-                        onChange={handleChangeTestIntro}>    
+                        onChange={handleChangeTestIntro}>
                     </CKEditor>
                 </Box>
 
                 <Box boxShadow={1} p={2} m={3}>
                     <Typography variant={"h5"}>Choose level of difficulty: </Typography>
-                    <NativeSelect              
+                    <NativeSelect
                         inputProps={{ 'aria-label': 'age' }}
                         onChange={handleChangeDifficulty}>
                         <option value={0}>Easy</option>
@@ -297,7 +297,7 @@ public class Program
 
                 <Box boxShadow={1} p={2} m={3}>
                     <Typography variant={"h5"}>Choose programming language: </Typography>
-                    <NativeSelect              
+                    <NativeSelect
                         inputProps={{ 'aria-label': 'age' }}
                         onChange={handleChangeLanguague}>
                         {/* <option value={"c_cpp"}>C++</option> */}
@@ -310,10 +310,10 @@ public class Program
                 <Box boxShadow={1} p={2} m={3}>
                     <Grid container>
                         <Grid item lg={6}>
-                             
+
                             <Typography variant={"h5"}>Enter code: </Typography>
                             <CodeEditor language={language}  code={code[language]} onChange={handleOnChangeCode} ></CodeEditor>
-                        
+
                         </Grid>
                         <Grid item lg={6}>
                             <Typography variant="h5">Notes:</Typography>
@@ -332,24 +332,24 @@ public class Program
                                 </TextField>
                             </div>
                             <br></br>
-                            
+
                             <div>
                             <Button variant="primary" onClick={handleTestCode}>Test code</Button>
                             <SkewLoader color={"#088247"}  loading={isLoading} size={20} />
                             </div>
-                            <Typography className={isTestSuccess ? classes.textSuccess : classes.textFail}>{testResponse}</Typography> 
+                            <Typography className={isTestSuccess ? classes.textSuccess : classes.textFail}>{testResponse}</Typography>
                         </Grid>
                     </Grid>
-                </Box>      
+                </Box>
 
                 <Box boxShadow={1} p={2} m={3}>
                     <Typography variant={"h5"}>Submit input file: </Typography>
                     <input type="file" name="inputFile" onChange={handleChangeInputFile}></input>
-                </Box>  
+                </Box>
                 <Box boxShadow={1} p={2} m={3}>
                     <Typography variant={"h5"}>Submit expected output file: </Typography>
                     <input type="file" name="outputFile" onChange={handleChangeOutputFile}></input>
-                </Box>  
+                </Box>
 
                 <Box variant="contained" display="flex" justifyContent="center" p={2} m={3}>
                     <Typography  className={isAddSuccess ? classes.textSuccess : classes.textFail}>{message}</Typography>
@@ -357,9 +357,9 @@ public class Program
                 </Box>
 
                 <Box variant="contained" display="flex" justifyContent="center" boxShadow={1} p={2} m={3}>
-                    <Button color="primary" type="submit">Submit</Button>    
-                </Box>  
-            </form>   
+                    <Button color="primary" type="submit">Submit</Button>
+                </Box>
+            </form>
         </Box>
     );
 }

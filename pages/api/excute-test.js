@@ -41,7 +41,7 @@ export default async function handler(req, res) {
     res.status(500).json(message);
   } else if (respone.status !== 200) {
     const result = await respone.json();
-    res.status(respone.status).json({ message, comeFrom: 'compiler api' });
+    res.status(respone.status).json({ result, comeFrom: 'compiler api' });
   } else if (respone.status === 200) {
     try {
       const result = await respone.json();
