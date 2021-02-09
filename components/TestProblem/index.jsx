@@ -57,14 +57,14 @@ int main()
     printf("Hello World");
     return 0;
 }`,
-    csharp:
+    Csharp:
       `using System;
 class HelloWorld {
     static void Main() {
         Console.WriteLine("Hello World");
     }
 }`,
-    java:
+    Java:
       `import java.util.Scanner;
 public class Program
 {
@@ -72,7 +72,7 @@ public class Program
         System.out.println("Hello World");
     }
 }`,
-    python:
+    Python:
       `print("Hello world!")`
 
 };
