@@ -8,13 +8,12 @@ import {
   Typography,
 } from "@material-ui/core";
 import MenuIcon from "@material-ui/icons/Menu";
-import { useRouter } from "next/router";
+import Link from "next/link";
 
 function GuestAppBar() {
   const styles = useStyles();
-  const router = useRouter();
   return (
-    <AppBar position="static" className={styles.root}>
+    <AppBar position="static">
       <Toolbar>
         <IconButton className={styles.menu} edge="start" aria-label="menu">
           <MenuIcon />
@@ -22,30 +21,22 @@ function GuestAppBar() {
         <Typography className={styles.title} variant="h6">
           Home
         </Typography>
-        <Button className={styles.action} onClick={toLoginPage}>
-          Login
-        </Button>
-        <Button className={styles.action} onClick={toRegisterPage}>
-          Register
-        </Button>
+        <Link href="/login">
+          <Button className={styles.action} href="/login">
+            Login
+          </Button>
+        </Link>
+        <Link href="/register">
+          <Button className={styles.action} href="/register">
+            Register
+          </Button>
+        </Link>
       </Toolbar>
     </AppBar>
   );
-
-  function toLoginPage(e) {
-    e.preventDefault();
-    router.push("/login");
-  }
-  function toRegisterPage(e) {
-    e.preventDefault();
-    router.push("/register");
-  }
 }
 
 const useStyles = makeStyles((theme) => ({
-  root: {
-    flexGrow: 1,
-  },
   title: {
     flexGrow: 1,
   },
