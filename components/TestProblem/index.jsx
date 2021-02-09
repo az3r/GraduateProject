@@ -159,7 +159,7 @@ export default function Test({problemId}) {
             }
         }
         else{
-            setTestCodeResult(data.stderr);
+            setTestCodeResult('stdout: ' + data.stdout + '\n' + 'stderr: ' + data.stderr);
         }
     }
 
@@ -179,11 +179,14 @@ export default function Test({problemId}) {
             })
         })
 
+        // const data = await response.json();
+
         if(response.status === 200){
             Router.push('/');
         }
         else{
             console.log("Error");
+            alert('API ERROR');
         }
     }
 
