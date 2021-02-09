@@ -21,6 +21,8 @@
   <component name="ChangeListManager">
     <list default="true" id="73bd1854-2930-493b-bbd0-fb90442d9327" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/components/TestProblem/Problem/index.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/TestProblem/Problem/index.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/components/TestProblem/index.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/TestProblem/index.jsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/libs/firebase_server.js" beforeDir="false" afterPath="$PROJECT_DIR$/libs/firebase_server.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -99,7 +101,9 @@
       <workItem from="1612695129294" duration="2935000" />
       <workItem from="1612698438485" duration="3233000" />
       <workItem from="1612709698259" duration="8185000" />
-      <workItem from="1612754682119" duration="16124000" />
+      <workItem from="1612754682119" duration="16752000" />
+      <workItem from="1612798271355" duration="3045000" />
+      <workItem from="1612844825466" duration="4043000" />
     </task>
     <servers />
   </component>
@@ -132,15 +136,5 @@
       <screen x="1366" y="0" width="1366" height="738" />
     </state>
     <state x="1756" y="102" width="630" height="534" key="find.popup/0.0.1366.738/1366.0.1366.738@1366.0.1366.738" timestamp="1612773235568" />
-  </component>
-  <component name="XDebuggerManager">
-    <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" type="javascript">
-          <url>file://$PROJECT_DIR$/components/AddTest/index.jsx</url>
-          <option name="timeStamp" value="1" />
-        </line-breakpoint>
-      </breakpoints>
-    </breakpoint-manager>
   </component>
 </project>

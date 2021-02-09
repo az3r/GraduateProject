@@ -149,6 +149,7 @@ export default function Test({problemId}) {
 
 
         const data = await response.json();
+
         if(response.status === 200){
             if(data.failed == 0){
                 setTestCodeResult("Correct!");
@@ -163,11 +164,13 @@ export default function Test({problemId}) {
     }
 
     const handleSubmit = async (e) => {
+        console.log(problemId);
+        console.log(code);
         const response = await fetch(URL.GetURL()+"excute-test", {
             method: "POST",
             headers: {
                 'Accept': 'application/json',
-                'Content-Type':'application/json'
+                'Content-Type': 'application/json'
             },
             body: JSON.stringify({
                 "userId": 1,

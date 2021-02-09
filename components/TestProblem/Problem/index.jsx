@@ -8,7 +8,8 @@ import Typography from '@material-ui/core/Typography';
 import List from '@material-ui/core/List';
 import makeStyles from "@material-ui/core/styles/makeStyles";
 import Avatar from '@material-ui/core/Avatar';
-
+import { CKEditor } from '@ckeditor/ckeditor5-react'
+import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 
 
 function TabPanel(props) {
@@ -18,9 +19,9 @@ function TabPanel(props) {
     <div>
       {value === index && (
         <Paper style={{maxHeight: 1000, height: 510, overflow: 'auto'}}>
-          <pre>
+          <div>
             {children}
-          </pre>
+          </div>
         </Paper>
       )}
     </div>
@@ -57,6 +58,9 @@ const useStyles = makeStyles({
   }
 });
 
+const editorConfiguration = {
+  toolbar: [ ],
+};
 
 export default function Problem(props) {
   const classes = useStyles();
@@ -103,7 +107,11 @@ export default function Problem(props) {
           </Box>
         </div>
         <hr />
-        {props.content}
+        <CKEditor
+          editor={ ClassicEditor }
+          disabled={true}
+          config={ editorConfiguration }
+          data={props.content} />
       </TabPanel>
       <TabPanel value={value} index={1}>
         Item Two
