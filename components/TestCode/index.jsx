@@ -8,6 +8,7 @@ import Paper from '@material-ui/core/Paper';
 import CodeEditor from './CodeEditor';
 import Router from 'next/router';
 import SplitPane from 'react-split-pane';
+import ClipLoader from "react-spinners/ClipLoader";
 
 
 const useStyles = makeStyles( {
@@ -46,7 +47,7 @@ const useStyles = makeStyles( {
         position: 'absolute',
         top: -200,
         zIndex: 4,
-    }
+    },
 });
 
 
@@ -63,6 +64,8 @@ export default function Test({problemId}) {
     const [code, setCode] = useState('');
     const [testCodeResult, setTestCodeResult] = useState('');
     const [openConsole, setOpenConsole] = useState('hidden');
+
+    const [loading, setLoading] = useState(false);
 
 
     useEffect( () => {
@@ -104,6 +107,7 @@ export default function Test({problemId}) {
     }
 
     const handleRunCode = async (e) => {
+        setLoading(true);
         setOpenConsole('visible');
 
 
@@ -134,9 +138,11 @@ export default function Test({problemId}) {
         else{
             setTestCodeResult('stdout: ' + data.stdout + '\n' + 'stderr: ' + data.stderr);
         }
+        setLoading(false);
     }
 
     const handleSubmit = async (e) => {
+        setLoading(true);
         console.log(problemId);
         console.log(code);
         const response = await fetch("/api/excute-test", {
@@ -161,6 +167,7 @@ export default function Test({problemId}) {
             console.log("Error");
             alert('ERROR');
         }
+        setLoading(false);
     }
 
     const handleCodeChange = (newCode) => {
@@ -192,6 +199,7 @@ export default function Test({problemId}) {
                           </Box>
                           <Button size={'small'} onClick={handleOpenConsoleChange} variant="outlined"
                                               className={classes.consoleButton}>Console</Button>
+                          <ClipLoader color={"#088247"} loading={loading} size={25} />
                           <Button size={'small'} type="submit" variant="outlined" onClick={handleSubmit}
                                               className={classes.submitButton}>Submit</Button>
                           <Button size={'small'} type="submit" variant="outlined" onClick={handleRunCode}

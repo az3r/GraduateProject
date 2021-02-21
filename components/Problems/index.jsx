@@ -10,7 +10,7 @@ import Paper from '@material-ui/core/Paper';
 import Link from '@material-ui/core/Link';
 import Box from '@material-ui/core/Box';
 import Search from './Search/index';
-import URL from '../URL';
+import Pagination from '@material-ui/lab/Pagination';
 
 
 
@@ -26,6 +26,12 @@ const useStyles = makeStyles((theme) => ({
     },
     tableRow: {
         'hover': {color: '#7EA5FF'}
+    },
+    pagination: {
+        marginTop: 10,
+        marginBottom: 10,
+        display: 'flex',
+        float: 'right',
     }
 }));
 
@@ -93,6 +99,9 @@ export default function Problems() {
                     ))}
                 </TableBody>
             </Table>
+            <div className={classes.pagination}>
+                <Pagination count={10} variant="outlined" color="primary" />
+            </div>
         </TableContainer>
     );
 }
