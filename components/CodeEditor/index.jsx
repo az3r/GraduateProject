@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import AceEditor from "react-ace";
 
 import "ace-builds/src-noconflict/mode-java";
@@ -35,7 +35,7 @@ export default function CodeEditor({language,code,onChange}){
                     showLineNumbers: true,
                     tabSize: 2,
                 }}>
-            </AceEditor>   
-        </>          
+            </AceEditor>
+        </>
     );
 }

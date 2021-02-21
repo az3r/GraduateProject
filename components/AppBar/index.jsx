@@ -12,15 +12,15 @@ import { useRouter } from "next/router";
 
 const useStyles = makeStyles((theme) => ({
   root: {
-   // flexGrow: 1,
+    flexGrow: 1,
     backgroundColor: '#088247',
-    
+
   },
   title: {
     marginLeft: '50px',
     "&:hover": {
       cursor: 'pointer'
-    }
+    },
   },
   whiteColor: {
     color: "#ffffff"
@@ -47,9 +47,14 @@ export default function MyAppBar({isExaminer}) {
     router.push("/register");
   }
 
-  const toHomePage = (e) => {
+  const toProblemPage = (e) => {
     e.preventDefault();
     router.push("/")
+  }
+
+  const toExaminationPage = (e) => {
+    e.preventDefault();
+    router.push("/examination")
   }
 
   const toLecturerPage = (e) => {
@@ -63,12 +68,15 @@ export default function MyAppBar({isExaminer}) {
         <IconButton className={styles.whiteColor} edge="start" aria-label="menu">
           <Typography variant="h5">HCMUSCoder</Typography>
         </IconButton>
-        <Typography className={ isExaminer ? styles.title : [styles.title,styles.flexGrow].join(" ")} variant="h6" onClick={toHomePage}>
-          Home
+        <Typography className={ isExaminer ? styles.title : [styles.title,styles.flexGrow].join(" ")} variant="h6" onClick={toProblemPage}>
+          Problem
+        </Typography>
+        <Typography className={ isExaminer ? styles.title : [styles.title,styles.flexGrow].join(" ")} variant="h6" onClick={toExaminationPage}>
+          Examination
         </Typography>
         {
-          isExaminer?  
-          <Typography className={[styles.title,styles.flexGrow].join(" ")} variant="h6" onClick={toLecturerPage}>
+          isExaminer?
+          <Typography className={[styles.title, styles.flexGrow].join(" ")} variant="h6" onClick={toLecturerPage}>
             Examiner
           </Typography> : null
         }

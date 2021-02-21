@@ -1,17 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import Head from "next/head";
 import { makeStyles, Grid, Paper } from "@material-ui/core";
-import Layout from "../../components/Layout";
+import Layout from "../components/Layout";
 import dynamic from 'next/dynamic';
 
-
-const TestCode = dynamic(
+const TestMCQ = dynamic(
   () => {
-    return import('../../components/TestCode');
+    return import('../components/TestMCQ');
   },
   { ssr: false }
 );
-
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -35,18 +33,8 @@ export default function Test({problemId}) {
       </Head>
 
       <Layout>
-        <TestCode problemId={problemId}></TestCode>
+        <TestMCQ problemId={problemId}></TestMCQ>
       </Layout>
     </>
   );
-}
-
-
-
-export async function getServerSideProps({params}) {
-  return {
-    props: {
-      problemId: params.id
-    }
-  }
 }

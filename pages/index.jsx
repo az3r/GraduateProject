@@ -1,8 +1,6 @@
 import Head from "next/head";
 import { Grid } from "@material-ui/core";
 
-
-import TopScore from "../components/TopScore";
 import Problems from "../components/Problems";
 import YourProgress from "../components/YourProgress";
 import Layout from "../components/Layout";
@@ -28,11 +26,7 @@ export default function Home() {
                   direction="column"
                   alignItems="center"
                   justify="center">
-              {/*<Search />*/}
             </Grid>
-            {/*<Grid item xs={12} sm={3}>*/}
-            {/*  <TopScore />*/}
-            {/*</Grid>*/}
             <Grid item xs={8}>
               <Problems />
             </Grid>

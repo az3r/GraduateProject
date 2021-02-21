@@ -20,13 +20,36 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="73bd1854-2930-493b-bbd0-fb90442d9327" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/components/TestMCQ/Problem/index.jsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/components/TestMCQ/index.jsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/pages/examination/index.jsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/pages/mcq.jsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/styles/edit.css" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/components/URL.js" beforeDir="false" afterPath="$PROJECT_DIR$/components/URL.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/components/AppBar/index.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/AppBar/index.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/components/CodeEditor/index.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/CodeEditor/index.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/components/TestProblem/CodeEditor/index.jsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/components/TestProblem/Console/index.jsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/components/TestProblem/Problem/index.jsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/components/TestProblem/index.jsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pages/_app.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/pages/_app.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pages/index.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/pages/index.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pages/problem/[id].jsx" beforeDir="false" afterPath="$PROJECT_DIR$/pages/problem/[id].jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/yarn.lock" beforeDir="false" afterPath="$PROJECT_DIR$/yarn.lock" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="CSS File" />
+      </list>
+    </option>
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -40,6 +63,7 @@
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="list.type.of.created.stylesheet" value="CSS" />
     <property name="node.js.detected.package.eslint" value="true" />
     <property name="node.js.detected.package.tslint" value="true" />
     <property name="node.js.path.for.package.eslint" value="project" />
@@ -51,31 +75,20 @@
     <property name="vue.rearranger.settings.migration" value="true" />
   </component>
   <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="D:\OneDrive\Desktop\GraduateProject\Source\GraduateProject\styles" />
+      <recent name="D:\OneDrive\Desktop\GraduateProject\Source\GraduateProject\libs\server" />
+      <recent name="D:\OneDrive\Desktop\GraduateProject\Source\GraduateProject\public" />
+    </key>
     <key name="CopyFile.RECENT_KEYS">
       <recent name="D:\OneDrive\Desktop\GraduateProject\Source\GraduateProject\public" />
       <recent name="D:\OneDrive\Desktop\GraduateProject\Source\GraduateProject\components\YourProgress\Images" />
     </key>
-    <key name="MoveFile.RECENT_KEYS">
-      <recent name="D:\OneDrive\Desktop\GraduateProject\Source\GraduateProject\libs\server" />
-      <recent name="D:\OneDrive\Desktop\GraduateProject\Source\GraduateProject\public" />
-    </key>
   </component>
   <component name="RunManager">
-    <configuration name="build" type="js.build_tools.npm" temporary="true" nameIsGenerated="true">
-      <package-json value="$PROJECT_DIR$/package.json" />
-      <command value="run" />
-      <scripts>
-        <script value="build" />
-      </scripts>
-      <node-interpreter value="project" />
-      <envs />
+    <configuration default="true" type="JavascriptDebugType" uri="http://127.0.0.1:3000/">
       <method v="2" />
     </configuration>
-    <recent_temporary>
-      <list>
-        <item itemvalue="npm.build" />
-      </list>
-    </recent_temporary>
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
@@ -103,6 +116,9 @@
       <workItem from="1612798271355" duration="3045000" />
       <workItem from="1612844825466" duration="9292000" />
       <workItem from="1612866263715" duration="5923000" />
+      <workItem from="1613797588692" duration="14279000" />
+      <workItem from="1613837237006" duration="6836000" />
+      <workItem from="1613881015481" duration="8678000" />
     </task>
     <servers />
   </component>
@@ -122,6 +138,10 @@
     <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="WindowStateProjectService">
+    <state x="1503" y="0" width="1092" height="738" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1613881740621">
+      <screen x="1366" y="0" width="1366" height="738" />
+    </state>
+    <state x="1503" y="0" width="1092" height="738" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.0.1366.738/1366.0.1366.738@1366.0.1366.738" timestamp="1613881740621" />
     <state x="1829" y="124" key="FileChooserDialogImpl" timestamp="1612698749575">
       <screen x="1366" y="0" width="1366" height="738" />
     </state>
