@@ -51,7 +51,7 @@ const useStyles = makeStyles( {
 });
 
 
-export default function Test({problemId}) {
+export default function Test({problemId, nextProblem}) {
     const classes = useStyles();
 
 
@@ -142,32 +142,37 @@ export default function Test({problemId}) {
     }
 
     const handleSubmit = async (e) => {
-        setLoading(true);
-        console.log(problemId);
-        console.log(code);
-        const response = await fetch("/api/excute-test", {
-            method: "POST",
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                "userId": 1,
-                "examId": problemId,
-                "code": code
-            })
-        })
-
-        // const data = await response.json();
-
-        if(response.status === 200){
-            Router.push('/');
+        if(nextProblem){
+            nextProblem();
         }
         else{
-            console.log("Error");
-            alert('ERROR');
+            setLoading(true);
+            console.log(problemId);
+            console.log(code);
+            const response = await fetch("/api/excute-test", {
+                method: "POST",
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    "userId": 1,
+                    "examId": problemId,
+                    "code": code
+                })
+            })
+
+            // const data = await response.json();
+
+            if(response.status === 200){
+                Router.push('/');
+            }
+            else{
+                console.log("Error");
+                alert('ERROR');
+            }
+            setLoading(false);
         }
-        setLoading(false);
     }
 
     const handleCodeChange = (newCode) => {

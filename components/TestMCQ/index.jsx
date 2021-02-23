@@ -31,7 +31,7 @@ const useStyles = makeStyles( {
 });
 
 
-export default function Test({problemId}) {
+export default function Test({problemId, nextProblem}) {
   const classes = useStyles();
 
 
@@ -43,7 +43,8 @@ export default function Test({problemId}) {
 
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
+    // e.preventDefault();
+    nextProblem();
   }
 
   return (
