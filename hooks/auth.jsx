@@ -1,8 +1,8 @@
-import * as React from "react";
-import FirebaseAuth from "../libs/firebase_client";
+import * as React from 'react';
+import { FirebaseAuth } from '../libs/firebase_client';
 const authContext = React.createContext(null);
 
-export default function AuthProvider({children}) {
+export default function AuthProvider({ children }) {
   const [user, setUser] = React.useState(null);
   FirebaseAuth().onAuthStateChanged((user) => {
     setUser(user);

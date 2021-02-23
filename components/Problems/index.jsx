@@ -12,96 +12,118 @@ import Box from '@material-ui/core/Box';
 import Search from './Search/index';
 import Pagination from '@material-ui/lab/Pagination';
 
-
-
 const useStyles = makeStyles((theme) => ({
-    table: {
-        minWidth: 650,
-    },
-    link: {
-        color: 'green',
-    },
-    box: {
-        color: 'white',
-    },
-    tableRow: {
-        'hover': {color: '#7EA5FF'}
-    },
-    pagination: {
-        marginTop: 10,
-        marginBottom: 10,
-        display: 'flex',
-        float: 'right',
-    }
+  table: {
+    minWidth: 650,
+  },
+  link: {
+    color: 'green',
+  },
+  box: {
+    color: 'white',
+  },
+  tableRow: {
+    hover: { color: '#7EA5FF' },
+  },
+  pagination: {
+    marginTop: 10,
+    marginBottom: 10,
+    display: 'flex',
+    float: 'right',
+  },
 }));
 
-
 export default function Problems() {
-    const classes = useStyles();
-    const [problems, setProblems] = useState([]);
+  const classes = useStyles();
+  const [problems, setProblems] = useState([]);
 
-    useEffect(  ( ) => {
+  useEffect(() => {
+    async function getProblems() {
+      const response = await fetch('/api/get-all-test', {
+        method: 'GET',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+        },
+      });
 
-        async function getProblems() {
-            const response = await fetch("/api/get-all-test", {
-                method: 'GET',
-                headers: {
-                    'Accept': 'application/json',
-                    'Content-Type':'application/json'
-                },
-            });
+      const data = await response.json();
+      if (response.status === 200) {
+        setProblems(data);
+      } else {
+        setProblems([]);
+      }
+    }
 
-            const data = await response.json()
-            if (response.status === 200) {
-                setProblems(data);
-            } else {
-                setProblems([]);
-            }
-        }
+    getProblems();
+  }, []);
 
-        getProblems();
-    }, []);
-
-
-    return (
-        <TableContainer component={Paper}>
-            <Search />
-            <Table className={classes.table} size="small" aria-label="a dense table">
-                <TableHead>
-                    <TableRow>
-                        <TableCell>#</TableCell>
-                        <TableCell>Title</TableCell>
-                        <TableCell>Difficulty</TableCell>
-                        <TableCell>Language</TableCell>
-                        <TableCell>Score</TableCell>
-                    </TableRow>
-                </TableHead>
-                <TableBody>
-                    {problems.map((problem, index) => (
-                            <TableRow key={problems.id} className={classes.tableRow} hover style={index % 2? { background : 'rgb(250, 250, 250)' }:{ background : "white"}}>
-                                <TableCell>{index}</TableCell>
-                                <TableCell component="th" scope="row">
-                                    <Link href={`/problem/${problem.id}`} underline={'none'} className={classes.link}>{problem.data.title}</Link>
-                                </TableCell>
-                                <TableCell>
-                                    <Box component="span" display="inline" p={'4px'}   borderRadius={16} className={classes.box}
-                                         bgcolor={ problem.data.difficulty == 0 ? "green" : problem.data.difficulty == 1 ? "orange" : "red"}>
-                                        {
-                                            problem.data.difficulty == 0 ? "Easy" : problem.data.difficulty == 1 ? "Medium" : "Hard"
-                                        }
-                                    </Box>
-                                </TableCell>
-                                <TableCell>
-                                    {problem.data.language}
-                                </TableCell>
-                                <TableCell>{problem.data.score}</TableCell>
-                            </TableRow>
-                    ))}
-                </TableBody>
-            </Table>
-            <div className={classes.pagination}>
-                <Pagination count={10} variant="outlined" color="primary" />
-            </div>
-        </TableContainer>
-    );
+  return (
+    <TableContainer component={Paper}>
+      <Search />
+      <Table className={classes.table} size="small" aria-label="a dense table">
+        <TableHead>
+          <TableRow>
+            <TableCell>#</TableCell>
+            <TableCell>Title</TableCell>
+            <TableCell>Difficulty</TableCell>
+            <TableCell>Language</TableCell>
+            <TableCell>Score</TableCell>
+          </TableRow>
+        </TableHead>
+        <TableBody>
+          {problems.map((problem, index) => (
+            <TableRow
+              key={problems.id}
+              className={classes.tableRow}
+              hover
+              style={
+                index % 2
+                  ? { background: 'rgb(250, 250, 250)' }
+                  : { background: 'white' }
+              }
+            >
+              <TableCell>{index}</TableCell>
+              <TableCell component="th" scope="row">
+                <Link
+                  href={`/problem/${problem.id}`}
+                  underline={'none'}
+                  className={classes.link}
+                >
+                  {problem.data.title}
+                </Link>
+              </TableCell>
+              <TableCell>
+                <Box
+                  component="span"
+                  display="inline"
+                  p={'4px'}
+                  borderRadius={16}
+                  className={classes.box}
+                  bgcolor={
+                    problem.data.difficulty == 0
+                      ? 'green'
+                      : problem.data.difficulty == 1
+                      ? 'orange'
+                      : 'red'
+                  }
+                >
+                  {problem.data.difficulty == 0
+                    ? 'Easy'
+                    : problem.data.difficulty == 1
+                    ? 'Medium'
+                    : 'Hard'}
+                </Box>
+              </TableCell>
+              <TableCell>{problem.data.language}</TableCell>
+              <TableCell>{problem.data.score}</TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
+      <div className={classes.pagination}>
+        <Pagination count={10} variant="outlined" color="primary" />
+      </div>
+    </TableContainer>
+  );
 }

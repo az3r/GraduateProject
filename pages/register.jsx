@@ -1,109 +1,123 @@
-import * as React from "react";
 import {
-  Button,
-  Typography,
-  Container,
-  TextField,
-  makeStyles,
-  Link as MaterialLink,
   Box,
-  CircularProgress,
-} from "@material-ui/core";
-import Head from "next/head";
-import Link from "next/link";
+  Button,
+  Container,
+  makeStyles,
+  Step,
+  StepContent,
+  StepLabel,
+  Stepper,
+} from '@material-ui/core';
+import Head from 'next/head';
+import * as React from 'react';
+import {
+  DeveloperRegister,
+  SelectAccount,
+  CompanyRegister,
+} from '../components/Register';
+import VerifyEmail from '../components/Register/VerifyEmail';
+
 export default function Register() {
   const styles = useStyles();
+  const [step, setStep] = React.useState(steps.length - 1);
+  const accountTypeRef = React.useRef('developer');
+
   return (
-    <form className={styles.root} onSubmit={onSubmit}>
+    <>
       <Head>
         <title>Register</title>
         <meta property="og-title" content="Register" />
       </Head>
-      <Typography variant="h4" align="center">
-        Register a new account
-      </Typography>
-      <Container maxWidth="sm" className={styles.form}>
-        <TextField
-          id="email"
-          fullWidth
-          type="email"
-          className={styles.field}
-          label="Email"
-          variant="filled"
-          required
-        />
-        <TextField
-          id="username"
-          fullWidth
-          type="text"
-          className={styles.field}
-          label="Username"
-          variant="filled"
-          required
-        />
-        <TextField
-          id="password"
-          fullWidth
-          type="password"
-          className={styles.field}
-          label="Password"
-          variant="filled"
-          required
-        />
-        <TextField
-          id="confirm-password"
-          fullWidth
-          type="password"
-          className={styles.field}
-          label="Confirm Password"
-          variant="filled"
-          required
-        />
-        <Button variant="contained" color="primary" type="submit" fullWidth>
-          Register
-        </Button>
-
-        <Box
-          className={styles.seperator}
-          display="flex"
-          flexDirection="column"
-          alignItems="center"
+      <Container className={styles.root}>
+        <Stepper
+          activeStep={step}
+          className={styles.header}
+          title="Register account"
         >
-          <Typography align="center">Already have an account?</Typography>
-          <Link href="/login">
-            <Button
-              className={styles.seperator}
-              fullWidth
-              variant="contained"
-              href="/login"
-            >
-              Login to start now
-            </Button>
-          </Link>
-
+          {steps.map(({ label }, index) => {
+            return (
+              <Step key={label}>
+                <StepLabel>{label}</StepLabel>
+                {step > 0 ? (
+                  <StepContent>
+                    {index === steps.length - 1 ? (
+                      <Button
+                        variant="contained"
+                        color="primary"
+                        onClick={() => setStep(index - 1)}
+                      >
+                        Skip
+                      </Button>
+                    ) : (
+                      <Button
+                        color="primary"
+                        onClick={() => setStep(index - 1)}
+                      >
+                        Back
+                      </Button>
+                    )}
+                  </StepContent>
+                ) : null}
+              </Step>
+            );
+          })}
+        </Stepper>
+        <Box className={styles.content}>
+          <StepComponent index={step} />
         </Box>
       </Container>
-    </form>
+    </>
   );
-  function onSubmit(e) {
-    e.preventDefault();
 
+  function StepComponent({ index }) {
+    switch (index) {
+      case 1:
+        return accountTypeRef.current === 'company' ? (
+          <CompanyRegister onSubmitted={onSubmitted} />
+        ) : (
+          <DeveloperRegister onSubmitted={onSubmitted} />
+        );
+      case 2:
+        return <VerifyEmail />;
+      default:
+        return <SelectAccount onSelected={onSelected} />;
+    }
+
+    function onSubmitted(form) {
+      const data = new FormData(form);
+      console.log(data.get('email'));
+      setStep(step + 1);
+    }
+
+    function onSelected(type) {
+      if (type === 'developer') {
+        // do something for developer
+      } else {
+        // do something for company
+      }
+      accountTypeRef.current = type || 'developer';
+      setStep(step + 1);
+    }
   }
 }
 
+const steps = [
+  { label: 'Select your account type', optional: false },
+  { label: 'Create your new account', optional: false },
+  { label: 'Verify your email', optional: true },
+];
 const useStyles = makeStyles((theme) => ({
   root: {
-    paddingTop: theme.spacing(6),
+    height: '100vh',
+    display: 'flex',
+    flexDirection: 'column',
   },
-  form: {
-    alignItems: "center",
+  header: {
+    flex: 1,
   },
-  field: {
-    marginTop: theme.spacing(3),
-    marginBottom: theme.spacing(3),
-    display: "block",
-  },
-  seperator: {
-    marginTop: theme.spacing(2),
+  content: {
+    flex: 10,
+    paddingTop: theme.spacing(1),
+    paddingBottom: theme.spacing(1),
   },
 }));

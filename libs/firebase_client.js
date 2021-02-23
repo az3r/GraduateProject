@@ -1,5 +1,5 @@
-import firebase from "firebase/app";
-import "firebase/auth";
+import firebase from 'firebase/app';
+import 'firebase/auth';
 
 // initialize firebase app for browser
 if (firebase.apps.length === 0) {
@@ -14,22 +14,22 @@ if (firebase.apps.length === 0) {
 }
 const FirebaseAuth = firebase.auth;
 
-async function register({username, email, password}) {
+async function register({ username, email, password }) {
   if (validate(email)) {
     try {
       const auth = FirebaseAuth();
       const creds = await auth.createUserWithEmailAndPassword(email, password);
       await creds.user.updateProfile({
         displayName: username,
-        photoURL: "./avatar.jpeg", // TODO: find a default avatar for new user
+        photoURL: './avatar.jpeg', // TODO: find a default avatar for new user
       });
     } catch (error) {
       console.log(error);
       throw error;
     }
   } else {
-    throw {error: "Email is invalid"};
+    throw { error: 'Email is invalid' };
   }
 }
 
-export default FirebaseAuth;
+export { FirebaseAuth };
