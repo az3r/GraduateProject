@@ -14,6 +14,7 @@ import {
   Typography,
   Popper,
   Link as MaterialLink,
+  Box,
 } from '@material-ui/core';
 import MenuIcon from '@material-ui/icons/Menu';
 import Link from 'next/link';
@@ -27,13 +28,32 @@ function MemberAppBar() {
 
   return (
     <AppBar position="static">
-      <Toolbar>
-        <IconButton className={styles.menu} edge="start" aria-label="menu">
+      <Toolbar className={styles.menu}>
+        <IconButton className={styles.menuItem} edge="start" aria-label="menu">
           <MenuIcon />
         </IconButton>
-        <Typography className={styles.title} variant="h6">
-          Smart Coder
-        </Typography>
+        <Link href="/">
+          <MenuItem>
+            <MaterialLink href="/" color="inherit" underline="none">
+              <Typography variant="h6">Problems</Typography>
+            </MaterialLink>
+          </MenuItem>
+        </Link>
+        <Link href="/examination">
+          <MenuItem>
+            <MaterialLink href="/examination" color="inherit" underline="none">
+              <Typography variant="h6">Examination</Typography>
+            </MaterialLink>
+          </MenuItem>
+        </Link>
+        <Link href="/examiner">
+          <MenuItem>
+            <MaterialLink href="/examiner" color="inherit" underline="none">
+              <Typography variant="h6">Examiner</Typography>
+            </MaterialLink>
+          </MenuItem>
+        </Link>
+        <Box flexGrow={1} />
         <IconButton onClick={() => setOpen(!open)} ref={anchorRef}>
           <Avatar src="https://picsum.photos/200" />
         </IconButton>
@@ -96,10 +116,15 @@ function CompanyActions() {
 }
 
 const useStyles = makeStyles((theme) => ({
-  title: {
+  grow: {
     flexGrow: 1,
   },
   menu: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  menuItem: {
     marginRight: theme.spacing(2),
     color: theme.palette.primary.contrastText,
   },
