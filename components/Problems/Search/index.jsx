@@ -1,9 +1,12 @@
 import React from 'react';
-import { makeStyles } from '@material-ui/core/styles';
-import Paper from '@material-ui/core/Paper';
-import Input from '@material-ui/core/Input';
-import { FormControl, MenuItem, Select } from '@material-ui/core';
-import OutlinedInput from '@material-ui/core/OutlinedInput';
+import {
+  makeStyles,
+  FormControl,
+  MenuItem,
+  Select,
+  OutlinedInput
+} from '@material-ui/core';
+
 
 const useStyles = makeStyles((theme) => ({
   outlinedInput: {
@@ -19,19 +22,13 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function Search() {
+export default function Search({search, handleSearchChange, handleSearchKeyPress, difficulty, handleDifficultyChange, language, handleLanguageChange}) {
   const classes = useStyles();
-
-  const [difficulty, setDifficulty] = React.useState('easy');
-  const [domain, setDomain] = React.useState('csharp');
 
   return (
     <div>
       <FormControl>
-        <OutlinedInput
-          className={classes.outlinedInput}
-          placeholder={'Search...'}
-        />
+        <OutlinedInput value={search} onChange={handleSearchChange} onKeyPress={handleSearchKeyPress}  className={classes.outlinedInput} placeholder={'Search...'} />
       </FormControl>
 
       <FormControl>
@@ -39,8 +36,9 @@ export default function Search() {
           value={difficulty}
           displayEmpty
           className={classes.select}
-          onChange={(e) => setDifficulty(e.target.value)}
+          onChange={handleDifficultyChange}
         >
+          <MenuItem value={'all'}>All Difficulty</MenuItem>
           <MenuItem value={'easy'}>Easy</MenuItem>
           <MenuItem value={'medium'}>Medium</MenuItem>
           <MenuItem value={'hard'}>Hard</MenuItem>
@@ -49,11 +47,12 @@ export default function Search() {
 
       <FormControl>
         <Select
-          value={domain}
+          value={language}
           displayEmpty
           className={classes.select}
-          onChange={(e) => setDomain(e.target.value)}
+          onChange={handleLanguageChange}
         >
+          <MenuItem value={'all'}>All Language</MenuItem>
           <MenuItem value={'csharp'}>C#</MenuItem>
           <MenuItem value={'java'}>Java</MenuItem>
           <MenuItem value={'javascript'}>Javascript</MenuItem>
@@ -61,5 +60,5 @@ export default function Search() {
         </Select>
       </FormControl>
     </div>
-  );
+  )
 }
