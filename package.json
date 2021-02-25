@@ -27,5 +27,18 @@
     "react-split-pane": "^0.1.92",
     "react-tabs": "^3.2.0",
     "recharts": "^2.0.4"
+  },
+  "devDependencies": {
+    "eslint": "^7.20.0",
+    "prettier": "^2.2.1"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "*.js": "eslint --cache --fix",
+    "*.{js,css,md}": "prettier --write"
   }
 }
