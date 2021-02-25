@@ -17,7 +17,7 @@ export default function Layout(props) {
 
   return (
     <>
-      <MemberAppBar />
+      <GuestAppBar />
       <div className={classes.root}>{props.children}</div>
     </>
   );

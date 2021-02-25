@@ -1,53 +1,166 @@
 import React from 'react';
-import { Box, Button, makeStyles, Typography } from '@material-ui/core';
+import {
+  Avatar,
+  Button,
+  Container,
+  Grid,
+  makeStyles,
+  TextField,
+  Typography,
+} from '@material-ui/core';
 import Head from 'next/head';
-import Link from 'next/link';
+import clsx from 'clsx';
 import { useRouter } from 'next/router';
-import StyledFirebaseAuth from 'react-firebaseui/StyledFirebaseAuth';
-import { FirebaseAuth } from '../libs/firebase_client';
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    display: 'flex',
-    flexDirection: 'column',
-    alignContent: 'center',
-    alignItems: 'center',
-    padding: theme.spacing(2),
+    [theme.breakpoints.up('xs')]: {
+      padding: theme.spacing(5),
+      width: 512,
+    },
+    [theme.breakpoints.down('xs')]: {
+      padding: theme.spacing(2),
+      width: '100%',
+    },
+  },
+  login: {
+    paddingTop: theme.spacing(4),
+    paddingBottom: theme.spacing(4),
+  },
+  logo: {
+    width: 32,
+    height: 32,
+  },
+  noTransform: {
+    textTransform: 'none',
+  },
+  google: {
+    backgroundColor: 'white',
+    '&:hover': {
+      backgroundColor: '#f5f5f5',
+    },
+  },
+  github: {
+    backgroundColor: '#212121',
+    '&:hover': {
+      backgroundColor: 'black',
+    },
+  },
+  facebook: {
+    color: theme.palette.background,
+    backgroundColor: '#4267b2',
+    '&:hover': {
+      backgroundColor: '#003d82',
+    },
   },
 }));
 export default function Login() {
   const router = useRouter();
-  const config = {
-    callbacks: {
-      signInSuccessWithAuthResult() {
-        router.push('/');
-        return false;
-      },
-    },
-    signInFlow: 'popup',
-    signInOptions: [
-      FirebaseAuth.GoogleAuthProvider.PROVIDER_ID,
-      FirebaseAuth.FacebookAuthProvider.PROVIDER_ID,
-      FirebaseAuth.GithubAuthProvider.PROVIDER_ID,
-    ],
-  };
   const styles = useStyles();
   return (
-    <Box className={styles.root}>
+    <Container className={styles.root}>
       <Head>
         <title>Login</title>
         <meta property="og-title" content="Login" />
       </Head>
-      <Typography align="center" variant="h4">
-        Sign into your account
+      <Typography variant="h2" align="center">
+        <b>Smart Coder</b>
       </Typography>
-      <StyledFirebaseAuth uiConfig={config} firebaseAuth={FirebaseAuth()} />
-      <Typography align="center">Does not have an account?</Typography>
-      <Link href="/register">
-        <Button variant="text" href="/register">
-          Register now!
-        </Button>
-      </Link>
-    </Box>
+      <Grid className={styles.login} spacing={3} container direction="column">
+        <Grid item>
+          <Typography align="center" variant="h4">
+            Sign into Smart Coder
+          </Typography>
+        </Grid>
+        <Grid item>
+          <TextField
+            variant="filled"
+            label="Username"
+            fullWidth
+            name="username"
+          />
+        </Grid>
+        <Grid item>
+          <TextField
+            variant="filled"
+            label="Password"
+            fullWidth
+            name="password"
+          />
+        </Grid>
+        <Grid item>
+          <Button variant="contained" color="primary" fullWidth>
+            Sign in
+          </Button>
+        </Grid>
+        <Grid item>
+          <Typography align="center">
+            Or choose one of these methods:
+          </Typography>
+        </Grid>
+        <Grid container item direction="column" spacing={2} justify="center">
+          <Grid item>
+            <Button
+              className={clsx(styles.noTransform, styles.google)}
+              variant="contained"
+              fullWidth
+              startIcon={
+                <Avatar
+                  className={styles.logo}
+                  alt="Google's logo"
+                  src="/logo_google.webp"
+                />
+              }
+            >
+              Sign in with Google
+            </Button>
+          </Grid>
+          <Grid item>
+            <Button
+              className={clsx(styles.noTransform, styles.facebook)}
+              variant="contained"
+              color="primary"
+              fullWidth
+              startIcon={
+                <Avatar
+                  className={styles.logo}
+                  alt="Facebook's logo"
+                  src="/logo_facebook.webp"
+                />
+              }
+            >
+              Sign in with Facebook
+            </Button>
+          </Grid>
+          <Grid item>
+            <Button
+              className={clsx(styles.noTransform, styles.github)}
+              variant="contained"
+              color="primary"
+              fullWidth
+              startIcon={
+                <Avatar
+                  className={styles.logo}
+                  alt="Github's logo"
+                  src="/logo_github.webp"
+                />
+              }
+            >
+              Sign in with Github
+            </Button>
+          </Grid>
+        </Grid>
+        <Grid container item direction="column" spacing={1} justify="center">
+          <Grid item>
+            <Typography align="center">Does not have an account?</Typography>
+          </Grid>
+          <Grid item>
+            <Button variant="contained" color="secondary" fullWidth>
+              Register now!
+            </Button>
+          </Grid>
+        </Grid>
+      </Grid>
+    </Container>
   );
 }
