@@ -15,8 +15,17 @@ const data = [
 const renderActiveShape = (props) => {
   const RADIAN = Math.PI / 180;
   const {
-    cx, cy, midAngle, innerRadius, outerRadius, startAngle, endAngle,
-    fill, payload, percent, value,
+    cx,
+    cy,
+    midAngle,
+    innerRadius,
+    outerRadius,
+    startAngle,
+    endAngle,
+    fill,
+    payload,
+    percent,
+    value,
   } = props;
   const sin = Math.sin(-RADIAN * midAngle);
   const cos = Math.cos(-RADIAN * midAngle);
@@ -30,7 +39,9 @@ const renderActiveShape = (props) => {
 
   return (
     <g>
-      <text x={cx} y={cy} dy={8} textAnchor="middle" fill={fill}>{payload.name}</text>
+      <text x={cx} y={cy} dy={8} textAnchor="middle" fill={fill}>
+        {payload.name}
+      </text>
       <Sector
         cx={cx}
         cy={cy}
@@ -49,10 +60,25 @@ const renderActiveShape = (props) => {
         outerRadius={outerRadius + 10}
         fill={fill}
       />
-      <path d={`M${sx},${sy}L${mx},${my}L${ex},${ey}`} stroke={fill} fill="none" />
+      <path
+        d={`M${sx},${sy}L${mx},${my}L${ex},${ey}`}
+        stroke={fill}
+        fill="none"
+      />
       <circle cx={ex} cy={ey} r={2} fill={fill} stroke="none" />
-      <text x={ex + (cos >= 0 ? 1 : -1) * 12} y={ey} textAnchor={textAnchor} fill="#333">{`PV ${value}`}</text>
-      <text x={ex + (cos >= 0 ? 1 : -1) * 12} y={ey} dy={18} textAnchor={textAnchor} fill="#999">
+      <text
+        x={ex + (cos >= 0 ? 1 : -1) * 12}
+        y={ey}
+        textAnchor={textAnchor}
+        fill="#333"
+      >{`PV ${value}`}</text>
+      <text
+        x={ex + (cos >= 0 ? 1 : -1) * 12}
+        y={ey}
+        dy={18}
+        textAnchor={textAnchor}
+        fill="#999"
+      >
         {`(Rate ${(percent * 100).toFixed(2)}%)`}
       </text>
     </g>
@@ -72,7 +98,7 @@ const useStyles = makeStyles((theme) => ({
   },
   captionItem: {
     textAlign: 'center',
-    fontWeight: 'bold'
+    fontWeight: 'bold',
   },
   settings: {
     height: 25,
@@ -100,61 +126,63 @@ export default function YourProgress() {
   //   this.setActiveIndex(index);
   // };
 
-    return (
-      <Paper>
-        <div className={classes.root}>
-          <Avatar  alt="Your Progress" src={'/increase_100px.png'}/>
-          <Typography className={classes.progress} variant="h5" gutterBottom>
-            Your Progress
-          </Typography>
-          <Avatar  alt="Settings" className={classes.settings} src={'/settings_24px.png'}/>
+  return (
+    <Paper>
+      <div className={classes.root}>
+        <Avatar alt="Your Progress" src={'/increase_100px.png'} />
+        <Typography className={classes.progress} variant="h5" gutterBottom>
+          Your Progress
+        </Typography>
+        <Avatar
+          alt="Settings"
+          className={classes.settings}
+          src={'/settings_24px.png'}
+        />
+      </div>
+
+      <hr />
+      <div className={classes.root}>
+        <Typography variant="h6" gutterBottom>
+          Coin: 300
+        </Typography>
+        <Avatar alt="Coins" src={'/coins_48px.png'} />
+      </div>
+
+      <PieChart width={400} height={250}>
+        <Pie
+          activeIndex={activeIndex}
+          activeShape={renderActiveShape}
+          data={data}
+          innerRadius={50}
+          outerRadius={80}
+          fill="#8884d8"
+          dataKey="value"
+          onMouseOver={(data, index) => {
+            setActiveIndex(index);
+          }}
+        >
+          {data.map((entry, index) => (
+            <Cell key={`cell-${index}`} fill={COLORS[index]} />
+          ))}
+        </Pie>
+      </PieChart>
+
+      <hr />
+
+      <div className={classes.caption}>
+        <div className={classes.captionItem} style={{ color: COLORS[0] }}>
+          <div>200</div>
+          <span>Todo</span>
         </div>
-
-        <hr />
-        <div className={classes.root}>
-          <Typography variant="h6" gutterBottom>
-            Coin: 300
-          </Typography>
-          <Avatar  alt="Coins" src={'/coins_48px.png'}/>
+        <div className={classes.captionItem} style={{ color: COLORS[1] }}>
+          <div>2/198</div>
+          <span>Solved</span>
         </div>
-
-        <PieChart width={400} height={250}>
-          <Pie
-            activeIndex={activeIndex}
-            activeShape={renderActiveShape}
-            data={data}
-            innerRadius={50}
-            outerRadius={80}
-            fill="#8884d8"
-            dataKey="value"
-            onMouseOver={(data, index) => {setActiveIndex(index);}}
-          >
-            {
-              data.map((entry, index) => <Cell key={`cell-${index}`} fill={COLORS[index]} />)
-            }
-          </Pie>
-        </PieChart>
-
-        <hr />
-
-        <div className={classes.caption}>
-          <div className={classes.captionItem} style={{color: COLORS[0]}}>
-            <div>200</div>
-            <span>Todo</span>
-          </div>
-          <div className={classes.captionItem} style={{color: COLORS[1]}}>
-            <div>2/198</div>
-            <span>Solved</span>
-          </div>
-          <div className={classes.captionItem} style={{color: COLORS[2]}}>
-            <div>0</div>
-            <span>Attempted</span>
-          </div>
+        <div className={classes.captionItem} style={{ color: COLORS[2] }}>
+          <div>0</div>
+          <span>Attempted</span>
         </div>
-
-      </Paper>
-    );
+      </div>
+    </Paper>
+  );
 }
-
-
-

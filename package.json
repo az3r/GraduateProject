@@ -6,6 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
+    "lint": "npx eslint .",
+    "format": "npx prettier --write **",
     "postinstall": "husky install"
   },
   "dependencies": {

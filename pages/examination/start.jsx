@@ -4,18 +4,16 @@ import Layout from '../../components/Layout';
 import TestCode from '../examination/code';
 import TestMCQ from '../examination/mcq';
 
-
-export default function Start(){
-  const [problem, setProblem] = useState("code");
+export default function Start() {
+  const [problem, setProblem] = useState('code');
 
   const nextProblem = () => {
-    if(problem === "code"){
-      setProblem("mcq");
+    if (problem === 'code') {
+      setProblem('mcq');
+    } else {
+      setProblem('code');
     }
-    else{
-      setProblem("code");
-    }
-  }
+  };
 
   return (
     <>
@@ -24,10 +22,14 @@ export default function Start(){
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-        {
-          problem === "code" ?
-          <TestCode problemId={"Ly06j1rBoYqdIfq5iWFJ"} nextProblem={nextProblem}></TestCode> : <TestMCQ problemId={"123"} nextProblem={nextProblem}></TestMCQ>
-        }
+      {problem === 'code' ? (
+        <TestCode
+          problemId={'Ly06j1rBoYqdIfq5iWFJ'}
+          nextProblem={nextProblem}
+        ></TestCode>
+      ) : (
+        <TestMCQ problemId={'123'} nextProblem={nextProblem}></TestMCQ>
+      )}
     </>
-  )
+  );
 }

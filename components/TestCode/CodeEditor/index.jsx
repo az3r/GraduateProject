@@ -26,7 +26,7 @@ export default function CodeEditor({ language, code, onCodeChange }) {
         showGutter={true}
         highlightActiveLine={true}
         value={code}
-        width={"674px"}
+        width={'674px'}
         setOptions={{
           enableBasicAutocompletion: true,
           enableLiveAutocompletion: true,

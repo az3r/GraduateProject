@@ -1,4 +1,4 @@
-import * as React from "react";
+import * as React from 'react';
 import {
   AppBar,
   Button,
@@ -6,9 +6,9 @@ import {
   makeStyles,
   Toolbar,
   Typography,
-} from "@material-ui/core";
-import MenuIcon from "@material-ui/icons/Menu";
-import Link from "next/link";
+} from '@material-ui/core';
+import MenuIcon from '@material-ui/icons/Menu';
+import Link from 'next/link';
 
 function GuestAppBar() {
   const styles = useStyles();

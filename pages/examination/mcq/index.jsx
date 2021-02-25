@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import Head from "next/head";
-import { makeStyles, Grid, Paper } from "@material-ui/core";
+import Head from 'next/head';
+import { makeStyles, Grid, Paper } from '@material-ui/core';
 import Layout from '../../../components/Layout';
 import dynamic from 'next/dynamic';
 
@@ -22,7 +22,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function MCQ({problemId, nextProblem}) {
+export default function MCQ({ problemId, nextProblem }) {
   const classes = useStyles();
 
   return (

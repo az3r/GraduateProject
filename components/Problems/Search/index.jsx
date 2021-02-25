@@ -5,7 +5,6 @@ import Input from '@material-ui/core/Input';
 import { FormControl, MenuItem, Select } from '@material-ui/core';
 import OutlinedInput from '@material-ui/core/OutlinedInput';
 
-
 const useStyles = makeStyles((theme) => ({
   outlinedInput: {
     height: 30,
@@ -29,7 +28,10 @@ export default function Search() {
   return (
     <div>
       <FormControl>
-        <OutlinedInput className={classes.outlinedInput} placeholder={'Search...'} />
+        <OutlinedInput
+          className={classes.outlinedInput}
+          placeholder={'Search...'}
+        />
       </FormControl>
 
       <FormControl>
@@ -37,7 +39,7 @@ export default function Search() {
           value={difficulty}
           displayEmpty
           className={classes.select}
-          onChange={e => setDifficulty(e.target.value)}
+          onChange={(e) => setDifficulty(e.target.value)}
         >
           <MenuItem value={'easy'}>Easy</MenuItem>
           <MenuItem value={'medium'}>Medium</MenuItem>
@@ -50,7 +52,7 @@ export default function Search() {
           value={domain}
           displayEmpty
           className={classes.select}
-          onChange={e => setDomain(e.target.value)}
+          onChange={(e) => setDomain(e.target.value)}
         >
           <MenuItem value={'csharp'}>C#</MenuItem>
           <MenuItem value={'java'}>Java</MenuItem>
@@ -59,5 +61,5 @@ export default function Search() {
         </Select>
       </FormControl>
     </div>
-  )
+  );
 }

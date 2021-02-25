@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import Head from "next/head";
-import { makeStyles, Grid, Paper } from "@material-ui/core";
-import Layout from "../../../components/Layout";
+import Head from 'next/head';
+import { makeStyles, Grid, Paper } from '@material-ui/core';
+import Layout from '../../../components/Layout';
 import dynamic from 'next/dynamic';
-
 
 const TestCode = dynamic(
   () => {
@@ -11,7 +10,6 @@ const TestCode = dynamic(
   },
   { ssr: false }
 );
-
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -24,7 +22,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function Code({problemId, nextProblem}) {
+export default function Code({ problemId, nextProblem }) {
   const classes = useStyles();
 
   return (

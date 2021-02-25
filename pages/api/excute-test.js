@@ -55,12 +55,10 @@ export default async function handler(req, res) {
 
       res.status(200).json(result);
     } catch (error) {
-      res
-        .status(200)
-        .json(result, {
-          message: 'failed to log history to database',
-          error: error,
-        });
+      res.status(200).json(result, {
+        message: 'failed to log history to database',
+        error: error,
+      });
     }
   } else res.status(500).json({ error: 'server error' });
 }

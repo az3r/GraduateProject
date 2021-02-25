@@ -1,7 +1,7 @@
-import * as React from "react";
-import Document, { Html, Head, Main, NextScript } from "next/document";
-import { ServerStyleSheets } from "@material-ui/core";
-import { LightTheme } from "../styles/themes";
+import * as React from 'react';
+import Document, { Html, Head, Main, NextScript } from 'next/document';
+import { ServerStyleSheets } from '@material-ui/core';
+import { LightTheme } from '../styles/themes';
 // for more information,
 // read https://material-ui.com/styles/advanced/#server-side-rendering
 // read https://nextjs.org/docs/advanced-features/custom-document

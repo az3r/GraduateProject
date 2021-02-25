@@ -11,7 +11,7 @@ function TabPanel(props) {
   return (
     <>
       {value === index && (
-        <Paper style={{height: 160, overflow: 'auto'}}>
+        <Paper style={{ height: 160, overflow: 'auto' }}>
           <pre>{children}</pre>
         </Paper>
       )}
@@ -31,7 +31,7 @@ const useStyles = makeStyles({
   },
 });
 
-export default function Console({cases, testCodeResult}){
+export default function Console({ cases, testCodeResult }) {
   const classes = useStyles();
 
   const [value, setValue] = React.useState(1);
@@ -40,39 +40,43 @@ export default function Console({cases, testCodeResult}){
     setValue(newValue);
   };
 
-  return(
+  return (
     <>
       <AppBar position="static" color="default">
         <Tabs
           value={value}
-          indicatorColor='primary'
-          textColor='primary'
+          indicatorColor="primary"
+          textColor="primary"
           className={classes.Tabs}
           onChange={handleChange}
           aria-label="tabs example"
-          style={{width: "674px"}}
+          style={{ width: '674px' }}
         >
-          <Tab style={{backgroundColor: value === 0 ? "white" : ""}} className={classes.Tab}  label="Testcase" />
-          <Tab style={{backgroundColor: value === 1 ? "white" : ""}} className={classes.Tab}  label="Run Code Result" />
+          <Tab
+            style={{ backgroundColor: value === 0 ? 'white' : '' }}
+            className={classes.Tab}
+            label="Testcase"
+          />
+          <Tab
+            style={{ backgroundColor: value === 1 ? 'white' : '' }}
+            className={classes.Tab}
+            label="Run Code Result"
+          />
         </Tabs>
       </AppBar>
       <TabPanel value={value} index={0}>
         {cases.map((testCase, index) => (
           <>
-            <h3 style={{marginBottom: "0px", marginLeft: "15px"}}>Test case {index + 1}:</h3>
-            <div style={{marginLeft: "30px"}}>
-              Input: {testCase.input}
-            </div>
-            <div style={{marginLeft: "30px"}}>
-              Output: {testCase.output}
-            </div>
+            <h3 style={{ marginBottom: '0px', marginLeft: '15px' }}>
+              Test case {index + 1}:
+            </h3>
+            <div style={{ marginLeft: '30px' }}>Input: {testCase.input}</div>
+            <div style={{ marginLeft: '30px' }}>Output: {testCase.output}</div>
           </>
         ))}
       </TabPanel>
       <TabPanel value={value} index={1}>
-        <div style={{marginLeft: "15px"}}>
-          {testCodeResult}
-        </div>
+        <div style={{ marginLeft: '15px' }}>{testCodeResult}</div>
       </TabPanel>
     </>
   );

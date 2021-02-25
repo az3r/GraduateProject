@@ -27,7 +27,7 @@ export default function Home() {
               direction="column"
               alignItems="center"
               justify="center"
-             />
+            />
             <Grid item xs={8}>
               <Problems />
             </Grid>
