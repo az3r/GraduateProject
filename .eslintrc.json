@@ -12,7 +12,9 @@
     "ecmaVersion": 12,
     "sourceType": "module"
   },
-  "plugins": ["react"],
+  "plugins": ["react", "@babel"],
   "parser": "@babel/eslint-parser",
-  "rules": {}
+  "rules": {
+    "no-use-before-define": [2, { "functions": false, "classes": false }]
+  }
 }

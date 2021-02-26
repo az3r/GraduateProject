@@ -12,77 +12,9 @@ import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { FirebaseAuth, signin } from '../libs/firebase_client';
 
-const useStyles = makeStyles((theme) => ({
-  root: {
-    [theme.breakpoints.up('xs')]: {
-      padding: theme.spacing(5),
-      width: 512,
-    },
-    [theme.breakpoints.down('xs')]: {
-      padding: theme.spacing(2),
-      width: '100%',
-    },
-  },
-  login: {
-    paddingTop: theme.spacing(4),
-    paddingBottom: theme.spacing(4),
-  },
-  logo: {
-    width: 32,
-    height: 32,
-  },
-  google: {
-    backgroundColor: 'white',
-    '&:hover': {
-      backgroundColor: '#f5f5f5',
-    },
-  },
-  github: {
-    backgroundColor: '#212121',
-    '&:hover': {
-      backgroundColor: 'black',
-    },
-  },
-  facebook: {
-    color: theme.palette.background,
-    backgroundColor: '#4267b2',
-    '&:hover': {
-      backgroundColor: '#003d82',
-    },
-  },
-}));
 export default function Login() {
   const router = useRouter();
   const styles = useStyles();
-
-  function signinWithUsername(username, password) {
-    // TODO implement this shit
-  }
-
-  function onSubmit(e) {
-    e.preventDefault();
-    const data = new FormData(e.target);
-    const username = data.get('username');
-    const password = data.get('password');
-
-    signinWithUsername(username, password);
-  }
-
-  function signinWithProvider(method) {
-    const providers = {
-      google: new FirebaseAuth.GoogleAuthProvider(),
-      facebook: new FirebaseAuth.FacebookAuthProvider(),
-      github: new FirebaseAuth.GithubAuthProvider(),
-    };
-    const provider = providers[method];
-    signin({ provider })
-      .then(() => {
-        // redirect to home page
-        // router.replace('/');
-        console.log('sign in success');
-      })
-      .catch((error) => console.error(error));
-  }
 
   return (
     <Container className={styles.root}>
@@ -201,4 +133,73 @@ export default function Login() {
       </form>
     </Container>
   );
+
+  function signinWithUsername(username, password) {
+    // TODO implement this shit
+  }
+
+  function onSubmit(e) {
+    e.preventDefault();
+    const data = new FormData(e.target);
+    const username = data.get('username');
+    const password = data.get('password');
+
+    signinWithUsername(username, password);
+  }
+
+  function signinWithProvider(method) {
+    const providers = {
+      google: new FirebaseAuth.GoogleAuthProvider(),
+      facebook: new FirebaseAuth.FacebookAuthProvider(),
+      github: new FirebaseAuth.GithubAuthProvider(),
+    };
+    const provider = providers[method];
+    signin({ provider })
+      .then(() => {
+        // redirect to home page
+        // router.replace('/');
+        console.log('sign in success');
+      })
+      .catch((error) => console.error(error));
+  }
 }
+
+const useStyles = makeStyles((theme) => ({
+  root: {
+    [theme.breakpoints.up('xs')]: {
+      padding: theme.spacing(5),
+      width: 512,
+    },
+    [theme.breakpoints.down('xs')]: {
+      padding: theme.spacing(2),
+      width: '100%',
+    },
+  },
+  login: {
+    paddingTop: theme.spacing(4),
+    paddingBottom: theme.spacing(4),
+  },
+  logo: {
+    width: 32,
+    height: 32,
+  },
+  google: {
+    backgroundColor: 'white',
+    '&:hover': {
+      backgroundColor: '#f5f5f5',
+    },
+  },
+  github: {
+    backgroundColor: '#212121',
+    '&:hover': {
+      backgroundColor: 'black',
+    },
+  },
+  facebook: {
+    color: theme.palette.background,
+    backgroundColor: '#4267b2',
+    '&:hover': {
+      backgroundColor: '#003d82',
+    },
+  },
+}));

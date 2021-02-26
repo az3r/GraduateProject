@@ -9,7 +9,8 @@ import {
 } from '@material-ui/core';
 import Head from 'next/head';
 import Link from 'next/link';
-export default function CompanyRegister({ onSubmitted }) {
+
+export default function CompanyRegister({ cache }) {
   const styles = useStyles();
   return (
     <form className={styles.root} onSubmit={onSubmit}>
@@ -29,6 +30,7 @@ export default function CompanyRegister({ onSubmitted }) {
           className={styles.field}
           label="Buiness Email"
           variant="filled"
+          onChange={(e) => cache({ email: e.target.value })}
           required
         />
         <TextField
@@ -39,6 +41,7 @@ export default function CompanyRegister({ onSubmitted }) {
           className={styles.field}
           label="Username"
           variant="filled"
+          onChange={(e) => cache({ username: e.target.value })}
           required
         />
         <TextField
@@ -64,7 +67,6 @@ export default function CompanyRegister({ onSubmitted }) {
         <Button variant="contained" color="primary" type="submit" fullWidth>
           Register
         </Button>
-
         <Box
           className={styles.seperator}
           display="flex"
@@ -76,6 +78,7 @@ export default function CompanyRegister({ onSubmitted }) {
             <Button
               className={styles.seperator}
               fullWidth
+              color="secondary"
               variant="contained"
               href="/login"
             >
@@ -88,7 +91,11 @@ export default function CompanyRegister({ onSubmitted }) {
   );
   function onSubmit(e) {
     e.preventDefault();
-    onSubmitted(e.target);
+    const form = new FormData(e.target);
+    const email = form.get('email');
+    const username = form.get('username');
+
+    // call api
   }
 }
 

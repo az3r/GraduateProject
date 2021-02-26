@@ -1,3 +1,4 @@
+import * as React from 'react';
 import {
   Box,
   Button,
@@ -9,7 +10,7 @@ import {
   Stepper,
 } from '@material-ui/core';
 import Head from 'next/head';
-import * as React from 'react';
+import PropTypes from 'prop-types';
 import {
   DeveloperRegister,
   SelectAccount,
@@ -17,10 +18,16 @@ import {
 } from '../components/Register';
 import VerifyEmail from '../components/Register/VerifyEmail';
 
+const steps = [
+  { label: 'Select your account type', optional: false },
+  { label: 'Create your new account', optional: false },
+  { label: 'Verify your email', optional: true },
+];
+
 export default function Register() {
   const styles = useStyles();
-  const [step, setStep] = React.useState(steps.length - 1);
-  const accountTypeRef = React.useRef('developer');
+  const [step, setStep] = React.useState(0);
+  const dataRef = React.useRef({});
 
   return (
     <>
@@ -34,78 +41,83 @@ export default function Register() {
           className={styles.header}
           title="Register account"
         >
-          {steps.map(({ label }, index) => {
-            return (
-              <Step key={label}>
-                <StepLabel>{label}</StepLabel>
-                {step > 0 ? (
-                  <StepContent>
-                    {index === steps.length - 1 ? (
-                      <Button
-                        variant="contained"
-                        color="primary"
-                        onClick={() => setStep(index - 1)}
-                      >
-                        Skip
-                      </Button>
-                    ) : (
-                      <Button
-                        color="primary"
-                        onClick={() => setStep(index - 1)}
-                      >
-                        Back
-                      </Button>
-                    )}
-                  </StepContent>
-                ) : null}
-              </Step>
-            );
-          })}
+          {steps.map(({ label }, index) => (
+            <Step key={label}>
+              <StepLabel>{label}</StepLabel>
+              {step > 0 ? (
+                <StepContent>
+                  {index === steps.length - 1 ? (
+                    <Button
+                      variant="contained"
+                      color="primary"
+                      onClick={() => setStep(index - 1)}
+                    >
+                      Skip
+                    </Button>
+                  ) : (
+                    <Button color="primary" onClick={() => setStep(index - 1)}>
+                      Back
+                    </Button>
+                  )}
+                </StepContent>
+              ) : null}
+            </Step>
+          ))}
         </Stepper>
         <Box className={styles.content}>
-          <StepComponent index={step} />
+          <StepBody
+            step={step}
+            data={dataRef.current}
+            onCompleted={parseData}
+          />
         </Box>
       </Container>
     </>
   );
 
-  function StepComponent({ index }) {
-    switch (index) {
-      case 1:
-        return accountTypeRef.current === 'company' ? (
-          <CompanyRegister onSubmitted={onSubmitted} />
-        ) : (
-          <DeveloperRegister onSubmitted={onSubmitted} />
-        );
-      case 2:
-        return <VerifyEmail />;
-      default:
-        return <SelectAccount onSelected={onSelected} />;
-    }
-
-    function onSubmitted(form) {
-      const data = new FormData(form);
-      console.log(data.get('email'));
-      setStep(step + 1);
-    }
-
-    function onSelected(type) {
-      if (type === 'developer') {
-        // do something for developer
-      } else {
-        // do something for company
-      }
-      accountTypeRef.current = type || 'developer';
-      setStep(step + 1);
-    }
+  function parseData({ account, email }) {
+    setStep(step + 1);
   }
 }
 
-const steps = [
-  { label: 'Select your account type', optional: false },
-  { label: 'Create your new account', optional: false },
-  { label: 'Verify your email', optional: true },
-];
+function StepBody({ step, data, cache, onCompleted }) {
+  switch (step) {
+    case 1: {
+      const account = data.account || 'developer';
+      return account === 'developer' ? (
+        <CompanyRegister
+          cache={(form) => {
+            console.log(form);
+            cache();
+          }}
+        />
+      ) : (
+        <DeveloperRegister
+          cache={(form) => {
+            console.log(form);
+          }}
+        />
+      );
+    }
+    case 2:
+      return <VerifyEmail email={data.email} />;
+    default:
+      return (
+        <SelectAccount onSelected={(account) => onCompleted({ account })} />
+      );
+  }
+}
+
+StepBody.propTypes = {
+  step: PropTypes.number.isRequired,
+  cache: PropTypes.func.isRequired,
+  onCompleted: PropTypes.func.isRequired,
+  data: PropTypes.shape({
+    account: PropTypes.string,
+    email: PropTypes.string,
+  }).isRequired,
+};
+
 const useStyles = makeStyles((theme) => ({
   root: {
     height: '100vh',
