@@ -15,21 +15,60 @@ if (firebase.apps.length === 0) {
 const FirebaseAuth = firebase.auth;
 
 async function register({ username, email, password }) {
-  if (validate(email)) {
-    try {
-      const auth = FirebaseAuth();
-      const creds = await auth.createUserWithEmailAndPassword(email, password);
-      await creds.user.updateProfile({
-        displayName: username,
-        photoURL: './avatar.jpeg', // TODO: find a default avatar for new user
-      });
-    } catch (error) {
-      console.log(error);
-      throw error;
-    }
-  } else {
-    throw { error: 'Email is invalid' };
-  }
+  return FirebaseAuth()
+    .createUserWithEmailAndPassword(email, password)
+    .then(
+      (credentials) => {
+        // TODO: save username and email into database
+        // update profile
+        credentials.user
+          .updateProfile({
+            displayName: username,
+          })
+          .then(() => credentials)
+          .catch((error) => ({
+            error: 'update-profile-failed',
+            message: "Failed to update user' profile",
+            details: error,
+          }));
+      },
+      (error) => ({
+        error: 'invalid-account',
+        message: 'Invalid email format or password is too weak',
+        details: error,
+      })
+    );
 }
 
-export { FirebaseAuth };
+async function signin({ email, password, provider }) {
+  if (email && password) {
+    // sign in using email and password
+    return FirebaseAuth()
+      .signInWithEmailAndPassword(email, password)
+      .then((credentials) => credentials)
+      .catch((error) => ({
+        error: 'invalid-email',
+        message: 'Email or password is incorrect',
+        details: error,
+      }));
+  }
+  if (!provider) {
+    return {
+      error: 'missing-provider',
+      message: 'An AuthProvider must be supplied',
+      details: {},
+    };
+  }
+
+  // sign in using a provider
+  return FirebaseAuth()
+    .signInWithPopup(provider)
+    .then((credentials) => credentials)
+    .catch((error) => ({
+      error: 'invalid-provider',
+      message: 'The supplied AuthProvider is invalid',
+      details: error,
+    }));
+}
+
+export { FirebaseAuth, signin, register };

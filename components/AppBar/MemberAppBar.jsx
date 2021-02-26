@@ -59,7 +59,6 @@ function MemberAppBar() {
         <Popper
           anchorEl={anchorRef.current}
           open={open}
-          role="A list of actions which user can perform"
           transition
           disablePortal
         >
