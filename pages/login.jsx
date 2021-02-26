@@ -11,6 +11,7 @@ import {
 import Head from 'next/head';
 import clsx from 'clsx';
 import { useRouter } from 'next/router';
+import { FirebaseAuth, signin } from '../libs/firebase_client';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -57,6 +58,20 @@ const useStyles = makeStyles((theme) => ({
 export default function Login() {
   const router = useRouter();
   const styles = useStyles();
+
+  function signinWithProvider(method, { role }) {
+    const providers = {
+      google: new FirebaseAuth.GoogleAuthProvider(),
+      facebook: new FirebaseAuth.FacebookAuthProvider(),
+      github: new FirebaseAuth.GithubAuthProvider(),
+    };
+    const provider = providers[method];
+    provider.setCustomParameters({
+      role: role || 'developer',
+    });
+    const 
+  }
+
   return (
     <Container className={styles.root}>
       <Head>

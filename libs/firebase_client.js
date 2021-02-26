@@ -1,6 +1,18 @@
 import firebase from 'firebase/app';
 import 'firebase/auth';
 
+class ErrorSignin {
+  constructor({ error, message, details }) {
+    this.error = error || 'unknown-error';
+    this.message = message || 'Empty message';
+    this.details = details || {};
+  }
+
+  static reject({ error, message, details }) {
+    return Promise.reject(new ErrorSignin({ error, message, details }));
+  }
+}
+
 // initialize firebase app for browser
 if (firebase.apps.length === 0) {
   firebase.initializeApp({
@@ -26,11 +38,13 @@ async function register({ username, email, password }) {
             displayName: username,
           })
           .then(() => credentials)
-          .catch((error) => ({
-            error: 'update-profile-failed',
-            message: "Failed to update user' profile",
-            details: error,
-          }));
+          .catch((error) =>
+            ErrorSignin.reject({
+              error: 'update-profile-failed',
+              message: "Failed to update user' profile",
+              details: error,
+            })
+          );
       },
       (error) => ({
         error: 'invalid-account',
@@ -46,29 +60,33 @@ async function signin({ email, password, provider }) {
     return FirebaseAuth()
       .signInWithEmailAndPassword(email, password)
       .then((credentials) => credentials)
-      .catch((error) => ({
-        error: 'invalid-email',
-        message: 'Email or password is incorrect',
-        details: error,
-      }));
+      .catch((error) =>
+        ErrorSignin.reject({
+          error: 'invalid-email',
+          message: 'Email or password is incorrect',
+          details: error,
+        })
+      );
   }
   if (!provider) {
-    return {
+    return ErrorSignin.reject({
       error: 'missing-provider',
       message: 'An AuthProvider must be supplied',
       details: {},
-    };
+    });
   }
 
   // sign in using a provider
   return FirebaseAuth()
     .signInWithPopup(provider)
     .then((credentials) => credentials)
-    .catch((error) => ({
-      error: 'invalid-provider',
-      message: 'The supplied AuthProvider is invalid',
-      details: error,
-    }));
+    .catch((error) =>
+      ErrorSignin.reject({
+        error: 'invalid-provider',
+        message: 'The supplied AuthProvider is invalid',
+        details: error,
+      })
+    );
 }
 
 export { FirebaseAuth, signin, register };
