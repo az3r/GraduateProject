@@ -153,6 +153,7 @@ export default function Login() {
             <Grid item>
               <Button
                 className={styles.facebook}
+                onClick={() => signinWithProvider('facebook')}
                 variant="contained"
                 color="primary"
                 fullWidth
@@ -170,6 +171,7 @@ export default function Login() {
             <Grid item>
               <Button
                 className={styles.github}
+                onClick={() => signinWithProvider('github')}
                 variant="contained"
                 color="primary"
                 fullWidth
