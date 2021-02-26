@@ -20,6 +20,21 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { FirebaseAuth } from '../../libs/firebase_client';
 
+const useStyles = makeStyles((theme) => ({
+  grow: {
+    flexGrow: 1,
+  },
+  menu: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  menuItem: {
+    marginRight: theme.spacing(2),
+    color: theme.palette.primary.contrastText,
+  },
+}));
+
 function MemberAppBar() {
   const styles = useStyles();
   const [open, setOpen] = React.useState(false);
@@ -64,7 +79,9 @@ function MemberAppBar() {
         >
           {({ TransitionProps, placement }) => (
             <Grow
-              {...TransitionProps}
+              in={TransitionProps.in}
+              onEntered={TransitionProps.onEnter}
+              onExit={TransitionProps.onExited}
               style={{
                 transformOrigin:
                   placement === 'bottom' ? 'center top' : 'center bottom',
@@ -85,47 +102,31 @@ function MemberAppBar() {
 
 function CompanyActions() {
   const router = useRouter();
-  return (
-    <>
-      <MenuList>
-        <Link href="/profile">
-          <MenuItem>
-            <MaterialLink href="/profile" color="inherit" underline="none">
-              Profile
-            </MaterialLink>
-          </MenuItem>
-        </Link>
-        <Link href="/setting">
-          <MenuItem>
-            <MaterialLink href="/setting" color="inherit" underline="none">
-              Setting
-            </MaterialLink>
-          </MenuItem>
-        </Link>
-        <MenuItem onClick={logout}>Sign out</MenuItem>
-      </MenuList>
-    </>
-  );
 
   async function logout() {
     await FirebaseAuth().signOut();
     await router.push('/');
   }
-}
 
-const useStyles = makeStyles((theme) => ({
-  grow: {
-    flexGrow: 1,
-  },
-  menu: {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  menuItem: {
-    marginRight: theme.spacing(2),
-    color: theme.palette.primary.contrastText,
-  },
-}));
+  return (
+    <MenuList>
+      <Link href="/profile">
+        <MenuItem>
+          <MaterialLink href="/profile" color="inherit" underline="none">
+            Profile
+          </MaterialLink>
+        </MenuItem>
+      </Link>
+      <Link href="/setting">
+        <MenuItem>
+          <MaterialLink href="/setting" color="inherit" underline="none">
+            Setting
+          </MaterialLink>
+        </MenuItem>
+      </Link>
+      <MenuItem onClick={logout}>Sign out</MenuItem>
+    </MenuList>
+  );
+}
 
 export default MemberAppBar;
