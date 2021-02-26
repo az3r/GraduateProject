@@ -9,7 +9,6 @@ import {
   Typography,
 } from '@material-ui/core';
 import Head from 'next/head';
-import clsx from 'clsx';
 import { useRouter } from 'next/router';
 import { FirebaseAuth, signin } from '../libs/firebase_client';
 
@@ -31,9 +30,6 @@ const useStyles = makeStyles((theme) => ({
   logo: {
     width: 32,
     height: 32,
-  },
-  noTransform: {
-    textTransform: 'none',
   },
   google: {
     backgroundColor: 'white',
@@ -59,17 +55,33 @@ export default function Login() {
   const router = useRouter();
   const styles = useStyles();
 
-  function signinWithProvider(method, { role }) {
+  function signinWithUsername(username, password) {
+    // TODO implement this shit
+  }
+
+  function onSubmit(e) {
+    e.preventDefault();
+    const data = new FormData(e.target);
+    const username = data.get('username');
+    const password = data.get('password');
+
+    signinWithUsername(username, password);
+  }
+
+  function signinWithProvider(method) {
     const providers = {
       google: new FirebaseAuth.GoogleAuthProvider(),
       facebook: new FirebaseAuth.FacebookAuthProvider(),
       github: new FirebaseAuth.GithubAuthProvider(),
     };
     const provider = providers[method];
-    provider.setCustomParameters({
-      role: role || 'developer',
-    });
-    const 
+    signin({ provider })
+      .then(() => {
+        // redirect to home page
+        // router.replace('/');
+        console.log('sign in success');
+      })
+      .catch((error) => console.error(error));
   }
 
   return (
@@ -81,101 +93,110 @@ export default function Login() {
       <Typography variant="h2" align="center">
         <b>Smart Coder</b>
       </Typography>
-      <Grid className={styles.login} spacing={3} container direction="column">
-        <Grid item>
-          <Typography align="center" variant="h4">
-            Sign into Smart Coder
-          </Typography>
-        </Grid>
-        <Grid item>
-          <TextField
-            variant="filled"
-            label="Username"
-            fullWidth
-            name="username"
-          />
-        </Grid>
-        <Grid item>
-          <TextField
-            variant="filled"
-            label="Password"
-            fullWidth
-            name="password"
-          />
-        </Grid>
-        <Grid item>
-          <Button variant="contained" color="primary" fullWidth>
-            Sign in
-          </Button>
-        </Grid>
-        <Grid item>
-          <Typography align="center">
-            Or choose one of these methods:
-          </Typography>
-        </Grid>
-        <Grid container item direction="column" spacing={2} justify="center">
+      <form onSubmit={onSubmit}>
+        <Grid className={styles.login} spacing={3} container direction="column">
           <Grid item>
-            <Button
-              className={clsx(styles.noTransform, styles.google)}
-              variant="contained"
+            <Typography align="center" variant="h4">
+              Sign into Smart Coder
+            </Typography>
+          </Grid>
+          <Grid item>
+            <TextField
+              variant="filled"
+              type="text"
+              id="username"
+              label="Username"
               fullWidth
-              startIcon={
-                <Avatar
-                  className={styles.logo}
-                  alt="Google's logo"
-                  src="/logo_google.webp"
-                />
-              }
-            >
-              Sign in with Google
+              name="username"
+              required
+            />
+          </Grid>
+          <Grid item>
+            <TextField
+              variant="filled"
+              id="password"
+              type="password"
+              label="Password"
+              fullWidth
+              name="password"
+              required
+            />
+          </Grid>
+          <Grid item>
+            <Button type="submit" variant="contained" color="primary" fullWidth>
+              Sign in
             </Button>
           </Grid>
           <Grid item>
-            <Button
-              className={clsx(styles.noTransform, styles.facebook)}
-              variant="contained"
-              color="primary"
-              fullWidth
-              startIcon={
-                <Avatar
-                  className={styles.logo}
-                  alt="Facebook's logo"
-                  src="/logo_facebook.webp"
-                />
-              }
-            >
-              Sign in with Facebook
-            </Button>
+            <Typography align="center">
+              Or choose one of these methods:
+            </Typography>
           </Grid>
-          <Grid item>
-            <Button
-              className={clsx(styles.noTransform, styles.github)}
-              variant="contained"
-              color="primary"
-              fullWidth
-              startIcon={
-                <Avatar
-                  className={styles.logo}
-                  alt="Github's logo"
-                  src="/logo_github.webp"
-                />
-              }
-            >
-              Sign in with Github
-            </Button>
+          <Grid container item direction="column" spacing={2} justify="center">
+            <Grid item>
+              <Button
+                className={styles.google}
+                variant="contained"
+                onClick={() => signinWithProvider('google')}
+                fullWidth
+                startIcon={
+                  <Avatar
+                    className={styles.logo}
+                    alt="Google's logo"
+                    src="/logo_google.webp"
+                  />
+                }
+              >
+                Sign in with Google
+              </Button>
+            </Grid>
+            <Grid item>
+              <Button
+                className={styles.facebook}
+                variant="contained"
+                color="primary"
+                fullWidth
+                startIcon={
+                  <Avatar
+                    className={styles.logo}
+                    alt="Facebook's logo"
+                    src="/logo_facebook.webp"
+                  />
+                }
+              >
+                Sign in with Facebook
+              </Button>
+            </Grid>
+            <Grid item>
+              <Button
+                className={styles.github}
+                variant="contained"
+                color="primary"
+                fullWidth
+                startIcon={
+                  <Avatar
+                    className={styles.logo}
+                    alt="Github's logo"
+                    src="/logo_github.webp"
+                  />
+                }
+              >
+                Sign in with Github
+              </Button>
+            </Grid>
+          </Grid>
+          <Grid container item direction="column" spacing={1} justify="center">
+            <Grid item>
+              <Typography align="center">Does not have an account?</Typography>
+            </Grid>
+            <Grid item>
+              <Button variant="contained" color="secondary" fullWidth>
+                Register now!
+              </Button>
+            </Grid>
           </Grid>
         </Grid>
-        <Grid container item direction="column" spacing={1} justify="center">
-          <Grid item>
-            <Typography align="center">Does not have an account?</Typography>
-          </Grid>
-          <Grid item>
-            <Button variant="contained" color="secondary" fullWidth>
-              Register now!
-            </Button>
-          </Grid>
-        </Grid>
-      </Grid>
+      </form>
     </Container>
   );
 }
