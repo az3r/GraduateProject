@@ -21,21 +21,8 @@
   <component name="ChangeListManager">
     <list default="true" id="73bd1854-2930-493b-bbd0-fb90442d9327" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/components/AppBar/MemberAppBar.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/AppBar/MemberAppBar.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/components/Layout/index.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/Layout/index.jsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/components/Problems/Search/index.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/Problems/Search/index.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/components/Problems/index.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/Problems/index.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/components/TestCode/Console/index.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/TestCode/Console/index.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/components/TestCode/Problem/index.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/TestCode/Problem/index.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/components/TestCode/index.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/TestCode/index.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/components/TestMCQ/Answer/index.jsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/components/TestMCQ/AnswerMCQ/index.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/TestMCQ/AnswerMCQ/index.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/components/TestMCQ/Problem/index.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/TestMCQ/Problem/index.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/components/TestMCQ/index.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/TestMCQ/index.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/components/YourProgress/index.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/YourProgress/index.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/components/app_bars.jsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/yarn.lock" beforeDir="false" afterPath="$PROJECT_DIR$/yarn.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pages/index.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/pages/index.jsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -121,6 +108,7 @@
       <workItem from="1614172840065" duration="1845000" />
       <workItem from="1614237632761" duration="12344000" />
       <workItem from="1614269113286" duration="3954000" />
+      <workItem from="1614314783036" duration="3654000" />
     </task>
     <servers />
   </component>

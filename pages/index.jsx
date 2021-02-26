@@ -1,8 +1,11 @@
 import React from 'react';
 import Head from 'next/head';
-import { Grid } from '@material-ui/core';
+import {
+  Grid,
+  Hidden,
+  Container
+} from '@material-ui/core';
 
-import Container from '@material-ui/core/Container';
 import Problems from '../components/Problems';
 import YourProgress from '../components/YourProgress';
 import Layout from '../components/Layout';
@@ -28,12 +31,14 @@ export default function Home() {
               alignItems="center"
               justify="center"
             />
-            <Grid item xs={8}>
+            <Grid item xs={12} md={8} lg={8}>
               <Problems />
             </Grid>
-            <Grid item xs={4}>
-              <YourProgress />
-            </Grid>
+            <Hidden smDown>
+              <Grid item xs={false} md={4} lg={4}>
+                <YourProgress />
+              </Grid>
+            </Hidden>
           </Grid>
         </Container>
       </Layout>
