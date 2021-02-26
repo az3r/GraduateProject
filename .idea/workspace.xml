@@ -20,14 +20,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="73bd1854-2930-493b-bbd0-fb90442d9327" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/pages/examination/code/index.jsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/pages/examination/mcq/index.jsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/pages/examination/start.jsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/components/TestCode/index.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/TestCode/index.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/components/TestMCQ/index.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/TestMCQ/index.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pages/examination/index.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/pages/examination/index.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pages/mcq.jsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/components/Problems/Search/index.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/Problems/Search/index.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pages/index.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/pages/index.jsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -109,7 +104,11 @@
       <workItem from="1613797588692" duration="14279000" />
       <workItem from="1613837237006" duration="6836000" />
       <workItem from="1613881015481" duration="13877000" />
-      <workItem from="1614062281060" duration="14615000" />
+      <workItem from="1614062281060" duration="15737000" />
+      <workItem from="1614172840065" duration="1845000" />
+      <workItem from="1614237632761" duration="12344000" />
+      <workItem from="1614269113286" duration="3954000" />
+      <workItem from="1614314783036" duration="3654000" />
     </task>
     <servers />
   </component>
@@ -142,10 +141,10 @@
       <screen x="0" y="0" width="1366" height="738" />
     </state>
     <state x="500" y="283" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2/0.0.1366.738/1366.0.1366.738@0.0.1366.738" timestamp="1612509227348" />
-    <state x="1756" y="102" width="630" height="534" key="find.popup" timestamp="1612773235568">
+    <state x="1680" y="102" width="1052" height="534" key="find.popup" timestamp="1614239856053">
       <screen x="1366" y="0" width="1366" height="738" />
     </state>
-    <state x="1756" y="102" width="630" height="534" key="find.popup/0.0.1366.738/1366.0.1366.738@1366.0.1366.738" timestamp="1612773235568" />
+    <state x="1680" y="102" width="1052" height="534" key="find.popup/0.0.1366.738/1366.0.1366.738@1366.0.1366.738" timestamp="1614239856053" />
     <state x="1705" y="165" key="run.anything.popup" timestamp="1614072482808">
       <screen x="1366" y="0" width="1366" height="738" />
     </state>

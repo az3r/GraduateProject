@@ -1,10 +1,17 @@
 import React from 'react';
-import { PieChart, Pie, Sector, Cell } from 'recharts';
-import Paper from '@material-ui/core/Paper';
-import Avatar from '@material-ui/core/Avatar';
-import Typography from '@material-ui/core/Typography';
-import { makeStyles } from '@material-ui/core/styles';
-import { colors } from '@material-ui/core';
+import {
+  PieChart,
+  Pie,
+  Sector,
+  Cell
+} from 'recharts';
+
+import {
+  makeStyles,
+  Typography,
+  Avatar,
+  Paper
+} from '@material-ui/core';
 
 const data = [
   { name: 'ToDo', value: 400 },

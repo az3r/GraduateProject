@@ -2,7 +2,6 @@ import * as React from 'react';
 import {
   AppBar,
   Avatar,
-  Button,
   IconButton,
   makeStyles,
   Toolbar,

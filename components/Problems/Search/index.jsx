@@ -1,9 +1,16 @@
 import React from 'react';
-import { makeStyles } from '@material-ui/core/styles';
-import Paper from '@material-ui/core/Paper';
-import Input from '@material-ui/core/Input';
-import { FormControl, MenuItem, Select } from '@material-ui/core';
-import OutlinedInput from '@material-ui/core/OutlinedInput';
+import {
+  makeStyles,
+  FormControl,
+  MenuItem,
+  Select,
+  OutlinedInput,
+  Grid,
+  Hidden,
+} from '@material-ui/core';
+import Problems from '../index';
+import YourProgress from '../../YourProgress';
+
 
 const useStyles = makeStyles((theme) => ({
   outlinedInput: {
@@ -19,47 +26,48 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function Search() {
+export default function Search({search, handleSearchChange, handleSearchKeyPress, difficulty, handleDifficultyChange, language, handleLanguageChange}) {
   const classes = useStyles();
 
-  const [difficulty, setDifficulty] = React.useState('easy');
-  const [domain, setDomain] = React.useState('csharp');
-
   return (
-    <div>
-      <FormControl>
-        <OutlinedInput
-          className={classes.outlinedInput}
-          placeholder={'Search...'}
-        />
-      </FormControl>
-
-      <FormControl>
-        <Select
-          value={difficulty}
-          displayEmpty
-          className={classes.select}
-          onChange={(e) => setDifficulty(e.target.value)}
-        >
-          <MenuItem value={'easy'}>Easy</MenuItem>
-          <MenuItem value={'medium'}>Medium</MenuItem>
-          <MenuItem value={'hard'}>Hard</MenuItem>
-        </Select>
-      </FormControl>
-
-      <FormControl>
-        <Select
-          value={domain}
-          displayEmpty
-          className={classes.select}
-          onChange={(e) => setDomain(e.target.value)}
-        >
-          <MenuItem value={'csharp'}>C#</MenuItem>
-          <MenuItem value={'java'}>Java</MenuItem>
-          <MenuItem value={'javascript'}>Javascript</MenuItem>
-          <MenuItem value={'c'}>C</MenuItem>
-        </Select>
-      </FormControl>
-    </div>
-  );
+    <Grid container>
+      <Grid item xs={12} sm={6}>
+        <FormControl>
+          <OutlinedInput value={search} onChange={handleSearchChange} onKeyPress={handleSearchKeyPress}
+                         className={classes.outlinedInput} placeholder={'Search...'} />
+        </FormControl>
+      </Grid>
+      <Grid item xs={6} sm={3}>
+        <FormControl>
+          <Select
+            value={difficulty}
+            displayEmpty
+            className={classes.select}
+            onChange={handleDifficultyChange}
+          >
+            <MenuItem value={'all'}>All Difficulty</MenuItem>
+            <MenuItem value={'easy'}>Easy</MenuItem>
+            <MenuItem value={'medium'}>Medium</MenuItem>
+            <MenuItem value={'hard'}>Hard</MenuItem>
+          </Select>
+        </FormControl>
+      </Grid>
+      <Grid item xs={6} sm={3}>
+        <FormControl>
+          <Select
+            value={language}
+            displayEmpty
+            className={classes.select}
+            onChange={handleLanguageChange}
+          >
+            <MenuItem value={'all'}>All Language</MenuItem>
+            <MenuItem value={'csharp'}>C#</MenuItem>
+            <MenuItem value={'java'}>Java</MenuItem>
+            <MenuItem value={'javascript'}>Javascript</MenuItem>
+            <MenuItem value={'c'}>C</MenuItem>
+          </Select>
+        </FormControl>
+      </Grid>
+    </Grid>
+  )
 }

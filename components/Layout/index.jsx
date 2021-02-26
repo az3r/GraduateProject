@@ -1,5 +1,8 @@
-import { GuestAppBar, MemberAppBar } from '../AppBar';
-import { Container, makeStyles } from '@material-ui/core';
+import { MemberAppBar } from '../AppBar';
+
+import {
+  makeStyles
+} from '@material-ui/core';
 
 const useStyles = makeStyles((theme) => ({
   root: {

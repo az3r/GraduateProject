@@ -1,12 +1,23 @@
 import React from 'react';
-import Paper from '@material-ui/core/Paper';
-import Box from '@material-ui/core/Box';
-import makeStyles from '@material-ui/core/styles/makeStyles';
-import Avatar from '@material-ui/core/Avatar';
-import { CKEditor } from '@ckeditor/ckeditor5-react';
+import {
+  makeStyles,
+  Paper,
+  Box,
+  Avatar
+} from '@material-ui/core';
+
+import {
+  Tab,
+  Tabs,
+  TabList,
+  TabPanel
+} from 'react-tabs';
+
+import { CKEditor } from '@ckeditor/ckeditor5-react'
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
-import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import 'react-tabs/style/react-tabs.css';
+
+
 
 const useStyles = makeStyles({
   title: {
@@ -29,11 +40,11 @@ const useStyles = makeStyles({
     display: 'flex',
     justifyContent: 'space-between',
     marginLeft: 15,
-  },
+  }
 });
 
 const editorConfiguration = {
-  toolbar: [],
+  toolbar: [ ],
 };
 
 export default function Problem(props) {
@@ -48,45 +59,28 @@ export default function Problem(props) {
       </TabList>
 
       <TabPanel>
-        <Paper style={{ maxHeight: 1000, height: 510, overflow: 'auto' }}>
+        <Paper style={{maxHeight: 1000, height: 510, overflow: 'auto'}}>
           <h2 className={classes.title}>{props.title}</h2>
           <div className={classes.problemInfo}>
-            <Box
-              component="span"
-              display="inline"
-              p={'4px'}
-              borderRadius={16}
-              className={classes.difficultyBox}
-              bgcolor={
-                props.difficulty === 0
-                  ? 'green'
-                  : props.difficulty == 1
-                  ? 'orange'
-                  : 'red'
+            <Box component="span" display="inline" p={'4px'} borderRadius={16} className={classes.difficultyBox}
+                 bgcolor={props.difficulty === 0 ? "green" : props.difficulty == 1 ? "orange" : "red"}>
+              {
+                props.difficulty == 0 ? "Easy" : props.difficulty == 1 ? "Medium" : "Hard"
               }
-            >
-              {props.difficulty == 0
-                ? 'Easy'
-                : props.difficulty == 1
-                ? 'Medium'
-                : 'Hard'}
             </Box>
 
             <Box className={classes.scoreBox}>
-              <Box>Score: {props.score}</Box>
-              <Avatar
-                className={classes.scoreAvatar}
-                alt="Score"
-                src={'/coins_48px.png'}
-              />
+              <Box>
+                Score: {props.score}
+              </Box>
+              <Avatar className={classes.scoreAvatar} alt="Score" src={'/coins_48px.png'} />
             </Box>
           </div>
           <CKEditor
-            editor={ClassicEditor}
+            editor={ ClassicEditor }
             disabled={true}
-            config={editorConfiguration}
-            data={props.content}
-          />
+            config={ editorConfiguration }
+            data={props.content} />
         </Paper>
       </TabPanel>
       <TabPanel>
