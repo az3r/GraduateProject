@@ -12,79 +12,41 @@ import * as React from 'react';
 
 export default function VerifyEmail({ email }) {
   const styles = useStyles();
-  const [first, setFirst] = React.useState(true);
-
-  function onSendEmail() {
-    setFirst(false);
-  }
 
   return (
-    <Container className={styles.root}>
-      <Grid container spacing={4} direction="column" justify="center">
-        <Grid item>
-          <Box
-            display="flex"
-            flexDirection="column"
-            alignItems="center"
-            justifyContent="center"
-            color="primary.main"
-            borderColor="primary.main"
-            border={1}
-            p={4}
-            width={304}
-          >
-            <CheckCircle />
-            <Box m={1} />
-            <Typography variant="h5" align="center">
-              Account Successfully Created
-            </Typography>
-          </Box>
-        </Grid>
-        <Grid item container spacing={1} direction="column">
-          <Grid item>
-            <Typography>
-              A verification email has been sent to this email address
-            </Typography>
-          </Grid>
-          <Grid item>
-            <TextField
-              type="email"
-              fullWidth
-              variant="outlined"
-              contentEditable={false}
-              value="mycompany@email.com"
-            />
-          </Grid>
-
-          <Grid item container direction="column" spacing={1}>
-            <Grid item>
-              <Typography>
-                You can skip this step and verify your account later in{' '}
-                <b>Profile </b> setting
-              </Typography>
-            </Grid>
-            <Grid item>
-              <Box color="error.main">
-                <Typography>
-                  <b>CAUTIONS: </b> any unverified account will be deleted after{' '}
-                  <b>30 days</b>
-                </Typography>
-              </Box>
-            </Grid>
-            <Grid item container spacing={2}>
-              <Grid item>
-                <Button variant="outlined" color="secondary">
-                  Take me to Dashboard
-                </Button>
-              </Grid>
-              <Grid item>
-                <VerifyButton />
-              </Grid>
-            </Grid>
-          </Grid>
-        </Grid>
+    <Grid
+      className={styles.root}
+      container
+      spacing={4}
+      direction="column"
+      justify="center"
+      alignContent="center"
+      alignItems="stretch"
+    >
+      <Grid item>
+        <Typography align="center" variant="h3">
+          Verify Your Account
+        </Typography>
       </Grid>
-    </Container>
+      <Grid item>
+        <Typography>
+          Your new account has been registered successfully, but first you need
+          to verify your email before using our service{' '}
+        </Typography>
+      </Grid>
+      <Grid item>
+        <TextField
+          type="email"
+          variant="outlined"
+          fullWidth
+          contentEditable={false}
+          value={email}
+        />
+      </Grid>
+      <Grid item>
+        <VerifyButton />
+      </Grid>
+    </Grid>
   );
 }
 
@@ -97,6 +59,8 @@ function VerifyButton() {
       setTimeout(() => {
         setCooldown(cooldown - 1);
       }, 1000);
+    } else {
+      // send verification email
     }
   }, [cooldown]);
   return (
@@ -107,12 +71,18 @@ function VerifyButton() {
           disabled={cooldown > 0}
           variant="contained"
           color={cooldown > 0 ? 'text' : 'primary'}
+          fullWidth
           onClick={onVerifyEmail}
         >
-          Resend {cooldown > 0 ? `${cooldown}s'` : ''}
+          Resend {cooldown > 0 ? `${cooldown} seconds'` : ''}
         </Button>
       ) : (
-        <Button color="primary" variant="contained" onClick={onVerifyEmail}>
+        <Button
+          fullWidth
+          color="primary"
+          variant="contained"
+          onClick={onVerifyEmail}
+        >
           Verify now!
         </Button>
       )}
@@ -127,16 +97,7 @@ function VerifyButton() {
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    [theme.breakpoints.up('xs')]: {
-      padding: theme.spacing(5),
-      width: '80%',
-    },
-    [theme.breakpoints.down('xs')]: {
-      padding: theme.spacing(2),
-      width: '100%',
-    },
-  },
-  button: {
-    width: 128,
+    padding: theme.spacing(2),
+    paddingTop: theme.spacing(4),
   },
 }));

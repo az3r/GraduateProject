@@ -30,37 +30,31 @@ export default function Register() {
   const dataRef = React.useRef({});
 
   return (
-    <>
+    <Container className={styles.root}>
       <Head>
         <title>Register</title>
         <meta property="og-title" content="Register" />
       </Head>
-      <Container className={styles.root}>
-        <Stepper
-          activeStep={step}
-          className={styles.header}
-          title="Register account"
-        >
-          {steps.map(({ label }, index) => (
-            <Step key={label}>
-              <StepLabel>{label}</StepLabel>
-              {step > 0 && (
-                <StepContent>
-                  {index > 0 && index < steps.length - 1 && (
-                    <Button color="primary" onClick={() => setStep(index - 1)}>
-                      Back
-                    </Button>
-                  )}
-                </StepContent>
-              )}
-            </Step>
-          ))}
-        </Stepper>
-        <Box className={styles.content}>
-          <StepComponent />
-        </Box>
-      </Container>
-    </>
+      <Stepper activeStep={step} title="Register account">
+        {steps.map(({ label }, index) => (
+          <Step key={label}>
+            <StepLabel>{label}</StepLabel>
+            {step > 0 && (
+              <StepContent>
+                {index > 0 && index < steps.length - 1 && (
+                  <Button color="primary" onClick={() => setStep(index - 1)}>
+                    Back
+                  </Button>
+                )}
+              </StepContent>
+            )}
+          </Step>
+        ))}
+      </Stepper>
+      <Box flexGrow="1">
+        <StepComponent />
+      </Box>
+    </Container>
   );
 
   function StepComponent() {
@@ -106,18 +100,11 @@ export default function Register() {
   }
 }
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(() => ({
   root: {
-    height: '100vh',
+    height: '80vh',
+    padding: 0,
     display: 'flex',
     flexDirection: 'column',
-  },
-  header: {
-    flex: 1,
-  },
-  content: {
-    flex: 10,
-    paddingTop: theme.spacing(1),
-    paddingBottom: theme.spacing(1),
   },
 }));
