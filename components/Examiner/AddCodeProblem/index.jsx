@@ -62,8 +62,8 @@ public class Program
   const [isAddSuccess, setIsAddSuccess] = useState(false);
   const classes = useStyles();
 
-  const handleChangeTestName = (event, editor) => {
-    setTestName(editor.getData());
+  const handleChangeTestName = (event) => {
+    setTestName(event.target.value);
   };
 
   const handleChangeTestIntro = (event, editor) => {
@@ -252,11 +252,7 @@ public class Program
       >
         <Box boxShadow={1} p={2} m={3}>
           <Typography variant={'h5'}>Enter problem title: </Typography>
-          <CKEditor
-            editor={ClassicEditor}
-            data=""
-            onChange={handleChangeTestName}
-          ></CKEditor>
+          <TextField onChange={handleChangeTestName} fullWidth></TextField>
         </Box>
 
         <Box boxShadow={1} p={2} m={3}>

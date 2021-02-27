@@ -26,10 +26,11 @@ export default async function handler(req, res) {
   const message = await respone.json();
 
   if (respone.status === 401) res.status(401).json({ error: 'Unauthorized' });
+  
   else if (respone.status === 400) {
     res.status(400).json(message);
   } else if (respone.status !== 200) {
-    res.status(response.status).json({ message, comeFrom: 'compiler api' });
+    res.status(respone.status).json({ message, comeFrom: 'compiler api' });
   } else if (respone.status === 200) {
     // const result = await respone.json();
     res.status(200).json(message);
