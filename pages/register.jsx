@@ -46,15 +46,7 @@ export default function Register() {
               <StepLabel>{label}</StepLabel>
               {step > 0 && (
                 <StepContent>
-                  {index === steps.length - 1 ? (
-                    <Button
-                      variant="contained"
-                      color="primary"
-                      onClick={() => setStep(index - 1)}
-                    >
-                      Skip
-                    </Button>
-                  ) : (
+                  {index > 0 && index < steps.length - 1 && (
                     <Button color="primary" onClick={() => setStep(index - 1)}>
                       Back
                     </Button>
