@@ -54,15 +54,17 @@ async function register({ username, email, password }) {
     );
 }
 
-async function signin({ email, password, provider }) {
-  if (email && password) {
-    // sign in using email and password
+async function signin({ username, password, provider }) {
+  if (username && password) {
+    // TODO: retrieve token from api
+    // const token = getToken(username, password);
+    const token = 'sfsjflksjflsfse';
     return FirebaseAuth()
-      .signInWithEmailAndPassword(email, password)
+      .signInWithCustomToken(token)
       .then((credentials) => credentials)
       .catch((error) =>
         ErrorSignin.reject({
-          error: 'invalid-email',
+          error: 'invalid-username-password',
           message: 'Email or password is incorrect',
           details: error,
         })

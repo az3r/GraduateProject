@@ -1,20 +1,42 @@
 import React from 'react';
 import {
   Avatar,
+  Box,
   Button,
+  CircularProgress,
   Container,
   Grid,
   makeStyles,
+  Snackbar,
   TextField,
   Typography,
 } from '@material-ui/core';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
+import Link from 'next/link';
+import { Alert } from '@material-ui/lab';
 import { FirebaseAuth, signin } from '../libs/firebase_client';
+
+const providers = {
+  google: new FirebaseAuth.GoogleAuthProvider(),
+  facebook: new FirebaseAuth.FacebookAuthProvider(),
+  github: new FirebaseAuth.GithubAuthProvider(),
+};
 
 export default function Login() {
   const router = useRouter();
   const styles = useStyles();
+  const [waiting, setWaiting] = React.useState(false);
+  const [snackBarState, setSnackBarState] = React.useState({
+    open: false,
+    severity: 'info',
+    message: 'No message',
+  });
+
+  // prefetch home page
+  React.useEffect(() => {
+    router.prefetch('/');
+  });
 
   return (
     <Container className={styles.root}>
@@ -25,7 +47,7 @@ export default function Login() {
       <Typography variant="h2" align="center">
         <b>Smart Coder</b>
       </Typography>
-      <form onSubmit={onSubmit}>
+      <form onSubmit={onFormSubmitted}>
         <Grid className={styles.login} spacing={3} container direction="column">
           <Grid item>
             <Typography align="center" variant="h4">
@@ -41,6 +63,7 @@ export default function Login() {
               fullWidth
               name="username"
               required
+              disabled={waiting}
             />
           </Grid>
           <Grid item>
@@ -52,115 +75,199 @@ export default function Login() {
               fullWidth
               name="password"
               required
+              disabled={waiting}
             />
           </Grid>
-          <Grid item>
-            <Button type="submit" variant="contained" color="primary" fullWidth>
-              Sign in
-            </Button>
-          </Grid>
-          <Grid item>
-            <Typography align="center">
-              Or choose one of these methods:
-            </Typography>
-          </Grid>
-          <Grid container item direction="column" spacing={2} justify="center">
-            <Grid item>
-              <Button
-                className={styles.google}
-                variant="contained"
-                onClick={() => signinWithProvider('google')}
-                fullWidth
-                startIcon={
-                  <Avatar
-                    className={styles.logo}
-                    alt="Google's logo"
-                    src="/logo_google.webp"
-                  />
-                }
+          {waiting ? (
+            <Grid
+              item
+              container
+              justify="center"
+              alignItems="center"
+              spacing={2}
+            >
+              <Grid item>
+                <Typography align="center">
+                  Signing you in, please wait...
+                </Typography>
+              </Grid>
+              <Grid item>
+                <CircularProgress />
+              </Grid>
+            </Grid>
+          ) : (
+            <>
+              <Grid item>
+                <Button
+                  type="submit"
+                  variant="contained"
+                  color="primary"
+                  fullWidth
+                >
+                  Sign in
+                </Button>
+              </Grid>
+              <Grid item>
+                <Typography align="center">
+                  Or choose one of these methods:
+                </Typography>
+              </Grid>
+              <Grid
+                container
+                item
+                direction="column"
+                spacing={2}
+                justify="center"
               >
-                Sign in with Google
-              </Button>
-            </Grid>
-            <Grid item>
-              <Button
-                className={styles.facebook}
-                onClick={() => signinWithProvider('facebook')}
-                variant="contained"
-                color="primary"
-                fullWidth
-                startIcon={
-                  <Avatar
-                    className={styles.logo}
-                    alt="Facebook's logo"
-                    src="/logo_facebook.webp"
-                  />
-                }
+                <Grid item>
+                  <Button
+                    className={styles.google}
+                    variant="contained"
+                    onClick={() => onSignin({ method: 'google' })}
+                    fullWidth
+                    startIcon={
+                      <Avatar
+                        className={styles.logo}
+                        alt="Google's logo"
+                        src="/logo_google.webp"
+                      />
+                    }
+                  >
+                    Sign in with Google
+                  </Button>
+                </Grid>
+                <Grid item>
+                  <Button
+                    className={styles.facebook}
+                    onClick={() => onSignin({ method: 'facebook' })}
+                    variant="contained"
+                    color="primary"
+                    fullWidth
+                    startIcon={
+                      <Avatar
+                        className={styles.logo}
+                        alt="Facebook's logo"
+                        src="/logo_facebook.webp"
+                      />
+                    }
+                  >
+                    Sign in with Facebook
+                  </Button>
+                </Grid>
+                <Grid item>
+                  <Button
+                    className={styles.github}
+                    onClick={() => onSignin({ method: 'github' })}
+                    variant="contained"
+                    color="primary"
+                    fullWidth
+                    startIcon={
+                      <Avatar
+                        className={styles.logo}
+                        alt="Github's logo"
+                        src="/logo_github.webp"
+                      />
+                    }
+                  >
+                    Sign in with Github
+                  </Button>
+                </Grid>
+              </Grid>
+              <Grid
+                container
+                item
+                direction="column"
+                spacing={1}
+                justify="center"
               >
-                Sign in with Facebook
-              </Button>
-            </Grid>
-            <Grid item>
-              <Button
-                className={styles.github}
-                onClick={() => signinWithProvider('github')}
-                variant="contained"
-                color="primary"
-                fullWidth
-                startIcon={
-                  <Avatar
-                    className={styles.logo}
-                    alt="Github's logo"
-                    src="/logo_github.webp"
-                  />
-                }
-              >
-                Sign in with Github
-              </Button>
-            </Grid>
-          </Grid>
-          <Grid container item direction="column" spacing={1} justify="center">
-            <Grid item>
-              <Typography align="center">Does not have an account?</Typography>
-            </Grid>
-            <Grid item>
-              <Button variant="contained" color="secondary" fullWidth>
-                Register now!
-              </Button>
-            </Grid>
-          </Grid>
+                <Grid item>
+                  <Typography align="center">
+                    Does not have an account?
+                  </Typography>
+                </Grid>
+                <Grid item>
+                  <Link href="/register">
+                    <Button
+                      variant="contained"
+                      href="/register"
+                      color="secondary"
+                      fullWidth
+                    >
+                      Register now!
+                    </Button>
+                  </Link>
+                </Grid>
+              </Grid>
+            </>
+          )}
         </Grid>
       </form>
+      <Snackbar
+        anchorOrigin={{
+          vertical: 'bottom',
+          horizontal: 'right',
+        }}
+        open={snackBarState.open}
+        autoHideDuration={2000}
+        onClose={() =>
+          setSnackBarState((prev) => ({
+            open: false,
+            message: prev.message,
+            severity: prev.severity,
+          }))
+        }
+      >
+        <Alert variant="filled" severity={snackBarState.severity}>
+          {snackBarState.message}
+        </Alert>
+      </Snackbar>
     </Container>
   );
 
-  function signinWithUsername(username, password) {
-    // TODO implement this shit
-  }
-
-  function onSubmit(e) {
+  function onFormSubmitted(e) {
     e.preventDefault();
     const data = new FormData(e.target);
     const username = data.get('username');
     const password = data.get('password');
 
-    signinWithUsername(username, password);
+    onSignin({ username, password });
   }
 
-  function signinWithProvider(method) {
-    const providers = {
-      google: new FirebaseAuth.GoogleAuthProvider(),
-      facebook: new FirebaseAuth.FacebookAuthProvider(),
-      github: new FirebaseAuth.GithubAuthProvider(),
-    };
-    const provider = providers[method];
-    signin({ provider })
+  function onSignin({ username, password, method }) {
+    setWaiting(true);
+    setTimeout(() => {
+      setWaiting(false);
+      if (false) {
+        setSnackBarState({
+          open: true,
+          severity: 'success',
+          message: 'Login successfully!',
+        });
+        router.replace('/');
+      } else {
+        const { error } = { error: 'invalid-username-password' };
+        setSnackBarState({
+          open: true,
+          severity: 'error',
+          message:
+            error === 'invalid-username-password'
+              ? 'Invalid username or password'
+              : 'Internal server error',
+        });
+      }
+    }, 1000);
+
+    /*
+    const provider = method && providers[method];
+    signin({ username, password, provider })
       .then(() => {
         // redirect to home page
         // router.replace('/');
         console.log('sign in success');
       })
       .catch((error) => console.error(error));
+
+*/
   }
 }
 
