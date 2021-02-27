@@ -97,7 +97,7 @@ export default function CodingProblem({
                         <ul>
                             <li><Typography>Write full your code in the coding editor</Typography></li>
                             <li><Typography>Enter simple input and output to test your code (include only one test case)</Typography></li>
-                            <li><Typography>Click &#34Test code&#34 button to test your code and input, output</Typography></li>
+                            <li><Typography>Click "Test code" button to test your code and input, output</Typography></li>
                         </ul>
 
                         <div>
