@@ -21,7 +21,6 @@ export default function VerifyEmail({ email }) {
       direction="column"
       justify="center"
       alignContent="center"
-      alignItems="stretch"
     >
       <Grid item>
         <Typography align="center" variant="h3">
@@ -67,14 +66,16 @@ function VerifyButton() {
     <>
       {resend ? (
         <Button
-          startIcon={<Send />}
+          startIcon={cooldown <= 0 && <Send />}
           disabled={cooldown > 0}
           variant="contained"
           color={cooldown > 0 ? 'text' : 'primary'}
           fullWidth
           onClick={onVerifyEmail}
         >
-          Resend {cooldown > 0 ? `${cooldown} seconds'` : ''}
+          {cooldown > 0
+            ? `Please wait for ${cooldown}s...'`
+            : 'Resend verification'}
         </Button>
       ) : (
         <Button
@@ -83,7 +84,7 @@ function VerifyButton() {
           variant="contained"
           onClick={onVerifyEmail}
         >
-          Verify now!
+          Verify email
         </Button>
       )}
     </>
