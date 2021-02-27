@@ -11,18 +11,16 @@ import 'ace-builds/src-noconflict/snippets/java';
 import 'ace-builds/src-noconflict/snippets/c_cpp';
 import 'ace-builds/src-noconflict/ext-language_tools';
 import 'ace-builds/src-noconflict/theme-xcode';
-import { Typography } from '@material-ui/core';
 
-export default function CodeEditor({ language, code, onChange }) {
+export default function CodeEditor({ language, code, onCodeChange }) {
   return (
     <>
-      <Typography> Programming Language: {language}</Typography>
       <AceEditor
         placeholder="Write your code here..."
-        mode={language}
+        mode={language.toLowerCase()}
         theme="xcode"
         name="blah2"
-        onChange={onChange}
+        onChange={onCodeChange}
         fontSize={14}
         showPrintMargin={true}
         showGutter={true}
