@@ -1,6 +1,6 @@
 import {Box, Button} from '@material-ui/core';
 import React,{useState} from 'react';
-import Questions from './Questions';
+import Questions from './Questions/index';
 
 
 export default function AddTestPage(props){
@@ -31,6 +31,7 @@ public class Program
             IsMultipleChoices: true,
             Question: "",
             Score: 0,
+            Time: 0,
             A: "",
             B: "",
             C: "",
@@ -47,6 +48,7 @@ public class Program
             Content: "",
             Difficulty: 0,
             Score: 0,
+            Time: 0,
             Language: "Csharp",
             Code: code["Csharp"],
             Input: [],
@@ -99,6 +101,16 @@ public class Program
         const newListQuestions = [...listOfQuestions];
         const question = newListQuestions[questionID];
         question.Score = e.target.value;
+        setListOfQuestions(newListQuestions);
+    }
+
+    const handleChangeTime = (e) => {
+        const id = e.target.id;
+        const split = id.split("_");
+        const questionID = split[1];
+        const newListQuestions = [...listOfQuestions];
+        const question = newListQuestions[questionID];
+        question.Time = e.target.value;
         setListOfQuestions(newListQuestions);
     }
 
@@ -283,7 +295,8 @@ public class Program
     }
         
 
-    const handleSubmitExam = () =>{
+    const handleSubmitExam = async (e) =>{
+        e.preventDefault();
         console.log(listOfQuestions);
         // const response = await fetch("/api/add-exam",{
         //     method: "POST",
@@ -300,29 +313,31 @@ public class Program
 
     return(
         <Box m={1}>
-            <Box display="flex" justifyContent="center" m={3}>
-                <Button color="secondary" variant="contained" onClick={handleAddMultipleChoicesQuestion}>
-                    Add multiple choices question
-                </Button>
-                <Button color="primary" variant="contained" onClick={handleAddCodingProblemQuestion}>
-                    Add coding problem question
-                </Button>
-            </Box>
-            
-            <Questions listOfQuestions={listOfQuestions}
-                handleChangeQuestionMC={handleChangeQuestionMC} handleChangeAnswerMC={handleChangeAnswerMC}
-                handleChangeCorrectAnswer={handleChangeCorrectAnswer} handleChangeScore={handleChangeScore}
+            <form onSubmit={handleSubmitExam}>
+                <Box display="flex" justifyContent="center" m={3}>
+                    <Button color="secondary" variant="contained" onClick={handleAddMultipleChoicesQuestion}>
+                        Add multiple choices question
+                    </Button>
+                    <Button color="primary" variant="contained" onClick={handleAddCodingProblemQuestion}>
+                        Add coding problem question
+                    </Button>
+                </Box>
+                
+                <Questions listOfQuestions={listOfQuestions}
+                    handleChangeQuestionMC={handleChangeQuestionMC} handleChangeAnswerMC={handleChangeAnswerMC}
+                    handleChangeCorrectAnswer={handleChangeCorrectAnswer} handleChangeScore={handleChangeScore}
+                    handleChangeTime={handleChangeTime}
 
-                handleChangeCPTitle={handleChangeCPTitle} handleChangeCPInfo={handleChangeCPInfo}
-                handleChangeCPDifficulty={handleChangeCPDifficulty} handleChangeLanguague={handleChangeLanguague}
-                handleChangeCPCode={handleChangeCPCode} handleChangeCPFiles={handleChangeCPFiles}
-                handleChangeSimpleTest={handleChangeSimpleTest}
-                handleTestCode={handleTestCode}>
-            </Questions>
-            <Box display="flex" justifyContent="center" m={3}>
-                <Button variant="contained" color="primary" onClick={handleSubmitExam}>Add Exam</Button>
-
-            </Box>
+                    handleChangeCPTitle={handleChangeCPTitle} handleChangeCPInfo={handleChangeCPInfo}
+                    handleChangeCPDifficulty={handleChangeCPDifficulty} handleChangeLanguague={handleChangeLanguague}
+                    handleChangeCPCode={handleChangeCPCode} handleChangeCPFiles={handleChangeCPFiles}
+                    handleChangeSimpleTest={handleChangeSimpleTest}
+                    handleTestCode={handleTestCode}>
+                </Questions>
+                <Box display="flex" justifyContent="center" m={3}>
+                    <Button variant="contained" color="primary" type="submit">Add Exam</Button>
+                </Box>
+            </form>
         </Box>
     );
 }

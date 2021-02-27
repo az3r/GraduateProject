@@ -20,7 +20,8 @@ const useStyles = makeStyles({
 export default function CodingProblem({
         NO,value,
         handleChangeCPTitle,handleChangeCPInfo,handleChangeCPDifficulty,handleChangeScore,
-        handleChangeLanguague,handleChangeCPCode,handleChangeSimpleTest,handleTestCode,isTestSuccess,handleChangeCPFiles,testResponse}){
+        handleChangeLanguague,handleChangeCPCode,handleChangeSimpleTest,handleTestCode,handleChangeCPFiles,
+        handleChangeTime}){
     
     const classes = useStyles();
 
@@ -40,7 +41,7 @@ export default function CodingProblem({
                 <Typography variant={"h5"}>Enter title: </Typography>
                 <TextField
                     id={"CP_"+NO}
-                    onChange={handleChangeCPTitle} fullWidth>
+                    onChange={handleChangeCPTitle} fullWidth required>
                 </TextField>
             </Box>
 
@@ -69,6 +70,11 @@ export default function CodingProblem({
             </Box>
 
             <Box boxShadow={1} p={2} m={3}>
+                    <Typography variant={"h5"}>Enter time by minute (min: 0.5, max: 100): </Typography>
+                    <input id={"MC_"+NO}  onChange={handleChangeTime} type="number" max="100" min="0.5" value={value.Time} ></input>
+            </Box>
+
+            <Box boxShadow={1} p={2} m={3}>
                 <Typography variant={"h5"}>Choose programming language: </Typography>
                 <NativeSelect
                     onChange={handleChangeLanguague} id={"CP_"+NO}>
@@ -83,7 +89,7 @@ export default function CodingProblem({
                     <Grid item lg={6}>
 
                         <Typography variant={"h5"}>Enter code: </Typography>
-                        <CodeEditor language={value.Language}  code={value.Code} onCodeChange={handleOnChangeCode} ></CodeEditor>
+                        <CodeEditor language={value.Language}  code={value.Code} onCodeChange={handleOnChangeCode}  />
 
                     </Grid>
                     <Grid item lg={6}>
@@ -118,7 +124,7 @@ export default function CodingProblem({
                 <input id={"CP_"+NO+"_In"} type="file" onChange={handleChangeCPFiles}></input>
             </Box>
             <Box boxShadow={1} p={2} m={3}>
-                <Typography variant={"h5"}>Submit expected output file: </Typography>
+                <Typography variant="h5">Submit expected output file: </Typography>
                 <input id={"CP_"+NO+"_Out"} type="file" onChange={handleChangeCPFiles}></input>
             </Box>
         </Box>

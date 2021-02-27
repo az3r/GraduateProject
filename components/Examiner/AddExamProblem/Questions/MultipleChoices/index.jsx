@@ -1,9 +1,10 @@
 import { CKEditor } from '@ckeditor/ckeditor5-react';
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
-import { Box, FormControlLabel, Radio, RadioGroup, TextField, Typography } from '@material-ui/core';
-import React, { useState } from 'react';
+import { Box, FormControlLabel, Radio, RadioGroup, Typography } from '@material-ui/core';
+import React from 'react';
 
-export default function MultipleChoices({NO,value,handleChangeQuestionMC,handleChangeAnswerMC,handleChangeCorrectAnswer,handleChangeScore}){
+export default function MultipleChoices({NO,value,handleChangeQuestionMC,handleChangeAnswerMC,
+    handleChangeCorrectAnswer,handleChangeScore,handleChangeTime}){
     
     const handleChangeQuestion = (event,editor) => {
         const data = editor.getData();
@@ -32,16 +33,14 @@ export default function MultipleChoices({NO,value,handleChangeQuestionMC,handleC
     return(
         <>
             <Box boxShadow={4} p={2}>
-                <Typography variant="h5" >Question #{NO+1}</Typography>
+                <Typography variant="h5">Question #{NO+1}</Typography>
 
                 <Box boxShadow={1} p={2} m={3}>
                     <Typography variant={"h5"}>Enter question: </Typography>
                     <CKEditor
-                        
                         editor={ ClassicEditor }
                         data={value.Question}
-                        onChange={handleChangeQuestion}>
-                    </CKEditor>
+                        onChange={handleChangeQuestion}/>
                 </Box>
 
                 <Box boxShadow={1} p={2} m={3}>
@@ -50,12 +49,17 @@ export default function MultipleChoices({NO,value,handleChangeQuestionMC,handleC
                 </Box>
 
                 <Box boxShadow={1} p={2} m={3}>
+                    <Typography variant={"h5"}>Enter time by minute (min: 0.5, max: 100): </Typography>
+                    <input id={"MC_"+NO}  onChange={handleChangeTime} type="number" max="100" min="0.5" value={value.Time} ></input>
+                </Box>
+
+                <Box boxShadow={1} p={2} m={3}>
                     <Typography variant={"h5"}>Enter answer A: </Typography>
                     <CKEditor
                         editor={ ClassicEditor }
                         data={value.A}
-                        onChange={handleChangeAnswerA}>
-                    </CKEditor>
+                        onChange={handleChangeAnswerA}/>
+
                 </Box>
 
                 <Box boxShadow={1} p={2} m={3}>
@@ -63,8 +67,7 @@ export default function MultipleChoices({NO,value,handleChangeQuestionMC,handleC
                     <CKEditor
                         editor={ ClassicEditor }
                         data={value.B}
-                        onChange={handleChangeAnswerB}>
-                    </CKEditor>
+                        onChange={handleChangeAnswerB}/>
                 </Box>
 
                 <Box boxShadow={1} p={2} m={3}>
@@ -72,8 +75,7 @@ export default function MultipleChoices({NO,value,handleChangeQuestionMC,handleC
                     <CKEditor
                         editor={ ClassicEditor }
                         data={value.C}
-                        onChange={handleChangeAnswerC}>
-                    </CKEditor>
+                        onChange={handleChangeAnswerC}/>
                 </Box>
 
                 <Box boxShadow={1} p={2} m={3}>
@@ -81,8 +83,7 @@ export default function MultipleChoices({NO,value,handleChangeQuestionMC,handleC
                     <CKEditor
                         editor={ ClassicEditor }
                         data={value.D}
-                        onChange={handleChangeAnswerD}>
-                    </CKEditor>
+                        onChange={handleChangeAnswerD}/>
                 </Box>
 
                 <Box boxShadow={1} p={2} m={3}>
@@ -94,7 +95,6 @@ export default function MultipleChoices({NO,value,handleChangeQuestionMC,handleC
                         <FormControlLabel value="D" control={<Radio />} label="D" />
                     </RadioGroup>
                 </Box>
-
             </Box>
         </>
     )
