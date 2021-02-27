@@ -12,7 +12,6 @@ export default function ExaminerPage(props) {
         <title>HCMUSCoder - Examiner</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
-
       <Layout>
         <Examiner></Examiner>
       </Layout>

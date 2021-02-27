@@ -12,7 +12,7 @@ import ClipLoader from "react-spinners/ClipLoader";
 
 import Problem from './Problem/';
 import Console from './Console';
-import CodeEditor from './CodeEditor';
+import CodeEditor from '../CodeEditor';
 
 
 const useStyles = makeStyles( (theme) => ({

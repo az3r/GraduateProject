@@ -1,7 +1,6 @@
 import {
   Box,
   Button,
-  Container,
   Grid,
   makeStyles,
   NativeSelect,
@@ -12,8 +11,8 @@ import React, { useState } from 'react';
 import { CKEditor } from '@ckeditor/ckeditor5-react';
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import SkewLoader from 'react-spinners/SkewLoader';
-import CodeEditor from '../CodeEditor';
-import URL from '../URL';
+import CodeEditor from '../../CodeEditor';
+import URL from '../../URL';
 
 const useStyles = makeStyles({
   textSuccess: {
@@ -24,7 +23,7 @@ const useStyles = makeStyles({
   },
 });
 
-export default function AddTestPage(props) {
+export default function AddProblemPage(props) {
   const [testName, setTestName] = useState('');
   const [testIntro, setTestIntro] = useState('');
   const [difficulty, setDifficulty] = useState(0);
@@ -161,7 +160,7 @@ public class Program
       ];
     }
 
-    const response = await fetch(URL.GetURL() + 'add-test', {
+    const response = await fetch('/api/add-test', {
       method: 'POST',
       headers: {
         Accept: 'application/json',
@@ -202,7 +201,7 @@ public class Program
       return;
     }
     setIsLoading(true);
-    const response = await fetch(URL.GetURL() + 'test-exam', {
+    const response = await fetch('/api/test-exam', {
       method: 'POST',
       headers: {
         Accept: 'application/json',
@@ -227,14 +226,14 @@ public class Program
       if (data.results[0].passed) {
         setIsTestSuccess(true);
         setTestReponse(
-          'Test passed! Now proceed with deleting answer in the code editor \nThen, submiting input and output files with the same format as current simple test cases\n(Note: test cases in files must be devided by a blank line)'
+          'Test passed! Now proceed with deleting answer in the code editor. Then, submiting input and output files with the same format as current simple test cases\n(Note: test cases in files must be devided by a blank line)'
         );
       } else {
         setIsTestSuccess(false);
         setTestReponse(
           'Test failed! \nExpected output: ' +
             data.results[0].expected +
-            '\nActual: ' +
+            '\n. Actual output: ' +
             data.results[0].actual
         );
       }
@@ -252,7 +251,7 @@ public class Program
         encType="multipart/form-data"
       >
         <Box boxShadow={1} p={2} m={3}>
-          <Typography variant={'h5'}>Enter test name: </Typography>
+          <Typography variant={'h5'}>Enter problem title: </Typography>
           <CKEditor
             editor={ClassicEditor}
             data=""
@@ -261,7 +260,7 @@ public class Program
         </Box>
 
         <Box boxShadow={1} p={2} m={3}>
-          <Typography variant={'h5'}>Enter test information: </Typography>
+          <Typography variant={'h5'}>Enter problem information: </Typography>
           <CKEditor
             editor={ClassicEditor}
             data=""

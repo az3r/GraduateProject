@@ -5,10 +5,16 @@ import React, { useState } from 'react';
 export default function Examiner(props) {
   const router = useRouter();
 
-  const goToAddPage = (e) => {
+  const goToAddProblemPage = (e) => {
     e.preventDefault();
-    router.push('examiner/add');
+    router.push('examiner/add-problem');
   };
+
+  const goToAddExamPage = (e) => {
+    e.preventDefault();
+    router.push('examiner/add-exam');
+  };
+
   return (
     <>
       <Grid container>
@@ -18,7 +24,10 @@ export default function Examiner(props) {
               <Button>My tests</Button>
             </div>
             <div>
-              <Button onClick={goToAddPage}>Add test</Button>
+              <Button onClick={goToAddExamPage}>Add exam</Button>
+            </div>
+            <div>
+              <Button onClick={goToAddProblemPage}>Add problem</Button>
             </div>
           </Box>
         </Grid>

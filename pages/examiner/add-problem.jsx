@@ -5,18 +5,15 @@ import dynamic from 'next/dynamic';
 import Examiner from '../../components/Examiner';
 import Layout from '../../components/Layout';
 
-const AddTest = dynamic(
-  () => {
-    return import('../../components/AddTest');
-  },
-  { ssr: false }
-);
+const AddCodeProblem = dynamic(
+  () => import('../../components/Examiner/AddCodeProblem'),
+  { ssr: false });
 
-export default function AddTestPage(props) {
+export default function AddProblem(props) {
   return (
     <>
       <Layout>
-        <AddTest></AddTest>
+        <AddCodeProblem></AddCodeProblem>
       </Layout>
     </>
   );
