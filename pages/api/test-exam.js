@@ -11,7 +11,7 @@ export default async function handler(req, res) {
     return;
   }
 
-  const respone = await fetch(apiUrl, {
+  const response = await fetch(apiUrl, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -23,16 +23,17 @@ export default async function handler(req, res) {
     }),
   });
 
-  const message = await respone.json();
+  const message = await response.json();
 
-  if (respone.status === 401) res.status(401).json({ error: 'Unauthorized' });
-  
-  else if (respone.status === 400) {
+  if (response.status === 401) res.status(401).json({ error: 'Unauthorized' });
+  else if (response.status === 400) {
     res.status(400).json(message);
-  } else if (respone.status !== 200) {
-    res.status(respone.status).json({ message, comeFrom: 'compiler api' });
-  } else if (respone.status === 200) {
-    // const result = await respone.json();
+  } 
+  else if (response.status !== 200) {
+    res.status(response.status).json({ message, comeFrom: 'compiler api' });
+  } 
+  else if (response.status === 200) {
     res.status(200).json(message);
-  } else res.status(500).json({ error: 'server error' });
+  } 
+  else res.status(500).json({ error: 'server error' });
 }
