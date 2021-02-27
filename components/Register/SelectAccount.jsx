@@ -10,14 +10,14 @@ import {
 } from '@material-ui/core';
 import PropTypes from 'prop-types';
 
-export default function SelectAccount({ onCompleted }) {
+export default function SelectAccount({ onSelected }) {
   const styles = useStyles();
   return (
     <Box className={styles.root}>
       <Button
         variant="contained"
         color="primary"
-        onClick={() => onCompleted('developer')}
+        onClick={() => onSelected('developer')}
         className={styles.button}
       >
         <Box display="flex" flexDirection="column">
@@ -43,7 +43,7 @@ export default function SelectAccount({ onCompleted }) {
       <Button
         variant="contained"
         color="primary"
-        onClick={() => onCompleted('company')}
+        onClick={() => onSelected('company')}
         className={styles.button}
       >
         <Box display="flex" flexDirection="column">
@@ -69,7 +69,7 @@ export default function SelectAccount({ onCompleted }) {
 }
 
 SelectAccount.propTypes = {
-  onCompleted: PropTypes.func.isRequired,
+  onSelected: PropTypes.func.isRequired,
 };
 
 const useStyles = makeStyles((theme) => ({

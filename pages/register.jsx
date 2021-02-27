@@ -44,7 +44,7 @@ export default function Register() {
           {steps.map(({ label }, index) => (
             <Step key={label}>
               <StepLabel>{label}</StepLabel>
-              {step > 0 ? (
+              {step > 0 && (
                 <StepContent>
                   {index === steps.length - 1 ? (
                     <Button
@@ -60,63 +60,59 @@ export default function Register() {
                     </Button>
                   )}
                 </StepContent>
-              ) : null}
+              )}
             </Step>
           ))}
         </Stepper>
         <Box className={styles.content}>
-          <StepBody
-            step={step}
-            data={dataRef.current}
-            onCompleted={parseData}
-          />
+          <StepComponent />
         </Box>
       </Container>
     </>
   );
 
-  function parseData({ account, email }) {
-    setStep(step + 1);
-  }
-}
-
-function StepBody({ step, data, cache, onCompleted }) {
-  switch (step) {
-    case 1: {
-      const account = data.account || 'developer';
-      return account === 'developer' ? (
-        <CompanyRegister
-          cache={(form) => {
-            console.log(form);
-            cache();
-          }}
-        />
-      ) : (
-        <DeveloperRegister
-          cache={(form) => {
-            console.log(form);
-          }}
-        />
-      );
+  function StepComponent() {
+    switch (step) {
+      case 0:
+        return <SelectAccountStep />;
+      case 1:
+        return <RegisterStep />;
+      case 2:
+        return <VerifyAccountStep />;
+      default:
+        throw new Error(`received step ${step} out of ${steps.length} steps`);
     }
-    case 2:
-      return <VerifyEmail email={data.email} />;
-    default:
-      return (
-        <SelectAccount onSelected={(account) => onCompleted({ account })} />
-      );
+  }
+
+  function RegisterStep() {
+    function onRegistered(account) {
+      dataRef.current.account = account;
+      setStep(step + 1);
+    }
+    return dataRef.current.accountType === 'developer' ? (
+      <DeveloperRegister onRegistered={onRegistered} />
+    ) : (
+      <CompanyRegister onRegistered={onRegistered} />
+    );
+  }
+
+  function SelectAccountStep() {
+    return (
+      <SelectAccount
+        onSelected={(accountType) => {
+          dataRef.current.accountType = accountType;
+          setStep(step + 1);
+        }}
+      />
+    );
+  }
+
+  function VerifyAccountStep() {
+    function onVerified() {}
+    const { email } = dataRef.current.account;
+    return <VerifyEmail email={email} onVerified={onVerified} />;
   }
 }
-
-StepBody.propTypes = {
-  step: PropTypes.number.isRequired,
-  cache: PropTypes.func.isRequired,
-  onCompleted: PropTypes.func.isRequired,
-  data: PropTypes.shape({
-    account: PropTypes.string,
-    email: PropTypes.string,
-  }).isRequired,
-};
 
 const useStyles = makeStyles((theme) => ({
   root: {

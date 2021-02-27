@@ -10,7 +10,7 @@ import {
 import Head from 'next/head';
 import Link from 'next/link';
 
-export default function CompanyRegister({ cache }) {
+export default function CompanyRegister({ onSubmitted }) {
   const styles = useStyles();
   return (
     <form className={styles.root} onSubmit={onSubmit}>
@@ -21,6 +21,7 @@ export default function CompanyRegister({ cache }) {
       <Typography variant="h4" align="center">
         Create company account
       </Typography>
+      ,w
       <Container maxWidth="sm" className={styles.form}>
         <TextField
           id="email"
@@ -30,7 +31,6 @@ export default function CompanyRegister({ cache }) {
           className={styles.field}
           label="Buiness Email"
           variant="filled"
-          onChange={(e) => cache({ email: e.target.value })}
           required
         />
         <TextField
@@ -41,7 +41,6 @@ export default function CompanyRegister({ cache }) {
           className={styles.field}
           label="Username"
           variant="filled"
-          onChange={(e) => cache({ username: e.target.value })}
           required
         />
         <TextField

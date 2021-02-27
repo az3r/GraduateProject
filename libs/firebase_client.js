@@ -30,7 +30,7 @@ async function register({ username, email, password }) {
   return FirebaseAuth()
     .createUserWithEmailAndPassword(email, password)
     .then(
-      (credentials) => {
+      (credentials) =>
         // TODO: save username and email into database
         // update profile
         credentials.user
@@ -44,8 +44,7 @@ async function register({ username, email, password }) {
               message: "Failed to update user' profile",
               details: error,
             })
-          );
-      },
+          ),
       (error) => ({
         error: 'invalid-account',
         message: 'Invalid email format or password is too weak',
