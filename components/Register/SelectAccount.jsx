@@ -1,43 +1,76 @@
+import * as React from 'react';
 import {
   Box,
   Button,
   List,
   ListItem,
-  ListItemIcon,
   ListItemText,
   makeStyles,
   Typography,
 } from '@material-ui/core';
-import { FiberManualRecord } from '@material-ui/icons';
-import * as React from 'react';
+import PropTypes from 'prop-types';
 
-export default function SelectAccount({ onSelected }) {
+export default function SelectAccount({ onCompleted }) {
   const styles = useStyles();
   return (
     <Box className={styles.root}>
       <Button
         variant="contained"
         color="primary"
-        onClick={() => onSelected('developer')}
+        onClick={() => onCompleted('developer')}
         className={styles.button}
       >
         <Box display="flex" flexDirection="column">
-          <Typography variant="h6">Developer Account</Typography>
+          <Typography variant="h4" align="center">
+            Developer Account
+          </Typography>
+          <List dense>
+            <ListItem alignItems="flex-start">
+              <ListItemText
+                primaryTypographyProps={{ variant: 'body1' }}
+                primary="Solve various problems"
+              />
+            </ListItem>
+            <ListItem>
+              <ListItemText
+                primaryTypographyProps={{ variant: 'body1' }}
+                primary="Test your skills with other competitors by paricipating in contest"
+              />
+            </ListItem>
+          </List>
         </Box>
       </Button>
       <Button
         variant="contained"
         color="primary"
-        onClick={() => onSelected('company')}
+        onClick={() => onCompleted('company')}
         className={styles.button}
       >
         <Box display="flex" flexDirection="column">
-          <Typography variant="h6">Company Account</Typography>
+          <Typography variant="h4">Company Account</Typography>
+          <List dense>
+            <ListItem>
+              <ListItemText
+                primaryTypographyProps={{ variant: 'body1' }}
+                primary="Create and publish problems"
+              />
+            </ListItem>
+            <ListItem>
+              <ListItemText
+                primaryTypographyProps={{ variant: 'body1' }}
+                primary="Organize your own contest, invite developers to participate in your contest through email"
+              />
+            </ListItem>
+          </List>
         </Box>
       </Button>
     </Box>
   );
 }
+
+SelectAccount.propTypes = {
+  onCompleted: PropTypes.func.isRequired,
+};
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -45,15 +78,16 @@ const useStyles = makeStyles((theme) => ({
     height: '100%',
     justifyContent: 'space-around',
     alignItems: 'center',
-    [theme.breakpoints.down('sm')]: {
+    [theme.breakpoints.down('md')]: {
       flexDirection: 'column',
     },
-    [theme.breakpoints.up('sm')]: {
+    [theme.breakpoints.up('md')]: {
       flexDirection: 'row',
     },
   },
   button: {
-    width: 256,
-    height: 128,
+    padding: theme.spacing(2),
+    textTransform: 'none',
+    width: 328,
   },
 }));
