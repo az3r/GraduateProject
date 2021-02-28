@@ -1,17 +1,6 @@
 import firebase from 'firebase/app';
 import 'firebase/auth';
-
-class ErrorSignin {
-  constructor({ error, message, details }) {
-    this.error = error || 'unknown-error';
-    this.message = message || 'Empty message';
-    this.details = details || {};
-  }
-
-  static reject({ error, message, details }) {
-    return Promise.reject(new ErrorSignin({ error, message, details }));
-  }
-}
+import 'firebase/firestore';
 
 // initialize firebase app for browser
 if (firebase.apps.length === 0) {
@@ -25,6 +14,7 @@ if (firebase.apps.length === 0) {
   });
 }
 const FirebaseAuth = firebase.auth;
+const Firestore = firebase.firestore;
 
 async function register({ username, email, password }) {
   return FirebaseAuth()
@@ -39,7 +29,7 @@ async function register({ username, email, password }) {
           })
           .then(() => credentials)
           .catch((error) =>
-            ErrorSignin.reject({
+            Promise.reject({
               error: 'update-profile-failed',
               message: "Failed to update user' profile",
               details: error,
@@ -55,34 +45,68 @@ async function register({ username, email, password }) {
 
 async function signin({ username, password, provider }) {
   if (username && password) {
-    // TODO: retrieve token from api
-    // const token = getToken(username, password);
-    const token = 'sfsjflksjflsfse';
-    return FirebaseAuth()
-      .signInWithCustomToken(token)
-      .then((credentials) => credentials)
-      .catch((error) =>
-        ErrorSignin.reject({
-          error: 'invalid-username-password',
-          message: 'Email or password is incorrect',
-          details: error,
-        })
-      );
+    return signinWithUsername(username, password);
   }
+
   if (!provider) {
-    return ErrorSignin.reject({
+    return Promise.reject({
       error: 'missing-provider',
       message: 'An AuthProvider must be supplied',
       details: {},
     });
   }
 
+  return signinWithProvider(provider);
+}
+
+async function signinWithUsername(username, password) {
+  const result = await Firestore()
+    .collection('User')
+    .doc(username)
+    .get()
+    .then((snapshot) => {
+      if (snapshot.exists)
+        return {
+          success: {
+            email: snapshot.get('email'),
+          },
+        };
+      return {
+        failure: {
+          error: 'firestore-error',
+          message: 'Failed to get email from user',
+          details: {},
+        },
+      };
+    })
+    .catch((error) => ({
+      failure: {
+        error: 'firestore-error',
+        message: 'Failed to get email from user',
+        details: error,
+      },
+    }));
+  if (result.success) {
+    return FirebaseAuth()
+      .signInWithEmailAndPassword(result.success.email, password)
+      .then((credentials) => credentials)
+      .catch((error) =>
+        Promise.reject({
+          error: 'invalid-username-password',
+          message: 'Email or password is incorrect',
+          details: error,
+        })
+      );
+  }
+  return Promise.reject(result.failure);
+}
+async function signinWithProvider(provider) {
   // sign in using a provider
   return FirebaseAuth()
     .signInWithPopup(provider)
     .then((credentials) => credentials)
     .catch((error) =>
-      ErrorSignin.reject({
+      Promise.reject({
         error: 'invalid-provider',
         message: 'The supplied AuthProvider is invalid',
         details: error,
