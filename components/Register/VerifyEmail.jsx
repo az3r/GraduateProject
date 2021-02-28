@@ -1,14 +1,15 @@
 import {
   Grid,
-  Box,
   Button,
   makeStyles,
   TextField,
   Typography,
-  Container,
 } from '@material-ui/core';
-import { Send, CheckCircle } from '@material-ui/icons';
+import { Send } from '@material-ui/icons';
+import PropTypes from 'prop-types';
 import * as React from 'react';
+import { FirebaseAuth } from '../../libs/firebase_client';
+import { getBaseUrl } from '../../utils/urls';
 
 export default function VerifyEmail({ email }) {
   const styles = useStyles();
@@ -90,12 +91,25 @@ function VerifyButton() {
     </>
   );
 
-  function onVerifyEmail() {
+  async function onVerifyEmail() {
+    // update ui
     if (!resend) setResend(true);
-    setCooldown(5);
+    setCooldown(60);
+
+    try {
+      await FirebaseAuth().currentUser.sendEmailVerification({
+        url: getBaseUrl(),
+      });
+      await FirebaseAuth().currentUser.reload();
+    } catch (error) {
+      console.error(error);
+    }
   }
 }
 
+VerifyEmail.propTypes = {
+  email: PropTypes.string.isRequired,
+};
 const useStyles = makeStyles((theme) => ({
   root: {
     padding: theme.spacing(2),
