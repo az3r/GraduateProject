@@ -12,7 +12,6 @@ import { CKEditor } from '@ckeditor/ckeditor5-react';
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import SkewLoader from 'react-spinners/SkewLoader';
 import CodeEditor from '../../CodeEditor';
-import URL from '../../URL';
 
 const useStyles = makeStyles({
   textSuccess: {
@@ -23,7 +22,7 @@ const useStyles = makeStyles({
   },
 });
 
-export default function AddProblemPage(props) {
+export default function AddProblemPage() {
   const [testName, setTestName] = useState('');
   const [testIntro, setTestIntro] = useState('');
   const [difficulty, setDifficulty] = useState(0);
@@ -93,7 +92,7 @@ public class Program
     const splitedText = text.split('\r');
     let result = [];
     let arrayOfVariables = [];
-    for (let i = 0; i < splitedText.length; i++) {
+    for (let i = 0; i < splitedText.length; i += 1) {
       if (splitedText[i] !== '\n') {
         arrayOfVariables = [...arrayOfVariables, splitedText[i]];
         if (i === splitedText.length - 1) {
@@ -110,8 +109,8 @@ public class Program
   const handleChangeInputFile = (e) => {
     if (e.target.files[0] !== undefined) {
       const fileReader = new FileReader();
-      fileReader.onload = async (e) => {
-        const text = e.target.result;
+      fileReader.onload = async (reader) => {
+        const text = reader.target.result;
         const testCases = getFormatResultFromFile(text);
         setInput(testCases);
       };
@@ -122,8 +121,8 @@ public class Program
   const handleChangeOutputFile = (e) => {
     if (e.target.files[0] !== undefined) {
       const fileReader = new FileReader();
-      fileReader.onload = async (e) => {
-        const text = e.target.result;
+      fileReader.onload = async (reader) => {
+        const text = reader.target.result;
         const expectedOutputs = getFormatResultFromFile(text);
         setOutput(expectedOutputs);
       };
@@ -150,7 +149,7 @@ public class Program
     }
 
     let cases = [];
-    for (let i = 0; i < input.length; i++) {
+    for (let i = 0; i < input.length; i += 1) {
       cases = [
         ...cases,
         {
@@ -170,11 +169,11 @@ public class Program
         userId: 1,
         title: testName,
         content: testIntro,
-        difficulty: difficulty,
-        score: score,
-        language: language,
+        difficulty,
+        score,
+        language,
         code: code[language],
-        cases: cases,
+        cases,
       }),
     });
 
@@ -195,7 +194,7 @@ public class Program
     setSimpleOutput(e.target.value);
   };
 
-  const handleTestCode = async (e) => {
+  const handleTestCode = async () => {
     if (simpleInput === '' || simpleOutput === '') {
       setTestReponse('Have not submited simple input or output yet');
       return;
@@ -210,7 +209,7 @@ public class Program
       body: JSON.stringify({
         userId: 1,
         code: code[language],
-        language: language,
+        language,
         cases: [
           {
             input: simpleInput,
@@ -231,10 +230,7 @@ public class Program
       } else {
         setIsTestSuccess(false);
         setTestReponse(
-          'Test failed! \nExpected output: ' +
-            data.results[0].expected +
-            '\n. Actual output: ' +
-            data.results[0].actual
+          `Test failed! \nExpected output: ${data.results[0].expected}\n. Actual output: ${data.results[0].actual}`
         );
       }
     } else {
@@ -251,21 +247,21 @@ public class Program
         encType="multipart/form-data"
       >
         <Box boxShadow={1} p={2} m={3}>
-          <Typography variant={'h5'}>Enter problem title: </Typography>
-          <TextField onChange={handleChangeTestName} fullWidth></TextField>
+          <Typography variant="h5">Enter problem title: </Typography>
+          <TextField onChange={handleChangeTestName} fullWidth />
         </Box>
 
         <Box boxShadow={1} p={2} m={3}>
-          <Typography variant={'h5'}>Enter problem information: </Typography>
+          <Typography variant="h5">Enter problem information: </Typography>
           <CKEditor
             editor={ClassicEditor}
             data=""
             onChange={handleChangeTestIntro}
-          ></CKEditor>
+          />
         </Box>
 
         <Box boxShadow={1} p={2} m={3}>
-          <Typography variant={'h5'}>Choose level of difficulty: </Typography>
+          <Typography variant="h5">Choose level of difficulty: </Typography>
           <NativeSelect
             inputProps={{ 'aria-label': 'age' }}
             onChange={handleChangeDifficulty}
@@ -277,38 +273,38 @@ public class Program
         </Box>
 
         <Box boxShadow={1} p={2} m={3}>
-          <Typography variant={'h5'}>Enter score: </Typography>
+          <Typography variant="h5">Enter score: </Typography>
           <input
             onChange={handleChangeScore}
             type="number"
             max="100"
             min="0"
             value={score}
-          ></input>
+          />
         </Box>
 
         <Box boxShadow={1} p={2} m={3}>
-          <Typography variant={'h5'}>Choose programming language: </Typography>
+          <Typography variant="h5">Choose programming language: </Typography>
           <NativeSelect
             inputProps={{ 'aria-label': 'age' }}
             onChange={handleChangeLanguague}
           >
             {/* <option value={"c_cpp"}>C++</option> */}
-            <option value={'Csharp'}>C#</option>
-            <option value={'Java'}>Java</option>
-            <option value={'Python'}>Python</option>
+            <option value="Csharp">C#</option>
+            <option value="Java">Java</option>
+            <option value="Python">Python</option>
           </NativeSelect>
         </Box>
 
         <Box boxShadow={1} p={2} m={3}>
           <Grid container>
             <Grid item lg={6}>
-              <Typography variant={'h5'}>Enter code: </Typography>
+              <Typography variant="h5">Enter code: </Typography>
               <CodeEditor
                 language={language}
                 code={code[language]}
                 onChange={handleOnChangeCode}
-              ></CodeEditor>
+              />
             </Grid>
             <Grid item lg={6}>
               <Typography variant="h5">Notes:</Typography>
@@ -326,7 +322,8 @@ public class Program
                 </li>
                 <li>
                   <Typography>
-                    Click "Test code" button to test your code and input, output
+                    Click &quot;Test code&quot; button to test your code and
+                    input, output
                   </Typography>
                 </li>
               </ul>
@@ -336,22 +333,22 @@ public class Program
                   multiline
                   label="Enter simple input"
                   onChange={handleChangeSimpleInput}
-                ></TextField>
+                />
               </div>
               <div>
                 <TextField
                   multiline
                   label="Enter simple output"
                   onChange={handleChangeSimpleOutput}
-                ></TextField>
+                />
               </div>
-              <br></br>
+              <br />
 
               <div>
                 <Button variant="primary" onClick={handleTestCode}>
                   Test code
                 </Button>
-                <SkewLoader color={'#088247'} loading={isLoading} size={20} />
+                <SkewLoader color="#088247" loading={isLoading} size={20} />
               </div>
               <Typography
                 className={
@@ -365,20 +362,20 @@ public class Program
         </Box>
 
         <Box boxShadow={1} p={2} m={3}>
-          <Typography variant={'h5'}>Submit input file: </Typography>
+          <Typography variant="h5">Submit input file: </Typography>
           <input
             type="file"
             name="inputFile"
             onChange={handleChangeInputFile}
-          ></input>
+          />
         </Box>
         <Box boxShadow={1} p={2} m={3}>
-          <Typography variant={'h5'}>Submit expected output file: </Typography>
+          <Typography variant="h5">Submit expected output file: </Typography>
           <input
             type="file"
             name="outputFile"
             onChange={handleChangeOutputFile}
-          ></input>
+          />
         </Box>
 
         <Box
