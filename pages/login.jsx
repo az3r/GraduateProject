@@ -234,12 +234,8 @@ export default function Login() {
       if (username && password) {
         setWaiting(true);
       }
-      const credentials = await signin({ username, password, provider });
-      if (credentials.user.emailVerified) {
-        router.replace('/');
-      } else {
-        router.push(`/verify?email=${credentials.user.email}`);
-      }
+      await signin({ username, password, provider });
+      router.replace('/');
 
       setSnackBarState({
         open: true,
