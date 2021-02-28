@@ -6,12 +6,15 @@ import {
   Typography,
 } from '@material-ui/core';
 import { Send } from '@material-ui/icons';
+import Link from 'next/link';
 import PropTypes from 'prop-types';
 import * as React from 'react';
 import { FirebaseAuth } from '../../libs/firebase_client';
 import { getBaseUrl } from '../../utils/urls';
+import { useAuth } from '../../hooks/auth';
 
 export default function VerifyEmail({ email }) {
+  const user = useAuth();
   const styles = useStyles();
 
   return (
@@ -25,26 +28,39 @@ export default function VerifyEmail({ email }) {
     >
       <Grid item>
         <Typography align="center" variant="h3">
-          Verify Your Account
+          {user.emailVerfied ? 'Acount alredy verified' : 'Verify Your Account'}
         </Typography>
       </Grid>
       <Grid item>
-        <Typography>
-          Your new account has been registered successfully, but first you need
-          to verify your email before using our service{' '}
-        </Typography>
+        {user.emailVerfied ? (
+          <Typography>Your account has been verified</Typography>
+        ) : (
+          <Typography>
+            Your new account has been registered successfully, but first you
+            need to verify your email before using our service{' '}
+          </Typography>
+        )}
       </Grid>
       <Grid item>
         <TextField
           type="email"
           variant="outlined"
+          label="Email"
           fullWidth
           contentEditable={false}
           value={email}
         />
       </Grid>
       <Grid item>
-        <VerifyButton />
+        {user.emailVerfied ? (
+          <Link href="/">
+            <Button variant="contained" color="secondary" fullWidth>
+              Back to Dashboard
+            </Button>
+          </Link>
+        ) : (
+          <VerifyButton />
+        )}
       </Grid>
     </Grid>
   );
@@ -98,7 +114,7 @@ function VerifyButton() {
 
     try {
       await FirebaseAuth().currentUser.sendEmailVerification({
-        url: getBaseUrl(),
+        url: `${getBaseUrl()}login`,
       });
       await FirebaseAuth().currentUser.reload();
     } catch (error) {
