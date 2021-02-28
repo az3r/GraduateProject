@@ -1,7 +1,6 @@
 import React from 'react';
 import {
   Avatar,
-  Box,
   Button,
   CircularProgress,
   Container,
@@ -233,41 +232,37 @@ export default function Login() {
     onSignin({ username, password });
   }
 
-  function onSignin({ username, password, method }) {
-    setWaiting(true);
-    setTimeout(() => {
-      setWaiting(false);
-      if (false) {
-        setSnackBarState({
-          open: true,
-          severity: 'success',
-          message: 'Login successfully!',
-        });
-        router.replace('/');
-      } else {
-        const { error } = { error: 'invalid-username-password' };
+  async function onSignin({ username, password, method }) {
+    const provider = method && providers[method];
+    try {
+      // show loading component only when user signs in with username and password
+      if (username && password) {
+        setWaiting(true);
+      }
+      await signin({ username, password, provider });
+
+      setSnackBarState({
+        open: true,
+        severity: 'success',
+        message: 'Login successfully!',
+      });
+      router.replace('/');
+    } catch (failure) {
+      const { error } = failure;
+      let message;
+      if (error.startsWith('invalid')) message = 'Invalid username or password';
+      else message = 'Internal server error';
+
+      // only display message if user signs in with username and password
+      if (username && password) {
         setSnackBarState({
           open: true,
           severity: 'error',
-          message:
-            error === 'invalid-username-password'
-              ? 'Invalid username or password'
-              : 'Internal server error',
+          message,
         });
+        setWaiting(false);
       }
-    }, 1000);
-
-    /*
-    const provider = method && providers[method];
-    signin({ username, password, provider })
-      .then(() => {
-        // redirect to home page
-        // router.replace('/');
-        console.log('sign in success');
-      })
-      .catch((error) => console.error(error));
-
-*/
+    }
   }
 }
 

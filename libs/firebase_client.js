@@ -13,29 +13,39 @@ if (firebase.apps.length === 0) {
     appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID,
   });
 }
-const FirebaseAuth = firebase.auth;
+
 const Firestore = firebase.firestore;
 
-async function register({ username, email, password }) {
+export const FirebaseAuth = firebase.auth;
+
+export async function register({ username, email, password }) {
   return FirebaseAuth()
     .createUserWithEmailAndPassword(email, password)
-    .then(
-      (credentials) =>
-        // TODO: save username and email into database
-        // update profile
-        credentials.user
-          .updateProfile({
-            displayName: username,
+    .then((credentials) =>
+      Firestore()
+        .collection('User')
+        .doc(username)
+        .set({
+          email,
+        })
+        .then(() => credentials)
+        .catch((error) =>
+          Promise.reject({
+            error: 'firestore-error',
+            message: 'Unable to update email for user',
+            details: {
+              ...error,
+              collection: 'User',
+              doc: username,
+              at: {
+                email,
+              },
+            },
           })
-          .then(() => credentials)
-          .catch((error) =>
-            Promise.reject({
-              error: 'update-profile-failed',
-              message: "Failed to update user' profile",
-              details: error,
-            })
-          ),
-      (error) => ({
+        )
+    )
+    .catch((error) =>
+      Promise.reject({
         error: 'invalid-account',
         message: 'Invalid email format or password is too weak',
         details: error,
@@ -43,7 +53,7 @@ async function register({ username, email, password }) {
     );
 }
 
-async function signin({ username, password, provider }) {
+export async function signin({ username, password, provider }) {
   if (username && password) {
     return signinWithUsername(username, password);
   }
@@ -60,46 +70,39 @@ async function signin({ username, password, provider }) {
 }
 
 async function signinWithUsername(username, password) {
-  const result = await Firestore()
+  const email = await Firestore()
     .collection('User')
     .doc(username)
     .get()
     .then((snapshot) => {
-      if (snapshot.exists)
-        return {
-          success: {
-            email: snapshot.get('email'),
-          },
-        };
-      return {
-        failure: {
-          error: 'firestore-error',
-          message: 'Failed to get email from user',
-          details: {},
-        },
-      };
+      if (snapshot.exists) return snapshot.get('email');
+      return Promise.reject({
+        error: 'invalid-username',
+        message: 'username does not exist in database',
+        details: { username },
+      });
     })
-    .catch((error) => ({
-      failure: {
+    .catch((failure) => {
+      if (failure.error === 'invalid-username') return Promise.reject(failure);
+      return Promise.reject({
         error: 'firestore-error',
         message: 'Failed to get email from user',
+        details: failure,
+      });
+    });
+
+  return FirebaseAuth()
+    .signInWithEmailAndPassword(email, password)
+    .then((result) => result)
+    .catch((error) =>
+      Promise.reject({
+        error: 'invalid-password',
+        message: 'Password is incorrect',
         details: error,
-      },
-    }));
-  if (result.success) {
-    return FirebaseAuth()
-      .signInWithEmailAndPassword(result.success.email, password)
-      .then((credentials) => credentials)
-      .catch((error) =>
-        Promise.reject({
-          error: 'invalid-username-password',
-          message: 'Email or password is incorrect',
-          details: error,
-        })
-      );
-  }
-  return Promise.reject(result.failure);
+      })
+    );
 }
+
 async function signinWithProvider(provider) {
   // sign in using a provider
   return FirebaseAuth()
@@ -107,11 +110,9 @@ async function signinWithProvider(provider) {
     .then((credentials) => credentials)
     .catch((error) =>
       Promise.reject({
-        error: 'invalid-provider',
-        message: 'The supplied AuthProvider is invalid',
+        error: 'signin-provider-error',
+        message: 'Failed to signin with provider',
         details: error,
       })
     );
 }
-
-export { FirebaseAuth, signin, register };
