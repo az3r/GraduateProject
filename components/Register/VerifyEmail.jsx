@@ -113,9 +113,9 @@ function VerifyButton() {
     setCooldown(60);
 
     try {
-      const { email } = FirebaseAuth().currentUser;
+      const { uid } = FirebaseAuth().currentUser;
       await FirebaseAuth().currentUser.sendEmailVerification({
-        url: `${getBaseUrl()}verify?email=${email}`,
+        url: `${getBaseUrl()}verify?uid=${uid}`,
       });
     } catch (error) {
       console.error(error);
