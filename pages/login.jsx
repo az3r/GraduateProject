@@ -234,14 +234,18 @@ export default function Login() {
       if (username && password) {
         setWaiting(true);
       }
-      await signin({ username, password, provider });
+      const credentials = await signin({ username, password, provider });
+      if (credentials.user.emailVerified) {
+        router.replace('/');
+      } else {
+        router.push(`/verify?email=${credentials.user.email}`);
+      }
 
       setSnackBarState({
         open: true,
         severity: 'success',
         message: 'Login successfully!',
       });
-      router.replace('/');
     } catch (failure) {
       const { error } = failure;
       let message;

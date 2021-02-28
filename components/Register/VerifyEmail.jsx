@@ -113,10 +113,10 @@ function VerifyButton() {
     setCooldown(60);
 
     try {
+      const { email } = FirebaseAuth().currentUser;
       await FirebaseAuth().currentUser.sendEmailVerification({
-        url: `${getBaseUrl()}login`,
+        url: `${getBaseUrl()}verify?email=${email}`,
       });
-      await FirebaseAuth().currentUser.reload();
     } catch (error) {
       console.error(error);
     }
