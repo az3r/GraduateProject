@@ -18,6 +18,25 @@ const Firestore = firebase.firestore;
 
 export const FirebaseAuth = firebase.auth;
 
+export async function existed({ username, email }) {
+  try {
+    if (username) {
+      const snapshot = await Firestore().collection('User').doc(username).get();
+      return snapshot.exists;
+    }
+    if (email) {
+      const providers = await FirebaseAuth().fetchSignInMethodsForEmail(email);
+      return providers.length > 0;
+    }
+    return false;
+  } catch (error) {
+    return Promise.reject({
+      error: 'firestore-error',
+      message: 'Unable to read document for collection "User"',
+      details: error,
+    });
+  }
+}
 export async function register({ username, email, password }) {
   return FirebaseAuth()
     .createUserWithEmailAndPassword(email, password)
@@ -29,28 +48,15 @@ export async function register({ username, email, password }) {
           email,
         })
         .then(() => credentials)
-        .catch((error) =>
-          Promise.reject({
-            error: 'firestore-error',
-            message: 'Unable to update email for user',
-            details: {
-              ...error,
-              collection: 'User',
-              doc: username,
-              at: {
-                email,
-              },
-            },
-          })
-        )
     )
-    .catch((error) =>
-      Promise.reject({
+    .catch((failure) => {
+      if (failure.error === 'firestore-error') return Promise.reject(failure);
+      return Promise.reject({
         error: 'invalid-account',
         message: 'Invalid email format or password is too weak',
-        details: error,
-      })
-    );
+        details: failure,
+      });
+    });
 }
 
 export async function signin({ username, password, provider }) {

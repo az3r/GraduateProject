@@ -186,12 +186,7 @@ export default function Login() {
                 </Grid>
                 <Grid item>
                   <Link href="/register">
-                    <Button
-                      variant="contained"
-                      href="/register"
-                      color="secondary"
-                      fullWidth
-                    >
+                    <Button variant="contained" color="secondary" fullWidth>
                       Register now!
                     </Button>
                   </Link>

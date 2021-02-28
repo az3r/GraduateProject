@@ -5,7 +5,6 @@ import {
   Container,
   TextField,
   makeStyles,
-  Box,
   Snackbar,
   Grid,
   CircularProgress,
@@ -14,16 +13,20 @@ import PropTypes from 'prop-types';
 import Head from 'next/head';
 import Link from 'next/link';
 import { Alert } from '@material-ui/lab';
-import { register } from '../../libs/firebase_client';
+import { register, existed } from '../../libs/firebase_client';
 
 export default function DeveloperRegister({ onRegistered }) {
   const styles = useStyles();
   const [waiting, setWaiting] = React.useState(false);
+  const [userExisted, setUserExisted] = React.useState(false);
+  const [emailExisted, setEmailExisted] = React.useState(false);
+  const [strongPassword, setStrongPassword] = React.useState(true);
   const [snackBarState, setSnackBarState] = React.useState({
     open: false,
     severity: 'info',
     message: 'No message',
   });
+
   return (
     <Container className={styles.root}>
       <form onSubmit={onSubmit}>
@@ -39,12 +42,13 @@ export default function DeveloperRegister({ onRegistered }) {
           </Grid>
           <Grid item>
             <TextField
-              name="email"
-              id="email"
+              name="username"
+              id="username"
               fullWidth
-              type="email"
-              className={styles.field}
-              label="Email"
+              helperText={userExisted ? "Username's already existed" : null}
+              error={userExisted}
+              type="text"
+              label="Username"
               variant="filled"
               required
               disabled={waiting}
@@ -52,12 +56,13 @@ export default function DeveloperRegister({ onRegistered }) {
           </Grid>
           <Grid item>
             <TextField
-              name="username"
-              id="username"
+              name="email"
+              id="email"
               fullWidth
-              type="text"
-              className={styles.field}
-              label="Username"
+              type="email"
+              helperText={emailExisted ? "Email's already existed" : null}
+              error={emailExisted}
+              label="Email"
               variant="filled"
               required
               disabled={waiting}
@@ -69,21 +74,9 @@ export default function DeveloperRegister({ onRegistered }) {
               id="password"
               fullWidth
               type="password"
-              className={styles.field}
               label="Password"
-              variant="filled"
-              required
-              disabled={waiting}
-            />
-          </Grid>
-          <Grid item>
-            <TextField
-              name="confirmPassword"
-              id="confirm-password"
-              fullWidth
-              type="password"
-              className={styles.field}
-              label="Confirm Password"
+              error={!strongPassword}
+              helperText={strongPassword ? null : 'Weak password'}
               variant="filled"
               required
               disabled={waiting}
@@ -125,7 +118,6 @@ export default function DeveloperRegister({ onRegistered }) {
                     fullWidth
                     variant="outlined"
                     color="secondary"
-                    href="/login"
                   >
                     I already had an account
                   </Button>
@@ -159,57 +151,41 @@ export default function DeveloperRegister({ onRegistered }) {
   function onSubmit(e) {
     e.preventDefault();
     const form = new FormData(e.target);
-    const username = form.get('username');
-    const email = form.get('email');
-    const password = form.get('password');
-    onRegister({ username, email, password });
+    const username = form.get('username').trim();
+    const email = form.get('email').trim();
+    const password = form.get('password').trim();
+
+    validate({ username, email, password }).then((result) => {
+      if (result) onRegister({ username, email, password });
+    });
   }
 
-  function onRegister({ username, email, password }) {
-    setWaiting(true);
-    setTimeout(() => {
-      setWaiting(false);
-      if (true) {
-        setSnackBarState({
-          open: true,
-          severity: 'success',
-          message: 'Register successfully!',
-        });
-        onRegistered({ email: 'example@eamil.com' });
-      } else {
-        const { error } = { error: 'invalid-username-password' };
-        setSnackBarState({
-          open: true,
-          severity: 'error',
-          message:
-            error === 'invalid-username-password'
-              ? 'Invalid username or password'
-              : 'Internal server error',
-        });
-      }
-    }, 1000);
-    /*
-    register({
-      username,
-      email,
-      password,
-    })
-      .then((credentilas) => {
-        setSnackBarState({
-          open: true,
-          severity: 'success',
-          message: 'Registered successfully!',
-        });
-        onRegistered(credentilas);
-      })
-      .catch((error) => {
-        setSnackBarState({
-          open: true,
-          severity: 'error',
-          message: 'Internal server error',
-        });
+  async function validate(form) {
+    const isEmailExist = await existed({ email: form.email });
+    const isUserExist = await existed({ username: form.username });
+    const regex = new RegExp('^(?=.*[A-Z]{1,})(?=.*[a-z]{1,}).{8,}$');
+    const isStrongPassword = regex.test(form.password);
+    setEmailExisted(isEmailExist);
+    setUserExisted(isUserExist);
+    setStrongPassword(isStrongPassword);
+
+    // update ui
+    return !isEmailExist && !isUserExist && isStrongPassword;
+  }
+
+  async function onRegister({ username, email, password }) {
+    try {
+      setWaiting(true);
+      const credentials = await register({ username, email, password });
+      onRegistered(credentials.user);
+    } catch (error) {
+      setSnackBarState({
+        open: true,
+        severity: 'error',
+        message: 'Internal server error',
       });
-      */
+      setWaiting(false);
+    }
   }
 }
 
