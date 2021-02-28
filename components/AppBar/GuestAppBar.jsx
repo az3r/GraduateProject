@@ -17,13 +17,13 @@ function GuestAppBar() {
           Smart Coder
         </Typography>
         <Link href="/login">
-          <Button className={styles.action} href="/login">
-            Login
+          <Button className={styles.action}>
+            <Typography variant="h6">Login</Typography>
           </Button>
         </Link>
         <Link href="/register">
-          <Button className={styles.action} href="/register">
-            Register
+          <Button className={styles.action}>
+            <Typography variant="h6">Register</Typography>
           </Button>
         </Link>
       </Toolbar>
@@ -34,12 +34,9 @@ const useStyles = makeStyles((theme) => ({
   title: {
     flexGrow: 1,
   },
-  menu: {
-    marginRight: theme.spacing(2),
-    color: theme.palette.primary.contrastText,
-  },
   action: {
-    width: 96,
+    width: 128,
+    textTransform: 'none',
     color: theme.palette.primary.contrastText,
   },
 }));

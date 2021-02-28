@@ -1,6 +1,8 @@
-import { MemberAppBar, GuestAppBar } from '../AppBar';
-
+import * as React from 'react';
 import { makeStyles } from '@material-ui/core';
+import PropTypes from 'prop-types';
+import { MemberAppBar, GuestAppBar } from '../AppBar';
+import { useAuth } from '../../hooks/auth';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -13,13 +15,18 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function Layout(props) {
+export default function Layout({ children }) {
+  const user = useAuth();
   const classes = useStyles();
 
   return (
     <>
-      <GuestAppBar />
-      <div className={classes.root}>{props.children}</div>
+      {user ? <MemberAppBar /> : <GuestAppBar />}
+      <div className={classes.root}>{children}</div>
     </>
   );
 }
+
+Layout.propTypes = {
+  children: PropTypes.node.isRequired,
+};

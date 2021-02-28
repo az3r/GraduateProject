@@ -12,7 +12,6 @@ import {
   Grow,
   Typography,
   Popper,
-  Link as MaterialLink,
   Box,
 } from '@material-ui/core';
 import MenuIcon from '@material-ui/icons/Menu';
@@ -35,7 +34,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function MemberAppBar() {
+export default function MemberAppBar() {
   const styles = useStyles();
   const [open, setOpen] = React.useState(false);
   const anchorRef = React.useRef(null);
@@ -48,23 +47,17 @@ function MemberAppBar() {
         </IconButton>
         <Link href="/">
           <MenuItem>
-            <MaterialLink href="/" color="inherit" underline="none">
-              <Typography variant="h6">Problems</Typography>
-            </MaterialLink>
+            <Typography variant="h6">Problems</Typography>
           </MenuItem>
         </Link>
         <Link href="/examination">
           <MenuItem>
-            <MaterialLink href="/examination" color="inherit" underline="none">
-              <Typography variant="h6">Examination</Typography>
-            </MaterialLink>
+            <Typography variant="h6">Examination</Typography>
           </MenuItem>
         </Link>
         <Link href="/examiner">
           <MenuItem>
-            <MaterialLink href="/examiner" color="inherit" underline="none">
-              <Typography variant="h6">Examiner</Typography>
-            </MaterialLink>
+            <Typography variant="h6">Examiner</Typography>
           </MenuItem>
         </Link>
         <Box flexGrow={1} />
@@ -77,15 +70,11 @@ function MemberAppBar() {
           transition
           disablePortal
         >
-          {({ TransitionProps, placement }) => (
+          {({ TransitionProps }) => (
             <Grow
               in={TransitionProps.in}
               onEntered={TransitionProps.onEnter}
               onExit={TransitionProps.onExited}
-              style={{
-                transformOrigin:
-                  placement === 'bottom' ? 'center top' : 'center bottom',
-              }}
             >
               <ClickAwayListener onClickAway={() => setOpen(false)}>
                 <Paper>
@@ -111,22 +100,12 @@ function CompanyActions() {
   return (
     <MenuList>
       <Link href="/profile">
-        <MenuItem>
-          <MaterialLink href="/profile" color="inherit" underline="none">
-            Profile
-          </MaterialLink>
-        </MenuItem>
+        <MenuItem>Profile</MenuItem>
       </Link>
       <Link href="/setting">
-        <MenuItem>
-          <MaterialLink href="/setting" color="inherit" underline="none">
-            Setting
-          </MaterialLink>
-        </MenuItem>
+        <MenuItem>Setting</MenuItem>
       </Link>
       <MenuItem onClick={logout}>Sign out</MenuItem>
     </MenuList>
   );
 }
-
-export default MemberAppBar;
