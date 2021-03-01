@@ -8,8 +8,6 @@ import {
   Grid,
   Hidden,
 } from '@material-ui/core';
-import Problems from '../index';
-import YourProgress from '../../YourProgress';
 
 
 const useStyles = makeStyles((theme) => ({

@@ -20,9 +20,21 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="73bd1854-2930-493b-bbd0-fb90442d9327" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/components/Examinations/index.jsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/pages/examination/introduction.jsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/pages/examination_intro.jsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/coins_28px.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/ranking.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/trophy.png" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/components/Problems/Search/index.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/Problems/Search/index.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pages/index.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/pages/index.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/components/Problems/index.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/Problems/index.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/components/TestMCQ/AnswerMCQ/index.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/TestMCQ/AnswerMCQ/index.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/components/TopScore/index.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/TopScore/index.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pages/examination/index.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/pages/examination/index.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/yarn.lock" beforeDir="false" afterPath="$PROJECT_DIR$/yarn.lock" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -108,7 +120,11 @@
       <workItem from="1614172840065" duration="1845000" />
       <workItem from="1614237632761" duration="12344000" />
       <workItem from="1614269113286" duration="3954000" />
-      <workItem from="1614314783036" duration="3654000" />
+      <workItem from="1614314783036" duration="3875000" />
+      <workItem from="1614494110715" duration="9498000" />
+      <workItem from="1614516238655" duration="412000" />
+      <workItem from="1614526115094" duration="4856000" />
+      <workItem from="1614581015833" duration="15364000" />
     </task>
     <servers />
   </component>
@@ -132,6 +148,10 @@
       <screen x="1366" y="0" width="1366" height="738" />
     </state>
     <state x="1503" y="0" width="1092" height="738" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.0.1366.738/1366.0.1366.738@1366.0.1366.738" timestamp="1613881740621" />
+    <state x="1786" y="171" key="#com.intellij.fileTypes.FileTypeChooser" timestamp="1614507422683">
+      <screen x="1366" y="0" width="1366" height="738" />
+    </state>
+    <state x="1786" y="171" key="#com.intellij.fileTypes.FileTypeChooser/0.0.1366.738/1366.0.1366.738@1366.0.1366.738" timestamp="1614507422683" />
     <state x="1829" y="124" key="FileChooserDialogImpl" timestamp="1612698749575">
       <screen x="1366" y="0" width="1366" height="738" />
     </state>

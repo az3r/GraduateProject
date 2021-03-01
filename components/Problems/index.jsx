@@ -32,7 +32,8 @@ const useStyles = makeStyles((theme) => ({
     marginTop: 10,
     marginBottom: 10,
     display: 'flex',
-    float: 'right',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 }));
 
