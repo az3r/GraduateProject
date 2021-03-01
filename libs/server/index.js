@@ -1,3 +1,3 @@
-import validate from './validate';
+import * as auth from './validate';
 
-export { validate };
+export { auth };

@@ -1,12 +1,10 @@
-import { Firestore } from './firebase_server';
+import { FirebaseAuth } from './firebase_server';
 
-export default function validate(req) {
-  // retrieve user token
-  const { authorization } = req.headers;
+export async function verify(authorization) {
   const regex = new RegExp(/^(Bearer)\s+(\w+)$$/g);
   const results = regex.exec(authorization);
-  const uid = results[2];
+  const token = results[2];
 
-  // get user from uid
-  return true;
+  const { uid } = await FirebaseAuth().verifyIdToken(token);
+  return uid;
 }
