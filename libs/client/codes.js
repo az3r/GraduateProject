@@ -24,20 +24,19 @@ export async function test({
 }) {
   const { uid } = FirebaseAuth().currentUser;
   const token = await FirebaseAuth().currentUser.getIdToken(true);
-  const response = await fetch({
+  const response = await fetch(`${compiler}${langs[lang.toLowerCase()]}`, {
     method: 'POST',
-    url: `${compiler}${langs[lang.toLowerCase()]}`,
-    body: {
-      code,
-      testcases,
-    },
     headers: {
       'Content-Type': 'application/json',
       Authorization: `Bearer ${token}`,
     },
+    body: JSON.stringify({
+      code,
+      testcases,
+    }),
   });
 
-  const data = response.json();
+  const data = await response.json();
   if (response.status === '200') {
     const { failed } = data;
     const status = failed > 0 ? statuses.failed : statuses.passed;

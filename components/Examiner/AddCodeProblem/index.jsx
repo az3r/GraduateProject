@@ -11,6 +11,10 @@ import React, { useState } from 'react';
 import { CKEditor } from '@ckeditor/ckeditor5-react';
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import SkewLoader from 'react-spinners/SkewLoader';
+import getTestCaseFromInputAndOutput from '@libs/client/business';
+import create from '@libs/client/problems';
+import { test } from '@libs/client/codes';
+import { FirebaseAuth } from '@libs/client/firebase';
 import CodeEditor from '../../CodeEditor';
 
 const useStyles = makeStyles({
@@ -23,12 +27,7 @@ const useStyles = makeStyles({
 });
 
 export default function AddProblemPage() {
-  const [testName, setTestName] = useState('');
-  const [testIntro, setTestIntro] = useState('');
-  const [difficulty, setDifficulty] = useState(0);
-  const [score, setScore] = useState(0);
-  const [language, setLanguage] = useState('Csharp');
-  const [code, setCode] = useState({
+  const code = {
     c_cpp: `#include <stdio.h>
 int main()
 {
@@ -49,6 +48,15 @@ public class Program
     }
 }`,
     Python: `print("Hello world!")`,
+  };
+  const [problem,setProblem] = useState({
+    title: "",
+    content: "",
+    difficulty: 0,
+    score: 0,
+    language: "Csharp",
+    code: code.Csharp,
+    cases: [],
   });
   const [input, setInput] = useState([]);
   const [output, setOutput] = useState([]);
@@ -59,33 +67,32 @@ public class Program
   const [isLoading, setIsLoading] = useState(false);
   const [isTestSuccess, setIsTestSuccess] = useState(false);
   const [isAddSuccess, setIsAddSuccess] = useState(false);
+
   const classes = useStyles();
 
   const handleChangeTestName = (event) => {
-    setTestName(event.target.value);
+    setProblem({...problem, title: event.target.value});
   };
 
   const handleChangeTestIntro = (event, editor) => {
-    setTestIntro(editor.getData());
+    setProblem({...problem, content: editor.getData()});
   };
 
-  const handleChangeDifficulty = (e) => {
-    setDifficulty(e.target.value);
+  const handleChangeDifficulty = (event) => {
+    setProblem({...problem, difficulty: event.target.value});
   };
 
-  const handleChangeScore = (e) => {
-    setScore(e.target.value);
+  const handleChangeScore = (event) => {
+    setProblem({...problem, score: event.target.value});
   };
 
-  const handleChangeLanguague = (e) => {
-    setLanguage(e.target.value);
+  const handleChangeLanguague = (event) => {
+    setProblem({...problem, language: event.target.value});
+    setProblem({...problem, code: code[event.target.value]});
   };
 
   const handleOnChangeCode = (newCode) => {
-    if (language === 'c_cpp') setCode({ ...code, c_cpp: newCode });
-    if (language === 'Csharp') setCode({ ...code, Csharp: newCode });
-    if (language === 'Java') setCode({ ...code, Java: newCode });
-    if (language === 'Python') setCode({ ...code, Python: newCode });
+   setProblem({...problem, code: newCode});
   };
 
   function getFormatResultFromFile(text) {
@@ -130,54 +137,27 @@ public class Program
     }
   };
 
-  const handleSubmitAddTest = async (e) => {
+  const handleSubmitAddProblem = async (e) => {
     e.preventDefault();
     if (!isTestSuccess) {
       setIsAddSuccess(false);
       setMessage('Exam has not tested with the passed result yet!');
       return;
     }
-    if (testIntro === '' || testName === '' || input === [] || output === []) {
+
+    const cases = getTestCaseFromInputAndOutput(input,output);
+    setProblem({...problem, cases});
+
+    if (problem.title === '' || problem.content === '' || problem.cases ) {
       setIsAddSuccess(false);
       setMessage('Not filling in enough information for the test');
       return;
     }
-    if (input.length !== output.length) {
-      setIsAddSuccess(false);
-      setMessage('Number of input and output not equal');
-      return;
-    }
 
-    let cases = [];
-    for (let i = 0; i < input.length; i += 1) {
-      cases = [
-        ...cases,
-        {
-          input: input[i].join(' ').trim(),
-          output: output[i].join(' ').trim(),
-        },
-      ];
-    }
+    const {uid} = FirebaseAuth().currentUser;
+    const response = create(uid,problem);
 
-    const response = await fetch('/api/add-test', {
-      method: 'POST',
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        userId: 1,
-        title: testName,
-        content: testIntro,
-        difficulty,
-        score,
-        language,
-        code: code[language],
-        cases,
-      }),
-    });
-
-    if (response.status === 200) {
+    if (response === true) {
       setIsAddSuccess(true);
       setMessage('Add test success!');
     } else {
@@ -200,40 +180,35 @@ public class Program
       return;
     }
     setIsLoading(true);
-    const response = await fetch('/api/test-exam', {
-      method: 'POST',
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        userId: 1,
-        code: code[language],
-        language,
-        cases: [
-          {
-            input: simpleInput,
-            output: simpleOutput,
-          },
-        ],
-      }),
+    const cases = [{
+      input: simpleInput,
+      output: simpleOutput
+    }];
+    const response = await test({
+      problemId: "",
+      problemName: "",
+      lang: problem.language,
+      code: problem.code,
+      testcases: cases,
+      save: false
     });
 
+    console.log(response);
+
     setIsLoading(false);
-    if (response.status === 200) {
-      const data = await response.json();
-      if (data.results[0].passed) {
-        setIsTestSuccess(true);
-        setTestReponse(
-          'Test passed! Now proceed with deleting answer in the code editor. Then, submiting input and output files with the same format as current simple test cases\n(Note: test cases in files must be devided by a blank line)'
-        );
-      } else {
+    if (response.passed) {
+      setIsTestSuccess(true);
+      setTestReponse(
+        'Test passed! Now proceed with deleting answer in the code editor. Then, submiting input and output files with the same format as current simple test cases\n(Note: test cases in files must be devided by a blank line)'
+      );
+    } 
+    else if(response.failed === 1) {
         setIsTestSuccess(false);
         setTestReponse(
-          `Test failed! \nExpected output: ${data.results[0].expected}\n. Actual output: ${data.results[0].actual}`
+          `Test failed! \nExpected output: ${response.results[0].expected}\n. Actual output: ${response.results[0].actual}`
         );
-      }
-    } else {
+    } 
+    else {
       setIsTestSuccess(false);
       setTestReponse('Error! Please check again');
     }
@@ -243,7 +218,8 @@ public class Program
     <Box m={1}>
       <form
         method="post"
-        onSubmit={handleSubmitAddTest}
+        onSubmit={handleSubmitAddProblem
+    }
         encType="multipart/form-data"
       >
         <Box boxShadow={1} p={2} m={3}>
@@ -279,7 +255,7 @@ public class Program
             type="number"
             max="100"
             min="0"
-            value={score}
+            value={problem.score}
           />
         </Box>
 
@@ -301,9 +277,9 @@ public class Program
             <Grid item lg={6}>
               <Typography variant="h5">Enter code: </Typography>
               <CodeEditor
-                language={language}
-                code={code[language]}
-                onChange={handleOnChangeCode}
+                language={problem.language}
+                code={problem.code}
+                onCodeChange={handleOnChangeCode}
               />
             </Grid>
             <Grid item lg={6}>

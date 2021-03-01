@@ -18,6 +18,7 @@ export default async function create(
     owner: userId,
     createdOn: Firestore.Timestamp.now(),
   });
+  return true;
 }
 
 export async function get(problemId) {
