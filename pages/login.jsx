@@ -243,10 +243,10 @@ export default function Login() {
         severity: 'success',
         message: 'Login successfully!',
       });
-    } catch (failure) {
-      const { error } = failure;
+    } catch (error) {
+      const { code } = error;
       let message;
-      if (error.startsWith('invalid')) message = 'Invalid username or password';
+      if (code.startsWith('auth/')) message = 'Invalid username or password';
       else message = 'Internal server error';
 
       // only display message if user signs in with username and password

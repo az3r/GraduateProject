@@ -17,7 +17,8 @@ import {
 import MenuIcon from '@material-ui/icons/Menu';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { signout } from '@libs/client';
+import { auth } from '@libs/client';
+import { useAuth } from '@hooks/auth';
 
 const useStyles = makeStyles((theme) => ({
   grow: {
@@ -36,6 +37,7 @@ const useStyles = makeStyles((theme) => ({
 
 export default function MemberAppBar() {
   const styles = useStyles();
+  const user = useAuth();
   const [open, setOpen] = React.useState(false);
   const anchorRef = React.useRef(null);
 
@@ -62,7 +64,7 @@ export default function MemberAppBar() {
         </Link>
         <Box flexGrow={1} />
         <IconButton onClick={() => setOpen(!open)} ref={anchorRef}>
-          <Avatar src="https://picsum.photos/200" />
+          <Avatar alt="user's profile" src={user.photoURL} />
         </IconButton>
         <Popper
           anchorEl={anchorRef.current}
@@ -93,7 +95,7 @@ function CompanyActions() {
   const router = useRouter();
 
   async function logout() {
-    await signout();
+    await auth.signout();
     await router.push('/');
   }
 
