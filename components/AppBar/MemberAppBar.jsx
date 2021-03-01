@@ -17,7 +17,7 @@ import {
 import MenuIcon from '@material-ui/icons/Menu';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { FirebaseAuth } from '../../libs/firebase_client';
+import { signout } from '@libs/client';
 
 const useStyles = makeStyles((theme) => ({
   grow: {
@@ -93,7 +93,7 @@ function CompanyActions() {
   const router = useRouter();
 
   async function logout() {
-    await FirebaseAuth().signOut();
+    await signout();
     await router.push('/');
   }
 

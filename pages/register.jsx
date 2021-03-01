@@ -10,13 +10,12 @@ import {
   Stepper,
 } from '@material-ui/core';
 import Head from 'next/head';
-import PropTypes from 'prop-types';
 import {
   DeveloperRegister,
   SelectAccount,
   CompanyRegister,
-} from '../components/Register';
-import VerifyEmail from '../components/Register/VerifyEmail';
+} from '@components/Register';
+import VerifyEmail from '@components/Register/VerifyEmail';
 
 const steps = [
   { label: 'Select your account type', optional: false },

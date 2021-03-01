@@ -4,7 +4,13 @@
     "es2021": true,
     "node": true
   },
-  "extends": ["plugin:react/recommended", "airbnb", "prettier"],
+  "extends": [
+    "plugin:react/recommended",
+    "plugin:import/errors",
+    "plugin:import/warnings",
+    "airbnb",
+    "prettier"
+  ],
   "parserOptions": {
     "ecmaFeatures": {
       "jsx": true
@@ -14,6 +20,11 @@
   },
   "plugins": ["react", "@babel"],
   "parser": "@babel/eslint-parser",
+  "settings": {
+    "import/resolver": {
+      "babel-module": {}
+    }
+  },
   "rules": {
     "no-use-before-define": "off",
     "prefer-promise-reject-errors": "off"

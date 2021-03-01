@@ -13,7 +13,7 @@ import PropTypes from 'prop-types';
 import Head from 'next/head';
 import Link from 'next/link';
 import { Alert } from '@material-ui/lab';
-import { register, existed } from '../../libs/firebase_client';
+import { register, existed } from '@libs/client';
 
 export default function DeveloperRegister({ onRegistered }) {
   const styles = useStyles();

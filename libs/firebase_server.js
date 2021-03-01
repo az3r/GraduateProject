@@ -1,5 +1,4 @@
 import admin from 'firebase-admin';
-
 // initialize firebase app for server-side
 if (admin.apps.length === 0) {
   admin.initializeApp({

@@ -9,9 +9,9 @@ import { Send } from '@material-ui/icons';
 import Link from 'next/link';
 import PropTypes from 'prop-types';
 import * as React from 'react';
-import { FirebaseAuth } from '../../libs/firebase_client';
-import { getBaseUrl } from '../../utils/urls';
-import { useAuth } from '../../hooks/auth';
+import { sendVerifyEmail } from '@libs/client';
+import { getBaseUrl } from '@utils/urls';
+import { useAuth } from '@hooks/auth';
 
 export default function VerifyEmail({ email }) {
   const user = useAuth();
@@ -64,61 +64,61 @@ export default function VerifyEmail({ email }) {
       </Grid>
     </Grid>
   );
-}
 
-function VerifyButton() {
-  const [resend, setResend] = React.useState(false);
-  const [cooldown, setCooldown] = React.useState(0);
+  function VerifyButton() {
+    const [resend, setResend] = React.useState(false);
+    const [cooldown, setCooldown] = React.useState(0);
 
-  React.useEffect(() => {
-    if (cooldown > 0) {
-      setTimeout(() => {
-        setCooldown(cooldown - 1);
-      }, 1000);
-    } else {
-      // send verification email
-    }
-  }, [cooldown]);
-  return (
-    <>
-      {resend ? (
-        <Button
-          startIcon={cooldown <= 0 && <Send />}
-          disabled={cooldown > 0}
-          variant="contained"
-          color={cooldown > 0 ? 'text' : 'primary'}
-          fullWidth
-          onClick={onVerifyEmail}
-        >
-          {cooldown > 0
-            ? `Please wait for ${cooldown}s...'`
-            : 'Resend verification'}
-        </Button>
-      ) : (
-        <Button
-          fullWidth
-          color="primary"
-          variant="contained"
-          onClick={onVerifyEmail}
-        >
-          Verify email
-        </Button>
-      )}
-    </>
-  );
+    React.useEffect(() => {
+      let timer;
+      if (cooldown > 0) {
+        timer = setTimeout(() => {
+          setCooldown(cooldown - 1);
+        }, 1000);
+      }
+      return clearTimeout(timer);
+    }, [cooldown]);
+    return (
+      <>
+        {resend ? (
+          <Button
+            startIcon={cooldown <= 0 && <Send />}
+            disabled={cooldown > 0}
+            variant="contained"
+            color={cooldown > 0 ? 'default' : 'primary'}
+            fullWidth
+            onClick={onVerifyEmail}
+          >
+            {cooldown > 0
+              ? `Please wait for ${cooldown}s...'`
+              : 'Resend verification'}
+          </Button>
+        ) : (
+          <Button
+            fullWidth
+            color="primary"
+            variant="contained"
+            onClick={onVerifyEmail}
+          >
+            Verify email
+          </Button>
+        )}
+      </>
+    );
 
-  async function onVerifyEmail() {
-    // update ui
-    if (!resend) setResend(true);
-    setCooldown(60);
+    async function onVerifyEmail() {
+      // update ui
+      if (!resend) setResend(true);
+      setCooldown(60);
 
-    try {
-      const { uid } = FirebaseAuth().currentUser;
-      await FirebaseAuth().currentUser.sendEmailVerification({
-        url: `${getBaseUrl()}verify?uid=${uid}`,
-      });
-    } catch (error) {
-      console.error(error);
+      try {
+        sendVerifyEmail({
+          url: `${getBaseUrl()}verify?uid=${user.uid}`,
+        });
+      } catch (error) {
+        // TODO: handler this error
+        console.error(error);
+      }
     }
   }
 }

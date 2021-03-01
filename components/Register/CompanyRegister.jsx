@@ -5,112 +5,208 @@ import {
   Container,
   TextField,
   makeStyles,
-  Box,
+  Snackbar,
+  Grid,
+  CircularProgress,
 } from '@material-ui/core';
+import PropTypes from 'prop-types';
 import Head from 'next/head';
 import Link from 'next/link';
+import { Alert } from '@material-ui/lab';
+import { register, existed } from '@libs/client';
 
-export default function CompanyRegister({ onSubmitted }) {
+export default function DeveloperRegister({ onRegistered }) {
   const styles = useStyles();
+  const [waiting, setWaiting] = React.useState(false);
+  const [userExisted, setUserExisted] = React.useState(false);
+  const [emailExisted, setEmailExisted] = React.useState(false);
+  const [strongPassword, setStrongPassword] = React.useState(true);
+  const [snackBarState, setSnackBarState] = React.useState({
+    open: false,
+    severity: 'info',
+    message: 'No message',
+  });
+
   return (
-    <form className={styles.root} onSubmit={onSubmit}>
-      <Head>
-        <title>Register</title>
-        <meta property="og-title" content="Register" />
-      </Head>
-      <Typography variant="h4" align="center">
-        Create company account
-      </Typography>
-      ,w
-      <Container maxWidth="sm" className={styles.form}>
-        <TextField
-          id="email"
-          fullWidth
-          name="email"
-          type="email"
-          className={styles.field}
-          label="Buiness Email"
-          variant="filled"
-          required
-        />
-        <TextField
-          id="username"
-          name="username"
-          fullWidth
-          type="text"
-          className={styles.field}
-          label="Username"
-          variant="filled"
-          required
-        />
-        <TextField
-          id="password"
-          name="password"
-          fullWidth
-          type="password"
-          className={styles.field}
-          label="Password"
-          variant="filled"
-          required
-        />
-        <TextField
-          id="confirm-password"
-          name="confirmPassword"
-          fullWidth
-          type="password"
-          className={styles.field}
-          label="Confirm Password"
-          variant="filled"
-          required
-        />
-        <Button variant="contained" color="primary" type="submit" fullWidth>
-          Register
-        </Button>
-        <Box
-          className={styles.seperator}
-          display="flex"
-          flexDirection="column"
-          alignItems="center"
-        >
-          <Typography align="center">Already have an account?</Typography>
-          <Link href="/login">
-            <Button
-              className={styles.seperator}
+    <Container className={styles.root}>
+      <form onSubmit={onSubmit}>
+        <Head>
+          <title>Register</title>
+          <meta property="og-title" content="Register" />
+        </Head>
+        <Grid container spacing={4} direction="column" justify="center">
+          <Grid item>
+            <Typography variant="h4" align="center" className={styles.title}>
+              Create Company Account
+            </Typography>
+          </Grid>
+          <Grid item>
+            <TextField
+              name="username"
+              id="username"
               fullWidth
-              color="secondary"
-              variant="contained"
-              href="/login"
+              helperText={userExisted ? "Username's already existed" : null}
+              error={userExisted}
+              type="text"
+              label="Company's name"
+              variant="filled"
+              required
+              disabled={waiting}
+            />
+          </Grid>
+          <Grid item>
+            <TextField
+              name="email"
+              id="email"
+              fullWidth
+              type="email"
+              helperText={emailExisted ? "Email's already existed" : null}
+              error={emailExisted}
+              label="Business Email"
+              variant="filled"
+              required
+              disabled={waiting}
+            />
+          </Grid>
+          <Grid item>
+            <TextField
+              name="password"
+              id="password"
+              fullWidth
+              type="password"
+              label="Password"
+              error={!strongPassword}
+              helperText={strongPassword ? null : 'Weak password'}
+              variant="filled"
+              required
+              disabled={waiting}
+            />
+          </Grid>
+          {waiting ? (
+            <Grid
+              item
+              container
+              justify="center"
+              alignItems="center"
+              spacing={2}
             >
-              Login to start now
-            </Button>
-          </Link>
-        </Box>
-      </Container>
-    </form>
+              <Grid item>
+                <Typography align="center">
+                  Registering new account, please wait...
+                </Typography>
+              </Grid>
+              <Grid item>
+                <CircularProgress />
+              </Grid>
+            </Grid>
+          ) : (
+            <>
+              <Grid item>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  type="submit"
+                  fullWidth
+                >
+                  Register
+                </Button>
+              </Grid>
+              <Grid item>
+                <Link href="/login">
+                  <Button
+                    className={styles.seperator}
+                    fullWidth
+                    variant="outlined"
+                    color="secondary"
+                  >
+                    I already had an account
+                  </Button>
+                </Link>
+              </Grid>
+            </>
+          )}
+        </Grid>
+      </form>
+      <Snackbar
+        open={snackBarState.open}
+        autoHideDuration={2000}
+        onClose={() =>
+          setSnackBarState((prev) => ({
+            ...prev,
+            open: false,
+          }))
+        }
+        anchorOrigin={{
+          horizontal: 'right',
+          vertical: 'bottom',
+        }}
+      >
+        <Alert variant="filled" severity={snackBarState.severity}>
+          {snackBarState.message}
+        </Alert>
+      </Snackbar>
+    </Container>
   );
+
   function onSubmit(e) {
     e.preventDefault();
     const form = new FormData(e.target);
-    const email = form.get('email');
-    const username = form.get('username');
+    const username = form.get('username').trim();
+    const email = form.get('email').trim();
+    const password = form.get('password').trim();
 
-    // call api
+    validate({ username, email, password }).then((result) => {
+      if (result) onRegister({ username, email, password });
+    });
+  }
+
+  async function validate(form) {
+    const isEmailExist = await existed({ email: form.email });
+    const isUserExist = await existed({ username: form.username });
+    const regex = new RegExp('^(?=.*[A-Z]{1,})(?=.*[a-z]{1,}).{8,}$');
+    const isStrongPassword = regex.test(form.password);
+    setEmailExisted(isEmailExist);
+    setUserExisted(isUserExist);
+    setStrongPassword(isStrongPassword);
+
+    // update ui
+    return !isEmailExist && !isUserExist && isStrongPassword;
+  }
+
+  async function onRegister({ username, email, password }) {
+    try {
+      setWaiting(true);
+      const credentials = await register({
+        username,
+        email,
+        password,
+        roll: 'company',
+      });
+      onRegistered(credentials.user);
+    } catch (error) {
+      setSnackBarState({
+        open: true,
+        severity: 'error',
+        message: 'Internal server error',
+      });
+      setWaiting(false);
+    }
   }
 }
 
+DeveloperRegister.propTypes = {
+  onRegistered: PropTypes.func.isRequired,
+};
+
 const useStyles = makeStyles((theme) => ({
   root: {
-    paddingTop: theme.spacing(6),
-  },
-  form: {
-    alignItems: 'center',
-  },
-  field: {
-    marginTop: theme.spacing(3),
-    marginBottom: theme.spacing(3),
-    display: 'block',
-  },
-  seperator: {
-    marginTop: theme.spacing(2),
+    [theme.breakpoints.up('xs')]: {
+      padding: theme.spacing(5),
+      width: 512,
+    },
+    [theme.breakpoints.down('xs')]: {
+      padding: theme.spacing(2),
+      width: '100%',
+    },
   },
 }));
