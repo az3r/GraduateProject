@@ -14,7 +14,7 @@ import Head from 'next/head';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
 import { Alert } from '@material-ui/lab';
-import { FirebaseAuth } from '@libs/client/firebase_client';
+import { FirebaseAuth } from '@libs/client/firebase';
 import { auth } from '@libs/client';
 
 const providers = {

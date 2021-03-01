@@ -27,6 +27,8 @@
   },
   "rules": {
     "no-use-before-define": "off",
-    "prefer-promise-reject-errors": "off"
+    "prefer-promise-reject-errors": "off",
+    "react/prop-types": "off",
+    "import/prefer-default-export": "off"
   }
 }

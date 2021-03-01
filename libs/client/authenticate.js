@@ -1,4 +1,4 @@
-import { Firestore, FirebaseAuth } from './firebase_client';
+import { Firestore, FirebaseAuth } from './firebase';
 
 export async function register({ username, email, password, role }) {
   const credentials = await FirebaseAuth().createUserWithEmailAndPassword(

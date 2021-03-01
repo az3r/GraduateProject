@@ -1,5 +1,5 @@
 import { collections } from '@utils/constants';
-import { Firestore } from './firebase_client';
+import { Firestore } from './firebase';
 
 const { problems } = collections;
 
@@ -29,5 +29,5 @@ export async function get(problemId) {
     return snapshot.data();
   }
   const snapshot = await Firestore().collection(problems).get();
-  return snapshot.docs.map((item) => item.data());
+  return snapshot.docs.map((item) => ({ id: item.id, ...item.data() }));
 }

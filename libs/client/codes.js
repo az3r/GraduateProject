@@ -1,5 +1,5 @@
 import { collections, urls } from '@utils/constants';
-import { Firestore, FirebaseAuth } from './firebase_client';
+import { Firestore, FirebaseAuth } from './firebase';
 
 const { users } = collections;
 const { compiler } = urls;
@@ -14,7 +14,7 @@ const statuses = {
   error: 'syntax-error',
 };
 
-export default async function test({
+export async function test({
   problemId,
   problemName,
   lang,

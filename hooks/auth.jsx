@@ -1,6 +1,6 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { FirebaseAuth } from '@libs/client/firebase_client';
+import { FirebaseAuth } from '@libs/client/firebase';
 
 const authContext = React.createContext(null);
 

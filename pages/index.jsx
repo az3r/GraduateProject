@@ -1,21 +1,19 @@
 import React from 'react';
+import { problems as probs } from '@libs/client';
+import PropTypes from 'prop-types';
+
 import Head from 'next/head';
-import {
-  Grid,
-  Hidden,
-  Container
-} from '@material-ui/core';
+import { Grid, Hidden, Container } from '@material-ui/core';
 
-import Problems from '../components/Problems';
-import YourProgress from '../components/YourProgress';
-import Layout from '../components/Layout';
+import Problems from '@components/Problems/index';
+import YourProgress from '@components/YourProgress';
+import Layout from '@components/Layout';
 
-export default function Home() {
+export default function Home({ problems }) {
   return (
     <>
       <Head>
         <title>Smart Coder</title>
-        <link rel="icon" href="/favicon.ico" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
@@ -32,7 +30,7 @@ export default function Home() {
               justify="center"
             />
             <Grid item xs={12} md={8} lg={8}>
-              <Problems />
+              <Problems problems={problems} />
             </Grid>
             <Hidden smDown>
               <Grid item xs={false} md={4} lg={4}>
@@ -44,4 +42,18 @@ export default function Home() {
       </Layout>
     </>
   );
+}
+
+Home.propTypes = {
+  // eslint-disable-next-line react/forbid-prop-types
+  problems: PropTypes.array.isRequired,
+};
+
+export async function getServerSideProps() {
+  const items = await probs.get();
+  return {
+    props: {
+      problems: items,
+    },
+  };
 }

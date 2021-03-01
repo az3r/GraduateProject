@@ -1,6 +1,6 @@
 export const collections = {
   users: 'Users',
-  problems: 'Problems',
+  problems: 'Exam',
 };
 export const urls = {
   compiler: 'https://online-code-exercise.herokuapp.com/',
