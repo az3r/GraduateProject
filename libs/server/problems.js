@@ -14,5 +14,3 @@ export async function get(problemId) {
   const snapshot = await Firestore().collection(problems).get();
   return snapshot.docs.map((item) => item.data());
 }
-
-export const a = 5;

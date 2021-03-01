@@ -1,3 +1,5 @@
-import * as auth from './validate';
+import * as problems from './problems';
 
-export { auth };
+export { problems };
+
+export const a = 5;
