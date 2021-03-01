@@ -56,10 +56,5 @@
   "lint-staged": {
     "*.{js,jsx}": "eslint --cache --fix",
     "*.{js,css,md}": "prettier --write"
-  },
-  "browser": {
-    "child_process": false,
-    "fs": false,
-    "net": false
   }
 }
