@@ -51,6 +51,7 @@ Home.propTypes = {
 
 export async function getServerSideProps() {
   const items = await probs.get();
+
   return {
     props: {
       problems: items,

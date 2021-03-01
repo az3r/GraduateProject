@@ -1,29 +1,28 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import Head from 'next/head';
-import { makeStyles, Grid, Paper } from '@material-ui/core';
-import Layout from '../../components/Layout';
+// import { makeStyles } from '@material-ui/core';
 import dynamic from 'next/dynamic';
+import { problems as probs } from '@libs/client';
+import Layout from '../../components/Layout';
 
 const TestCode = dynamic(
-  () => {
-    return import('../../components/TestCode');
-  },
+  () => import('../../components/TestCode'),
   { ssr: false }
 );
 
-const useStyles = makeStyles((theme) => ({
-  root: {
-    flexGrow: 1,
-  },
-  paper: {
-    padding: theme.spacing(2),
-    textAlign: 'center',
-    color: theme.palette.text.secondary,
-  },
-}));
+// const useStyles = makeStyles((theme) => ({
+//   root: {
+//     flexGrow: 1,
+//   },
+//   paper: {
+//     padding: theme.spacing(2),
+//     textAlign: 'center',
+//     color: theme.palette.text.secondary,
+//   },
+// }));
 
-export default function Test({ problemId }) {
-  const classes = useStyles();
+export default function Test({ problem }) {
+  // const classes = useStyles();
 
   return (
     <>
@@ -33,16 +32,26 @@ export default function Test({ problemId }) {
       </Head>
 
       <Layout>
-        <TestCode problemId={problemId}></TestCode>
+        <TestCode problem={problem} />
       </Layout>
     </>
   );
 }
 
+// export async function getServerSideProps({ params }) {
+//   return {
+//     props: {
+//       problemId: params.id,
+//     },
+//   };
+// }
+
 export async function getServerSideProps({ params }) {
+  const item = await probs.get(params.id);
+
   return {
     props: {
-      problemId: params.id,
+      problem: item,
     },
   };
 }

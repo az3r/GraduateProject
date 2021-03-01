@@ -62,29 +62,29 @@ export default function Problems({ problems: items }) {
       filteredProblemList = problemList;
     } else {
       filteredProblemList = problemList.filter((problem) =>
-        problem.data.title.toLowerCase().includes(keyword.toLowerCase())
+        problem.title.toLowerCase().includes(keyword.toLowerCase()) //
       );
     }
 
     if (diff !== 'all') {
       if (diff === 'easy') {
         filteredProblemList = filteredProblemList.filter(
-          (problem) => problem.data.difficulty === 0
+          (problem) => problem.difficulty === 0 //
         );
       } else if (diff === 'medium') {
         filteredProblemList = filteredProblemList.filter(
-          (problem) => problem.data.difficulty === 1
+          (problem) => problem.difficulty === 1 //
         );
       } else {
         filteredProblemList = filteredProblemList.filter(
-          (problem) => problem.data.difficulty === 2
+          (problem) => problem.difficulty === 2 //
         );
       }
     }
 
-    if (language !== 'all') {
+    if (lang !== 'all') {
       filteredProblemList = filteredProblemList.filter(
-        (problem) => problem.data.language.toLowerCase() === language
+        (problem) => problem.language.toLowerCase() === lang  //
       );
     }
 
