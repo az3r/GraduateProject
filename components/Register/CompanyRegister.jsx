@@ -13,7 +13,7 @@ import PropTypes from 'prop-types';
 import Head from 'next/head';
 import Link from 'next/link';
 import { Alert } from '@material-ui/lab';
-import { register, existed } from '@libs/client';
+import { auth } from '@libs/client';
 
 export default function DeveloperRegister({ onRegistered }) {
   const styles = useStyles();
@@ -161,8 +161,8 @@ export default function DeveloperRegister({ onRegistered }) {
   }
 
   async function validate(form) {
-    const isEmailExist = await existed({ email: form.email });
-    const isUserExist = await existed({ username: form.username });
+    const isEmailExist = await auth.existed({ email: form.email });
+    const isUserExist = await auth.existed({ username: form.username });
     const regex = new RegExp('^(?=.*[A-Z]{1,})(?=.*[a-z]{1,}).{8,}$');
     const isStrongPassword = regex.test(form.password);
     setEmailExisted(isEmailExist);
@@ -176,7 +176,7 @@ export default function DeveloperRegister({ onRegistered }) {
   async function onRegister({ username, email, password }) {
     try {
       setWaiting(true);
-      const credentials = await register({
+      const credentials = await auth.register({
         username,
         email,
         password,

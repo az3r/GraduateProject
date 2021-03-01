@@ -14,7 +14,8 @@ import Head from 'next/head';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
 import { Alert } from '@material-ui/lab';
-import { FirebaseAuth, signin } from '../libs/firebase_client';
+import { FirebaseAuth } from '@libs/client/firebase_client';
+import { auth } from '@libs/client';
 
 const providers = {
   google: new FirebaseAuth.GoogleAuthProvider(),
@@ -234,7 +235,7 @@ export default function Login() {
       if (username && password) {
         setWaiting(true);
       }
-      await signin({ username, password, provider });
+      await auth.signin({ username, password, provider });
       router.replace('/');
 
       setSnackBarState({

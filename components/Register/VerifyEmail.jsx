@@ -9,7 +9,7 @@ import { Send } from '@material-ui/icons';
 import Link from 'next/link';
 import PropTypes from 'prop-types';
 import * as React from 'react';
-import { sendVerifyEmail } from '@libs/client';
+import { auth } from '@libs/client';
 import { getBaseUrl } from '@utils/urls';
 import { useAuth } from '@hooks/auth';
 
@@ -112,7 +112,7 @@ export default function VerifyEmail({ email }) {
       setCooldown(60);
 
       try {
-        sendVerifyEmail({
+        auth.sendVerifyEmail({
           url: `${getBaseUrl()}verify?uid=${user.uid}`,
         });
       } catch (error) {

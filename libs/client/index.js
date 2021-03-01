@@ -1,5 +1,4 @@
-import { signin, signout } from './signin';
-import { existed, sendVerifyEmail } from './authenticate';
-import register from './register';
+import * as auth from './authenticate';
+import * as users from './users';
 
-export { signin, existed, register, sendVerifyEmail, signout };
+export { auth, users };

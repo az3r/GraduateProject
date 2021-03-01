@@ -1,5 +1,4 @@
-import admin from '../../libs/firebase_server';
-import createTestModel from '../../model/ExamModel';
+import admin from '../../libs/server/firebase_server';
 
 const database = admin.firestore();
 
@@ -14,7 +13,7 @@ export default async function handler(req, res) {
     req.body.cases
   );
   try {
-    const result = await database.collection('Exam').doc().set(postData);
+    const result = await database.collection('Exams').doc().set(postData);
     return res.status(200).json({
       message: 'Add new test successfully',
       createdOn: result.writeTime,
