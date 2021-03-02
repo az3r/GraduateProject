@@ -231,10 +231,7 @@ export default function Login() {
   async function onSignin({ username, password, method }) {
     const provider = method && providers[method];
     try {
-      // show loading component only when user signs in with username and password
-      if (username && password) {
-        setWaiting(true);
-      }
+      setWaiting(true);
       await auth.signin({ username, password, provider });
       router.replace('/');
 
@@ -244,20 +241,20 @@ export default function Login() {
         message: 'Login successfully!',
       });
     } catch (error) {
+      // TODO: handle account existed error
+      console.error(error);
       const { code } = error;
       let message;
       if (code.startsWith('auth/')) message = 'Invalid username or password';
       else message = 'Internal server error';
 
       // only display message if user signs in with username and password
-      if (username && password) {
-        setSnackBarState({
-          open: true,
-          severity: 'error',
-          message,
-        });
-        setWaiting(false);
-      }
+      setSnackBarState({
+        open: true,
+        severity: 'error',
+        message,
+      });
+      setWaiting(false);
     }
   }
 }
