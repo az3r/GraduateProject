@@ -11,7 +11,7 @@ import React, { useState } from 'react';
 import { CKEditor } from '@ckeditor/ckeditor5-react';
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import SkewLoader from 'react-spinners/SkewLoader';
-import getTestCaseFromInputAndOutput from '@libs/client/business';
+import getTestCaseFromInputAndOutput, { getFormatResultFromFile } from '@libs/client/business';
 import create from '@libs/client/problems';
 import { test } from '@libs/client/codes';
 import { FirebaseAuth } from '@libs/client/firebase';
@@ -95,24 +95,6 @@ public class Program
    setProblem({...problem, code: newCode});
   };
 
-  function getFormatResultFromFile(text) {
-    const splitedText = text.split('\r');
-    let result = [];
-    let arrayOfVariables = [];
-    for (let i = 0; i < splitedText.length; i += 1) {
-      if (splitedText[i] !== '\n') {
-        arrayOfVariables = [...arrayOfVariables, splitedText[i]];
-        if (i === splitedText.length - 1) {
-          result = [...result, arrayOfVariables];
-        }
-      } else if (splitedText[i] === '\n') {
-        result = [...result, arrayOfVariables];
-        arrayOfVariables = [];
-      }
-    }
-    return result;
-  }
-
   const handleChangeInputFile = (e) => {
     if (e.target.files[0] !== undefined) {
       const fileReader = new FileReader();
@@ -184,31 +166,29 @@ public class Program
       input: simpleInput,
       output: simpleOutput
     }];
-    const response = await test({
-      problemId: "",
-      problemName: "",
-      lang: problem.language,
-      code: problem.code,
-      testcases: cases,
-      save: false
-    });
 
-    console.log(response);
-
-    setIsLoading(false);
-    if (response.passed) {
-      setIsTestSuccess(true);
-      setTestReponse(
-        'Test passed! Now proceed with deleting answer in the code editor. Then, submiting input and output files with the same format as current simple test cases\n(Note: test cases in files must be devided by a blank line)'
-      );
-    } 
-    else if(response.failed === 1) {
-        setIsTestSuccess(false);
+    try {
+      const response = await test({
+        problemId: "",
+        problemName: "",
+        lang: problem.language,
+        code: problem.code,
+        testcases: cases,
+        save: false
+      });
+      if (response.passed) {
+        setIsTestSuccess(true);
         setTestReponse(
-          `Test failed! \nExpected output: ${response.results[0].expected}\n. Actual output: ${response.results[0].actual}`
+          'Test passed! Now proceed with deleting answer in the code editor. Then, submiting input and output files with the same format as current simple test cases\n(Note: test cases in files must be devided by a blank line)'
         );
-    } 
-    else {
+      } 
+      else if(response.failed === 1) {
+          setIsTestSuccess(false);
+          setTestReponse(
+            `Test failed! \nExpected output: ${response.results[0].expected}\n. Actual output: ${response.results[0].actual}`
+          );
+      } 
+    } catch (error) {
       setIsTestSuccess(false);
       setTestReponse('Error! Please check again');
     }

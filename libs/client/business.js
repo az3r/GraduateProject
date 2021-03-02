@@ -12,3 +12,21 @@ export default function getTestCaseFromInputAndOutput(input, output) {
 
   return cases;
 }
+
+export function getFormatResultFromFile(text) {
+  const splitedText = text.split('\r');
+  let result = [];
+  let arrayOfVariables = [];
+  for (let i = 0; i < splitedText.length; i += 1) {
+    if (splitedText[i] !== '\n') {
+      arrayOfVariables = [...arrayOfVariables, splitedText[i]];
+      if (i === splitedText.length - 1) {
+        result = [...result, arrayOfVariables];
+      }
+    } else if (splitedText[i] === '\n') {
+      result = [...result, arrayOfVariables];
+      arrayOfVariables = [];
+    }
+  }
+  return result;
+}

@@ -1,11 +1,21 @@
-import {Box, Button} from '@material-ui/core';
+import { CKEditor } from '@ckeditor/ckeditor5-react';
+import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
+import {Box, Button, Checkbox, TextField, Typography} from '@material-ui/core';
 import React,{useState} from 'react';
+import { test } from '@libs/client/codes';
 import Questions from './Questions/index';
 
-
-export default function AddTestPage(props){
+export default function AddTestPage(){
+    const [examIntro,setExamIntro] = useState({
+        isPrivate: false,
+        password: "",
+        title: "",
+        content: "",
+        start: "",
+        end: "",
+    })
     const [listOfQuestions,setListOfQuestions] = useState([]);
-    const [code,setCode] = useState({
+    const code = {
     Csharp:
 `using System;
 class HelloWorld {
@@ -24,7 +34,7 @@ public class Program
     Python:
 `print("Hello world!")`
 
-    });
+    };
 
     const handleAddMultipleChoicesQuestion = () => {
         const newMultipleChoicesQuestion = {
@@ -50,7 +60,7 @@ public class Program
             Score: 0,
             Time: 0,
             Language: "Csharp",
-            Code: code["Csharp"],
+            Code: code.Csharp,
             Input: [],
             SimpleInput: '',
             Output: [],
@@ -71,6 +81,7 @@ public class Program
         setListOfQuestions(newListQuestions);
     }
 
+    // eslint-disable-next-line no-shadow
     const handleChangeAnswerMC = (id,code,value) => {
         const newListQuestions = [...listOfQuestions];
         const question = newListQuestions[id];
@@ -95,7 +106,7 @@ public class Program
 
 
     const handleChangeScore = (e) => {
-        const id = e.target.id;
+        const {id} = e.target;
         const split = id.split("_");
         const questionID = split[1];
         const newListQuestions = [...listOfQuestions];
@@ -105,7 +116,7 @@ public class Program
     }
 
     const handleChangeTime = (e) => {
-        const id = e.target.id;
+        const {id} = e.target;
         const split = id.split("_");
         const questionID = split[1];
         const newListQuestions = [...listOfQuestions];
@@ -115,7 +126,7 @@ public class Program
     }
 
     const handleChangeCorrectAnswer = (e) => {
-        const id = e.target.parentElement.parentElement.parentElement.parentElement.id;
+        const {id} = e.target.parentElement.parentElement.parentElement.parentElement;
         const split = id.split("_");
         const questionID = split[1];
         const newListQuestions = [...listOfQuestions];
@@ -126,7 +137,7 @@ public class Program
 
 
     const handleChangeCPTitle = (e) => {
-        const id = e.target.id;
+        const {id} = e.target;
         const split = id.split("_");
         const questionID = split[1];
         const newListQuestions = [...listOfQuestions];
@@ -143,7 +154,7 @@ public class Program
     }
 
     const handleChangeCPDifficulty = (e) => {
-        const id = e.target.id;
+        const {id} = e.target;
         const split = id.split("_");
         const questionID = split[1];
         const newListQuestions = [...listOfQuestions];
@@ -153,7 +164,7 @@ public class Program
     }
 
     const handleChangeLanguague = (e) => {
-        const id = e.target.id;
+        const {id} = e.target;
         const split = id.split("_");
         const questionID = split[1];
         const newListQuestions = [...listOfQuestions];
@@ -174,6 +185,7 @@ public class Program
         const splitedText = text.split("\r");
         let result = [];
         let arrayOfVariables = [];
+        // eslint-disable-next-line no-plusplus
         for(let i = 0 ; i < splitedText.length ; i++)
         {
             if(splitedText[i] !== "\n")
@@ -194,13 +206,14 @@ public class Program
     }
 
     const handleChangeCPFiles = (e) => {
-        const id = e.target.id;
+        const {id} = e.target;
         const split = id.split("_");
         const questionID = split[1];
         const fileType = split[2];
         if(e.target.files[0] !== undefined)
         {
             const fileReader = new FileReader();
+            // eslint-disable-next-line no-shadow
             fileReader.onload = async (e) => {
                 const text = (e.target.result);
                 const testCases = getFormatResultFromFile(text);
@@ -219,7 +232,7 @@ public class Program
     }
 
     const handleChangeSimpleTest = (e) => {
-        const id = e.target.id;
+        const {id} = e.target;
         const split = id.split("_");
         const questionID = split[1];
         const caseType = split[2];
@@ -236,48 +249,40 @@ public class Program
     {
         const newListQuestions = [...listOfQuestions];
         const question = newListQuestions[questionID];
-        const response = await fetch("/api/test-exam",{
-            method: "POST",
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type':'application/json'
-            },
-            body: JSON.stringify({
-                "userId": 1,
-                "code": question.Code,
-                "language": question.Language,
-                "cases": [{
-                    input: question.SimpleInput,
-                    output: question.SimpleOutput
-                }],
-            })})
-
-        if(response.status === 200)
-        {
-            const data = await response.json();
-            if(data.results[0].passed)
-            {
-                question.TestCodeSuccess = true;
-                question.MessageTestCode = "Test passed! Now proceed with deleting answer in the code editor .Then, submiting input and output files with the same format as current simple test cases\n(Note: test cases in files must be devided by a blank line)";
-            }
-            else
-            {       
-                question.TestCodeSuccess = false;
-                question.MessageTestCode = `Test failed! \nExpected output: ${  data.results[0].expected  }\n. Actual: ${  data.results[0].actual}`;
-            }
-
+        const cases = [{
+            input: question.SimpleInput,
+            output: question.SimpleOutput
+          }];
+      
+        try {
+        const response = await test({
+            problemId: "",
+            problemName: "",
+            lang: question.Language,
+            code: question.Code,
+            testcases: cases,
+            save: false
+        });
+        if (response.passed) {
+            question.TestCodeSuccess = true;
+            question.MessageTestCode = 'Test passed! Now proceed with deleting answer in the code editor. Then, submiting input and output files with the same format as current simple test cases\n(Note: test cases in files must be devided by a blank line)';
+        } 
+        else if(response.failed === 1) {
+            question.TestCodeSuccess = false;
+            question.MessageTestCode =  `Test failed! \nExpected output: ${response.results[0].expected}\n. Actual output: ${response.results[0].actual}`;
+        } 
+        } catch (error) {
+            question.TestCodeSuccess = false;
+            question.MessageTestCode = 'Error! Please check again';
         }
-        else
-        {           
-            question.MessageTestCode = "Error! Please check again";
+        finally{
+            question.IsLoadingTestCode = false;
+            setListOfQuestions(newListQuestions);
         }
-        
-        question.IsLoadingTestCode = false;
-        setListOfQuestions(newListQuestions);
     }
 
     const handleTestCode = async (e) => {
-        const id = e.target.parentElement.id;
+        const {id} = e.target.parentElement;
         const split = id.split("_");
         const questionID = split[1];
         const newListQuestions = [...listOfQuestions];
@@ -310,7 +315,32 @@ public class Program
         //     })})
 
     }
+    const handleChangeExamTitle = (e) => {
+        setExamIntro({...examIntro, title: e.target.value});
+    }
 
+    const handleChangeExamInfo = (event,editor) => {
+        setExamIntro({...examIntro, content: editor.getData()});
+    }
+
+    const handleChangeStartTime = (e) => {
+        setExamIntro({...examIntro, start: e.target.value});
+    }
+
+    const handleChangeEndTime = (e) => {
+        setExamIntro({...examIntro, end: e.target.value});
+    }
+
+    const handleChangeExamPrivacy = (e) => {
+        console.log(examIntro);
+        setExamIntro({...examIntro, isPrivate: e.target.checked});
+    }
+    
+    const handleChangeExamPassword = (e) => {
+        console.log(examIntro);
+        setExamIntro({...examIntro, password: e.target.value});
+    }
+    
     return(
         <Box m={1}>
             <form onSubmit={handleSubmitExam}>
@@ -322,6 +352,49 @@ public class Program
                         Add coding problem question
                     </Button>
                 </Box>
+
+                <Box boxShadow={1} p={2} m={3}>
+                    <Typography variant="h5">Is the exam private?: </Typography>
+                    <Checkbox
+                        checked={examIntro.isPrivate}
+                        onChange={handleChangeExamPrivacy}
+                    />
+                    {
+                        examIntro.isPrivate ? 
+                            <TextField label="Password" onChange={handleChangeExamPassword} /> : null
+                    }
+                </Box>
+
+                <Box boxShadow={1} p={2} m={3}>
+                    <Typography variant="h5">Enter exam title: </Typography>
+                    <TextField value={examIntro.title} fullWidth onChange={handleChangeExamTitle}/>
+                </Box>
+
+                <Box boxShadow={1} p={2} m={3}>
+                    <Typography variant="h5">Enter exam information: </Typography>
+                    <CKEditor
+                        editor={ClassicEditor}
+                        data={examIntro.content}
+                        onChange={handleChangeExamInfo}
+                    />
+                </Box>
+
+                <Box boxShadow={1} p={2} m={3}>
+                    <Typography variant="h5">Enter exam start time: </Typography>
+                    <TextField
+                        type="datetime-local"
+                        onChange={handleChangeStartTime}
+                    />
+                </Box>
+
+                <Box boxShadow={1} p={2} m={3}>
+                    <Typography variant="h5">Enter exam end time: </Typography>
+                    <TextField
+                        type="datetime-local"
+                        onChange={handleChangeEndTime}
+                    />
+                </Box>
+
                 
                 <Questions listOfQuestions={listOfQuestions}
                     handleChangeQuestionMC={handleChangeQuestionMC} handleChangeAnswerMC={handleChangeAnswerMC}
@@ -332,8 +405,7 @@ public class Program
                     handleChangeCPDifficulty={handleChangeCPDifficulty} handleChangeLanguague={handleChangeLanguague}
                     handleChangeCPCode={handleChangeCPCode} handleChangeCPFiles={handleChangeCPFiles}
                     handleChangeSimpleTest={handleChangeSimpleTest}
-                    handleTestCode={handleTestCode}>
-                </Questions>
+                    handleTestCode={handleTestCode} />
                 <Box display="flex" justifyContent="center" m={3}>
                     <Button variant="contained" color="primary" type="submit">Add Exam</Button>
                 </Box>

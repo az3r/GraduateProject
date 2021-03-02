@@ -26,76 +26,68 @@ export default function MultipleChoices({NO,value,handleChangeQuestionMC,handleC
     const handleChangeAnswerD = (event,editor) => {
         const data = editor.getData();
         handleChangeAnswerMC(NO,'D',data);
-    }
-
-
-    
+    } 
     return(
-        <>
-            <Box boxShadow={4} p={2}>
-                <Typography variant="h5">Question #{NO+1}</Typography>
-
-                <Box boxShadow={1} p={2} m={3}>
-                    <Typography variant={"h5"}>Enter question: </Typography>
-                    <CKEditor
-                        editor={ ClassicEditor }
-                        data={value.Question}
-                        onChange={handleChangeQuestion}/>
-                </Box>
-
-                <Box boxShadow={1} p={2} m={3}>
-                    <Typography variant={"h5"}>Enter score: </Typography>
-                    <input id={"MC_"+NO} onChange={handleChangeScore} type="number" max="100" min="0" value={value.Score}></input>
-                </Box>
-
-                <Box boxShadow={1} p={2} m={3}>
-                    <Typography variant={"h5"}>Enter time by minute (min: 0.5, max: 100): </Typography>
-                    <input id={"MC_"+NO}  onChange={handleChangeTime} type="number" max="100" min="0.5" value={value.Time} ></input>
-                </Box>
-
-                <Box boxShadow={1} p={2} m={3}>
-                    <Typography variant={"h5"}>Enter answer A: </Typography>
-                    <CKEditor
-                        editor={ ClassicEditor }
-                        data={value.A}
-                        onChange={handleChangeAnswerA}/>
-
-                </Box>
-
-                <Box boxShadow={1} p={2} m={3}>
-                    <Typography variant={"h5"}>Enter answer B: </Typography>
-                    <CKEditor
-                        editor={ ClassicEditor }
-                        data={value.B}
-                        onChange={handleChangeAnswerB}/>
-                </Box>
-
-                <Box boxShadow={1} p={2} m={3}>
-                    <Typography variant={"h5"}>Enter answer C: </Typography>
-                    <CKEditor
-                        editor={ ClassicEditor }
-                        data={value.C}
-                        onChange={handleChangeAnswerC}/>
-                </Box>
-
-                <Box boxShadow={1} p={2} m={3}>
-                    <Typography variant={"h5"}>Enter answer D: </Typography>
-                    <CKEditor
-                        editor={ ClassicEditor }
-                        data={value.D}
-                        onChange={handleChangeAnswerD}/>
-                </Box>
-
-                <Box boxShadow={1} p={2} m={3}>
-                    <Typography variant={"h5"}>Choose correct answer: </Typography>
-                        <RadioGroup id={"MC_"+NO} aria-label="gender" name="gender1" value={value.Correct} onChange={handleChangeCorrectAnswer}>
-                        <FormControlLabel value="A" control={<Radio />} label="A" />
-                        <FormControlLabel value="B" control={<Radio />} label="B" />
-                        <FormControlLabel value="C" control={<Radio />} label="C" />
-                        <FormControlLabel value="D" control={<Radio />} label="D" />
-                    </RadioGroup>
-                </Box>
+        <Box boxShadow={4} p={2} maxWidth>
+            <Box boxShadow={1} p={2} m={3}>
+                <Typography variant="h5">Enter question: </Typography>
+                <CKEditor
+                    editor={ ClassicEditor }
+                    data={value.Question}
+                    onChange={handleChangeQuestion}/>
             </Box>
-        </>
+
+            <Box boxShadow={1} p={2} m={3}>
+                <Typography variant="h5">Enter score: </Typography>
+                <input id={`MC_${NO}`} onChange={handleChangeScore} type="number" max="100" min="0" value={value.Score} />
+            </Box>
+
+            <Box boxShadow={1} p={2} m={3}>
+                <Typography variant="h5">Enter time by minute (min: 0.5, max: 100): </Typography>
+                <input id={`MC_${NO}`}  onChange={handleChangeTime} type="number" max="100" min="0.5" value={value.Time}  />
+            </Box>
+
+            <Box boxShadow={1} p={2} m={3}>
+                <Typography variant="h5">Enter answer A: </Typography>
+                <CKEditor
+                    editor={ ClassicEditor }
+                    data={value.A}
+                    onChange={handleChangeAnswerA}/>
+            </Box>
+
+            <Box boxShadow={1} p={2} m={3}>
+                <Typography variant="h5">Enter answer B: </Typography>
+                <CKEditor
+                    editor={ ClassicEditor }
+                    data={value.B}
+                    onChange={handleChangeAnswerB}/>
+            </Box>
+
+            <Box boxShadow={1} p={2} m={3}>
+                <Typography variant="h5">Enter answer C: </Typography>
+                <CKEditor
+                    editor={ ClassicEditor }
+                    data={value.C}
+                    onChange={handleChangeAnswerC}/>
+            </Box>
+
+            <Box boxShadow={1} p={2} m={3}>
+                <Typography variant="h5">Enter answer D: </Typography>
+                <CKEditor
+                    editor={ ClassicEditor }
+                    data={value.D}
+                    onChange={handleChangeAnswerD}/>
+            </Box>
+
+            <Box boxShadow={1} p={2} m={3}>
+                <Typography variant="h5">Choose correct answer: </Typography>
+                    <RadioGroup id={`MC_${NO}`} aria-label="gender" name="gender1" value={value.Correct} onChange={handleChangeCorrectAnswer}>
+                    <FormControlLabel value="A" control={<Radio />} label="A" />
+                    <FormControlLabel value="B" control={<Radio />} label="B" />
+                    <FormControlLabel value="C" control={<Radio />} label="C" />
+                    <FormControlLabel value="D" control={<Radio />} label="D" />
+                </RadioGroup>
+            </Box>
+        </Box>
     )
 }
