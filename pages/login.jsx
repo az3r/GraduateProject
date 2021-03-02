@@ -243,6 +243,7 @@ export default function Login() {
     } catch (error) {
       // TODO: handle account existed error
       console.error(error);
+
       const { code } = error;
       let message;
       if (code.startsWith('auth/')) message = 'Invalid username or password';

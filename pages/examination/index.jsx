@@ -1,180 +1,134 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import Head from 'next/head';
 import {
   makeStyles,
-  Container,
-  Grid,
-  List,
   Box,
+  Typography,
   Button,
+  TextField,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+  Grid,
 } from '@material-ui/core';
 import Layout from '../../components/Layout';
-import Router from 'next/router';
+
+import Examination from '../../components/Examinations';
+import TopScore from '../../components/TopScore';
 
 const useStyles = makeStyles({
-  problemList: {
-    width: '100%',
-    overflow: 'auto',
-    maxHeight: 450,
-  },
-  problemBox: {
-    height: 100,
-    backgroundColor: 'white',
-    margin: 10,
-    borderRadius: 15,
-    borderColor: 'green',
-  },
-  problemName: {
-    paddingLeft: 10,
-    color: 'green',
-  },
-  decorDiv: {
-    marginLeft: 10,
-    display: 'inline',
-    fontWeight: 'bolder',
-    color: 'gray',
-  },
-  decorSpan: {
-    fontWeight: 'normal',
-    color: 'black',
-  },
-  examinationIntroduction: {
-    textAlign: 'center',
-    paddingTop: 35,
-    paddingBottom: 35,
-    borderRadius: 20,
-    alignContent: 'center',
-    backgroundColor: 'green',
-    fontWeight: 'bolder',
-    fontSize: 20,
-  },
-  startButtonDiv: {
+  introBox: {
+    backgroundColor: '#960955',
     display: 'flex',
     justifyContent: 'center',
-    alignContent: 'center',
+    alignItems: 'center',
   },
-  startButton: {
-    backgroundColor: 'green',
+  introTitle: {
+    color: 'white',
+    marginTop: 5,
+  },
+  participateBox: {
+    display: 'flex',
+    justifyContent: 'center',
+    position: 'relative',
+  },
+  participateBtn: {
+    position: 'absolute',
+    top: -50,
   },
 });
 
-export default function Examination() {
+export default function ExaminationIntro() {
   const classes = useStyles();
+  const [introHeight, setIntroHeight] = useState(0);
+  const [open, setOpen] = useState(false);
 
-  const start = (e) => {
-    Router.push('/examination/start');
+  const handleClickOpen = () => {
+    setOpen(true);
   };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+
+  useEffect(() => {
+    setIntroHeight(window.innerWidth / 3);
+  }, []);
 
   return (
     <>
       <Head>
         <title>Smart Coder</title>
         <link rel="icon" href="/favicon.ico" />
+        <link rel="icon" href="/favicon.ico" />
       </Head>
 
       <Layout>
-        <Container component={'dev'}>
-          <h1>Examination Name</h1>
-        </Container>
-        <hr />
-        <Container component={'dev'}>
-          <Grid container spacing={3}>
-            <Grid item xs={8}>
-              <h1>Problems</h1>
-              <List className={classes.problemList}>
-                <Box border={1} className={classes.problemBox}>
-                  <h2 className={classes.problemName}>Problem Name</h2>
-                  <div className={classes.descriptionDiv}>
-                    <div className={classes.decorDiv}>
-                      Score: <span className={classes.decorSpan}>100</span>
-                    </div>
-                    <div className={classes.decorDiv}>
-                      Difficulty:{' '}
-                      <span className={classes.decorSpan}>Medium</span>
-                    </div>
-                  </div>
-                </Box>
-                <Box border={1} className={classes.problemBox}>
-                  <h2 className={classes.problemName}>Problem Name</h2>
-                  <div className={classes.descriptionDiv}>
-                    <div className={classes.decorDiv}>
-                      Score: <span className={classes.decorSpan}>100</span>
-                    </div>
-                    <div className={classes.decorDiv}>
-                      Difficulty:{' '}
-                      <span className={classes.decorSpan}>Medium</span>
-                    </div>
-                  </div>
-                </Box>
-                <Box border={1} className={classes.problemBox}>
-                  <h2 className={classes.problemName}>Problem Name</h2>
-                  <div className={classes.descriptionDiv}>
-                    <div className={classes.decorDiv}>
-                      Score: <span className={classes.decorSpan}>100</span>
-                    </div>
-                    <div className={classes.decorDiv}>
-                      Difficulty:{' '}
-                      <span className={classes.decorSpan}>Medium</span>
-                    </div>
-                  </div>
-                </Box>
-                <Box border={1} className={classes.problemBox}>
-                  <h2 className={classes.problemName}>Problem Name</h2>
-                  <div className={classes.descriptionDiv}>
-                    <div className={classes.decorDiv}>
-                      Score: <span className={classes.decorSpan}>100</span>
-                    </div>
-                    <div className={classes.decorDiv}>
-                      Difficulty:{' '}
-                      <span className={classes.decorSpan}>Medium</span>
-                    </div>
-                  </div>
-                </Box>
-                <Box border={1} className={classes.problemBox}>
-                  <h2 className={classes.problemName}>Problem Name</h2>
-                  <div className={classes.descriptionDiv}>
-                    <div className={classes.decorDiv}>
-                      Score: <span className={classes.decorSpan}>100</span>
-                    </div>
-                    <div className={classes.decorDiv}>
-                      Difficulty:{' '}
-                      <span className={classes.decorSpan}>Medium</span>
-                    </div>
-                  </div>
-                </Box>
-              </List>
-            </Grid>
-            <Grid item xs={4}>
-              <Box
-                border={1}
-                boxShadow={10}
-                className={classes.examinationIntroduction}
+        <Box style={{ height: introHeight }} className={classes.introBox}>
+          <Box style={{ textAlign: 'center' }}>
+            <img src="/trophy.png" alt="trophy icon" />
+            <Typography variant="h4" className={classes.introTitle}>
+              Smart Coder Examination
+            </Typography>
+          </Box>
+        </Box>
+        <Box className={classes.participateBox}>
+          <Button
+            color="primary"
+            variant="contained"
+            className={classes.participateBtn}
+            onClick={handleClickOpen}
+          >
+            Participate
+          </Button>
+          <Dialog
+            open={open}
+            onClose={handleClose}
+            aria-labelledby="form-dialog-title"
+          >
+            <DialogTitle id="form-dialog-title">
+              Participate Examination
+            </DialogTitle>
+            <DialogContent>
+              <DialogContentText>
+                To participate in the examination, please enter your exam code
+                which we sent it to your email.
+              </DialogContentText>
+              <TextField
+                autoFocus
+                margin="dense"
+                id="examCode"
+                label="Exam Code"
+                type="text"
+                fullWidth
+              />
+            </DialogContent>
+            <DialogActions>
+              <Button
+                onClick={handleClose}
+                color="secondary"
+                variant="contained"
               >
-                Examination Introduction
-              </Box>
-              <hr />
-              <div style={{ fontWeight: 'bolder', color: 'blue' }}>
-                Time estimated:{' '}
-                <span style={{ fontWeight: 'normal', color: 'black' }}>
-                  120 minutes
-                </span>
-              </div>
-              <div style={{ fontWeight: 'bolder', color: 'blue' }}>
-                Note:{' '}
-                <span style={{ fontWeight: 'normal', color: 'black' }}>
-                  If you click "Start" button, you will start making the
-                  examination. In addion, you won't pause or return the previous
-                  question.
-                </span>
-              </div>
-              <div className={classes.startButtonDiv}>
-                <Button className={classes.startButton} onClick={start}>
-                  START
-                </Button>
-              </div>
+                Cancel
+              </Button>
+              <Button onClick={handleClose} color="primary" variant="contained">
+                Join
+              </Button>
+            </DialogActions>
+          </Dialog>
+        </Box>
+        <Box>
+          <Grid container direction="row" justify="center" spacing={3}>
+            <Grid item sm={5}>
+              <Examination />
+            </Grid>
+            <Grid item sm={4}>
+              <TopScore />
             </Grid>
           </Grid>
-        </Container>
+        </Box>
       </Layout>
     </>
   );
