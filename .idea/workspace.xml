@@ -20,20 +20,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="73bd1854-2930-493b-bbd0-fb90442d9327" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/components/Examinations/index.jsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/pages/examination/introduction.jsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/pages/examination_intro.jsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/coins_28px.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/ranking.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/trophy.png" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/components/Problems/Search/index.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/Problems/Search/index.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/components/Problems/index.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/Problems/index.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/components/TestMCQ/AnswerMCQ/index.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/TestMCQ/AnswerMCQ/index.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/components/TopScore/index.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/TopScore/index.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/components/TestCode/index.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/TestCode/index.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/libs/client/codes.js" beforeDir="false" afterPath="$PROJECT_DIR$/libs/client/codes.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pages/examination/index.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/pages/examination/index.jsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/yarn.lock" beforeDir="false" afterPath="$PROJECT_DIR$/yarn.lock" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -125,6 +115,7 @@
       <workItem from="1614516238655" duration="412000" />
       <workItem from="1614526115094" duration="4856000" />
       <workItem from="1614581015833" duration="15364000" />
+      <workItem from="1614666951908" duration="5386000" />
     </task>
     <servers />
   </component>

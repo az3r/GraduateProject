@@ -74,37 +74,31 @@ export default function Test({ problem, nextProblem }) {
     setLoading(true);
     setOpenConsole('visible');
 
-    // const response = await fetch('/api/test-exam', {
-    //   method: 'POST',
-    //   headers: {
-    //     Accept: 'application/json',
-    //     'Content-Type': 'application/json',
-    //   },
-    //   body: JSON.stringify({
-    //     userId: 1,
-    //     code,
-    //     language,
-    //     cases,
-    //   }),
-    // });
+    try {
+      const response = await codes.test({
+        problemId: problem.id,
+        problemName: problem.title,
+        lang: problem.language,
+        code,
+        testcases: problem.cases,
+        save: false
+      });
 
-    const response = await codes.test({problemId: problem.id, problemName: problem.title, lang: problem.language, code: problem.code, testcases: problem.cases, save: false});
-
-    const data = await response.json();
-
-    if (response.status === 200) {
-      if (data.failed === 0) {
+      if (response.failed === 0) {
+        console.log("Correct!");
         setTestCodeResult('Correct!');
       } else {
         setTestCodeResult(
           `Incorrect! \nTest Cases: \n${JSON.stringify(cases)}`
         );
       }
-    } else {
-      // setTestCodeResult('stdout: ${data.stdout}\n' + 'stderr: ${data.stderr}');
-      setTestCodeResult('error');
+    } catch (e) {
+      setTestCodeResult(`stdout: ${e.stdout}\nstderr:  + ${e.stder}`);
+      console.log('Hello');
+      console.log(e);
+    } finally {
+      setLoading(false);
     }
-    setLoading(false);
   };
 
   const handleSubmit = async () => {
@@ -112,32 +106,23 @@ export default function Test({ problem, nextProblem }) {
       nextProblem();
     } else {
       setLoading(true);
-      // console.log(problem);
-      // console.log(code);
-      // const response = await fetch('/api/excute-test', {
-      //   method: 'POST',
-      //   headers: {
-      //     Accept: 'application/json',
-      //     'Content-Type': 'application/json',
-      //   },
-      //   body: JSON.stringify({
-      //     userId: 1,
-      //     examId: problemId,
-      //     code,
-      //   }),
-      // });
 
-      const response = await codes.test({problemId: problem.id, problemName: problem.title, lang: problem.language, code: problem.code, testcases: problem.cases, save: true});
+      try {
+        await codes.test({
+          problemId: problem.id,
+          problemName: problem.title,
+          lang: problem.language,
+          code,
+          testcases: problem.cases,
+          save: false
+        });
 
-      // const data = await response.json();
-
-      if (response.status === 200) {
+      } catch (e) {
+        console.log(e);
+      } finally {
+        setLoading(false);
         Router.push('/');
-      } else {
-        // console.log('Error');
-        // alert('ERROR');
       }
-      setLoading(false);
     }
   };
 

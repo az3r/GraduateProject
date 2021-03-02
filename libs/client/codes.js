@@ -37,7 +37,8 @@ export async function test({
   });
 
   const data = await response.json();
-  if (response.status === '200') {
+
+  if (response.status === 200) {
     const { failed } = data;
     const status = failed > 0 ? statuses.failed : statuses.passed;
     if (save) {
