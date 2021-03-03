@@ -7,7 +7,7 @@ export default async function create(
   userId,
   { title, language, score, content, difficulty, code, cases }
 ) {
-  await Firestore().collection(exams).doc().collection(problems).set({
+  await Firestore().collection(exams).doc().collection(problems).doc().set({
     isMCQ: false,
     title,
     language,

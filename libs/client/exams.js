@@ -29,3 +29,12 @@ export async function create(
 
   await Promise.all(tasks);
 }
+
+export async function get(examId) {
+  if (examId) {
+    const snapshot = await Firestore().collectionGroup(exams).doc(examId).get();
+    return snapshot.data();
+  }
+  const snapshot = await Firestore().collection(exams).get();
+  return snapshot.docs.map((item) => ({ id: item.id, ...item.data() }));
+}
