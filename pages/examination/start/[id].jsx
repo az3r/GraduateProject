@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
 import Head from 'next/head';
-import Layout from '../../components/Layout';
-import TestCode from '../examination/code';
-import TestMCQ from '../examination/mcq';
+import TestCode from '../code';
+import TestMCQ from '../mcq';
 
 export default function Start() {
   const [problem, setProblem] = useState('code');
@@ -24,11 +23,11 @@ export default function Start() {
 
       {problem === 'code' ? (
         <TestCode
-          problemId={'Ly06j1rBoYqdIfq5iWFJ'}
+          problem={problem}
           nextProblem={nextProblem}
-        ></TestCode>
+         />
       ) : (
-        <TestMCQ problemId={'123'} nextProblem={nextProblem}></TestMCQ>
+        <TestMCQ problem={problem} nextProblem={nextProblem} />
       )}
     </>
   );
