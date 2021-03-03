@@ -1,5 +1,6 @@
 import { collections } from '@utils/constants';
 import { Firestore } from './firebase';
+import { create as createProblem } from './problems';
 
 const { exams, problems: problemCollection } = collections;
 
@@ -18,16 +19,9 @@ export async function create(
     createdOn: Firestore.Timestamp.now(),
   });
 
-  const tasks = problems.map((item) =>
-    Firestore()
-      .collection(exams)
-      .doc(id)
-      .collection(problemCollection)
-      .doc()
-      .set(item)
-  );
-
+  const tasks = problems.map((item) => createProblem(userId, item));
   await Promise.all(tasks);
+  return id;
 }
 
 export async function get(examId, { withProblems }) {
