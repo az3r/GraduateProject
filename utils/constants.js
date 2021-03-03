@@ -1,6 +1,6 @@
 export const collections = {
   users: 'Users',
-  problems: 'Exam',
+  problems: 'Problems',
   exams: 'Exams',
 };
 export const urls = {

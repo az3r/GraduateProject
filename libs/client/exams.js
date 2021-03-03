@@ -30,11 +30,33 @@ export async function create(
   await Promise.all(tasks);
 }
 
-export async function get(examId) {
+export async function get(examId, { withProblems }) {
   if (examId) {
-    const snapshot = await Firestore().collectionGroup(exams).doc(examId).get();
-    return snapshot.data();
+    const snapshot = await Firestore().collection(exams).doc(examId).get();
+    const problems =
+      withProblems &&
+      (await Firestore()
+        .collection(exams)
+        .doc(examId)
+        .collection(problemCollection)
+        .get());
+    return {
+      problems: problems || undefined,
+      ...snapshot.data(),
+    };
   }
   const snapshot = await Firestore().collection(exams).get();
   return snapshot.docs.map((item) => ({ id: item.id, ...item.data() }));
+}
+
+export async function getProblems(examId) {
+  const snapshot = await Firestore()
+    .collection(exams)
+    .doc(examId)
+    .collection(problemCollection)
+    .get();
+  return snapshot.docs.map((item) => ({
+    id: item.id,
+    ...item.data(),
+  }));
 }
