@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import {
   makeStyles,
   Table,
@@ -9,7 +9,7 @@ import {
   TableRow,
   Link,
   Box,
-  Typography,
+  Typography, Button,
 } from '@material-ui/core';
 
 import Pagination from '@material-ui/lab/Pagination';
@@ -46,78 +46,29 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-const exams = [
-  {
-    id: 1,
-    title: 'Biweekly Examination 1',
-    duration: '1 h 30 m',
-    createdDate: Date.now(),
-  },
-  {
-    id: 2,
-    title: 'Biweekly Examination 2',
-    duration: '1 h 30 m',
-    createdDate: Date.now(),
-  },
-  {
-    id: 3,
-    title: 'Biweekly Examination 3',
-    duration: '1 h 30 m',
-    createdDate: Date.now(),
-  },
-  {
-    id: 4,
-    title: 'Biweekly Examination 4',
-    duration: '1 h 30 m',
-    createdDate: Date.now(),
-  },
-  {
-    id: 5,
-    title: 'Biweekly Examination 5',
-    duration: '1 h 30 m',
-    createdDate: Date.now(),
-  },
-  {
-    id: 6,
-    title: 'Biweekly Examination 6',
-    duration: '1 h 30 m',
-    createdDate: Date.now(),
-  },
-  {
-    id: 7,
-    title: 'Biweekly Examination 7',
-    duration: '1 h 30 m',
-    createdDate: Date.now(),
-  },
-  {
-    id: 8,
-    title: 'Biweekly Examination 8',
-    duration: '1 h 30 m',
-    createdDate: Date.now(),
-  },
-  {
-    id: 9,
-    title: 'Biweekly Examination 9',
-    duration: '1 h 30 m',
-    createdDate: Date.now(),
-  },
-  {
-    id: 10,
-    title: 'Biweekly Examination 10',
-    duration: '1 h 30 m',
-    createdDate: Date.now(),
-  },
-];
+const PROBLEM_PER_PAGE = 10;
 
-export default function Examinations() {
+export default function Examinations({exams}) {
   const classes = useStyles();
-  const [examinations, setExaminations] = useState([]);
-  const currentPage = 1;
-  const totalPage = 10;
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPage] = useState(
+    Math.ceil(exams.length / PROBLEM_PER_PAGE)
+  );
+  const [examinations, setExaminations] = useState(
+    exams.slice(
+      (currentPage - 1) * PROBLEM_PER_PAGE,
+      currentPage * PROBLEM_PER_PAGE
+    ));
 
-  useEffect(() => {
-    setExaminations(exams);
-  });
+
+  const handlePagination = (e, page) => {
+    setCurrentPage(page);
+
+    setExaminations(exams.slice(
+      (page - 1) * PROBLEM_PER_PAGE,
+      page * PROBLEM_PER_PAGE
+    ))
+  };
 
   return (
     <TableContainer
@@ -153,6 +104,7 @@ export default function Examinations() {
           <TableRow>
             <TableCell style={{ fontWeight: 'bolder' }}>Examination</TableCell>
             <TableCell style={{ fontWeight: 'bolder' }}>Duration</TableCell>
+            <TableCell style={{ fontWeight: 'bolder' }}>Status</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
@@ -181,12 +133,16 @@ export default function Examinations() {
                 </Link>
               </TableCell>
               <TableCell>{examination.duration}</TableCell>
+              <TableCell>
+                <Button size="small" variant="contained" color="primary" href={`/examination/${examination.id}`}>JOIN</Button>
+              </TableCell>
             </TableRow>
           ))}
         </TableBody>
       </Table>
       <div className={classes.pagination}>
         <Pagination
+          onChange={handlePagination}
           count={totalPage}
           page={currentPage}
           variant="outlined"

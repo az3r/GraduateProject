@@ -40,7 +40,7 @@ const useStyles = makeStyles({
   },
 });
 
-export default function ExaminationIntro() {
+export default function Index({exams}) {
   const classes = useStyles();
   const [introHeight, setIntroHeight] = useState(0);
   const [open, setOpen] = useState(false);
@@ -60,7 +60,7 @@ export default function ExaminationIntro() {
   return (
     <>
       <Head>
-        <title>Smart Coder</title>
+        <title>Examination</title>
         <link rel="icon" href="/favicon.ico" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
@@ -122,7 +122,7 @@ export default function ExaminationIntro() {
         <Box>
           <Grid container direction="row" justify="center" spacing={3}>
             <Grid item sm={5}>
-              <Examination />
+              <Examination exams={exams} />
             </Grid>
             <Grid item sm={4}>
               <TopScore />
@@ -132,4 +132,87 @@ export default function ExaminationIntro() {
       </Layout>
     </>
   );
+}
+const exams = [
+  {
+    id: 1,
+    title: "Hack the Interview (Vietnam) 1",
+    createdDate: Date.now(),
+    duration: "1 h 30 m"
+  },
+  {
+    id: 2,
+    title: "Hack the Interview (Vietnam) 2",
+    createdDate: Date.now(),
+    duration: "1 h 30 m"
+  },
+  {
+    id: 3,
+    title: "Hack the Interview (Vietnam) 3",
+    createdDate: Date.now(),
+    duration: "1 h 30 m"
+  },
+  {
+    id: 4,
+    title: "Hack the Interview (Vietnam) 4",
+    createdDate: Date.now(),
+    duration: "1 h 30 m"
+  },
+  {
+    id: 5,
+    title: "Hack the Interview (Vietnam) 5",
+    createdDate: Date.now(),
+    duration: "1 h 30 m"
+  },
+  {
+    id: 6,
+    title: "Hack the Interview (Vietnam) 6",
+    createdDate: Date.now(),
+    duration: "1 h 30 m"
+  },
+  {
+    id: 7,
+    title: "Hack the Interview (Vietnam) 7",
+    createdDate: Date.now(),
+    duration: "1 h 30 m"
+  },
+  {
+    id: 8,
+    title: "Hack the Interview (Vietnam) 8",
+    createdDate: Date.now(),
+    duration: "1 h 30 m"
+  },
+  {
+    id: 9,
+    title: "Hack the Interview (Vietnam) 9",
+    createdDate: Date.now(),
+    duration: "1 h 30 m"
+  },
+  {
+    id: 10,
+    title: "Hack the Interview (Vietnam) 10",
+    createdDate: Date.now(),
+    duration: "1 h 30 m"
+  },
+  {
+    id: 11,
+    title: "Hack the Interview (Vietnam) 11",
+    createdDate: Date.now(),
+    duration: "1 h 30 m"
+  },
+  {
+    id: 12,
+    title: "Hack the Interview (Vietnam) 12",
+    createdDate: Date.now(),
+    duration: "1 h 30 m"
+  }
+];
+
+export async function getServerSideProps() {
+
+  return {
+    props: {
+      exams,
+    },
+  };
 }

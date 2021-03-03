@@ -1,34 +1,30 @@
-import React, { useEffect, useState } from 'react';
-import Head from 'next/head';
-import { makeStyles, Grid, Paper } from '@material-ui/core';
-import Layout from '../../../components/Layout';
+import React from 'react';
 import dynamic from 'next/dynamic';
+import Layout from '../../../components/Layout';
 
 const TestMCQ = dynamic(
-  () => {
-    return import('../../../components/TestMCQ');
-  },
+  () => import('../../../components/TestMCQ'),
   { ssr: false }
 );
 
-const useStyles = makeStyles((theme) => ({
-  root: {
-    flexGrow: 1,
-  },
-  paper: {
-    padding: theme.spacing(2),
-    textAlign: 'center',
-    color: theme.palette.text.secondary,
-  },
-}));
+// const useStyles = makeStyles((theme) => ({
+//   root: {
+//     flexGrow: 1,
+//   },
+//   paper: {
+//     padding: theme.spacing(2),
+//     textAlign: 'center',
+//     color: theme.palette.text.secondary,
+//   },
+// }));
 
-export default function MCQ({ problemId, nextProblem }) {
-  const classes = useStyles();
+export default function MCQ({ problem, nextProblem }) {
+  // const classes = useStyles();
 
   return (
     <>
       <Layout>
-        <TestMCQ problemId={problemId} nextProblem={nextProblem}></TestMCQ>
+        <TestMCQ problem={problem} nextProblem={nextProblem} />
       </Layout>
     </>
   );
