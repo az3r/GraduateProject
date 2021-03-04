@@ -14,7 +14,10 @@ export async function create(userId, { examId, ...props }) {
       ...props,
     });
 
-  await Firestore().collection(path.replace(id, '')).doc(id).set({ id });
+  await Firestore()
+    .collection(path.replace(id, ''))
+    .doc(id)
+    .set({ id }, { merge: true });
   return id;
 }
 
