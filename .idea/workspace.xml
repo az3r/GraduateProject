@@ -20,16 +20,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="73bd1854-2930-493b-bbd0-fb90442d9327" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/pages/examination/[id].jsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/pages/examination/end/index.jsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/components/Examinations/index.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/Examinations/index.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pages/examination/code/index.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/pages/examination/code/index.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pages/examination/index.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/pages/examination/index.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pages/examination/introduction.jsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/pages/examination/mcq/index.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/pages/examination/mcq/index.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pages/examination/start.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/pages/examination/start/[id].jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/yarn.lock" beforeDir="false" afterPath="$PROJECT_DIR$/yarn.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pages/problem/[id].jsx" beforeDir="false" afterPath="$PROJECT_DIR$/pages/problem/[id].jsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -121,7 +114,9 @@
       <workItem from="1614526115094" duration="4856000" />
       <workItem from="1614581015833" duration="15364000" />
       <workItem from="1614666951908" duration="6817000" />
-      <workItem from="1614743970016" duration="9472000" />
+      <workItem from="1614743970016" duration="9842000" />
+      <workItem from="1614771488282" duration="497000" />
+      <workItem from="1614833023770" duration="4557000" />
     </task>
     <servers />
   </component>
