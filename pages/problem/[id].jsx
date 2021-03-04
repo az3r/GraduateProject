@@ -47,8 +47,17 @@ export default function Test({ problem }) {
 // }
 
 export async function getServerSideProps({ params }) {
+  try {
+    const item = await probs.get(params.id);
+    return {
+      props: {
+        problem: item,
+      },
+    };
+  }catch(e){
+    console.log(e);
+  }
   const item = await probs.get(params.id);
-
   return {
     props: {
       problem: item,
