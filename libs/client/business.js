@@ -30,3 +30,28 @@ export function getFormatResultFromFile(text) {
   }
   return result;
 }
+
+export function formatQuestionsArray(questions) {
+  const newQuestionList = questions.map((question) => {
+    if (!question.IsMultipleChoices) {
+      const newQuestion = {
+        ...question,
+        Cases: {
+          input: question.Input,
+          output: question.Output,
+        },
+      };
+      delete newQuestion.Input;
+      delete newQuestion.SimpleInput;
+      delete newQuestion.Output;
+      delete newQuestion.SimpleOutput;
+      delete newQuestion.LoadingTestCode;
+      delete newQuestion.MessageTestCode;
+      delete newQuestion.TestCodeSuccess;
+      delete newQuestion.IsLoadingTestCode;
+      return newQuestion;
+    }
+    return question;
+  });
+  return newQuestionList;
+}

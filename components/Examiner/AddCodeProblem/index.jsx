@@ -180,7 +180,7 @@ public class Program
         testcases: cases,
         save: false,
       });
-      if (response.passed) {
+      if (response.passed === 1) {
         setIsTestSuccess(true);
         setTestReponse(
           'Test passed! Now proceed with deleting answer in the code editor. Then, submiting input and output files with the same format as current simple test cases\n(Note: test cases in files must be devided by a blank line)'
@@ -194,6 +194,9 @@ public class Program
     } catch (error) {
       setIsTestSuccess(false);
       setTestReponse('Error! Please check again');
+    } finally{
+      console.log("dmmm");
+      setIsLoading(false);
     }
   };
 

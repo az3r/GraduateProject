@@ -3,6 +3,9 @@ import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import {Box, Button, Checkbox, TextField, Typography} from '@material-ui/core';
 import React,{useState} from 'react';
 import { test } from '@libs/client/codes';
+import { formatQuestionsArray } from '@libs/client/business';
+import { create } from '@libs/client/exams';
+import { FirebaseAuth } from '@libs/client/firebase';
 import Questions from './Questions/index';
 
 export default function AddTestPage(){
@@ -299,22 +302,6 @@ public class Program
         await sendTestRequest(questionID);
     }
         
-
-    const handleSubmitExam = async (e) =>{
-        e.preventDefault();
-        console.log(listOfQuestions);
-        // const response = await fetch("/api/add-exam",{
-        //     method: "POST",
-        //     headers: {
-        //         'Accept': 'application/json',
-        //         'Content-Type':'application/json'
-        //     },
-        //     body: JSON.stringify({
-        //         "userId": 1,
-        //         "exam": listOfQuestions
-        //     })})
-
-    }
     const handleChangeExamTitle = (e) => {
         setExamIntro({...examIntro, title: e.target.value});
     }
@@ -332,13 +319,27 @@ public class Program
     }
 
     const handleChangeExamPrivacy = (e) => {
-        console.log(examIntro);
         setExamIntro({...examIntro, isPrivate: e.target.checked});
     }
     
     const handleChangeExamPassword = (e) => {
-        console.log(examIntro);
         setExamIntro({...examIntro, password: e.target.value});
+    }
+
+    const handleSubmitExam = async (e) =>{
+        e.preventDefault();
+        const formatedQuestions = formatQuestionsArray(listOfQuestions);
+        const { uid } = FirebaseAuth().currentUser;
+     
+        create(uid,{
+            title: examIntro.title,
+            content: examIntro.content,
+            isPrivate: examIntro.isPrivate,
+            password: examIntro.password,
+            startAt: examIntro.start,
+            endAt: examIntro.end,
+            problems: formatedQuestions
+        });
     }
     
     return(

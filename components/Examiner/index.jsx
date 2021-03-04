@@ -1,8 +1,8 @@
-import { Box, Button, Grid, Typography } from '@material-ui/core';
+import { Box, Button, Grid } from '@material-ui/core';
 import { useRouter } from 'next/router';
-import React, { useState } from 'react';
+import React from 'react';
 
-export default function Examiner(props) {
+export default function Examiner() {
   const router = useRouter();
 
   const goToAddProblemPage = (e) => {
@@ -32,7 +32,7 @@ export default function Examiner(props) {
           </Box>
         </Grid>
         <Grid item lg={9}>
-          <Box boxShadow={3}></Box>
+          <Box boxShadow={3} />
         </Grid>
       </Grid>
     </>
