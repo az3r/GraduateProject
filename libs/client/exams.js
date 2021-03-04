@@ -19,7 +19,9 @@ export async function create(
     createdOn: Firestore.Timestamp.now(),
   });
 
-  const tasks = problems.map((item) => createProblem(userId, item));
+  const tasks = problems.map((item) =>
+    createProblem(userId, { examId: id, ...item })
+  );
   await Promise.all(tasks);
   return id;
 }

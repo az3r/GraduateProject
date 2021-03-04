@@ -8,10 +8,10 @@ import {
   TableHead,
   TableRow,
   Paper,
-  Link,
   Box,
+  Typography,
 } from '@material-ui/core';
-
+import Link from 'next/link';
 import Pagination from '@material-ui/lab/Pagination';
 import Search from './Search/index';
 
@@ -21,6 +21,7 @@ const useStyles = makeStyles(() => ({
   },
   link: {
     color: 'green',
+    cursor: 'pointer',
   },
   box: {
     color: 'white',
@@ -62,8 +63,8 @@ export default function Problems({ problems: items }) {
     if (keyword === '') {
       filteredProblemList = problemList;
     } else {
-      filteredProblemList = problemList.filter((problem) =>
-        problem.title.toLowerCase().includes(keyword.toLowerCase()) //
+      filteredProblemList = problemList.filter(
+        (problem) => problem.title.toLowerCase().includes(keyword.toLowerCase()) //
       );
     }
 
@@ -85,7 +86,7 @@ export default function Problems({ problems: items }) {
 
     if (lang !== 'all') {
       filteredProblemList = filteredProblemList.filter(
-        (problem) => problem.language.toLowerCase() === lang  //
+        (problem) => problem.language.toLowerCase() === lang //
       );
     }
 
@@ -171,12 +172,10 @@ export default function Problems({ problems: items }) {
               >
                 <TableCell>{index + 1}</TableCell>
                 <TableCell component="th" scope="row">
-                  <Link
-                    href={`/problem/${problem.id}`}
-                    underline="none"
-                    className={classes.link}
-                  >
-                    {problem.title}
+                  <Link href={`/problem/${problem.id}`}>
+                    <Typography className={classes.link}>
+                      {problem.title}
+                    </Typography>
                   </Link>
                 </TableCell>
                 <TableCell>

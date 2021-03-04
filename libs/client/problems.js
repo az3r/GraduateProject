@@ -3,28 +3,18 @@ import { Firestore } from './firebase';
 
 const { problems, exams } = collections;
 
-export async function create(
-  userId,
-  { title, language, score, content, difficulty, code, cases }
-) {
-  const { id } = await Firestore()
+export async function create(userId, { examId, ...props }) {
+  const { id, path } = await Firestore()
     .collection(exams)
-    .doc()
+    .doc(examId)
     .collection(problems)
     .add({
-      isMCQ: false,
-      title,
-      language,
-      score,
-      content,
-      difficulty,
-      code,
-      cases,
       owner: userId,
       createdOn: Firestore.Timestamp.now(),
+      ...props,
     });
 
-  await Firestore().collection(`${exams}/${problems}`).doc(id).set({ id });
+  await Firestore().collection(path.replace(id, '')).doc(id).set({ id });
   return id;
 }
 

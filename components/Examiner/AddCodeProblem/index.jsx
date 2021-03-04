@@ -11,8 +11,10 @@ import React, { useState } from 'react';
 import { CKEditor } from '@ckeditor/ckeditor5-react';
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import SkewLoader from 'react-spinners/SkewLoader';
-import getTestCaseFromInputAndOutput, { getFormatResultFromFile } from '@libs/client/business';
-import create from '@libs/client/problems';
+import getTestCaseFromInputAndOutput, {
+  getFormatResultFromFile,
+} from '@libs/client/business';
+import { create } from '@libs/client/problems';
 import { test } from '@libs/client/codes';
 import { FirebaseAuth } from '@libs/client/firebase';
 import CodeEditor from '../../CodeEditor';
@@ -49,12 +51,12 @@ public class Program
 }`,
     Python: `print("Hello world!")`,
   };
-  const [problem,setProblem] = useState({
-    title: "",
-    content: "",
+  const [problem, setProblem] = useState({
+    title: '',
+    content: '',
     difficulty: 0,
     score: 0,
-    language: "Csharp",
+    language: 'Csharp',
     code: code.Csharp,
     cases: [],
   });
@@ -71,28 +73,28 @@ public class Program
   const classes = useStyles();
 
   const handleChangeTestName = (event) => {
-    setProblem({...problem, title: event.target.value});
+    setProblem({ ...problem, title: event.target.value });
   };
 
   const handleChangeTestIntro = (event, editor) => {
-    setProblem({...problem, content: editor.getData()});
+    setProblem({ ...problem, content: editor.getData() });
   };
 
   const handleChangeDifficulty = (event) => {
-    setProblem({...problem, difficulty: event.target.value});
+    setProblem({ ...problem, difficulty: event.target.value });
   };
 
   const handleChangeScore = (event) => {
-    setProblem({...problem, score: event.target.value});
+    setProblem({ ...problem, score: event.target.value });
   };
 
   const handleChangeLanguague = (event) => {
-    setProblem({...problem, language: event.target.value});
-    setProblem({...problem, code: code[event.target.value]});
+    setProblem({ ...problem, language: event.target.value });
+    setProblem({ ...problem, code: code[event.target.value] });
   };
 
   const handleOnChangeCode = (newCode) => {
-   setProblem({...problem, code: newCode});
+    setProblem({ ...problem, code: newCode });
   };
 
   const handleChangeInputFile = (e) => {
@@ -127,17 +129,17 @@ public class Program
       return;
     }
 
-    const cases = getTestCaseFromInputAndOutput(input,output);
-    setProblem({...problem, cases});
+    const cases = getTestCaseFromInputAndOutput(input, output);
+    setProblem({ ...problem, cases });
 
-    if (problem.title === '' || problem.content === '' || problem.cases ) {
+    if (problem.title === '' || problem.content === '' || problem.cases) {
       setIsAddSuccess(false);
       setMessage('Not filling in enough information for the test');
       return;
     }
 
-    const {uid} = FirebaseAuth().currentUser;
-    const response = create(uid,problem);
+    const { uid } = FirebaseAuth().currentUser;
+    const response = create(uid, problem);
 
     if (response === true) {
       setIsAddSuccess(true);
@@ -162,32 +164,33 @@ public class Program
       return;
     }
     setIsLoading(true);
-    const cases = [{
-      input: simpleInput,
-      output: simpleOutput
-    }];
+    const cases = [
+      {
+        input: simpleInput,
+        output: simpleOutput,
+      },
+    ];
 
     try {
       const response = await test({
-        problemId: "",
-        problemName: "",
+        problemId: '',
+        problemName: '',
         lang: problem.language,
         code: problem.code,
         testcases: cases,
-        save: false
+        save: false,
       });
       if (response.passed) {
         setIsTestSuccess(true);
         setTestReponse(
           'Test passed! Now proceed with deleting answer in the code editor. Then, submiting input and output files with the same format as current simple test cases\n(Note: test cases in files must be devided by a blank line)'
         );
-      } 
-      else if(response.failed === 1) {
-          setIsTestSuccess(false);
-          setTestReponse(
-            `Test failed! \nExpected output: ${response.results[0].expected}\n. Actual output: ${response.results[0].actual}`
-          );
-      } 
+      } else if (response.failed === 1) {
+        setIsTestSuccess(false);
+        setTestReponse(
+          `Test failed! \nExpected output: ${response.results[0].expected}\n. Actual output: ${response.results[0].actual}`
+        );
+      }
     } catch (error) {
       setIsTestSuccess(false);
       setTestReponse('Error! Please check again');
@@ -198,8 +201,7 @@ public class Program
     <Box m={1}>
       <form
         method="post"
-        onSubmit={handleSubmitAddProblem
-    }
+        onSubmit={handleSubmitAddProblem}
         encType="multipart/form-data"
       >
         <Box boxShadow={1} p={2} m={3}>
