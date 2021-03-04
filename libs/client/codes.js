@@ -37,29 +37,25 @@ export async function test({
   });
 
   const data = await response.json();
+  let status = statuses.error;
 
   if (response.status === 200) {
     const { failed } = data;
-    const status = failed > 0 ? statuses.failed : statuses.passed;
-    if (save) {
-      Firestore().collection(users).doc(uid).collection('submissions').set({
+    status = failed > 0 ? statuses.failed : statuses.passed;
+  }
+
+  if (save) {
+    Firestore()
+      .collection(users)
+      .doc(uid)
+      .collection('submissions')
+      .set({
         problemId,
         problemName,
-        createdOn: Firestore.Timestamp.now(),
         status,
-        result: data,
+        details: { code, ...data },
+        createdOn: Firestore.Timestamp.now(),
       });
-    }
-    return data;
   }
-  if (save) {
-    Firestore().collection(users).doc(uid).collection('submissions').set({
-      problemId,
-      problemName,
-      createdOn: Firestore.Timestamp.now(),
-      status: statuses.error,
-      result: data,
-    });
-  }
-  return Promise.reject(data);
+  return response.status === 200 ? data : Promise.reject(data);
 }
