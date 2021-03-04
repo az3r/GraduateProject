@@ -6,7 +6,7 @@ const { problems, exams } = collections;
 export async function create(userId, { examId, ...props }) {
   const { id, path } = await Firestore()
     .collection(exams)
-    .doc(examId)
+    .doc(examId || 'general')
     .collection(problems)
     .add({
       owner: userId,
