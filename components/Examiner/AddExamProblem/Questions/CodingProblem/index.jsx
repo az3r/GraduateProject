@@ -64,12 +64,12 @@ export default function CodingProblem({
 
             <Box boxShadow={1} p={2} m={3}>
                 <Typography variant="h5">Enter score: </Typography>
-                <input id={`CP_${NO}`} onChange={handleChangeScore} type="number" max="100" min="0" value={value.Score} />
+                <input id={`CP_${NO}`} onChange={handleChangeScore} type="number" max="100" min="0" value={value.score} />
             </Box>
 
             <Box boxShadow={1} p={2} m={3}>
                     <Typography variant="h5">Enter time by minute (min: 0.5, max: 100): </Typography>
-                    <input id={`MC_${NO}`}  onChange={handleChangeTime} type="number" max="100" min="0.5" value={value.Time}  />
+                    <input id={`MC_${NO}`}  onChange={handleChangeTime} type="number" max="100" min="0.5" value={value.time}  />
             </Box>
 
             <Box boxShadow={1} p={2} m={3}>
@@ -86,7 +86,7 @@ export default function CodingProblem({
                 <Grid container>
                     <Grid item lg={6}>
                         <Typography variant="h5">Enter code: </Typography>
-                        <CodeEditor language={value.Language}  code={value.Code} onCodeChange={handleOnChangeCode}  />
+                        <CodeEditor language={value.language}  code={value.code} onCodeChange={handleOnChangeCode}  />
                     </Grid>
                     <Grid item lg={6}>
                         <Typography variant="h5">Notes:</Typography>
@@ -104,9 +104,9 @@ export default function CodingProblem({
                         </div>
                         <br />
 
-                        <Typography className={value.TestCodeSuccess ? classes.textSuccess : classes.textFail}>{value.MessageTestCode}</Typography>
+                        <Typography className={value.testCodeSuccess ? classes.textSuccess : classes.textFail}>{value.messageTestCode}</Typography>
                         <div>
-                            <SkewLoader color="#088247"  loading={value.IsLoadingTestCode} size={20} />
+                            <SkewLoader color="#088247"  loading={value.isLoadingTestCode} size={20} />
                         </div>
                         <Button variant="primary" id={`CP_${NO}`} onClick={handleTestCode}>Test code</Button>
                     </Grid>

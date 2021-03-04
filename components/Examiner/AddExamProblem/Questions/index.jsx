@@ -63,7 +63,7 @@ export default function Questions({listOfQuestions,handleChangeQuestionMC,handle
                 // eslint-disable-next-line react/no-array-index-key
                 <div key={key}>
                     {
-                        value.IsMultipleChoices ? 
+                        value.isMCQ ? 
                         <Accordion square expanded={expanded === `panel${key}`} onChange={handleChange(`panel${key}`)}>
                             <AccordionSummary aria-controls="panel1d-content" id="panel1d-header">
                                 <Typography>Question #{key + 1} (Multiple choices)</Typography>

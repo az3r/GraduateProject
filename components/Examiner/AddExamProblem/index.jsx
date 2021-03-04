@@ -3,7 +3,7 @@ import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import {Box, Button, Checkbox, TextField, Typography} from '@material-ui/core';
 import React,{useState} from 'react';
 import { test } from '@libs/client/codes';
-import { formatQuestionsArray } from '@libs/client/business';
+import { formatQuestionsArray, getFormatResultFromFile } from '@libs/client/business';
 import { create } from '@libs/client/exams';
 import { FirebaseAuth } from '@libs/client/firebase';
 import Questions from './Questions/index';
@@ -18,6 +18,7 @@ export default function AddTestPage(){
         end: "",
     })
     const [listOfQuestions,setListOfQuestions] = useState([]);
+    const [message,setMessage] = useState("");
     const code = {
     Csharp:
 `using System;
@@ -41,38 +42,38 @@ public class Program
 
     const handleAddMultipleChoicesQuestion = () => {
         const newMultipleChoicesQuestion = {
-            IsMultipleChoices: true,
-            Question: "",
-            Score: 0,
-            Time: 0,
-            A: "",
-            B: "",
-            C: "",
-            D: "",
-            Correct: ""
+            isMCQ: true,
+            question: "",
+            score: 0,
+            time: 0,
+            a: "",
+            b: "",
+            c: "",
+            d: "",
+            correct: ""
         }
         setListOfQuestions([...listOfQuestions,newMultipleChoicesQuestion]);
     }
 
     const handleAddCodingProblemQuestion = () => {
         const newCodingProblemQuestion = {
-            IsMultipleChoices: false,
-            Title: "",
-            Content: "",
-            Difficulty: 0,
-            Score: 0,
-            Time: 0,
-            Language: "Csharp",
-            Code: code.Csharp,
-            Input: [],
-            SimpleInput: '',
-            Output: [],
-            SimpleOutput: '',
-            Cases: [],
-            LoadingTestCode: false,
-            MessageTestCode: '',
-            TestCodeSuccess: false,
-            IsLoadingTestCode: false,
+            isMCQ: false,
+            title: "",
+            content: "",
+            difficulty: 0,
+            score: 0,
+            time: 0,
+            language: "Csharp",
+            code: code.Csharp,
+            input: [],
+            simpleInput: '',
+            output: [],
+            simpleOutput: '',
+            cases: [],
+            loadingTestCode: false,
+            messageTestCode: '',
+            testCodeSuccess: false,
+            isLoadingTestCode: false,
         }
         setListOfQuestions([...listOfQuestions,newCodingProblemQuestion]);
     }
@@ -80,7 +81,7 @@ public class Program
     const handleChangeQuestionMC = (id,value) => {
         const newListQuestions = [...listOfQuestions];
         const question = newListQuestions[id];
-        question.Question = value;
+        question.question = value;
         setListOfQuestions(newListQuestions);
     }
 
@@ -90,19 +91,19 @@ public class Program
         const question = newListQuestions[id];
         if(code === 'A')
         {
-            question.A = value;
+            question.a = value;
         }
         if(code === 'B')
         {
-            question.B = value;
+            question.b = value;
         }
         if(code === 'C')
         {
-            question.C = value;
+            question.c = value;
         }
         if(code === 'D')
         {
-            question.D = value;
+            question.d = value;
         }
         setListOfQuestions(newListQuestions);
     }
@@ -114,7 +115,7 @@ public class Program
         const questionID = split[1];
         const newListQuestions = [...listOfQuestions];
         const question = newListQuestions[questionID];
-        question.Score = e.target.value;
+        question.score = e.target.value;
         setListOfQuestions(newListQuestions);
     }
 
@@ -124,7 +125,7 @@ public class Program
         const questionID = split[1];
         const newListQuestions = [...listOfQuestions];
         const question = newListQuestions[questionID];
-        question.Time = e.target.value;
+        question.time = e.target.value;
         setListOfQuestions(newListQuestions);
     }
 
@@ -134,7 +135,7 @@ public class Program
         const questionID = split[1];
         const newListQuestions = [...listOfQuestions];
         const question = newListQuestions[questionID];
-        question.Correct = e.target.value;
+        question.correct = e.target.value;
         setListOfQuestions(newListQuestions);
       };
 
@@ -145,14 +146,14 @@ public class Program
         const questionID = split[1];
         const newListQuestions = [...listOfQuestions];
         const question = newListQuestions[questionID];
-        question.Title = e.target.value;
+        question.title = e.target.value;
         setListOfQuestions(newListQuestions);
     }
 
     const handleChangeCPInfo = (id,value) => {
         const newListQuestions = [...listOfQuestions];
         const question = newListQuestions[id];
-        question.Content = value;
+        question.content = value;
         setListOfQuestions(newListQuestions);
     }
 
@@ -162,7 +163,7 @@ public class Program
         const questionID = split[1];
         const newListQuestions = [...listOfQuestions];
         const question = newListQuestions[questionID];
-        question.Difficulty = e.target.value;
+        question.difficulty = e.target.value;
         setListOfQuestions(newListQuestions);
     }
 
@@ -172,42 +173,19 @@ public class Program
         const questionID = split[1];
         const newListQuestions = [...listOfQuestions];
         const question = newListQuestions[questionID];
-        question.Language = e.target.value;
-        question.Code = code[e.target.value];
+        question.language = e.target.value;
+        question.code = code[e.target.value];
         setListOfQuestions(newListQuestions);
     }
 
     const handleChangeCPCode = (id,newCode) => {
         const newListQuestions = [...listOfQuestions];
         const question = newListQuestions[id];
-        question.Code = newCode;
+        question.code = newCode;
         setListOfQuestions(newListQuestions);
     }
 
-    function getFormatResultFromFile(text){
-        const splitedText = text.split("\r");
-        let result = [];
-        let arrayOfVariables = [];
-        // eslint-disable-next-line no-plusplus
-        for(let i = 0 ; i < splitedText.length ; i++)
-        {
-            if(splitedText[i] !== "\n")
-            {
-                arrayOfVariables = [...arrayOfVariables, splitedText[i]];
-                if(i === splitedText.length - 1)
-                {
-                    result = [...result, arrayOfVariables.join(' ').trim()];
-                }
-            }
-            else if(splitedText[i] === "\n")
-            {
-                result = [...result, arrayOfVariables.join(' ').trim()];
-                arrayOfVariables = [];
-            }
-        }
-        return result;
-    }
-
+    
     const handleChangeCPFiles = (e) => {
         const {id} = e.target;
         const split = id.split("_");
@@ -224,9 +202,9 @@ public class Program
                 const question = newListQuestions[questionID];
   
                 if(fileType === "In")
-                    question.Input = testCases;
+                    question.input = testCases;
                 else
-                    question.Output = testCases;
+                    question.output = testCases;
 
                 setListOfQuestions(newListQuestions);
             };
@@ -242,9 +220,9 @@ public class Program
         const newListQuestions = [...listOfQuestions];
         const question = newListQuestions[questionID];
         if(caseType === 'SimpleIn')
-            question.SimpleInput = e.target.value;
+            question.simpleInput = e.target.value;
         else
-            question.SimpleOutput = e.target.value;
+            question.simpleOutput = e.target.value;
         setListOfQuestions(newListQuestions);
     }
 
@@ -253,33 +231,33 @@ public class Program
         const newListQuestions = [...listOfQuestions];
         const question = newListQuestions[questionID];
         const cases = [{
-            input: question.SimpleInput,
-            output: question.SimpleOutput
+            input: question.simpleInput,
+            output: question.simpleOutput,
           }];
       
         try {
         const response = await test({
             problemId: "",
             problemName: "",
-            lang: question.Language,
-            code: question.Code,
+            lang: question.language,
+            code: question.code,
             testcases: cases,
             save: false
         });
         if (response.passed) {
-            question.TestCodeSuccess = true;
-            question.MessageTestCode = 'Test passed! Now proceed with deleting answer in the code editor. Then, submiting input and output files with the same format as current simple test cases\n(Note: test cases in files must be devided by a blank line)';
+            question.testCodeSuccess = true;
+            question.messageTestCode = 'Test passed! Now proceed with deleting answer in the code editor. Then, submiting input and output files with the same format as current simple test cases\n(Note: test cases in files must be devided by a blank line)';
         } 
         else if(response.failed === 1) {
-            question.TestCodeSuccess = false;
-            question.MessageTestCode =  `Test failed! \nExpected output: ${response.results[0].expected}\n. Actual output: ${response.results[0].actual}`;
+            question.testCodeSuccess = false;
+            question.messageTestCode =  `Test failed! \nExpected output: ${response.results[0].expected}\n. Actual output: ${response.results[0].actual}`;
         } 
         } catch (error) {
-            question.TestCodeSuccess = false;
-            question.MessageTestCode = 'Error! Please check again';
+            question.testCodeSuccess = false;
+            question.messageTestCode = 'Error! Please check again';
         }
         finally{
-            question.IsLoadingTestCode = false;
+            question.isLoadingTestCode = false;
             setListOfQuestions(newListQuestions);
         }
     }
@@ -290,14 +268,14 @@ public class Program
         const questionID = split[1];
         const newListQuestions = [...listOfQuestions];
         const question = newListQuestions[questionID];
-        if(question.SimpleInput === '' || question.SimpleOutput === '')
+        if(question.simpleInput === '' || question.simpleOutput === '')
         {
-            question.MessageTestCode = "Have not submited simple input or output yet" ;
+            question.messageTestCode = "Have not submited simple input or output yet" ;
             setListOfQuestions(newListQuestions);
             return;
         }
 
-        question.IsLoadingTestCode = true;
+        question.isLoadingTestCode = true;
         setListOfQuestions(newListQuestions);
         await sendTestRequest(questionID);
     }
@@ -329,8 +307,8 @@ public class Program
     const handleSubmitExam = async (e) =>{
         e.preventDefault();
         const formatedQuestions = formatQuestionsArray(listOfQuestions);
+
         const { uid } = FirebaseAuth().currentUser;
-     
         create(uid,{
             title: examIntro.title,
             content: examIntro.content,
@@ -340,6 +318,7 @@ public class Program
             endAt: examIntro.end,
             problems: formatedQuestions
         });
+        setMessage("Add exam success");
     }
     
     return(
@@ -407,6 +386,11 @@ public class Program
                     handleChangeCPCode={handleChangeCPCode} handleChangeCPFiles={handleChangeCPFiles}
                     handleChangeSimpleTest={handleChangeSimpleTest}
                     handleTestCode={handleTestCode} />
+
+                <Box display="flex" justifyContent="center" m={3}>
+                    <Typography>{message}</Typography>
+                </Box>
+
                 <Box display="flex" justifyContent="center" m={3}>
                     <Button variant="contained" color="primary" type="submit">Add Exam</Button>
                 </Box>
