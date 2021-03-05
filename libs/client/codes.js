@@ -28,8 +28,7 @@ export async function test({
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
-      // eslint-disable-next-line prefer-template
-      Authorization: 'Bearer ' + token,
+      Authorization: `Bearer ${token}`,
     },
     body: JSON.stringify({
       code,

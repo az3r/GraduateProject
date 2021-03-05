@@ -192,6 +192,7 @@ public class Program
         );
       }
     } catch (error) {
+      console.log(error);
       setIsTestSuccess(false);
       setTestReponse('Error! Please check again');
     } finally{
