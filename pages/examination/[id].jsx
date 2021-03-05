@@ -9,6 +9,7 @@ import {
   Button,
 } from '@material-ui/core';
 
+import { exams } from '@libs/client';
 import Layout from '../../components/Layout';
 
 const useStyles = makeStyles({
@@ -68,7 +69,7 @@ const useStyles = makeStyles({
   },
 });
 
-export default function Introduction({problems}) {
+export default function Introduction({exam}) {
   const classes = useStyles();
 
   return (
@@ -80,7 +81,7 @@ export default function Introduction({problems}) {
 
       <Layout>
         <Container component="dev">
-          <h1>Examination Name</h1>
+          <h1>{exam.title}</h1>
         </Container>
         <hr />
         <Container component="dev">
@@ -89,7 +90,7 @@ export default function Introduction({problems}) {
               <h1>Problems</h1>
               <List className={classes.problemList}>
                 {
-                  problems.map((problem, index) => (
+                  exam.problems.map((problem, index) => (
                       <Box tabIndex={index} border={2} className={classes.problemBox}>
                         <Box>
                           <h2 className={classes.problemName}>{problem.title}</h2>
@@ -134,7 +135,7 @@ export default function Introduction({problems}) {
                 </span>
               </div>
               <div className={classes.startButtonDiv}>
-                <Button size="large" variant="contained" color="primary" href="/examination/start/1">
+                <Button size="large" variant="contained" color="primary" href={`/examination/start/${exam.id}`}>
                   START
                 </Button>
               </div>
@@ -146,94 +147,12 @@ export default function Introduction({problems}) {
   );
 }
 
-const problems = [
-  {
-    id: 1,
-    title: "Two Sum",
-    type: "MCQ",
-    duration: "00:30",
-    difficulty: "Easy",
-    score: 100,
-  },
-  {
-    id: 2,
-    title: "Add Two Numbers",
-    type: "Code",
-    duration: "05:00",
-    difficulty: "Medium",
-    score: 120,
-  },
-  {
-    id: 3,
-    title: "Longest Substring Without Repeating Characters",
-    type: "MCQ",
-    duration: "00:30",
-    difficulty: "Easy",
-    score: 100,
-  },
-  {
-    id: 4,
-    title: "Median of Two Sorted Arrays",
-    type: "Code",
-    duration: "05:00",
-    difficulty: "Medium",
-    score: 120,
-  },
-  {
-    id: 5,
-    title: "Longest Palindromic Substring",
-    type: "MCQ",
-    duration: "00:30",
-    difficulty: "Easy",
-    score: 100,
-  },
-  {
-    id: 6,
-    title: "ZigZag Conversion",
-    type: "Code",
-    duration: "05:00",
-    difficulty: "Medium",
-    score: 120,
-  },
-  {
-    id: 7,
-    title: "Palindrome Number",
-    type: "MCQ",
-    duration: "00:30",
-    difficulty: "Easy",
-    score: 100,
-  },
-  {
-    id: 8,
-    title: "Reverse Integer",
-    type: "Code",
-    duration: "05:00",
-    difficulty: "Medium",
-    score: 120,
-  },
-  {
-    id: 9,
-    title: "String to Integer (atoi)",
-    type: "MCQ",
-    duration: "00:30",
-    difficulty: "Easy",
-    score: 100,
-  },
-  {
-    id: 10,
-    title: "Regular Expression Matching",
-    type: "Code",
-    duration: "05:00",
-    difficulty: "Medium",
-    score: 120,
-  },
-];
-
-export async function getServerSideProps() {
+export async function getServerSideProps({params}) {
+  const item = await exams.get(params.id, {withProblems: true});
 
   return {
     props: {
-      problems,
+      exam: item,
     },
   };
 }

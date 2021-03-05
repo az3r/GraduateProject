@@ -49,8 +49,9 @@ const editorConfiguration = {
   toolbar: [ ],
 };
 
-export default function Problem(props) {
+export default function Problem({title, question, difficulty, score}) {
   const classes = useStyles();
+
 
   return (
     <Tabs>
@@ -60,27 +61,48 @@ export default function Problem(props) {
 
       <TabPanel>
         <Paper style={{maxHeight: 1000, height: 510, overflow: 'auto'}}>
-          <h2 className={classes.title}>{props.title}</h2>
+          <h2 className={classes.title}>{title}</h2>
           <div className={classes.problemInfo}>
-            <Box component="span" display="inline" p={'4px'} borderRadius={16} className={classes.difficultyBox}
-                 bgcolor={props.difficulty === 0 ? "green" : props.difficulty == 1 ? "orange" : "red"}>
-              {
-                props.difficulty == 0 ? "Easy" : props.difficulty == 1 ? "Medium" : "Hard"
-              }
-            </Box>
+            {difficulty === 0 &&
+              <Box component="span" display="inline" p="4px" borderRadius={16} className={classes.difficultyBox}
+                   bgcolor="green">
+                Easy
+              </Box>
+            }
+
+            {difficulty === 1 &&
+              <Box component="span" display="inline" p="4px" borderRadius={16} className={classes.difficultyBox}
+                   bgcolor="orange">
+                Medium
+              </Box>
+            }
+            {difficulty === 2 &&
+              <Box component="span" display="inline" p="4px" borderRadius={16} className={classes.difficultyBox}
+                   bgcolor="red">
+                Hard
+              </Box>
+            }
+
+
+            {/* <Box component="span" display="inline" p={'4px'} borderRadius={16} className={classes.difficultyBox} */}
+            {/*     bgcolor={difficulty === 0 ? "green" : difficulty === 1 ? "orange" : "red"}> */}
+            {/*  { */}
+            {/*    difficulty === 0 ? "Easy" : difficulty === 1 ? "Medium" : "Hard" */}
+            {/*  } */}
+            {/* </Box> */}
 
             <Box className={classes.scoreBox}>
               <Box>
-                Score: {props.score}
+                Score: {score}
               </Box>
-              <Avatar className={classes.scoreAvatar} alt="Score" src={'/coins_48px.png'} />
+              <Avatar className={classes.scoreAvatar} alt="Score" src="/coins_48px.png" />
             </Box>
           </div>
           <CKEditor
             editor={ ClassicEditor }
-            disabled={true}
+            disabled
             config={ editorConfiguration }
-            data={props.content} />
+            data={question} />
         </Paper>
       </TabPanel>
     </Tabs>

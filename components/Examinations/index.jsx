@@ -125,7 +125,7 @@ export default function Examinations({exams}) {
                     <Box className={classes.title}>{examination.title}</Box>
                     <Box className={classes.createdDate}>
                       {dateFormat(
-                        new Date(examination.createdDate),
+                        new Date(examination.createdOn),
                         'mmmm dd, yyyy "at" HH:MM TT'
                       )}
                     </Box>

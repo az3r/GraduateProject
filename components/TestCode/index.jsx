@@ -47,15 +47,15 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-export default function Test({ problem, nextProblem }) {
+export default function Test({ problem, nextProblem}) {
   const classes = useStyles();
 
-  const [title] = useState(problem.title);
-  const [content] = useState(problem.content);
-  const [language] = useState(problem.language);
-  const [cases] = useState(problem.cases);
-  const [difficulty] = useState(problem.difficulty);
-  const [score] = useState(problem.score);
+  const {title} = problem;
+  const {content} = problem;
+  const {language} = problem;
+  const {cases} = problem;
+  const {difficulty} = problem;
+  const {score} = problem;
   const [code, setCode] = useState(problem.code);
   const [testCodeResult, setTestCodeResult] = useState('');
   const [openConsole, setOpenConsole] = useState('hidden');

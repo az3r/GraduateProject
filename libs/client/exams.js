@@ -31,13 +31,16 @@ export async function get(examId, { withProblems }) {
   if (examId) {
     const snapshot = await Firestore().collection(exams).doc(examId).get();
     const problems = withProblems && (await getProblems(examId));
-    return {
+    return transform({
+      id: examId,
       problems: problems || null,
       ...snapshot.data(),
-    };
+    });
   }
   const snapshot = await Firestore().collection(exams).get();
-  return snapshot.docs.map((item) => ({ id: item.id, ...item.data() }));
+  return snapshot.docs.map((item) =>
+    transform({ id: item.id, ...item.data() })
+  );
 }
 
 export async function getProblems(examId) {

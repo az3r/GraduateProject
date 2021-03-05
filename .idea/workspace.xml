@@ -20,9 +20,19 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="73bd1854-2930-493b-bbd0-fb90442d9327" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/pages/examination/end/index.jsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pages/problem/[id].jsx" beforeDir="false" afterPath="$PROJECT_DIR$/pages/problem/[id].jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/components/Examinations/index.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/Examinations/index.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/components/TestCode/index.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/TestCode/index.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/components/TestMCQ/AnswerMCQ/index.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/TestMCQ/AnswerMCQ/index.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/components/TestMCQ/Problem/index.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/TestMCQ/Problem/index.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/components/TestMCQ/index.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/TestMCQ/index.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/libs/client/exams.js" beforeDir="false" afterPath="$PROJECT_DIR$/libs/client/exams.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/libs/client/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/libs/client/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pages/examination/[id].jsx" beforeDir="false" afterPath="$PROJECT_DIR$/pages/examination/[id].jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pages/examination/code/index.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/pages/examination/code/index.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pages/examination/index.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/pages/examination/index.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pages/examination/mcq/index.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/pages/examination/mcq/index.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pages/examination/start/[id].jsx" beforeDir="false" afterPath="$PROJECT_DIR$/pages/examination/start/[id].jsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -116,7 +126,8 @@
       <workItem from="1614666951908" duration="6817000" />
       <workItem from="1614743970016" duration="9842000" />
       <workItem from="1614771488282" duration="497000" />
-      <workItem from="1614833023770" duration="4557000" />
+      <workItem from="1614833023770" duration="5158000" />
+      <workItem from="1614910895144" duration="19528000" />
     </task>
     <servers />
   </component>

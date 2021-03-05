@@ -21,7 +21,7 @@ const styles = makeStyles({
 export default function AnswerMCQ() {
   const classes = styles();
 
-  const [value, setValue] = React.useState('A');
+  const [value, setValue] = React.useState('');
 
   const handleChange = (event) => {
     setValue(event.target.value);
@@ -31,7 +31,7 @@ export default function AnswerMCQ() {
     <>
       <Box className={classes.answerMCQBox}>
         <h2>Choose your answer: </h2>
-        <RadioGroup aria-label="gender" name="gender1" value={value} onChange={handleChange}>
+        <RadioGroup  aria-label="gender" name="gender1" value={value} onChange={handleChange}>
           <FormControlLabel value="A" control={<Radio />} label={HTMLReactParser('<h4>A. Đáp án A</h4>')} />
           <FormControlLabel value="B" control={<Radio />} label={HTMLReactParser('<h4>B. Đáp án B</h4>')} />
           <FormControlLabel value="C" control={<Radio />} label={HTMLReactParser('<h4>C. Đáp án C</h4>')} />
