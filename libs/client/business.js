@@ -17,16 +17,42 @@ export function getFormatResultFromFile(text) {
   const splitedText = text.split('\r');
   let result = [];
   let arrayOfVariables = [];
-  for (let i = 0; i < splitedText.length; i += 1) {
+  // eslint-disable-next-line no-plusplus
+  for (let i = 0; i < splitedText.length; i++) {
     if (splitedText[i] !== '\n') {
       arrayOfVariables = [...arrayOfVariables, splitedText[i]];
       if (i === splitedText.length - 1) {
-        result = [...result, arrayOfVariables];
+        result = [...result, arrayOfVariables.join(' ').trim()];
       }
     } else if (splitedText[i] === '\n') {
-      result = [...result, arrayOfVariables];
+      result = [...result, arrayOfVariables.join(' ').trim()];
       arrayOfVariables = [];
     }
   }
   return result;
+}
+
+export function formatQuestionsArray(questions) {
+  const newQuestionList = questions.map((question) => {
+    if (!question.isMCQ) {
+      const newQuestion = {
+        ...question,
+        cases: {
+          input: question.input,
+          output: question.output,
+        },
+      };
+      delete newQuestion.input;
+      delete newQuestion.simpleInput;
+      delete newQuestion.output;
+      delete newQuestion.simpleOutput;
+      delete newQuestion.loadingTestCode;
+      delete newQuestion.messageTestCode;
+      delete newQuestion.testCodeSuccess;
+      delete newQuestion.isLoadingTestCode;
+      return newQuestion;
+    }
+    return question;
+  });
+  return newQuestionList;
 }
