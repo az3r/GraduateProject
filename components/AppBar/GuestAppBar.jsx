@@ -13,9 +13,13 @@ function GuestAppBar() {
   return (
     <AppBar position="static">
       <Toolbar>
-        <Typography className={styles.title} variant="h6">
-          Smart Coder
-        </Typography>
+      <Link href="/">
+        <Button>
+          <Typography className={styles.title} variant="h6">
+            Smart Coder
+          </Typography>
+        </Button>
+      </Link>
         <Link href="/login">
           <Button className={styles.action}>
             <Typography variant="h6">Login</Typography>
