@@ -1,4 +1,5 @@
 import { collections } from '@utils/constants';
+import { transform } from '@utils/firestore';
 import { Firestore } from './firebase';
 
 const { problems, exams } = collections;
@@ -33,11 +34,11 @@ export async function get(problemId) {
         code: 'not-found',
         message: `There is no document with id ${problemId}`,
       });
-    return snapshot.docs[0].data();
+    return transform(snapshot.docs[0].data());
   }
   const snapshot = await Firestore()
     .collectionGroup(problems)
     .where('isMCQ', '==', false)
     .get();
-  return snapshot.docs.map((item) => item.data());
+  return snapshot.docs.map((item) => transform(item.data()));
 }

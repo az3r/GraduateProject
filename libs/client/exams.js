@@ -1,4 +1,5 @@
 import { collections } from '@utils/constants';
+import { transform } from '@utils/firestore';
 import { Firestore } from './firebase';
 import { create as createProblem } from './problems';
 
@@ -29,15 +30,9 @@ export async function create(
 export async function get(examId, { withProblems }) {
   if (examId) {
     const snapshot = await Firestore().collection(exams).doc(examId).get();
-    const problems =
-      withProblems &&
-      (await Firestore()
-        .collection(exams)
-        .doc(examId)
-        .collection(problemCollection)
-        .get());
+    const problems = withProblems && (await getProblems(examId));
     return {
-      problems: problems || undefined,
+      problems: problems || null,
       ...snapshot.data(),
     };
   }
@@ -51,8 +46,5 @@ export async function getProblems(examId) {
     .doc(examId)
     .collection(problemCollection)
     .get();
-  return snapshot.docs.map((item) => ({
-    id: item.id,
-    ...item.data(),
-  }));
+  return snapshot.docs.map((item) => transform(item.data()));
 }
