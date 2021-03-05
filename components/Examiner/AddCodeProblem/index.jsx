@@ -89,11 +89,11 @@ public class Program
   };
 
   const handleChangeLanguague = (event) => {
-    setProblem({ ...problem, language: event.target.value });
-    setProblem({ ...problem, code: code[event.target.value] });
+    setProblem({ ...problem, language: event.target.value, code: code[event.target.value]  });
   };
 
   const handleOnChangeCode = (newCode) => {
+
     setProblem({ ...problem, code: newCode });
   };
 

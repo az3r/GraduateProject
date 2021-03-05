@@ -22,9 +22,9 @@ export default function CodeEditor({ language, code, onCodeChange }) {
         name="blah2"
         onChange={onCodeChange}
         fontSize={14}
-        showPrintMargin={true}
-        showGutter={true}
-        highlightActiveLine={true}
+        showPrintMargin
+        showGutter
+        highlightActiveLine
         value={code}
         setOptions={{
           enableBasicAutocompletion: true,
@@ -33,7 +33,7 @@ export default function CodeEditor({ language, code, onCodeChange }) {
           showLineNumbers: true,
           tabSize: 2,
         }}
-      ></AceEditor>
+       />
     </>
   );
 }
