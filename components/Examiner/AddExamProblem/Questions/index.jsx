@@ -51,7 +51,7 @@ const Accordion = withStyles({
 
 export default function Questions({listOfQuestions,handleChangeQuestionMC,handleChangeAnswerMC,handleChangeCorrectAnswer,handleChangeScore,
     handleChangeCPTitle,handleChangeLanguague,handleChangeCPInfo,handleChangeCPDifficulty,handleChangeCPCode,handleChangeCPFiles,
-    handleChangeSimpleTest,handleTestCode,handleChangeTime}){
+    handleChangeSimpleTest,handleTestCode,handleChangeMinutes,handleChangeSeconds}){
 
     const [expanded, setExpanded] = useState('panel0');
     const handleChange = (panel) => (event, newExpanded) => {
@@ -72,7 +72,8 @@ export default function Questions({listOfQuestions,handleChangeQuestionMC,handle
                                 <MultipleChoices NO={key} value={value} handleChangeQuestionMC={handleChangeQuestionMC}
                                 handleChangeAnswerMC={handleChangeAnswerMC}
                                 handleChangeCorrectAnswer={handleChangeCorrectAnswer}
-                                handleChangeScore={handleChangeScore} handleChangeTime={handleChangeTime}/>
+                                handleChangeScore={handleChangeScore} handleChangeMinutes={handleChangeMinutes} 
+                                handleChangeSeconds={handleChangeSeconds} handleChangeCPDifficulty={handleChangeCPDifficulty}/>
                             </AccordionDetails>
                         </Accordion>
                         :
@@ -85,7 +86,8 @@ export default function Questions({listOfQuestions,handleChangeQuestionMC,handle
                                     handleChangeCPInfo={handleChangeCPInfo} handleChangeLanguague={handleChangeLanguague} 
                                     handleChangeCPDifficulty={handleChangeCPDifficulty} handleChangeCPCode={handleChangeCPCode}
                                     handleChangeCPFiles={handleChangeCPFiles} handleChangeSimpleTest={handleChangeSimpleTest}
-                                    handleTestCode={handleTestCode} handleChangeTime={handleChangeTime}/>
+                                    handleTestCode={handleTestCode} handleChangeMinutes={handleChangeMinutes} 
+                                    handleChangeSeconds={handleChangeSeconds}/>
                             </AccordionDetails>
                         </Accordion>
                     }

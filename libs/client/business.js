@@ -4,8 +4,8 @@ export default function getTestCaseFromInputAndOutput(input, output) {
     cases = [
       ...cases,
       {
-        input: input[i].join(' ').trim(),
-        output: output[i].join(' ').trim(),
+        input: input[i],
+        output: output[i],
       },
     ];
   }
@@ -37,10 +37,7 @@ export function formatQuestionsArray(questions) {
     if (!question.isMCQ) {
       const newQuestion = {
         ...question,
-        cases: {
-          input: question.input,
-          output: question.output,
-        },
+        cases: getTestCaseFromInputAndOutput(question.input, question.output),
       };
       delete newQuestion.input;
       delete newQuestion.simpleInput;

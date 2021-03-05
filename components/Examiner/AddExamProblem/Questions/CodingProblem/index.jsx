@@ -21,7 +21,7 @@ export default function CodingProblem({
         NO,value,
         handleChangeCPTitle,handleChangeCPInfo,handleChangeCPDifficulty,handleChangeScore,
         handleChangeLanguague,handleChangeCPCode,handleChangeSimpleTest,handleTestCode,handleChangeCPFiles,
-        handleChangeTime}){
+        handleChangeMinutes,handleChangeSeconds}){
     
     const classes = useStyles();
 
@@ -68,8 +68,13 @@ export default function CodingProblem({
             </Box>
 
             <Box boxShadow={1} p={2} m={3}>
-                    <Typography variant="h5">Enter time by minute (min: 0.5, max: 100): </Typography>
-                    <input id={`MC_${NO}`}  onChange={handleChangeTime} type="number" max="100" min="0.5" value={value.time}  />
+                <Typography variant="h5">Enter time for question: </Typography>
+                <Box display="flex">
+                    <input id={`CP_${NO}`}  onChange={handleChangeMinutes} type="number" max="100" min="0" value={value.minutes}  />
+                    <Typography>&nbsp;minute(s)&nbsp;&nbsp;&nbsp;:&nbsp;&nbsp;&nbsp;</Typography>
+                    <input id={`CP_${NO}`}  onChange={handleChangeSeconds} type="number" max="60" min="0" value={value.seconds}  />
+                    <Typography>&nbsp;second(s)&nbsp;&nbsp;</Typography>
+                </Box>
             </Box>
 
             <Box boxShadow={1} p={2} m={3}>

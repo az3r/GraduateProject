@@ -45,7 +45,8 @@ public class Program
             isMCQ: true,
             question: "",
             score: 0,
-            time: 0,
+            minutes: 0,
+            seconds: 0,
             a: "",
             b: "",
             c: "",
@@ -62,7 +63,8 @@ public class Program
             content: "",
             difficulty: 0,
             score: 0,
-            time: 0,
+            minutes: 0,
+            seconds: 0,
             language: "Csharp",
             code: code.Csharp,
             input: [],
@@ -119,13 +121,23 @@ public class Program
         setListOfQuestions(newListQuestions);
     }
 
-    const handleChangeTime = (e) => {
+    const handleChangeMinutes = (e) => {
         const {id} = e.target;
         const split = id.split("_");
         const questionID = split[1];
         const newListQuestions = [...listOfQuestions];
         const question = newListQuestions[questionID];
-        question.time = e.target.value;
+        question.minutes = e.target.value;
+        setListOfQuestions(newListQuestions);
+    }
+
+    const handleChangeSeconds = (e) => {
+        const {id} = e.target;
+        const split = id.split("_");
+        const questionID = split[1];
+        const newListQuestions = [...listOfQuestions];
+        const question = newListQuestions[questionID];
+        question.seconds = e.target.value;
         setListOfQuestions(newListQuestions);
     }
 
@@ -307,7 +319,6 @@ public class Program
     const handleSubmitExam = async (e) =>{
         e.preventDefault();
         const formatedQuestions = formatQuestionsArray(listOfQuestions);
-
         const { uid } = FirebaseAuth().currentUser;
         create(uid,{
             title: examIntro.title,
@@ -379,7 +390,7 @@ public class Program
                 <Questions listOfQuestions={listOfQuestions}
                     handleChangeQuestionMC={handleChangeQuestionMC} handleChangeAnswerMC={handleChangeAnswerMC}
                     handleChangeCorrectAnswer={handleChangeCorrectAnswer} handleChangeScore={handleChangeScore}
-                    handleChangeTime={handleChangeTime}
+                    handleChangeMinutes={handleChangeMinutes} handleChangeSeconds={handleChangeSeconds}
 
                     handleChangeCPTitle={handleChangeCPTitle} handleChangeCPInfo={handleChangeCPInfo}
                     handleChangeCPDifficulty={handleChangeCPDifficulty} handleChangeLanguague={handleChangeLanguague}

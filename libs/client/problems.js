@@ -5,7 +5,6 @@ import { Firestore } from './firebase';
 const { problems, exams } = collections;
 
 export async function create(userId, { examId, ...props }) {
-  console.log(props);
   const { id, path } = await Firestore()
     .collection(exams)
     .doc(examId || 'general')

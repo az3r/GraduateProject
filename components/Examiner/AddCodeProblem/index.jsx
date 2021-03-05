@@ -195,7 +195,6 @@ public class Program
       setIsTestSuccess(false);
       setTestReponse('Error! Please check again');
     } finally{
-      console.log("dmmm");
       setIsLoading(false);
     }
   };
