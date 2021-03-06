@@ -54,7 +54,7 @@ export default function MemberAppBar() {
         </Link>
         <Link href="/examination">
           <MenuItem>
-            <Typography variant="h6">Examination</Typography>
+            <Typography variant="h6">Examinations</Typography>
           </MenuItem>
         </Link>
         <Link href="/examiner">

@@ -1,9 +1,9 @@
 import React from 'react';
 import dynamic from 'next/dynamic';
-import Layout from '../../components/Layout';
+import Layout from '../../../components/Layout';
 
 const AddExamProblem = dynamic(
-  () => import('../../components/Examiner/AddExamProblem')
+  () => import('../../../components/Examiner/Examinations/AddExamProblem')
   ,
   { ssr: false });
 
@@ -11,7 +11,7 @@ export default function AddProblem() {
   return (
     <>
       <Layout>
-        <AddExamProblem></AddExamProblem>
+        <AddExamProblem />
       </Layout>
     </>
   );

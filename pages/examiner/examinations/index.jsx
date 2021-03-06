@@ -1,7 +1,8 @@
 import React from 'react';
 import Head from 'next/head';
-import Examiner from '../../components/Examiner';
-import Layout from '../../components/Layout';
+import ExaminationsPage from '@components/Examiner/Examinations';
+import Examiner from '../../../components/Examiner';
+import Layout from '../../../components/Layout';
 
 export default function ExaminerPage() {
   return (
@@ -11,7 +12,9 @@ export default function ExaminerPage() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <Layout>
-        <Examiner />
+        <Examiner>
+            <ExaminationsPage />
+        </Examiner>
       </Layout>
     </>
   );

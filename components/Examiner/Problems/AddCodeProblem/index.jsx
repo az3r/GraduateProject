@@ -1,7 +1,9 @@
 import {
   Box,
+  Breadcrumbs,
   Button,
   Grid,
+  Link,
   makeStyles,
   NativeSelect,
   TextField,
@@ -17,7 +19,7 @@ import getTestCaseFromInputAndOutput, {
 import { create } from '@libs/client/problems';
 import { test } from '@libs/client/codes';
 import { FirebaseAuth } from '@libs/client/firebase';
-import CodeEditor from '../../CodeEditor';
+import CodeEditor from '../../../CodeEditor';
 
 const useStyles = makeStyles({
   textSuccess: {
@@ -132,16 +134,16 @@ public class Program
     const cases = getTestCaseFromInputAndOutput(input, output);
     setProblem({ ...problem, cases });
 
-    if (problem.title === '' || problem.content === '' || problem.cases) {
+    if (problem.title === '' || problem.content === '' || problem.cases.length === 0) {
       setIsAddSuccess(false);
       setMessage('Not filling in enough information for the test');
       return;
     }
 
     const { uid } = FirebaseAuth().currentUser;
-    const response = create(uid, problem);
-
-    if (response === true) {
+    const response = await create(uid, problem);
+    
+    if (response) {
       setIsAddSuccess(true);
       setMessage('Add test success!');
     } else {
@@ -192,7 +194,6 @@ public class Program
         );
       }
     } catch (error) {
-      console.log(error);
       setIsTestSuccess(false);
       setTestReponse('Error! Please check again');
     } finally{
@@ -202,6 +203,17 @@ public class Program
 
   return (
     <Box m={1}>
+      <Box p={2}>
+        <Breadcrumbs>
+            <Link color="inherit" href="/examiner">
+              Examiner
+            </Link>
+            <Link color="inherit" href="/examiner/problems">
+              Problems
+            </Link>
+            <Typography color="textPrimary">Add</Typography>
+        </Breadcrumbs>
+      </Box>
       <form
         method="post"
         onSubmit={handleSubmitAddProblem}
@@ -250,7 +262,6 @@ public class Program
             inputProps={{ 'aria-label': 'age' }}
             onChange={handleChangeLanguague}
           >
-            {/* <option value={"c_cpp"}>C++</option> */}
             <option value="Csharp">C#</option>
             <option value="Java">Java</option>
             <option value="Python">Python</option>
