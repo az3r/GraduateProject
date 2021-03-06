@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { 
     Box, 
     Breadcrumbs, 
@@ -9,6 +9,8 @@ import {
 import { makeStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import AddIcon from '@material-ui/icons/Add';
+import { useAuth } from '@hooks/auth';
+import { useRouter } from 'next/router';
 
 const useStyles = makeStyles({
   root: {
@@ -30,8 +32,19 @@ const useStyles = makeStyles({
   }
 });
 
-export default function ProblemsPage() {
+export default function ProblemsPage({problems}) {
   const classes = useStyles();
+  const auth = useAuth();
+  const router = useRouter();
+
+  useEffect(() => {
+    const {user} = router.query;
+    const {uid} = auth;
+    if(user !== uid)
+    {
+      router.replace("/");
+    }
+  },[]);
 
   return (
     <>
@@ -53,7 +66,11 @@ export default function ProblemsPage() {
           <Button className={classes.addBtn} variant="contained" color="secondary" startIcon={<AddIcon/>}>Add problem</Button>
         </Link>
         <Box className={classes.itemsContainer} boxShadow={1} p={2}>
-            <Typography>haha</Typography>
+            {
+              problems.map((item) => (
+                <Typography>{item.title}</Typography>
+              ))
+            }
         </Box>
     </>
   );

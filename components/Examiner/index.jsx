@@ -10,6 +10,7 @@ import Typography from '@material-ui/core/Typography';
 import PriorityHighIcon from '@material-ui/icons/PriorityHigh';
 import HistoryOutlinedIcon from '@material-ui/icons/HistoryOutlined';
 import AssignmentOutlinedIcon from '@material-ui/icons/AssignmentOutlined';
+import { FirebaseAuth } from '@libs/client/firebase';
 
 const useStyles = makeStyles({
   root: {
@@ -24,6 +25,21 @@ export default function Examiner({children}) {
   const router = useRouter();
   const classes = useStyles();
 
+  const goToExaminerPage = () => {
+    router.replace('/examiner')
+  }
+
+  const goToProblemsPage = () => {
+    const {uid} = FirebaseAuth().currentUser;
+    router.replace(`/examiner/problems?user=${uid}`);
+  }
+
+  const goToExaminationsPage = () => {
+    const {uid} = FirebaseAuth().currentUser;
+
+    router.replace(`/examiner/examinations?user=${uid}`);
+  }
+
   return (
     <Box p={3}>
       <Grid container>
@@ -34,19 +50,19 @@ export default function Examiner({children}) {
                 <ListItemIcon>
                   <HistoryOutlinedIcon fontSize="small" />
                 </ListItemIcon>
-                <Typography onClick={() => router.push('../examiner')}>History</Typography>
+                <Typography onClick={goToExaminerPage}>History</Typography>
               </MenuItem>
               <MenuItem>
                 <ListItemIcon>
                   <PriorityHighIcon fontSize="small" />
                 </ListItemIcon>
-                <Typography onClick={() => router.push('../examiner/problems')}>Problems</Typography>
+                <Typography onClick={goToProblemsPage}>Problems</Typography>
               </MenuItem>
               <MenuItem>
                 <ListItemIcon>
                   <AssignmentOutlinedIcon fontSize="small" />
                 </ListItemIcon>
-                <Typography onClick={() => router.push('../examiner/examinations')}>Examinations</Typography>
+                <Typography onClick={goToExaminationsPage}>Examinations</Typography>
               </MenuItem>
             </MenuList>
           </Paper>

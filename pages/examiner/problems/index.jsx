@@ -1,10 +1,11 @@
 import React from 'react';
 import Head from 'next/head';
 import ProblemsPage from '@components/Examiner/Problems';
+import { getProblems } from '@libs/client/users';
 import Layout from '../../../components/Layout';
 import Examiner from '../../../components/Examiner';
 
-export default function ExaminerPage() {
+export default function ExaminerPage({problems}) {
   return (
     <>
       <Head>
@@ -13,18 +14,19 @@ export default function ExaminerPage() {
       </Head>
       <Layout>
         <Examiner>
-            <ProblemsPage />
+            <ProblemsPage problems={problems} />
         </Examiner>
       </Layout>
     </>
   );
 }
 
-export async function getServerSideProps() {
- 
+export async function getServerSideProps(context) {
+  const {user} = context.query;
+  const problems = await getProblems(user);
   return {
     props:{
-     
+      problems
     }
   }
 }

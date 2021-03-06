@@ -31,6 +31,8 @@ const useStyles = makeStyles({
 });
 
 export default function AddProblemPage() {
+  // const auth = useAuth();
+  // const [user,setUser] = useState("");
   const code = {
     c_cpp: `#include <stdio.h>
 int main()
@@ -208,9 +210,11 @@ public class Program
             <Link color="inherit" href="/examiner">
               Examiner
             </Link>
-            <Link color="inherit" href="/examiner/problems">
+            {/* <Link color="inherit"  href={`/examiner/problems?uid=${123}`}>
               Problems
-            </Link>
+            </Link> */}
+            <Typography color="textPrimary">Problems</Typography>
+
             <Typography color="textPrimary">Add</Typography>
         </Breadcrumbs>
       </Box>

@@ -30,7 +30,7 @@ const useStyles = makeStyles({
   }
 });
 
-export default function ExaminationsPage() {
+export default function ExaminationsPage({exams}) {
   const classes = useStyles();
 
   return (
@@ -50,10 +50,14 @@ export default function ExaminationsPage() {
             />
         </Box>
         <Link href="/examiner/examinations/add">
-          <Button className={classes.addBtn} variant="contained" color="secondary" startIcon={<AddIcon/>}>Add problem</Button>
+          <Button className={classes.addBtn} variant="contained" color="secondary" startIcon={<AddIcon/>}>Add examination</Button>
         </Link>
         <Box className={classes.itemsContainer} boxShadow={1} p={2}>
-            <Typography>haha</Typography>
+          {
+              exams.map((item) => (
+                <Typography>{item.title}</Typography>
+              ))
+            }
         </Box>
     </>
   );
