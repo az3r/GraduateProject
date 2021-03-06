@@ -49,7 +49,7 @@ const editorConfiguration = {
   toolbar: [ ],
 };
 
-export default function Problem({title, question, difficulty, score}) {
+export default function Problem({question, difficulty, score}) {
   const classes = useStyles();
 
 
@@ -61,7 +61,7 @@ export default function Problem({title, question, difficulty, score}) {
 
       <TabPanel>
         <Paper style={{maxHeight: 1000, height: 510, overflow: 'auto'}}>
-          <h2 className={classes.title}>{title}</h2>
+          <h2 className={classes.title}>MCQ</h2>
           <div className={classes.problemInfo}>
             {difficulty === 0 &&
               <Box component="span" display="inline" p="4px" borderRadius={16} className={classes.difficultyBox}

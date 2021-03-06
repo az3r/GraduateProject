@@ -93,7 +93,7 @@ export default function Test({ problem, nextProblem}) {
         );
       }
     } catch (e) {
-      setTestCodeResult(`stdout: ${e.stdout}\nstderr:  + ${e.stder}`);
+      setTestCodeResult(`stdout: ${e.stdout}\nstderr: ${e.stder}`);
       console.log('Hello');
       console.log(e);
     } finally {

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 import {
   makeStyles,
@@ -38,10 +38,11 @@ const useStyles = makeStyles( {
 export default function Test({problem, nextProblem}) {
   const classes = useStyles();
 
-  const {title} = problem;
   const {question} = problem;
   const {difficulty} = problem;
   const {score} = problem;
+  const {a, b, c, d} = problem;
+  const [answer, setAnswer] = useState('');
 
 
   const handleSubmit = () => {
@@ -54,7 +55,7 @@ export default function Test({problem, nextProblem}) {
     <Container disableGutters maxWidth={false} fixed>
       <SplitPane split="vertical"  minSize={350} defaultSize={window.outerWidth/2}>
         <div>
-          <Problem title={title} question={question} difficulty={difficulty} score={score} />
+          <Problem question={question} difficulty={difficulty} score={score} />
         </div>
         <div>
           <Paper square>
@@ -65,7 +66,7 @@ export default function Test({problem, nextProblem}) {
               </Box>
             </Box>
             <Box boxShadow={1}>
-              <AnswerMCQ />
+              <AnswerMCQ answer={answer} onAnswerChange={setAnswer} a={a} b={b} c={c} d={d}/>
             </Box>
             <Box className={classes.submitBox}>
               <Button size="small" type="submit" variant="outlined" onClick={handleSubmit}

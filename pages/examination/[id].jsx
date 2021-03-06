@@ -93,19 +93,69 @@ export default function Introduction({exam}) {
                   exam.problems.map((problem, index) => (
                       <Box tabIndex={index} border={2} className={classes.problemBox}>
                         <Box>
-                          <h2 className={classes.problemName}>{problem.title}</h2>
+                          {
+                            problem.title && <h2 className={classes.problemName}>{problem.title}</h2>
+                          }
+                          {
+                            problem.question && <h2 className={classes.problemName}>Multiple Choice Question</h2>
+                          }
                           <div>
                             <div className={classes.decorDiv}>
                               Score: <span className={classes.decorSpan}>{problem.score}</span>
                             </div>
                             <div className={classes.decorDiv}>
                               Difficulty:{' '}
-                              <span className={classes.decorSpan}>{problem.difficulty}</span>
+                              {/* <span className={classes.decorSpan}>{problem.difficulty}</span> */}
+                              {
+                                problem.difficulty === 0 &&
+                                <Box
+                                  component="span"
+                                  display="inline"
+                                  p="4px"
+                                  borderRadius={16}
+                                  color="white"
+                                  pl={1}
+                                  pr={1}
+                                  bgcolor="green"
+                                >
+                                  Easy
+                                </Box>
+                              }
+                              {
+                                problem.difficulty === 1 &&
+                                <Box
+                                  component="span"
+                                  display="inline"
+                                  p="4px"
+                                  borderRadius={16}
+                                  color="white"
+                                  pl={1}
+                                  pr={1}
+                                  bgcolor="orange"
+                                >
+                                  Medium
+                                </Box>
+                              }
+                              {
+                                problem.difficulty === 2 &&
+                                <Box
+                                  component="span"
+                                  display="inline"
+                                  p="4px"
+                                  borderRadius={16}
+                                  color="white"
+                                  pl={1}
+                                  pr={1}
+                                  bgcolor="red"
+                                >
+                                  Hard
+                                </Box>
+                              }
                             </div>
                           </div>
                         </Box>
                         <Box border={1} className={classes.duration}>
-                          05:00
+                          {(`0${  problem.minutes}`).slice(-2)} : {(`0${  problem.seconds}`).slice(-2)}
                         </Box>
                       </Box>
                     ))

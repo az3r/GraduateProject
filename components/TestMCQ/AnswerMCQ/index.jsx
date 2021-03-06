@@ -18,24 +18,31 @@ const styles = makeStyles({
   }
 });
 
-export default function AnswerMCQ() {
+export default function AnswerMCQ({answer, onAnswerChange, a, b, c, d}) {
   const classes = styles();
 
-  const [value, setValue] = React.useState('');
 
-  const handleChange = (event) => {
-    setValue(event.target.value);
+  const handleAnswerChange = (event) => {
+    onAnswerChange(event.target.value);
   };
 
   return (
     <>
       <Box className={classes.answerMCQBox}>
         <h2>Choose your answer: </h2>
-        <RadioGroup  aria-label="gender" name="gender1" value={value} onChange={handleChange}>
-          <FormControlLabel value="A" control={<Radio />} label={HTMLReactParser('<h4>A. Đáp án A</h4>')} />
-          <FormControlLabel value="B" control={<Radio />} label={HTMLReactParser('<h4>B. Đáp án B</h4>')} />
-          <FormControlLabel value="C" control={<Radio />} label={HTMLReactParser('<h4>C. Đáp án C</h4>')} />
-          <FormControlLabel value="D" control={<Radio />} label={HTMLReactParser('<h4>D. Đáp án D</h4>')} />
+        <RadioGroup  aria-label="gender" name="gender1" value={answer} onChange={handleAnswerChange}>
+          {
+            a !== '' && <FormControlLabel value="A" control={<Radio />} label={HTMLReactParser(a)} />
+          }
+          {
+            b !== '' && <FormControlLabel value="B" control={<Radio />} label={HTMLReactParser(b)} />
+          }
+          {
+            c !== '' && <FormControlLabel value="C" control={<Radio />} label={HTMLReactParser(c)} />
+          }
+          {
+            d !== '' && <FormControlLabel value="D" control={<Radio />} label={HTMLReactParser(d)} />
+          }
         </RadioGroup>
       </Box>
     </>
