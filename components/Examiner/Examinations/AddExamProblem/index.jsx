@@ -176,7 +176,8 @@ public class Program
         const questionID = split[1];
         const newListQuestions = [...listOfQuestions];
         const question = newListQuestions[questionID];
-        question.difficulty = e.target.value;
+        // eslint-disable-next-line radix
+        question.difficulty = parseInt(e.target.value);
         setListOfQuestions(newListQuestions);
     }
 
