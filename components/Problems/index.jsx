@@ -38,7 +38,7 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-const PROBLEM_PER_PAGE = 2;
+const PROBLEM_PER_PAGE = 10;
 let problemList = [];
 let filteredProblemList = [];
 
