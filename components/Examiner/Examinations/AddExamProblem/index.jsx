@@ -44,6 +44,7 @@ public class Program
         const newMultipleChoicesQuestion = {
             isMCQ: true,
             question: "",
+            difficulty: 0,
             score: 0,
             minutes: 0,
             seconds: 0,
