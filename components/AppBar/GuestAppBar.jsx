@@ -1,6 +1,7 @@
 import * as React from 'react';
 import {
   AppBar,
+  Box,
   Button,
   makeStyles,
   Toolbar,
@@ -13,9 +14,12 @@ function GuestAppBar() {
   return (
     <AppBar position="static">
       <Toolbar>
-        <Typography className={styles.title} variant="h6">
+        <Link href="/">
+          <Typography className={styles.title} variant="h6">
             Smart Coder
-        </Typography>
+          </Typography>
+        </Link>
+        <Box flexGrow={1} />
         <Link href="/login">
           <Button className={styles.action}>
             <Typography variant="h6">Login</Typography>
@@ -32,7 +36,7 @@ function GuestAppBar() {
 }
 const useStyles = makeStyles((theme) => ({
   title: {
-    flexGrow: 1,
+    cursor: 'pointer',
   },
   action: {
     width: 128,
