@@ -6,7 +6,7 @@ const authContext = React.createContext(null);
 
 export default function AuthProvider({ children }) {
   const [user, setUser] = React.useState(null);
-  FirebaseAuth().onAuthStateChanged(async (auth) => {
+  FirebaseAuth().onAuthStateChanged((auth) => {
     setUser(auth);
   });
   return <authContext.Provider value={user}>{children}</authContext.Provider>;

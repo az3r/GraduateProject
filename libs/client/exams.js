@@ -1,7 +1,6 @@
 import { collections } from '@utils/constants';
 import { transform } from '@utils/firestore';
 import { Firestore } from './firebase';
-import { create as createProblem } from './problems';
 
 const { exams, problems: problemCollection } = collections;
 
@@ -20,9 +19,7 @@ export async function create(
     createdOn: Firestore.Timestamp.now(),
   });
 
-  const tasks = problems.map((item) =>
-    createProblem(userId, { examId: id, ...item })
-  );
+  const tasks = problems.map((item) => createProblem(id, item));
   await Promise.all(tasks);
   return id;
 }
@@ -50,4 +47,14 @@ export async function getProblems(examId) {
     .collection(problemCollection)
     .get();
   return snapshot.docs.map((item) => transform(item.data()));
+}
+
+async function createProblem(examId, props) {
+  // exam already had owner and createdOn fields
+  const { id } = await Firestore()
+    .collection(exams)
+    .doc(examId)
+    .collection(problemCollection)
+    .add(props);
+  return id;
 }

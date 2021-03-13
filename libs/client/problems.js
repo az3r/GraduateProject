@@ -2,43 +2,29 @@ import { collections } from '@utils/constants';
 import { transform } from '@utils/firestore';
 import { Firestore } from './firebase';
 
-const { problems, exams } = collections;
+const { problems } = collections;
 
-export async function create(userId, { examId, ...props }) {
-  const { id, path } = await Firestore()
-    .collection(exams)
-    .doc(examId || 'general')
+export async function create(userId, props) {
+  const { id } = await Firestore()
     .collection(problems)
     .add({
       owner: userId,
       createdOn: Firestore.Timestamp.now(),
       ...props,
     });
-
-  await Firestore()
-    .collection(path.replace(id, ''))
-    .doc(id)
-    .set({ id }, { merge: true });
   return id;
 }
 
 export async function get(problemId) {
   if (problemId) {
     const snapshot = await Firestore()
-      .collectionGroup(problems)
-      .where('id', '==', problemId)
-      .limit(1)
+      .collection(problems)
+      .doc(problemId)
       .get();
-    if (snapshot.empty)
-      return Promise.reject({
-        code: 'not-found',
-        message: `There is no document with id ${problemId}`,
-      });
-    return transform(snapshot.docs[0].data());
+    return transform(snapshot.data());
   }
-  const snapshot = await Firestore()
-    .collectionGroup(problems)
-    .where('isMCQ', '==', false)
-    .get();
-  return snapshot.docs.map((item) => transform(item.data()));
+  const snapshot = await Firestore().collection(problems).get();
+  return snapshot.docs.map((item) =>
+    transform({ id: item.id, ...item.data() })
+  );
 }
