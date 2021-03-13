@@ -28,3 +28,16 @@ export async function get(problemId) {
     transform({ id: item.id, ...item.data() })
   );
 }
+
+export async function update(problemId, props) {
+  await Firestore()
+    .collection(problems)
+    .doc(problemId)
+    .set(
+      {
+        ...props,
+        modifiedAt: Firestore.Timestamp.now(),
+      },
+      { merge: true }
+    );
+}

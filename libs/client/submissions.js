@@ -1,7 +1,8 @@
 import { collections, urls } from '@utils/constants';
+import { transform } from '@utils/firestore';
 import { Firestore, FirebaseAuth } from './firebase';
 
-const { users } = collections;
+const { users, problemSubmissions } = collections;
 const { compiler } = urls;
 const langs = {
   csharp: 'csharp',
@@ -48,7 +49,7 @@ export async function test({
     Firestore()
       .collection(users)
       .doc(uid)
-      .collection('submissions')
+      .collection(problemSubmissions)
       .set({
         problemId,
         problemName,
@@ -58,4 +59,15 @@ export async function test({
       });
   }
   return response.status === 200 ? data : Promise.reject(data);
+}
+
+export async function getProblemSubmissions(userId, problemId) {
+  const snapshot = await Firestore()
+    .collection(users)
+    .doc(userId)
+    .collection(problemSubmissions)
+    .where('problemId', '==', problemId)
+    .get();
+
+  return snapshot.docs.map((doc) => transform(doc.data()));
 }

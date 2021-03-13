@@ -3,10 +3,11 @@
  * @param  data
  */
 export function transform(data) {
-  return data.createdOn
-    ? {
-        ...data,
-        createdOn: data.createdOn.toMillis(),
-      }
-    : data;
+  const createdOn = data.createdOn && data.createdOn.toMillis();
+  const modifiedAt = data.modifiedAt && data.modifiedAt.toMillis();
+  return {
+    ...data,
+    createdOn,
+    modifiedAt,
+  };
 }

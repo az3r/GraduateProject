@@ -24,6 +24,25 @@ export async function create(
   return id;
 }
 
+export async function update(
+  examId,
+  { title, content, isPrivate, password, startAt, endAt }
+) {
+  const { id } = await Firestore().collection(exams).doc(examId).set(
+    {
+      title,
+      content,
+      isPrivate,
+      password,
+      startAt,
+      endAt,
+      modifiedAt: Firestore.Timestamp.now(),
+    },
+    { merge: true }
+  );
+
+  return id;
+}
 export async function get(examId, { withProblems }) {
   if (examId) {
     const snapshot = await Firestore().collection(exams).doc(examId).get();
