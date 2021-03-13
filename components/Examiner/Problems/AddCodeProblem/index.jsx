@@ -9,7 +9,7 @@ import {
   TextField,
   Typography,
 } from '@material-ui/core';
-import React, { useState } from 'react';
+import React, {useEffect, useState } from 'react';
 import { CKEditor } from '@ckeditor/ckeditor5-react';
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import SkewLoader from 'react-spinners/SkewLoader';
@@ -19,6 +19,7 @@ import getTestCaseFromInputAndOutput, {
 import { create } from '@libs/client/problems';
 import { test } from '@libs/client/submissions';
 import { FirebaseAuth } from '@libs/client/firebase';
+import { useRouter } from 'next/router';
 import CodeEditor from '../../../CodeEditor';
 
 const useStyles = makeStyles({
@@ -30,9 +31,14 @@ const useStyles = makeStyles({
   },
 });
 
-export default function AddProblemPage() {
-  // const auth = useAuth();
-  // const [user,setUser] = useState("");
+export default function AddProblemPage({user}) {
+  const router = useRouter();
+  useEffect(() => {
+    if(Object.keys(user).length === 0)
+    {
+      router.replace('/login');
+    }
+  },[]);
   const code = {
     c_cpp: `#include <stdio.h>
 int main()
@@ -73,7 +79,6 @@ public class Program
   const [isLoading, setIsLoading] = useState(false);
   const [isTestSuccess, setIsTestSuccess] = useState(false);
   const [isAddSuccess, setIsAddSuccess] = useState(false);
-
   const classes = useStyles();
 
   const handleChangeTestName = (event) => {
@@ -214,13 +219,12 @@ public class Program
     <Box m={1}>
       <Box p={2}>
         <Breadcrumbs>
-          <Link color="inherit" href="/examiner">
-            Examiner
-          </Link>
-          {/* <Link color="inherit"  href={`/examiner/problems?uid=${123}`}>
+            <Link color="inherit" href="/examiner">
+              Examiner
+            </Link>
+            <Link color="inherit"  href="/examiner/problems">
               Problems
-            </Link> */}
-          <Typography color="textPrimary">Problems</Typography>
+            </Link>
 
           <Typography color="textPrimary">Add</Typography>
         </Breadcrumbs>

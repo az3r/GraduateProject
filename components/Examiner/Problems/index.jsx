@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { 
     Box, 
     Breadcrumbs, 
@@ -9,8 +9,6 @@ import {
 import { makeStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import AddIcon from '@material-ui/icons/Add';
-// import { useAuth } from '@hooks/auth';
-// import { useRouter } from 'next/router';
 
 const useStyles = makeStyles({
   root: {
@@ -34,18 +32,6 @@ const useStyles = makeStyles({
 
 export default function ProblemsPage({problems}) {
   const classes = useStyles();
-  // const auth = useAuth();
-  // const router = useRouter();
-
-  useEffect(() => {
-    // const {user} = router.query;
-    // const {uid} = auth;
-    // if(user !== uid)
-    // {
-    //   router.replace("/");
-    // }
-  },[]);
-
   return (
     <>
         <Box p={2}>

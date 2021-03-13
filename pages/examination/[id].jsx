@@ -199,7 +199,6 @@ export default function Introduction({exam}) {
 
 export async function getServerSideProps({params}) {
   const item = await exams.get(params.id, {withProblems: true});
-
   return {
     props: {
       exam: item,
