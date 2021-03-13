@@ -22,11 +22,7 @@
     <list default="true" id="73bd1854-2930-493b-bbd0-fb90442d9327" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/components/CodeEditor/index.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/CodeEditor/index.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/components/TestCode/Console/index.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/TestCode/Console/index.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/components/TestCode/Problem/index.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/TestCode/Problem/index.jsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/components/TestCode/index.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/TestCode/index.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/components/TestMCQ/index.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/TestMCQ/index.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/libs/client/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/libs/client/index.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -126,7 +122,7 @@
       <workItem from="1615132224739" duration="2702000" />
       <workItem from="1615254718845" duration="11308000" />
       <workItem from="1615521024251" duration="10840000" />
-      <workItem from="1615607929051" duration="3202000" />
+      <workItem from="1615607929051" duration="5802000" />
     </task>
     <servers />
   </component>

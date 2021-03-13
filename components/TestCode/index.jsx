@@ -14,17 +14,15 @@ const useStyles = makeStyles(() => ({
   consoleButton: {
     color: 'black',
     backgroundColor: 'white',
-    float: 'left',
+    marginRight: 'auto',
     marginLeft: 10,
   },
   submitButton: {
-    float: 'right',
     marginRight: 10,
   },
   runCodeButton: {
     color: 'black',
     backgroundColor: 'white',
-    float: 'right',
     marginRight: 5,
   },
   CODE: {
@@ -39,6 +37,8 @@ const useStyles = makeStyles(() => ({
     marginTop: 10,
     height: 50,
     position: 'relative',
+    display: 'flex',
+    alignItems: 'center',
   },
   consoleBox: {
     height: 200,
@@ -225,12 +225,15 @@ export default function Test({ problem, nextProblem}) {
               >
                 {language}
               </Box>
-              <Box>
-                Time out:
-                <Box border={1} style={{borderRadius: 5, borderColor: 'black', color: 'red', padding: 2}} component="span">
-                {(`0${minutes}`).slice(-2)} : {(`0${seconds}`).slice(-2)}
+              {
+                nextProblem &&
+                <Box>
+                  Time out:
+                  <Box border={1} style={{borderRadius: 5, borderColor: 'black', color: 'red', padding: 2}} component="span">
+                    {(`0${minutes}`).slice(-2)} : {(`0${seconds}`).slice(-2)}
+                  </Box>
                 </Box>
-              </Box>
+              }
             </Box>
             <Box boxShadow={1}>
               <CodeEditor
@@ -238,9 +241,10 @@ export default function Test({ problem, nextProblem}) {
                 code={code}
                 onCodeChange={handleCodeChange}
                 width={width}
+                height={window.outerHeight - 137 - 100}
               />
             </Box>
-            <Box style={{width}} className={classes.compileBox}>
+            <Box className={classes.compileBox}>
               <Box
                 className={classes.consoleBox}
                 component="div"
@@ -258,6 +262,15 @@ export default function Test({ problem, nextProblem}) {
               </Button>
               <ClipLoader color="#088247" loading={loading} size={25} />
               <Button
+                size="small"
+                type="submit"
+                variant="outlined"
+                onClick={handleRunCode}
+                className={classes.runCodeButton}
+              >
+                Run Code
+              </Button>
+              <Button
                 color="primary"
                 variant="contained"
                 size="small"
@@ -266,15 +279,6 @@ export default function Test({ problem, nextProblem}) {
                 className={classes.submitButton}
               >
                 Submit
-              </Button>
-              <Button
-                size="small"
-                type="submit"
-                variant="outlined"
-                onClick={handleRunCode}
-                className={classes.runCodeButton}
-              >
-                Run Code
               </Button>
             </Box>
           </Paper>
