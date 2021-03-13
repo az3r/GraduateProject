@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Box, Button, makeStyles, Container, Paper } from '@material-ui/core';
 
 import Router from 'next/router';
@@ -27,12 +27,13 @@ const useStyles = makeStyles(() => ({
     float: 'right',
     marginRight: 5,
   },
-  programmingLanguage: {
+  CODE: {
     height: 34,
     backgroundColor: '#fafafa',
     display: 'flex',
     alignItems: 'center',
     borderColor: 'gray',
+    justifyContent: 'space-between',
   },
   compileBox: {
     marginTop: 10,
@@ -47,20 +48,63 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-export default function Test({ problem, nextProblem }) {
+export default function Test({ problem, nextProblem}) {
   const classes = useStyles();
 
-  const { title } = problem;
-  const { content } = problem;
-  const { language } = problem;
-  const { cases } = problem;
-  const { difficulty } = problem;
-  const { score } = problem;
+  const widthRef = useRef(null);
+  const [width, setWidth] = useState(500);
+
+  const {title} = problem;
+  const {content} = problem;
+  const {language} = problem;
+  const {cases} = problem;
+  const {difficulty} = problem;
+  const {score} = problem;
   const [code, setCode] = useState(problem.code);
   const [testCodeResult, setTestCodeResult] = useState('');
   const [openConsole, setOpenConsole] = useState('hidden');
+  const [minutes, setMinutes] = useState(problem.minutes);
+  const [seconds, setSeconds] = useState(problem.seconds);
 
   const [loading, setLoading] = useState(false);
+
+  let timeOut;
+  useEffect(() => {
+    setCode(problem.code);
+    setMinutes(problem.minutes);
+    setSeconds(problem.seconds);
+  }, [problem]);
+
+  useEffect(() => {
+    timeOut = setTimeout(() => {
+      if(seconds === 0){
+        if(minutes === 0){
+          if (nextProblem) {
+            handleSubmit();
+          }
+        }
+        else{
+          setMinutes(minutes - 1);
+          setSeconds(59);
+        }
+      }
+      else{
+        setSeconds(seconds - 1);
+      }
+    }, 1000);
+  }, [seconds]);
+
+  useEffect(() => {
+    if(widthRef.current){
+      setWidth(widthRef.current.offsetWidth);
+    }
+  }, [widthRef]);
+
+  const handleWidthChange = () => {
+    if(widthRef.current){
+      setWidth(widthRef.current.offsetWidth);
+    }
+  }
 
   const handleOpenConsoleChange = () => {
     if (openConsole === 'visible') {
@@ -81,11 +125,11 @@ export default function Test({ problem, nextProblem }) {
         lang: problem.language,
         code,
         testcases: problem.cases,
-        save: false,
+        save: false
       });
 
       if (response.failed === 0) {
-        console.log('Correct!');
+        console.log("Correct!");
         setTestCodeResult('Correct!');
       } else {
         setTestCodeResult(
@@ -103,7 +147,23 @@ export default function Test({ problem, nextProblem }) {
 
   const handleSubmit = async () => {
     if (nextProblem) {
-      nextProblem();
+      clearTimeout(timeOut);
+      try {
+        await submissions.test({
+          problemId: problem.id,
+          problemName: problem.title,
+          lang: problem.language,
+          code,
+          testcases: problem.cases,
+          save: true
+        });
+
+      } catch (e) {
+        console.log(e);
+      } finally {
+        setLoading(false);
+        nextProblem();
+      }
     } else {
       setLoading(true);
 
@@ -114,8 +174,9 @@ export default function Test({ problem, nextProblem }) {
           lang: problem.language,
           code,
           testcases: problem.cases,
-          save: false,
+          save: true
         });
+
       } catch (e) {
         console.log(e);
       } finally {
@@ -134,7 +195,9 @@ export default function Test({ problem, nextProblem }) {
       <SplitPane
         split="vertical"
         minSize={350}
+        style={{height: window.outerHeight - 135}}
         defaultSize={window.outerWidth / 2}
+        onChange={handleWidthChange}
       >
         <div>
           <Problem
@@ -144,11 +207,12 @@ export default function Test({ problem, nextProblem }) {
             score={score}
           />
         </div>
+
         <div>
-          <Paper square>
+          <Paper ref={widthRef} style={{maxHeight: window.outerHeight, height: window.outerHeight - 137}} square>
             <Box
               p="10px"
-              className={classes.programmingLanguage}
+              className={classes.CODE}
               borderBottom={1}
             >
               <Box
@@ -161,21 +225,28 @@ export default function Test({ problem, nextProblem }) {
               >
                 {language}
               </Box>
+              <Box>
+                Time out:
+                <Box border={1} style={{borderRadius: 5, borderColor: 'black', color: 'red', padding: 2}} component="span">
+                {(`0${minutes}`).slice(-2)} : {(`0${seconds}`).slice(-2)}
+                </Box>
+              </Box>
             </Box>
             <Box boxShadow={1}>
               <CodeEditor
                 language={language}
                 code={code}
                 onCodeChange={handleCodeChange}
+                width={width}
               />
             </Box>
-            <Box className={classes.compileBox}>
+            <Box style={{width}} className={classes.compileBox}>
               <Box
                 className={classes.consoleBox}
                 component="div"
                 visibility={openConsole}
               >
-                <Console cases={cases} testCodeResult={testCodeResult} />
+                <Console cases={cases} testCodeResult={testCodeResult} width={width} />
               </Box>
               <Button
                 size="small"

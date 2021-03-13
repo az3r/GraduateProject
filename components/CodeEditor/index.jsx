@@ -12,7 +12,7 @@ import 'ace-builds/src-noconflict/snippets/c_cpp';
 import 'ace-builds/src-noconflict/ext-language_tools';
 import 'ace-builds/src-noconflict/theme-xcode';
 
-export default function CodeEditor({ language, code, onCodeChange }) {
+export default function CodeEditor({ language, code, onCodeChange, width }) {
   return (
     <>
       <AceEditor
@@ -26,6 +26,7 @@ export default function CodeEditor({ language, code, onCodeChange }) {
         showGutter
         highlightActiveLine
         value={code}
+        width={width}
         setOptions={{
           enableBasicAutocompletion: true,
           enableLiveAutocompletion: true,

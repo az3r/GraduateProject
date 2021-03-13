@@ -9,7 +9,7 @@ import {
 
 
 function TabPanel(props) {
-  const { children, value, index, ...other } = props;
+  const { children, value, index } = props;
 
   return (
     <>
@@ -34,7 +34,7 @@ const useStyles = makeStyles({
   },
 });
 
-export default function Console({ cases, testCodeResult }) {
+export default function Console({ cases, testCodeResult, width }) {
   const classes = useStyles();
 
   const [value, setValue] = React.useState(1);
@@ -53,7 +53,7 @@ export default function Console({ cases, testCodeResult }) {
           className={classes.Tabs}
           onChange={handleChange}
           aria-label="tabs example"
-          style={{ width: '674px' }}
+          style={{ width }}
         >
           <Tab
             style={{ backgroundColor: value === 0 ? 'white' : '' }}
