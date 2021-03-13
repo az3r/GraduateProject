@@ -17,7 +17,7 @@ import getTestCaseFromInputAndOutput, {
   getFormatResultFromFile,
 } from '@libs/client/business';
 import { create } from '@libs/client/problems';
-import { test } from '@libs/client/codes';
+import { test } from '@libs/client/submissions';
 import { FirebaseAuth } from '@libs/client/firebase';
 import CodeEditor from '../../../CodeEditor';
 
@@ -93,11 +93,14 @@ public class Program
   };
 
   const handleChangeLanguague = (event) => {
-    setProblem({ ...problem, language: event.target.value, code: code[event.target.value]  });
+    setProblem({
+      ...problem,
+      language: event.target.value,
+      code: code[event.target.value],
+    });
   };
 
   const handleOnChangeCode = (newCode) => {
-
     setProblem({ ...problem, code: newCode });
   };
 
@@ -136,7 +139,11 @@ public class Program
     const cases = getTestCaseFromInputAndOutput(input, output);
     setProblem({ ...problem, cases });
 
-    if (problem.title === '' || problem.content === '' || problem.cases.length === 0) {
+    if (
+      problem.title === '' ||
+      problem.content === '' ||
+      problem.cases.length === 0
+    ) {
       setIsAddSuccess(false);
       setMessage('Not filling in enough information for the test');
       return;
@@ -144,7 +151,7 @@ public class Program
 
     const { uid } = FirebaseAuth().currentUser;
     const response = await create(uid, problem);
-    
+
     if (response) {
       setIsAddSuccess(true);
       setMessage('Add test success!');
@@ -198,7 +205,7 @@ public class Program
     } catch (error) {
       setIsTestSuccess(false);
       setTestReponse('Error! Please check again');
-    } finally{
+    } finally {
       setIsLoading(false);
     }
   };
@@ -207,15 +214,15 @@ public class Program
     <Box m={1}>
       <Box p={2}>
         <Breadcrumbs>
-            <Link color="inherit" href="/examiner">
-              Examiner
-            </Link>
-            {/* <Link color="inherit"  href={`/examiner/problems?uid=${123}`}>
+          <Link color="inherit" href="/examiner">
+            Examiner
+          </Link>
+          {/* <Link color="inherit"  href={`/examiner/problems?uid=${123}`}>
               Problems
             </Link> */}
-            <Typography color="textPrimary">Problems</Typography>
+          <Typography color="textPrimary">Problems</Typography>
 
-            <Typography color="textPrimary">Add</Typography>
+          <Typography color="textPrimary">Add</Typography>
         </Breadcrumbs>
       </Box>
       <form

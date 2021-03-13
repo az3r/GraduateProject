@@ -5,7 +5,7 @@ import Router from 'next/router';
 import SplitPane from 'react-split-pane';
 import ClipLoader from 'react-spinners/ClipLoader';
 
-import { codes } from '@libs/client';
+import { submissions } from '@libs/client';
 import Problem from '@components/TestCode/Problem';
 import Console from './Console';
 import CodeEditor from '../CodeEditor';
@@ -47,15 +47,15 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-export default function Test({ problem, nextProblem}) {
+export default function Test({ problem, nextProblem }) {
   const classes = useStyles();
 
-  const {title} = problem;
-  const {content} = problem;
-  const {language} = problem;
-  const {cases} = problem;
-  const {difficulty} = problem;
-  const {score} = problem;
+  const { title } = problem;
+  const { content } = problem;
+  const { language } = problem;
+  const { cases } = problem;
+  const { difficulty } = problem;
+  const { score } = problem;
   const [code, setCode] = useState(problem.code);
   const [testCodeResult, setTestCodeResult] = useState('');
   const [openConsole, setOpenConsole] = useState('hidden');
@@ -75,17 +75,17 @@ export default function Test({ problem, nextProblem}) {
     setOpenConsole('visible');
 
     try {
-      const response = await codes.test({
+      const response = await submissions.test({
         problemId: problem.id,
         problemName: problem.title,
         lang: problem.language,
         code,
         testcases: problem.cases,
-        save: false
+        save: false,
       });
 
       if (response.failed === 0) {
-        console.log("Correct!");
+        console.log('Correct!');
         setTestCodeResult('Correct!');
       } else {
         setTestCodeResult(
@@ -108,15 +108,14 @@ export default function Test({ problem, nextProblem}) {
       setLoading(true);
 
       try {
-        await codes.test({
+        await submissions.test({
           problemId: problem.id,
           problemName: problem.title,
           lang: problem.language,
           code,
           testcases: problem.cases,
-          save: false
+          save: false,
         });
-
       } catch (e) {
         console.log(e);
       } finally {
