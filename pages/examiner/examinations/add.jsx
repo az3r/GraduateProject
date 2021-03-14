@@ -1,5 +1,6 @@
 import React from 'react';
 import dynamic from 'next/dynamic';
+import { parseCookies } from '@libs/client/cookies';
 import Layout from '../../../components/Layout';
 
 const AddExamProblem = dynamic(
@@ -7,12 +8,31 @@ const AddExamProblem = dynamic(
   ,
   { ssr: false });
 
-export default function AddProblem() {
+export default function AddProblem({user}) {
   return (
     <>
       <Layout>
-        <AddExamProblem />
+        <AddExamProblem user={user} />
       </Layout>
     </>
   );
 }
+
+export async function getServerSideProps({req}) {
+  const cookies = parseCookies(req);
+  if(Object.keys(cookies).length !== 0)
+  {
+    const user = JSON.parse(cookies.user);
+    return {
+      props: {
+        user,
+      }, 
+    }
+  }
+  return {
+    props: {
+      user: ""
+    }
+  }
+}
+

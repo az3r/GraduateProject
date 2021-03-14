@@ -1,37 +1,35 @@
 import { CKEditor } from '@ckeditor/ckeditor5-react';
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
-import {
-  Box,
-  Breadcrumbs,
-  Button,
-  Checkbox,
-  Link,
-  TextField,
-  Typography,
-} from '@material-ui/core';
-import React, { useState } from 'react';
-import { test } from '@libs/client/submissions';
-import {
-  formatQuestionsArray,
-  getFormatResultFromFile,
-} from '@libs/client/business';
+import {Box, Breadcrumbs, Button, Checkbox, Link, TextField, Typography} from '@material-ui/core';
+import React, {useEffect, useState} from 'react';
+import { formatQuestionsArray, getFormatResultFromFile } from '@libs/client/business';
 import { create } from '@libs/client/exams';
 import { FirebaseAuth } from '@libs/client/firebase';
+import { useRouter } from 'next/router';
+import { test } from '@libs/client/submissions';
 import Questions from './Questions/index';
 
-export default function AddTestPage() {
-  const [examIntro, setExamIntro] = useState({
-    isPrivate: false,
-    password: '',
-    title: '',
-    content: '',
-    start: '',
-    end: '',
-  });
-  const [listOfQuestions, setListOfQuestions] = useState([]);
-  const [message, setMessage] = useState('');
-  const code = {
-    Csharp: `using System;
+export default function AddTestPage({user}){
+    const router = useRouter();
+    useEffect(() => {
+        if(Object.keys(user).length === 0)
+        {
+        router.replace('/login');
+        }
+    },[]);
+    const [examIntro,setExamIntro] = useState({
+        isPrivate: false,
+        password: "",
+        title: "",
+        content: "",
+        start: "",
+        end: "",
+    })
+    const [listOfQuestions,setListOfQuestions] = useState([]);
+    const [message,setMessage] = useState("");
+    const code = {
+    Csharp:
+`using System;
 class HelloWorld {
     static void Main() {
         Console.WriteLine("Hello World");
@@ -329,107 +327,93 @@ public class Program
     });
     setMessage('Add exam success');
   };
-
-  return (
+    
+  return(
     <Box m={1}>
-      <Box p={2}>
-        <Breadcrumbs>
-          <Link color="inherit" href="/examiner">
-            Examiner
-          </Link>
-          {/* <Link color="inherit" href="/examiner/examinations">
-                        Examinations
-                    </Link> */}
-          <Typography color="textPrimary">Examinations</Typography>
+        <Box p={2}>
+            <Breadcrumbs>
+                <Link color="inherit" href="/examiner">
+                    Examiner
+                </Link>
+                <Link color="inherit" href="/examiner/examinations">
+                    Examinations
+                </Link>
 
-          <Typography color="textPrimary">Add</Typography>
-        </Breadcrumbs>
-      </Box>
-      <form onSubmit={handleSubmitExam}>
-        <Box display="flex" justifyContent="center" m={3}>
-          <Button
-            color="secondary"
-            variant="contained"
-            onClick={handleAddMultipleChoicesQuestion}
-          >
-            Add multiple choices question
-          </Button>
-          <Button
-            color="primary"
-            variant="contained"
-            onClick={handleAddCodingProblemQuestion}
-          >
-            Add coding problem question
-          </Button>
+                <Typography color="textPrimary">Add</Typography>
+            </Breadcrumbs>
         </Box>
+        <form onSubmit={handleSubmitExam}>
+            <Box display="flex" justifyContent="center" m={3}>
+                <Button color="secondary" variant="contained" onClick={handleAddMultipleChoicesQuestion}>
+                    Add multiple choices question
+                </Button>
+                <Button color="primary" variant="contained" onClick={handleAddCodingProblemQuestion}>
+                    Add coding problem question
+                </Button>
+            </Box>
 
-        <Box boxShadow={1} p={2} m={3}>
-          <Typography variant="h5">Is the exam private?: </Typography>
-          <Checkbox
-            checked={examIntro.isPrivate}
-            onChange={handleChangeExamPrivacy}
-          />
-          {examIntro.isPrivate ? (
-            <TextField label="Password" onChange={handleChangeExamPassword} />
-          ) : null}
-        </Box>
+            <Box boxShadow={1} p={2} m={3}>
+                <Typography variant="h5">Is the exam private?: </Typography>
+                <Checkbox
+                    checked={examIntro.isPrivate}
+                    onChange={handleChangeExamPrivacy}
+                />
+                {
+                    examIntro.isPrivate ? 
+                        <TextField label="Password" onChange={handleChangeExamPassword} /> : null
+                }
+            </Box>
 
-        <Box boxShadow={1} p={2} m={3}>
-          <Typography variant="h5">Enter exam title: </Typography>
-          <TextField
-            value={examIntro.title}
-            fullWidth
-            onChange={handleChangeExamTitle}
-          />
-        </Box>
+            <Box boxShadow={1} p={2} m={3}>
+                <Typography variant="h5">Enter exam title: </Typography>
+                <TextField value={examIntro.title} fullWidth onChange={handleChangeExamTitle}/>
+            </Box>
 
-        <Box boxShadow={1} p={2} m={3}>
-          <Typography variant="h5">Enter exam information: </Typography>
-          <CKEditor
-            editor={ClassicEditor}
-            data={examIntro.content}
-            onChange={handleChangeExamInfo}
-          />
-        </Box>
+            <Box boxShadow={1} p={2} m={3}>
+                <Typography variant="h5">Enter exam information: </Typography>
+                <CKEditor
+                    editor={ClassicEditor}
+                    data={examIntro.content}
+                    onChange={handleChangeExamInfo}
+                />
+            </Box>
 
-        <Box boxShadow={1} p={2} m={3}>
-          <Typography variant="h5">Enter exam start time: </Typography>
-          <TextField type="datetime-local" onChange={handleChangeStartTime} />
-        </Box>
+            <Box boxShadow={1} p={2} m={3}>
+                <Typography variant="h5">Enter exam start time: </Typography>
+                <TextField
+                    type="datetime-local"
+                    onChange={handleChangeStartTime}
+                />
+            </Box>
 
-        <Box boxShadow={1} p={2} m={3}>
-          <Typography variant="h5">Enter exam end time: </Typography>
-          <TextField type="datetime-local" onChange={handleChangeEndTime} />
-        </Box>
+            <Box boxShadow={1} p={2} m={3}>
+                <Typography variant="h5">Enter exam end time: </Typography>
+                <TextField
+                    type="datetime-local"
+                    onChange={handleChangeEndTime}
+                />
+            </Box>
 
-        <Questions
-          listOfQuestions={listOfQuestions}
-          handleChangeQuestionMC={handleChangeQuestionMC}
-          handleChangeAnswerMC={handleChangeAnswerMC}
-          handleChangeCorrectAnswer={handleChangeCorrectAnswer}
-          handleChangeScore={handleChangeScore}
-          handleChangeMinutes={handleChangeMinutes}
-          handleChangeSeconds={handleChangeSeconds}
-          handleChangeCPTitle={handleChangeCPTitle}
-          handleChangeCPInfo={handleChangeCPInfo}
-          handleChangeCPDifficulty={handleChangeCPDifficulty}
-          handleChangeLanguague={handleChangeLanguague}
-          handleChangeCPCode={handleChangeCPCode}
-          handleChangeCPFiles={handleChangeCPFiles}
-          handleChangeSimpleTest={handleChangeSimpleTest}
-          handleTestCode={handleTestCode}
-        />
+            
+            <Questions listOfQuestions={listOfQuestions}
+                handleChangeQuestionMC={handleChangeQuestionMC} handleChangeAnswerMC={handleChangeAnswerMC}
+                handleChangeCorrectAnswer={handleChangeCorrectAnswer} handleChangeScore={handleChangeScore}
+                handleChangeMinutes={handleChangeMinutes} handleChangeSeconds={handleChangeSeconds}
 
-        <Box display="flex" justifyContent="center" m={3}>
-          <Typography>{message}</Typography>
-        </Box>
+                handleChangeCPTitle={handleChangeCPTitle} handleChangeCPInfo={handleChangeCPInfo}
+                handleChangeCPDifficulty={handleChangeCPDifficulty} handleChangeLanguague={handleChangeLanguague}
+                handleChangeCPCode={handleChangeCPCode} handleChangeCPFiles={handleChangeCPFiles}
+                handleChangeSimpleTest={handleChangeSimpleTest}
+                handleTestCode={handleTestCode} />
 
-        <Box display="flex" justifyContent="center" m={3}>
-          <Button variant="contained" color="primary" type="submit">
-            Add Exam
-          </Button>
-        </Box>
-      </form>
+            <Box display="flex" justifyContent="center" m={3}>
+                <Typography>{message}</Typography>
+            </Box>
+
+            <Box display="flex" justifyContent="center" m={3}>
+                <Button variant="contained" color="primary" type="submit">Add Exam</Button>
+            </Box>
+        </form>
     </Box>
   );
 }

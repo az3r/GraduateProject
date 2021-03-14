@@ -1,6 +1,8 @@
+/* eslint-disable react/jsx-props-no-spreading */
 import * as React from 'react';
 import { CssBaseline, ThemeProvider } from '@material-ui/core';
-import { LightTheme, DarkTheme } from '../styles/themes';
+import { CookiesProvider } from 'react-cookie';
+import { LightTheme } from '../styles/themes';
 import AuthProvider from '../hooks/auth';
 import '../styles/edit.css';
 
@@ -9,7 +11,9 @@ function MainApp({ Component, pageProps }) {
     <ThemeProvider theme={LightTheme}>
       <CssBaseline>
         <AuthProvider>
-          <Component {...pageProps} />
+          <CookiesProvider>
+            <Component {...pageProps} />
+          </CookiesProvider>
         </AuthProvider>
       </CssBaseline>
     </ThemeProvider>

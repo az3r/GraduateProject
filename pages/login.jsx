@@ -16,6 +16,7 @@ import Link from 'next/link';
 import { Alert } from '@material-ui/lab';
 import { FirebaseAuth } from '@libs/client/firebase';
 import { auth } from '@libs/client';
+import { useCookies } from 'react-cookie';
 
 const providers = {
   google: new FirebaseAuth.GoogleAuthProvider(),
@@ -32,6 +33,8 @@ export default function Login() {
     severity: 'info',
     message: 'No message',
   });
+  // eslint-disable-next-line no-unused-vars
+  const [cookies,setCookies] = useCookies(['user']);
 
   // prefetch home page
   React.useEffect(() => {
@@ -233,8 +236,18 @@ export default function Login() {
     try {
       setWaiting(true);
       await auth.signin({ username, password, provider });
-      router.replace('/');
 
+
+      // save cookies
+      const user = {
+        uid: FirebaseAuth().currentUser.uid,
+        isLogin: true
+      }
+      setCookies(['user'],JSON.stringify(user),{path: '/'});
+      // end save cookies
+
+      
+      router.replace('/');
       setSnackBarState({
         open: true,
         severity: 'success',

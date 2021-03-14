@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 import {
   makeStyles,
@@ -26,6 +26,7 @@ const useStyles = makeStyles( {
     display: 'flex',
     alignItems: 'center',
     borderColor: 'gray',
+    justifyContent: 'space-between',
   },
   submitBox: {
     marginTop: 10,
@@ -43,10 +44,38 @@ export default function Test({problem, nextProblem}) {
   const {score} = problem;
   const {a, b, c, d} = problem;
   const [answer, setAnswer] = useState('');
+  const [minutes, setMinutes] = useState(problem.minutes);
+  const [seconds, setSeconds] = useState(problem.seconds);
+
+  let timeOut;
+  useEffect(() => {
+    setMinutes(problem.minutes);
+    setSeconds(problem.seconds);
+  }, [problem]);
+
+  useEffect(() => {
+    timeOut = setTimeout(() => {
+      if(seconds === 0){
+        if(minutes === 0){
+          if (nextProblem) {
+            handleSubmit();
+          }
+        }
+        else{
+          setMinutes(minutes - 1);
+          setSeconds(59);
+        }
+      }
+      else{
+        setSeconds(seconds - 1);
+      }
+    }, 1000);
+  }, [seconds]);
 
 
   const handleSubmit = () => {
     if (nextProblem) {
+      clearTimeout(timeOut);
       nextProblem();
     }
   }
@@ -63,6 +92,12 @@ export default function Test({problem, nextProblem}) {
               <Box component="span" display="inline" p="4px"  borderRadius={5} border={1}
                    bgcolor="#fafafa">
                 Multiple Choice Question
+              </Box>
+              <Box>
+                Time out:
+                <Box border={1} style={{borderRadius: 5, borderColor: 'black', color: 'red', padding: 2}} component="span">
+                  {(`0${minutes}`).slice(-2)} : {(`0${seconds}`).slice(-2)}
+                </Box>
               </Box>
             </Box>
             <Box boxShadow={1}>

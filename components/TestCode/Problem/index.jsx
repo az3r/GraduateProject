@@ -3,7 +3,7 @@ import {
   makeStyles,
   Paper,
   Box,
-  Avatar
+  Avatar, TableHead, TableRow, TableCell, TableBody, Table,
 } from '@material-ui/core';
 
 import {
@@ -16,6 +16,7 @@ import {
 import { CKEditor } from '@ckeditor/ckeditor5-react'
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import 'react-tabs/style/react-tabs.css';
+import dateFormat from 'dateformat';
 
 
 
@@ -40,6 +41,10 @@ const useStyles = makeStyles({
     display: 'flex',
     justifyContent: 'space-between',
     marginLeft: 15,
+  },
+  submission: {
+    marginLeft: 20,
+    marginRight: 20,
   }
 });
 
@@ -47,8 +52,52 @@ const editorConfiguration = {
   toolbar: [ ],
 };
 
+const submissions = [
+  {
+    id: 1,
+    submitedTime: Date.now(),
+    status: 'Compiler Error',
+    score: 0,
+    language: 'Csharp',
+  },
+  {
+    id: 2,
+    submitedTime: Date.now(),
+    status: 'Accepted',
+    score: 100,
+    language: 'Csharp',
+  },
+  {
+    id: 3,
+    submitedTime: Date.now(),
+    status: 'Wrong Answer',
+    score: 0,
+    language: 'Csharp',
+  },
+  {
+    id: 4,
+    submitedTime: Date.now(),
+    status: 'Compiler Error',
+    score: 0,
+    language: 'Csharp',
+  },
+  {
+    id: 5,
+    submitedTime: Date.now(),
+    status: 'Accepted',
+    score: 100,
+    language: 'Csharp',
+  }
+]
+
 export default function Problem(props) {
   const classes = useStyles();
+
+  const {title} = props;
+  const {difficulty} = props;
+  const {content} = props;
+  const {score} = props;
+
 
   return (
     <Tabs>
@@ -59,35 +108,104 @@ export default function Problem(props) {
       </TabList>
 
       <TabPanel>
-        <Paper style={{maxHeight: 1000, height: 510, overflow: 'auto'}}>
-          <h2 className={classes.title}>{props.title}</h2>
+        <Paper style={{maxHeight: window.outerHeight, height: window.outerHeight - 181, overflow: 'auto'}}>
+          <h2 className={classes.title}>
+            {
+              title
+            }
+          </h2>
           <div className={classes.problemInfo}>
-            <Box component="span" display="inline" p={'4px'} borderRadius={16} className={classes.difficultyBox}
-                 bgcolor={props.difficulty === 0 ? "green" : props.difficulty == 1 ? "orange" : "red"}>
-              {
-                props.difficulty == 0 ? "Easy" : props.difficulty == 1 ? "Medium" : "Hard"
-              }
-            </Box>
+            {
+              difficulty === 0 &&
+              <Box component="span" display="inline" p="4px" borderRadius={16} className={classes.difficultyBox}
+                   bgcolor="green">Easy</Box>
+            }
+            {
+              difficulty === 1 &&
+              <Box component="span" display="inline" p="4px" borderRadius={16} className={classes.difficultyBox}
+                   bgcolor="orange">Medium</Box>
+            }
+            {
+              difficulty === 2 &&
+              <Box component="span" display="inline" p="4px" borderRadius={16} className={classes.difficultyBox}
+                   bgcolor="red">Hard</Box>
+            }
 
             <Box className={classes.scoreBox}>
               <Box>
-                Score: {props.score}
+                Score: {score}
               </Box>
-              <Avatar className={classes.scoreAvatar} alt="Score" src={'/coins_48px.png'} />
+              <Avatar className={classes.scoreAvatar} alt="Score" src="/coins_48px.png" />
             </Box>
           </div>
           <CKEditor
             editor={ ClassicEditor }
-            disabled={true}
+            disabled
             config={ editorConfiguration }
-            data={props.content} />
+            onReady={editor => {
+              // You can store the "editor" and use when it is needed.
+              // console.log("Editor is ready to use!", editor);
+              editor.editing.view.change(writer => {
+                writer.setStyle(
+                  "border",
+                  "0px",
+                  editor.editing.view.document.getRoot()
+                );
+              });
+            }}
+            data={content} />
         </Paper>
       </TabPanel>
       <TabPanel>
         <h2>Any content 2</h2>
       </TabPanel>
       <TabPanel>
-        <h2>Any content 3</h2>
+        <Paper className={classes.submission}>
+          <Table size="small" aria-label="a dense table">
+            <TableHead>
+              <TableRow>
+                <TableCell>Time Submitted</TableCell>
+                <TableCell>Status</TableCell>
+                <TableCell>Score</TableCell>
+                <TableCell>Language</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {submissions.map((submission, index) => (
+                  <TableRow
+                    key={submission.id}
+                    className={classes.tableRow}
+                    hover
+                    style={
+                      index % 2
+                        ? { background: 'rgb(250, 250, 250)' }
+                        : { background: 'white' }
+                    }
+                  >
+                    <TableCell>
+                      {dateFormat(
+                      new Date(submission.submitedTime),
+                      'dd/mm/yyyy HH:MM TT'
+                    )}
+                    </TableCell>
+                    <TableCell>
+                      {
+                        submission.status === 'Accepted' && <p style={{color: 'green', fontWeight: 'bolder'}}>{submission.status}</p>
+                      }
+                      {
+                        submission.status === 'Wrong Answer' && <p style={{color: 'orange', fontWeight: 'bolder'}}>{submission.status}</p>
+                      }
+                      {
+                        submission.status === 'Compiler Error' && <p style={{color: 'red', fontWeight: 'bolder'}}>{submission.status}</p>
+                      }
+                    </TableCell>
+                    <TableCell>{submission.score}</TableCell>
+                    <TableCell>{submission.language}</TableCell>
+                  </TableRow>
+                ))}
+            </TableBody>
+          </Table>
+        </Paper>
       </TabPanel>
     </Tabs>
   );
