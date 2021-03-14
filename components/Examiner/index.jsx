@@ -49,23 +49,23 @@ export default function Examiner({user,children}) {
         <Grid item lg={3}>
           <Paper className={classes.root}>
             <MenuList>
-            <MenuItem>
+            <MenuItem onClick={goToExaminerPage}>
                 <ListItemIcon>
                   <HistoryOutlinedIcon fontSize="small" />
                 </ListItemIcon>
-                <Typography onClick={goToExaminerPage}>History</Typography>
+                <Typography>History</Typography>
               </MenuItem>
-              <MenuItem>
+              <MenuItem onClick={goToProblemsPage}>
                 <ListItemIcon>
                   <PriorityHighIcon fontSize="small" />
                 </ListItemIcon>
-                <Typography onClick={goToProblemsPage}>Problems</Typography>
+                <Typography>Problems</Typography>
               </MenuItem>
-              <MenuItem>
+              <MenuItem onClick={goToExaminationsPage}>
                 <ListItemIcon>
                   <AssignmentOutlinedIcon fontSize="small" />
                 </ListItemIcon>
-                <Typography onClick={goToExaminationsPage}>Examinations</Typography>
+                <Typography>Examinations</Typography>
               </MenuItem>
             </MenuList>
           </Paper>

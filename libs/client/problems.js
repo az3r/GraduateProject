@@ -21,7 +21,10 @@ export async function get(problemId) {
       .collection(problems)
       .doc(problemId)
       .get();
-    return transform(snapshot.data());
+    if (snapshot.data()) {
+      return transform({ id: snapshot.id, ...snapshot.data() });
+    }
+    return null;
   }
   const snapshot = await Firestore().collection(problems).get();
   return snapshot.docs.map((item) =>
@@ -30,6 +33,7 @@ export async function get(problemId) {
 }
 
 export async function update(problemId, props) {
+  console.log('hahahahahahahahahahaha', problemId);
   await Firestore()
     .collection(problems)
     .doc(problemId)
@@ -40,4 +44,5 @@ export async function update(problemId, props) {
       },
       { merge: true }
     );
+  return true;
 }

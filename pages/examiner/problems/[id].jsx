@@ -3,22 +3,23 @@ import dynamic from 'next/dynamic';
 import { parseCookies } from '@libs/client/cookies';
 import Layout from '../../../components/Layout';
 
-const AddCodeProblem = dynamic(
-  () => import('../../../components/Examiner/Problems/AddCodeProblem'),
+const UpdateCodeProblem  = dynamic(
+  () => import('../../../components/Examiner/Problems/UpdateCodeProblem'),
   { ssr: false });
 
 export default function AddProblem({user}) {
   return (
     <>
       <Layout>
-        <AddCodeProblem user={user} />
+        <UpdateCodeProblem user={user} />
       </Layout>
     </>
   );
 }
 
-export async function getServerSideProps({req}) {
+export async function getServerSideProps({req,params}) {
   const cookies = parseCookies(req);
+  console.log(params.id);
   if(Object.keys(cookies).length !== 0)
   {
     if(cookies.user)
@@ -28,7 +29,7 @@ export async function getServerSideProps({req}) {
         props: {
           user,
         }, 
-      } 
+      }
     }
   }
   return {
