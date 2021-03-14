@@ -1,12 +1,54 @@
 import { collections } from '@utils/constants';
 import { transform } from '@utils/firestore';
-import { Firestore } from './firebase';
+import { Firestore, FirebaseAuth } from './firebase';
 
 const { problems, exams, users } = collections;
 
-export async function data(uid) {
-  const user = Firestore().collection(users).doc(uid).get();
-  return user.data();
+/** require user to be signed in */
+export async function get() {
+  const info = await Firestore().collection(users).doc(uid).get();
+  const {
+    displayName: name,
+    email,
+    photoURL: avatar,
+    uid,
+  } = FirebaseAuth().currentUser;
+  return {
+    ...info.data(),
+    name,
+    email,
+    avatar,
+  };
+}
+
+/** require user to be signed in */
+export async function update({
+  name,
+  avatar,
+  location,
+  website,
+  education,
+  work,
+  technicalSkills,
+}) {
+  const { displayName, photoURL, uid } = FirebaseAuth().currentUser;
+
+  const infoTask = Firestore().collection(users).doc(uid).set(
+    {
+      location,
+      website,
+      education,
+      work,
+      technicalSkills,
+    },
+    { merge: true }
+  );
+  const profileTask = FirebaseAuth().currentUser.updateProfile({
+    displayName: name || displayName,
+    photoURL: avatar || photoURL,
+  });
+
+  await Promise.all(infoTask, profileTask);
 }
 
 export async function getProblems(uid) {
