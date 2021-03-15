@@ -23,10 +23,13 @@ export async function getServerSideProps({req}) {
   const cookies = parseCookies(req);
   if(Object.keys(cookies).length !== 0)
   {
-    return {
-      props: {
-        user: JSON.parse(cookies.user)
-      },
+    if(cookies.user)
+    {
+      return {
+        props: {
+          user: JSON.parse(cookies.user)
+        },
+      }
     }
   }
   return {

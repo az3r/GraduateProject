@@ -4,6 +4,7 @@ import {
   Box,
   Button,
   makeStyles,
+  MenuItem,
   Toolbar,
   Typography,
 } from '@material-ui/core';
@@ -15,9 +16,19 @@ function GuestAppBar() {
     <AppBar position="static">
       <Toolbar>
         <Link href="/">
-          <Typography className={styles.title} variant="h6">
+          <Typography className={styles.title} variant="h5">
             Smart Coder
           </Typography>
+        </Link>
+        <Link href="/">
+          <MenuItem>
+            <Typography variant="h6">Problems</Typography>
+          </MenuItem>
+        </Link>
+        <Link href="/examination">
+          <MenuItem>
+            <Typography variant="h6">Examinations</Typography>
+          </MenuItem>
         </Link>
         <Box flexGrow={1} />
         <Link href="/login">

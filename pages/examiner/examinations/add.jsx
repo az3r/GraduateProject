@@ -22,11 +22,14 @@ export async function getServerSideProps({req}) {
   const cookies = parseCookies(req);
   if(Object.keys(cookies).length !== 0)
   {
-    const user = JSON.parse(cookies.user);
-    return {
-      props: {
-        user,
-      }, 
+    if(cookies.user)
+    {
+      const user = JSON.parse(cookies.user);
+      return {
+        props: {
+          user,
+        }, 
+      }
     }
   }
   return {

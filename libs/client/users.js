@@ -53,12 +53,12 @@ export async function update({
 
 export async function getProblems(uid) {
   const snapshot = await Firestore()
-    .collection(exams)
-    .doc('general')
     .collection(problems)
     .where('owner', '==', uid)
     .get();
-  return snapshot.docs.map((item) => transform(item.data()));
+  return snapshot.docs.map((item) =>
+    transform({ id: item.id, ...item.data() })
+  );
 }
 
 export async function getExams(uid) {
@@ -67,5 +67,7 @@ export async function getExams(uid) {
     .where('owner', '==', uid)
     .get();
 
-  return snapshot.docs.map((item) => transform(item.data()));
+  return snapshot.docs.map((item) =>
+    transform({ id: item.id, ...item.data() })
+  );
 }

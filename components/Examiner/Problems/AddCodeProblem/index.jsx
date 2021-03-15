@@ -2,17 +2,11 @@ import {
   Box,
   Breadcrumbs,
   Button,
-  Grid,
   Link,
   makeStyles,
-  NativeSelect,
-  TextField,
   Typography,
 } from '@material-ui/core';
 import React, {useEffect, useState } from 'react';
-import { CKEditor } from '@ckeditor/ckeditor5-react';
-import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
-import SkewLoader from 'react-spinners/SkewLoader';
 import getTestCaseFromInputAndOutput, {
   getFormatResultFromFile,
 } from '@libs/client/business';
@@ -20,7 +14,7 @@ import { create } from '@libs/client/problems';
 import { test } from '@libs/client/submissions';
 import { FirebaseAuth } from '@libs/client/firebase';
 import { useRouter } from 'next/router';
-import CodeEditor from '../../../CodeEditor';
+import CodeProblem from '../CodeProblem';
 
 const useStyles = makeStyles({
   textSuccess: {
@@ -70,22 +64,38 @@ public class Program
     code: code.Csharp,
     cases: [],
   });
+  const [message, setMessage] = useState({
+    title: true,
+    content: true,
+    score: true,
+    testInput: true,
+    testOutput: true,
+    testMessage: "",
+    input: true,
+    output: true,
+    addMessage: ""
+  }
+);
   const [input, setInput] = useState([]);
   const [output, setOutput] = useState([]);
-  const [message, setMessage] = useState('');
   const [simpleInput, setSimpleInput] = useState('');
   const [simpleOutput, setSimpleOutput] = useState('');
-  const [testResponse, setTestReponse] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [isTestSuccess, setIsTestSuccess] = useState(false);
   const [isAddSuccess, setIsAddSuccess] = useState(false);
+
   const classes = useStyles();
 
   const handleChangeTestName = (event) => {
+    setMessage({...message, 
+      title: true,
+      addMessage: ""});
     setProblem({ ...problem, title: event.target.value });
   };
 
   const handleChangeTestIntro = (event, editor) => {
+    setMessage({...message, content: true,
+      addMessage: ""});
     setProblem({ ...problem, content: editor.getData() });
   };
 
@@ -116,6 +126,9 @@ public class Program
         const text = reader.target.result;
         const testCases = getFormatResultFromFile(text);
         setInput(testCases);
+        setMessage({...message, input: true,
+          addMessage: ""});
+
       };
       fileReader.readAsText(e.target.files[0]);
     }
@@ -128,57 +141,34 @@ public class Program
         const text = reader.target.result;
         const expectedOutputs = getFormatResultFromFile(text);
         setOutput(expectedOutputs);
+        setMessage({...message, output: true,
+          addMessage: ""});
+
       };
       fileReader.readAsText(e.target.files[0]);
     }
   };
 
-  const handleSubmitAddProblem = async (e) => {
-    e.preventDefault();
-    if (!isTestSuccess) {
-      setIsAddSuccess(false);
-      setMessage('Exam has not tested with the passed result yet!');
-      return;
-    }
-
-    const cases = getTestCaseFromInputAndOutput(input, output);
-    setProblem({ ...problem, cases });
-
-    if (
-      problem.title === '' ||
-      problem.content === '' ||
-      problem.cases.length === 0
-    ) {
-      setIsAddSuccess(false);
-      setMessage('Not filling in enough information for the test');
-      return;
-    }
-
-    const { uid } = FirebaseAuth().currentUser;
-    const response = await create(uid, problem);
-
-    if (response) {
-      setIsAddSuccess(true);
-      setMessage('Add test success!');
-    } else {
-      setIsAddSuccess(false);
-      setMessage('Add test failed due to server error. Please try again later');
-    }
-  };
-
   const handleChangeSimpleInput = (e) => {
+    setMessage({...message, testInput: true});
     setSimpleInput(e.target.value);
   };
 
   const handleChangeSimpleOutput = (e) => {
+    setMessage({...message, testOutput: true});
     setSimpleOutput(e.target.value);
   };
 
   const handleTestCode = async () => {
-    if (simpleInput === '' || simpleOutput === '') {
-      setTestReponse('Have not submited simple input or output yet');
+    if (simpleInput === '') {
+      setMessage({...message, testInput: false});
       return;
     }
+    if (simpleOutput === '') {
+      setMessage({...message, testOutput: false});
+      return;
+    }
+
     setIsLoading(true);
     const cases = [
       {
@@ -198,20 +188,76 @@ public class Program
       });
       if (response.passed === 1) {
         setIsTestSuccess(true);
-        setTestReponse(
-          'Test passed! Now proceed with deleting answer in the code editor. Then, submiting input and output files with the same format as current simple test cases\n(Note: test cases in files must be devided by a blank line)'
-        );
+        setMessage({...message, 
+          testMessage: 'Test passed!\nNow proceed with deleting answer in the code editor.\nThen, submiting input and output files with the same format as current simple test cases\n(Note: test cases in files must be devided by a blank line)',
+          addMessage: ""
+        });
       } else if (response.failed === 1) {
         setIsTestSuccess(false);
-        setTestReponse(
-          `Test failed! \nExpected output: ${response.results[0].expected}\n. Actual output: ${response.results[0].actual}`
-        );
+        setMessage({...message, 
+          testMessage:`Test failed!\nExpected output: ${response.results[0].expected}\nActual output: ${response.results[0].actual}`
+        });
       }
     } catch (error) {
       setIsTestSuccess(false);
-      setTestReponse('Error! Please check again');
+      setMessage({...message, 
+        testMessage:'Error! Please check again'});
     } finally {
       setIsLoading(false);
+    }
+  };
+
+  const handleSubmitAddProblem = async (e) => {
+    e.preventDefault();
+    if(problem.title === "")
+    {
+      setMessage({...message, 
+        title: false,
+        addMessage: "Not enter title"});
+      return;
+    }
+    if(problem.content === "")
+    {
+      setMessage({...message, 
+        content: false,
+        addMessage: "Not enter content"});
+      return;
+    }
+
+    if (!isTestSuccess) {
+      setIsAddSuccess(false);
+      setMessage({...message, addMessage: 'Not tested with the passed result yet!'});
+      return;
+    }
+
+    if(input.length === 0)
+    {
+      setMessage({...message, 
+        input: false,
+        addMessage: "Not submit input file"});
+      return;
+    } 
+
+    if(output.length === 0)
+    {
+      setMessage({...message, 
+        output: false,
+        addMessage: "Not submit input file"});
+      return;
+    } 
+
+    const cases = getTestCaseFromInputAndOutput(input, output);
+    problem.cases = cases;
+
+    const { uid } = FirebaseAuth().currentUser;
+    const response = await create(uid, problem);
+
+    if (response) {
+      setIsAddSuccess(true);
+      setMessage({...message, addMessage: 'Add test success!'});
+    } else {
+      setIsAddSuccess(false);
+      setMessage({...message, addMessage: 'Add test failed due to server error. Please try again later'});
     }
   };
 
@@ -234,136 +280,14 @@ public class Program
         onSubmit={handleSubmitAddProblem}
         encType="multipart/form-data"
       >
-        <Box boxShadow={1} p={2} m={3}>
-          <Typography variant="h5">Enter problem title: </Typography>
-          <TextField onChange={handleChangeTestName} fullWidth />
-        </Box>
-
-        <Box boxShadow={1} p={2} m={3}>
-          <Typography variant="h5">Enter problem information: </Typography>
-          <CKEditor
-            editor={ClassicEditor}
-            data=""
-            onChange={handleChangeTestIntro}
-          />
-        </Box>
-
-        <Box boxShadow={1} p={2} m={3}>
-          <Typography variant="h5">Choose level of difficulty: </Typography>
-          <NativeSelect
-            inputProps={{ 'aria-label': 'age' }}
-            onChange={handleChangeDifficulty}
-          >
-            <option value={0}>Easy</option>
-            <option value={1}>Medium</option>
-            <option value={2}>Hard</option>
-          </NativeSelect>
-        </Box>
-
-        <Box boxShadow={1} p={2} m={3}>
-          <Typography variant="h5">Enter score: </Typography>
-          <input
-            onChange={handleChangeScore}
-            type="number"
-            max="100"
-            min="0"
-            value={problem.score}
-          />
-        </Box>
-
-        <Box boxShadow={1} p={2} m={3}>
-          <Typography variant="h5">Choose programming language: </Typography>
-          <NativeSelect
-            inputProps={{ 'aria-label': 'age' }}
-            onChange={handleChangeLanguague}
-          >
-            <option value="Csharp">C#</option>
-            <option value="Java">Java</option>
-            <option value="Python">Python</option>
-          </NativeSelect>
-        </Box>
-
-        <Box boxShadow={1} p={2} m={3}>
-          <Grid container>
-            <Grid item lg={6}>
-              <Typography variant="h5">Enter code: </Typography>
-              <CodeEditor
-                language={problem.language}
-                code={problem.code}
-                onCodeChange={handleOnChangeCode}
-              />
-            </Grid>
-            <Grid item lg={6}>
-              <Typography variant="h5">Notes:</Typography>
-              <ul>
-                <li>
-                  <Typography>
-                    Write full your code in the coding editor
-                  </Typography>
-                </li>
-                <li>
-                  <Typography>
-                    Enter simple input and output to test your code (include
-                    only one test case)
-                  </Typography>
-                </li>
-                <li>
-                  <Typography>
-                    Click &quot;Test code&quot; button to test your code and
-                    input, output
-                  </Typography>
-                </li>
-              </ul>
-
-              <div>
-                <TextField
-                  multiline
-                  label="Enter simple input"
-                  onChange={handleChangeSimpleInput}
-                />
-              </div>
-              <div>
-                <TextField
-                  multiline
-                  label="Enter simple output"
-                  onChange={handleChangeSimpleOutput}
-                />
-              </div>
-              <br />
-
-              <div>
-                <Button variant="primary" onClick={handleTestCode}>
-                  Test code
-                </Button>
-                <SkewLoader color="#088247" loading={isLoading} size={20} />
-              </div>
-              <Typography
-                className={
-                  isTestSuccess ? classes.textSuccess : classes.textFail
-                }
-              >
-                {testResponse}
-              </Typography>
-            </Grid>
-          </Grid>
-        </Box>
-
-        <Box boxShadow={1} p={2} m={3}>
-          <Typography variant="h5">Submit input file: </Typography>
-          <input
-            type="file"
-            name="inputFile"
-            onChange={handleChangeInputFile}
-          />
-        </Box>
-        <Box boxShadow={1} p={2} m={3}>
-          <Typography variant="h5">Submit expected output file: </Typography>
-          <input
-            type="file"
-            name="outputFile"
-            onChange={handleChangeOutputFile}
-          />
-        </Box>
+        <CodeProblem problem={problem} 
+        handleChangeTestName={handleChangeTestName} handleChangeTestIntro={handleChangeTestIntro} 
+        handleChangeDifficulty={handleChangeDifficulty} handleChangeScore={handleChangeScore}
+        handleChangeLanguague={handleChangeLanguague}
+        handleOnChangeCode={handleOnChangeCode} handleChangeSimpleInput={handleChangeSimpleInput}
+        handleChangeSimpleOutput={handleChangeSimpleOutput} handleTestCode={handleTestCode}
+        handleChangeInputFile={handleChangeInputFile} handleChangeOutputFile={handleChangeOutputFile}
+        message={message} isLoading={isLoading} isTestSuccess={isTestSuccess}/>
 
         <Box
           variant="contained"
@@ -375,7 +299,7 @@ public class Program
           <Typography
             className={isAddSuccess ? classes.textSuccess : classes.textFail}
           >
-            {message}
+            {message.addMessage}
           </Typography>
         </Box>
 

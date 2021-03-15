@@ -14,7 +14,6 @@ import {
   Popper,
   Box,
 } from '@material-ui/core';
-import MenuIcon from '@material-ui/icons/Menu';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { auth } from '@libs/client';
@@ -22,6 +21,9 @@ import { useAuth } from '@hooks/auth';
 import { useCookies } from 'react-cookie';
 
 const useStyles = makeStyles((theme) => ({
+  title: {
+    cursor: 'pointer',
+  },
   grow: {
     flexGrow: 1,
   },
@@ -45,9 +47,11 @@ export default function MemberAppBar() {
   return (
     <AppBar position="static">
       <Toolbar className={styles.menu}>
-        <IconButton className={styles.menuItem} edge="start" aria-label="menu">
-          <MenuIcon />
-        </IconButton>
+      <Link href="/">
+          <Typography className={styles.title} variant="h5">
+            Smart Coder
+          </Typography>
+        </Link>
         <Link href="/">
           <MenuItem>
             <Typography variant="h6">Problems</Typography>
