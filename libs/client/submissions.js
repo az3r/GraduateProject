@@ -2,7 +2,7 @@ import { collections, urls } from '@utils/constants';
 import { transform } from '@utils/firestore';
 import { Firestore, FirebaseAuth } from './firebase';
 
-const { users, problemSubmissions } = collections;
+const { users, problemSubmissions, examSubmissions } = collections;
 const { compiler } = urls;
 const langs = {
   csharp: 'csharp',
@@ -15,15 +15,7 @@ const statuses = {
   error: 'syntax-error',
 };
 
-export async function test({
-  problemId,
-  problemName,
-  lang,
-  code,
-  testcases,
-  save,
-}) {
-  const { uid } = FirebaseAuth().currentUser;
+export async function test({ lang, code, testcases }) {
   const token = await FirebaseAuth().currentUser.getIdToken(true);
   const response = await fetch(`${compiler}${langs[lang.toLowerCase()]}`, {
     method: 'POST',
@@ -44,21 +36,8 @@ export async function test({
     const { failed } = data;
     status = failed > 0 ? statuses.failed : statuses.passed;
   }
-
-  if (save) {
-    Firestore()
-      .collection(users)
-      .doc(uid)
-      .collection(problemSubmissions)
-      .set({
-        problemId,
-        problemName,
-        status,
-        details: { code, ...data },
-        createdOn: Firestore.Timestamp.now(),
-      });
-  }
-  return response.status === 200 ? data : Promise.reject(data);
+  const result = { ...data, status };
+  return response.status === 200 ? result : Promise.reject(result);
 }
 
 export async function getProblemSubmissions(userId, problemId) {
@@ -70,4 +49,78 @@ export async function getProblemSubmissions(userId, problemId) {
     .get();
 
   return snapshot.docs.map((doc) => transform(doc.data()));
+}
+
+/**
+ * @example
+ * // for code problems, retrieve data from test function
+ * const codeResult = await test({
+ *   lang: 'c#',
+ *   code: 'submitted code',
+ *   testcases: [<list of test casess>]
+ * })
+ * const id = await createExamSubmission('userid', {
+ *   examId: 'examid',
+ *   total: 10,
+ *   correct: '5',
+ *   results: [
+ *     {
+ *       problemId: 'problemId',
+ *       problemName: 'problemName',
+ *       isMCQ: false,
+ *       status: codeResult.status,
+ *       details: {
+ *         code: 'submitted code',
+ *         ...codeResult
+ *       }
+ *     },
+ *     {
+ *       problemId: 'problemid',
+ *       problemName: 'problem name',
+ *       isMCQ: true,
+ *       status: failed | true
+ *       details: {
+ *         selectedAnswer: 'A',
+ *         correctAnswer: 'B'
+ *       }
+ *     }
+ *   ]
+ * })
+ * @param {string} userId user's uid retrieve from firebase auth
+ * @
+ */
+export async function createExamSubmission(
+  userId,
+  { examId, total, correct, results }
+) {
+  const { id } = await Firestore()
+    .collection(users)
+    .doc(userId)
+    .collection(examSubmissions)
+    .add({
+      examId,
+      total,
+      correct,
+      createdOn: Firestore.Timestamp.now(),
+      results,
+    });
+  return id;
+}
+
+export async function createProblemSubmission(
+  userId,
+  { problemId, problemName, status, code, data }
+) {
+  const { id } = await Firestore()
+    .collection(users)
+    .doc(userId)
+    .collection(problemSubmissions)
+    .add({
+      problemId,
+      problemName,
+      status,
+      details: { code, ...data },
+      createdOn: Firestore.Timestamp.now(),
+    });
+  return id;
 }
