@@ -16,4 +16,5 @@ if (firebase.apps.length === 0) {
 
 const Firestore = firebase.firestore;
 const FirebaseAuth = firebase.auth;
+
 export { FirebaseAuth, Firestore };

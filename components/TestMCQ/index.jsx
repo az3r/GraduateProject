@@ -39,9 +39,11 @@ const useStyles = makeStyles( {
 export default function Test({problem, nextProblem}) {
   const classes = useStyles();
 
-  const {question} = problem;
+  const {id} = problem;
   const {difficulty} = problem;
   const {score} = problem;
+  const {correct} = problem;
+  const {question} = problem;
   const {a, b, c, d} = problem;
   const [answer, setAnswer] = useState('');
   const [minutes, setMinutes] = useState(problem.minutes);
@@ -76,7 +78,16 @@ export default function Test({problem, nextProblem}) {
   const handleSubmit = () => {
     if (nextProblem) {
       clearTimeout(timeOut);
-      nextProblem();
+      const result = correct === answer ? 1 : 0;
+      nextProblem({
+        problemId: id,
+        problemName: question,
+        isMCQ: true,
+        status: correct === answer,
+        details: {
+          selectedAnswer: answer,
+          correctAnswer: correct
+      }}, result);
     }
   }
 

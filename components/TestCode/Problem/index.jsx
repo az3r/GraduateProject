@@ -52,43 +52,6 @@ const editorConfiguration = {
   toolbar: [ ],
 };
 
-const submissions = [
-  {
-    id: 1,
-    submitedTime: Date.now(),
-    status: 'Compiler Error',
-    score: 0,
-    language: 'Csharp',
-  },
-  {
-    id: 2,
-    submitedTime: Date.now(),
-    status: 'Accepted',
-    score: 100,
-    language: 'Csharp',
-  },
-  {
-    id: 3,
-    submitedTime: Date.now(),
-    status: 'Wrong Answer',
-    score: 0,
-    language: 'Csharp',
-  },
-  {
-    id: 4,
-    submitedTime: Date.now(),
-    status: 'Compiler Error',
-    score: 0,
-    language: 'Csharp',
-  },
-  {
-    id: 5,
-    submitedTime: Date.now(),
-    status: 'Accepted',
-    score: 100,
-    language: 'Csharp',
-  }
-]
 
 export default function Problem(props) {
   const classes = useStyles();
@@ -97,6 +60,8 @@ export default function Problem(props) {
   const {difficulty} = props;
   const {content} = props;
   const {score} = props;
+  const {problemSubmissionHistory} = props;
+  const {language} = props;
 
 
   return (
@@ -170,40 +135,44 @@ export default function Problem(props) {
                 <TableCell>Language</TableCell>
               </TableRow>
             </TableHead>
-            <TableBody>
-              {submissions.map((submission, index) => (
-                  <TableRow
-                    key={submission.id}
-                    className={classes.tableRow}
-                    hover
-                    style={
-                      index % 2
-                        ? { background: 'rgb(250, 250, 250)' }
-                        : { background: 'white' }
-                    }
-                  >
-                    <TableCell>
-                      {dateFormat(
-                      new Date(submission.submitedTime),
-                      'dd/mm/yyyy HH:MM TT'
-                    )}
-                    </TableCell>
-                    <TableCell>
-                      {
-                        submission.status === 'Accepted' && <p style={{color: 'green', fontWeight: 'bolder'}}>{submission.status}</p>
+            {
+              problemSubmissionHistory &&
+              <TableBody>
+                {
+                  problemSubmissionHistory.map((submission, index) => (
+                    <TableRow
+                      key={submission.id}
+                      className={classes.tableRow}
+                      hover
+                      style={
+                        index % 2
+                          ? { background: 'rgb(250, 250, 250)' }
+                          : { background: 'white' }
                       }
-                      {
-                        submission.status === 'Wrong Answer' && <p style={{color: 'orange', fontWeight: 'bolder'}}>{submission.status}</p>
-                      }
-                      {
-                        submission.status === 'Compiler Error' && <p style={{color: 'red', fontWeight: 'bolder'}}>{submission.status}</p>
-                      }
-                    </TableCell>
-                    <TableCell>{submission.score}</TableCell>
-                    <TableCell>{submission.language}</TableCell>
-                  </TableRow>
-                ))}
-            </TableBody>
+                    >
+                      <TableCell>
+                        {dateFormat(
+                          new Date(submission.createdOn),
+                          'dd/mm/yyyy HH:MM TT'
+                        )}
+                      </TableCell>
+                      <TableCell>
+                        {
+                          submission.status === 'Accepted' && <p style={{color: 'green', fontWeight: 'bolder'}}>{submission.status}</p>
+                        }
+                        {
+                          submission.status === 'Wrong Answer' && <p style={{color: 'orange', fontWeight: 'bolder'}}>{submission.status}</p>
+                        }
+                        {
+                          submission.status === 'Compiler Error' && <p style={{color: 'red', fontWeight: 'bolder'}}>{submission.status}</p>
+                        }
+                      </TableCell>
+                      <TableCell>{score}</TableCell>
+                      <TableCell>{language}</TableCell>
+                    </TableRow>
+                  ))}
+              </TableBody>
+            }
           </Table>
         </Paper>
       </TabPanel>

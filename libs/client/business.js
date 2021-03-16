@@ -53,3 +53,23 @@ export function formatQuestionsArray(questions) {
   });
   return newQuestionList;
 }
+
+export function calculateTotalExamTime(problems) {
+  let totalHours = 0;
+  let totalMinutes = 0;
+  let totalSeconds = 0;
+
+  problems.map((problem) => {
+    totalMinutes += parseInt(problem.minutes, 10);
+    totalSeconds += parseInt(problem.seconds, 10);
+    return null;
+  });
+
+  totalMinutes += parseInt(totalSeconds / 60, 10);
+
+  totalHours = parseInt(totalMinutes / 60, 10);
+  totalSeconds = parseInt(totalSeconds % 60, 10);
+  totalMinutes = parseInt(totalMinutes % 60, 10);
+
+  return `${totalHours}h ${totalMinutes}m ${totalSeconds}s`;
+}

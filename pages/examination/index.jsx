@@ -42,7 +42,7 @@ const useStyles = makeStyles({
   },
 });
 
-export default function Index({examinations}) {
+export default function Index({examinations, arrProblems}) {
   const classes = useStyles();
   const [introHeight, setIntroHeight] = useState(0);
   const [open, setOpen] = useState(false);
@@ -124,7 +124,7 @@ export default function Index({examinations}) {
         <Box>
           <Grid container direction="row" justify="center" spacing={3}>
             <Grid item sm={5}>
-              <Examination exams={examinations} />
+              <Examination exams={examinations} arrProblems={arrProblems} />
             </Grid>
             <Grid item sm={4}>
               <TopScore />
@@ -137,11 +137,17 @@ export default function Index({examinations}) {
 }
 
 export async function getServerSideProps() {
-  const items = await exams.get("", {});
+  const items = await exams.get("", {withProblems: false});
+  const arrProblems = [];
+  for(let i = 0; i < items.length; i += 1){
+    // const problems = await exams.getProblems(items[i].id)
+    arrProblems.push(exams.getProblems(items[i].id));
+  }
 
   return {
     props: {
       examinations: items,
+      arrProblems: await Promise.all(arrProblems),
     },
   };
 }

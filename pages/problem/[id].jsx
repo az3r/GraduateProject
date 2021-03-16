@@ -2,7 +2,8 @@ import React from 'react';
 import Head from 'next/head';
 // import { makeStyles } from '@material-ui/core';
 import dynamic from 'next/dynamic';
-import { problems as probs } from '@libs/client';
+import { problems as probs, submissions } from '@libs/client';
+import { parseCookies } from '@libs/client/cookies';
 import Layout from '../../components/Layout';
 
 const TestCode = dynamic(
@@ -21,7 +22,7 @@ const TestCode = dynamic(
 //   },
 // }));
 
-export default function Test({ problem }) {
+export default function Test({ problem, user, problemSubmissionHistory }) {
   // const classes = useStyles();
 
   return (
@@ -32,26 +33,26 @@ export default function Test({ problem }) {
       </Head>
 
       <Layout>
-        <TestCode problem={problem} />
+        <TestCode problem={problem} user={user} problemSubmissionHistory={problemSubmissionHistory} />
       </Layout>
     </>
   );
 }
 
-// export async function getServerSideProps({ params }) {
-//   return {
-//     props: {
-//       problemId: params.id,
-//     },
-//   };
-// }
 
-export async function getServerSideProps({ params }) {
+export async function getServerSideProps({ params, req }) {
+  const cookies = parseCookies(req);
+  const user = JSON.parse(cookies.user);
+
   try {
     const item = await probs.get(params.id);
+    const problemSubmissionHistory = await submissions.getProblemSubmissions(user.uid, params.id);
+
     return {
       props: {
         problem: item,
+        user,
+        problemSubmissionHistory,
       },
     };
   }catch(e){

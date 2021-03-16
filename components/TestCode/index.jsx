@@ -48,12 +48,13 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-export default function Test({ problem, nextProblem}) {
+export default function Test({ problem, user, problemSubmissionHistory, nextProblem}) {
   const classes = useStyles();
 
   const widthRef = useRef(null);
   const [width, setWidth] = useState(500);
 
+  const {id} = problem;
   const {title} = problem;
   const {content} = problem;
   const {language} = problem;
@@ -120,13 +121,12 @@ export default function Test({ problem, nextProblem}) {
 
     try {
       const response = await submissions.test({
-        problemId: problem.id,
-        problemName: problem.title,
         lang: problem.language,
         code,
         testcases: problem.cases,
-        save: false
       });
+
+      console.log(response);
 
       if (response.failed === 0) {
         console.log("Correct!");
@@ -138,7 +138,6 @@ export default function Test({ problem, nextProblem}) {
       }
     } catch (e) {
       setTestCodeResult(`stdout: ${e.stdout}\nstderr: ${e.stder}`);
-      console.log('Hello');
       console.log(e);
     } finally {
       setLoading(false);
@@ -147,38 +146,85 @@ export default function Test({ problem, nextProblem}) {
 
   const handleSubmit = async () => {
     if (nextProblem) {
+      setLoading(true);
       clearTimeout(timeOut);
+      let result = 0;
+      let response = null;
+      let status = "";
       try {
-        await submissions.test({
-          problemId: problem.id,
-          problemName: problem.title,
+        response = await submissions.test({
           lang: problem.language,
           code,
           testcases: problem.cases,
-          save: true
         });
 
+        if (response.status === "passed") {
+          result = 1;
+          status = "Accepted";
+        } else if(response.status === "failed") {
+          result = 0;
+          status = "Wrong Answer";
+        }
       } catch (e) {
-        console.log(e);
+        response = e;
+        result = 0;
+        status = "Compiler Error";
       } finally {
         setLoading(false);
-        nextProblem();
+        nextProblem({
+            problemId: id,
+            problemName: title,
+            isMCQ: false,
+            status,
+            details: {
+              code,
+              ...response
+            }
+          },
+          result);
       }
     } else {
       setLoading(true);
 
       try {
-        await submissions.test({
-          problemId: problem.id,
-          problemName: problem.title,
+        const response = await submissions.test({
           lang: problem.language,
           code,
           testcases: problem.cases,
-          save: true
         });
 
+        if (response.failed === 0) {
+          await submissions.createProblemSubmission(
+            user.uid,
+            {
+              problemId: problem.id,
+              problemName: problem.title,
+              status: "Accepted",
+              code,
+              data: response,
+            });
+        } else {
+          await submissions.createProblemSubmission(
+            user.uid,
+            {
+              problemId: problem.id,
+              problemName: problem.title,
+              status: "Wrong Answer",
+              code,
+              data: response,
+            });
+        }
       } catch (e) {
         console.log(e);
+        await submissions.createProblemSubmission(
+          user.uid,
+          {
+            problemId: problem.id,
+            problemName: problem.title,
+            status: "Compiler Error",
+            code,
+            data: e,
+          });
       } finally {
         setLoading(false);
         Router.push('/');
@@ -205,6 +251,8 @@ export default function Test({ problem, nextProblem}) {
             content={content}
             difficulty={difficulty}
             score={score}
+            problemSubmissionHistory={problemSubmissionHistory}
+            language={language}
           />
         </div>
 

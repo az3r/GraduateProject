@@ -14,6 +14,7 @@ import {
 
 import Pagination from '@material-ui/lab/Pagination';
 import dateFormat from 'dateformat';
+import { calculateTotalExamTime } from '@libs/client/business';
 
 const useStyles = makeStyles(() => ({
   tableContainer: {
@@ -48,7 +49,7 @@ const useStyles = makeStyles(() => ({
 
 const PROBLEM_PER_PAGE = 10;
 
-export default function Examinations({exams}) {
+export default function Examinations({exams, arrProblems}) {
   const classes = useStyles();
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPage] = useState(
@@ -132,7 +133,7 @@ export default function Examinations({exams}) {
                   </Box>
                 </Link>
               </TableCell>
-              <TableCell>{examination.duration}</TableCell>
+              <TableCell>{calculateTotalExamTime(arrProblems[index]).toString()}</TableCell>
               <TableCell>
                 <Button size="small" variant="contained" color="primary" href={`/examination/${examination.id}`}>JOIN</Button>
               </TableCell>

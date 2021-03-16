@@ -21,10 +21,10 @@ export default function ExaminerPage({user}) {
 
 export async function getServerSideProps({req}) {
   const cookies = parseCookies(req);
+
   if(Object.keys(cookies).length !== 0)
   {
-    if(cookies.user)
-    {
+    if(cookies.user){
       return {
         props: {
           user: JSON.parse(cookies.user)
