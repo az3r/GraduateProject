@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
 import Head from 'next/head';
-import { exams } from '@libs/client';
+import { exams, submissions } from '@libs/client';
 import { useRouter  } from 'next/router';
-import { createExamSubmission } from '@libs/client/submissions';
 import { parseCookies } from '@libs/client/cookies';
 import TestCode from '../code';
 import TestMCQ from '../mcq';
@@ -34,7 +33,7 @@ export default function Start({id, problems, user}) {
       setProblem(problems[indexNext]);
     } else {
 
-      await createExamSubmission(user.uid, {
+      await submissions.createExamSubmission(user.uid, {
         examId: id,
         total: problems.length,
         correct: numberOfCorrectTemp,
@@ -66,7 +65,13 @@ export default function Start({id, problems, user}) {
 
 export async function getServerSideProps({params, req}) {
   const cookies = parseCookies(req);
-  const user = JSON.parse(cookies.user);
+  let user = null;
+
+  if (Object.keys(cookies).length !== 0) {
+    if (cookies.user) {
+      user = JSON.parse(cookies.user);
+    }
+  }
   const items = await exams.getProblems(params.id);
 
   return {
