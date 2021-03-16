@@ -42,26 +42,29 @@ export default function Test({ problem, user, problemSubmissionHistory }) {
 
 export async function getServerSideProps({ params, req }) {
   const cookies = parseCookies(req);
-  const user = JSON.parse(cookies.user);
-
+  let user = null;
+  let problemSubmissionHistory = null;
+  let item = null;
   try {
-    const item = await probs.get(params.id);
-    const problemSubmissionHistory = await submissions.getProblemSubmissions(user.uid, params.id);
+    item = await probs.get(params.id);
 
-    return {
-      props: {
-        problem: item,
-        user,
-        problemSubmissionHistory,
-      },
-    };
-  }catch(e){
+    if (Object.keys(cookies).length !== 0) {
+      if (cookies.user) {
+        user = JSON.parse(cookies.user);
+        problemSubmissionHistory = await submissions.getProblemSubmissions(user.uid, params.id);
+      }
+    }
+
+
+  } catch (e) {
     console.log(e);
   }
-  const item = await probs.get(params.id);
+
   return {
     props: {
       problem: item,
+      user,
+      problemSubmissionHistory,
     },
   };
 }

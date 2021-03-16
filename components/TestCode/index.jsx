@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Box, Button, makeStyles, Container, Paper } from '@material-ui/core';
 
-import Router from 'next/router';
+import Router, { useRouter } from 'next/router';
 import SplitPane from 'react-split-pane';
 import ClipLoader from 'react-spinners/ClipLoader';
 
@@ -9,6 +9,7 @@ import { submissions } from '@libs/client';
 import Problem from '@components/TestCode/Problem';
 import Console from './Console';
 import CodeEditor from '../CodeEditor';
+
 
 const useStyles = makeStyles(() => ({
   consoleButton: {
@@ -49,6 +50,7 @@ const useStyles = makeStyles(() => ({
 }));
 
 export default function Test({ problem, user, problemSubmissionHistory, nextProblem}) {
+  const router = useRouter();
   const classes = useStyles();
 
   const widthRef = useRef(null);
@@ -68,6 +70,13 @@ export default function Test({ problem, user, problemSubmissionHistory, nextProb
   const [seconds, setSeconds] = useState(problem.seconds);
 
   const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    if(user === null)
+    {
+      router.replace('/login');
+    }
+  },[]);
 
   let timeOut;
   useEffect(() => {
