@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Head from 'next/head';
 import { exams, submissions } from '@libs/client';
 import { useRouter  } from 'next/router';
@@ -13,6 +13,13 @@ export default function Start({id, problems, user}) {
   const [problem, setProblem] = useState(problems[0]);
   const [results, setResults] = useState([]);
   const [numberOfCorrect, setNumberOfCorrect] = useState(0);
+
+  useEffect(() => {
+    if(user === null)
+    {
+      router.replace('/login');
+    }
+  },[]);
 
   const nextProblem = async (result, correct) => {
     const resultsTemp = results;
