@@ -2,7 +2,7 @@ import { collections } from '@utils/constants';
 import { transform } from '@utils/firestore';
 import { Firestore, FirebaseAuth } from './firebase';
 
-const { problems, exams, users } = collections;
+const { problems, exams, users, problemSubmissions } = collections;
 
 /** require user to be signed in */
 export async function get() {
@@ -51,6 +51,7 @@ export async function update({
   await Promise.all(infoTask, profileTask);
 }
 
+/** get problems own by user */
 export async function getProblems(uid) {
   const snapshot = await Firestore()
     .collection(problems)
@@ -59,6 +60,24 @@ export async function getProblems(uid) {
   return snapshot.docs.map((item) =>
     transform({ id: item.id, ...item.data() })
   );
+}
+
+/** get problems which user submitted answers */
+export async function getSubmittedProblems(uid) {
+  // get all problems' ids in user submission collection
+  const submissions = await Firestore()
+    .collection(users)
+    .doc(uid)
+    .collection(problemSubmissions)
+    .get();
+  const ids = new Set(submissions.docs.map((doc) => doc.get('problemId')));
+
+  const snapshot = await Firestore()
+    .collection(problems)
+    .where(Firestore.FieldPath.documentId(), 'in', ids)
+    .get();
+
+  return snapshot.docs.map((doc) => transform({ id: doc.id, ...doc.data() }));
 }
 
 /** get exams own by user */
@@ -73,6 +92,7 @@ export async function getExams(uid) {
   );
 }
 
+/** get exams in which user joined */
 export async function getJoinedExams(uid) {
   const user = await Firestore().collection(users).doc(uid).get();
 
