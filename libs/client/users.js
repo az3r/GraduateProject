@@ -6,13 +6,13 @@ const { problems, exams, users } = collections;
 
 /** require user to be signed in */
 export async function get() {
-  const info = await Firestore().collection(users).doc(uid).get();
   const {
     displayName: name,
     email,
     photoURL: avatar,
     uid,
   } = FirebaseAuth().currentUser;
+  const info = await Firestore().collection(users).doc(uid).get();
   return {
     ...info.data(),
     name,
@@ -61,6 +61,7 @@ export async function getProblems(uid) {
   );
 }
 
+/** get exams own by user */
 export async function getExams(uid) {
   const snapshot = await Firestore()
     .collection(exams)
@@ -70,4 +71,25 @@ export async function getExams(uid) {
   return snapshot.docs.map((item) =>
     transform({ id: item.id, ...item.data() })
   );
+}
+
+export async function getJoinedExams(uid) {
+  const user = await Firestore().collection(users).doc(uid).get();
+
+  const snapshot = await Firestore()
+    .collection(exams)
+    .where(Firestore.FieldPath.documentId(), 'in', user.get('joinedExams'))
+    .get();
+
+  return snapshot.docs.map((doc) => transform({ id: doc.id, ...doc.data() }));
+}
+
+export async function joinExam(uid, examId) {
+  return Firestore()
+    .collection(users)
+    .doc(uid)
+    .set(
+      { joinedExams: Firestore.FieldValue.arrayUnion(examId) },
+      { merge: true }
+    );
 }
