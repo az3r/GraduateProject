@@ -33,7 +33,6 @@ export async function get(problemId) {
 }
 
 export async function update(problemId, props) {
-  console.log('hahahahahahahahahahaha', problemId);
   await Firestore()
     .collection(problems)
     .doc(problemId)

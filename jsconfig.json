@@ -8,6 +8,8 @@
       "@models": ["./model/*"],
       "@styles/*": ["./styles/*"],
       "@utils/*": ["./utils/*"],
+      "@client/*": ["./libs/client/*"],
+      "@server/*": ["./libs/server/*"],
       "@hooks/*": ["./hooks/*"]
     }
   }
