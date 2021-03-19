@@ -51,8 +51,8 @@ export default function AccountTab() {
   };
 
   return (
-    <form className={classes.container} onSubmit={handleSubmit}>
-      <Grid className={classes.container} container spacing={3}>
+    <form onSubmit={handleSubmit}>
+      <Grid container spacing={3}>
         <Grid item xs={12} className={classes.groupTitle}>
           Change Your Password
         </Grid>

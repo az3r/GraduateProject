@@ -12,6 +12,7 @@ import {
 } from '@material-ui/core';
 import BasicInfoTab from 'components/UserProfile/BasicInfoTab';
 import AccountTab from 'components/UserProfile/AccountTab';
+import ExperiencesTab from 'components/UserProfile/ExperiencesTab';
 import PropTypes from 'prop-types';
 
 const useStyles = makeStyles((theme) => ({
@@ -85,15 +86,19 @@ export default function UserProfileTabs() {
         >
           <Tab label="Basic Info" {...a11yProps(0)} />
           <Tab label="Password" {...a11yProps(1)} />
+          <Tab label="Experiences" {...a11yProps(2)} />
         </Tabs>
       </Grid>
 
       <Grid item xs={9}>
         <TabPanel value={value} index={0}>
-          <BasicInfoTab/>
+          <BasicInfoTab />
         </TabPanel>
         <TabPanel value={value} index={1}>
-          <AccountTab/>
+          <AccountTab />
+        </TabPanel>
+        <TabPanel value={value} index={2}>
+          <ExperiencesTab />
         </TabPanel>
       </Grid>
     </Grid>

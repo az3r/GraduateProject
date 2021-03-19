@@ -42,7 +42,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const without = (array, filtered) => array.filter((n) => n != filtered);
+const without = (array, filtered) => array.filter((element) => element != filtered);
 
 export default function BasicInfoTab() {
   const user = {
@@ -86,8 +86,8 @@ export default function BasicInfoTab() {
   };
 
   return (
-    <form className={classes.container} onSubmit={handleSubmit}>
-      <Grid className={classes.container} container spacing={3}>
+    <form onSubmit={handleSubmit}>
+      <Grid container spacing={3}>
         <Grid item xs={12} className={classes.groupTitle}>
           Basic Information
         </Grid>
