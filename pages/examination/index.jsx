@@ -16,8 +16,8 @@ import {
 import { exams } from '@libs/client';
 import Layout from '../../components/Layout';
 
-import Examination from '../../components/Examinations';
-import TopScore from '../../components/TopScore';
+import Challenge from '../../components/Examinations/Challenge';
+import TopScore from '../../components/Examinations/TopScore';
 
 
 const useStyles = makeStyles({
@@ -124,7 +124,7 @@ export default function Index({examinations, arrProblems}) {
         <Box>
           <Grid container direction="row" justify="center" spacing={3}>
             <Grid item sm={5}>
-              <Examination exams={examinations} arrProblems={arrProblems} />
+              <Challenge exams={examinations} arrProblems={arrProblems} />
             </Grid>
             <Grid item sm={4}>
               <TopScore />

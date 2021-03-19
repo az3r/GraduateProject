@@ -17,6 +17,7 @@ import { CKEditor } from '@ckeditor/ckeditor5-react'
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import 'react-tabs/style/react-tabs.css';
 import dateFormat from 'dateformat';
+import Comment from '@components/TestCode/Problem/Comment';
 
 
 
@@ -122,7 +123,7 @@ export default function Problem(props) {
         </Paper>
       </TabPanel>
       <TabPanel>
-        <h2>Any content 2</h2>
+        <Comment />
       </TabPanel>
       <TabPanel>
         <Paper className={classes.submission}>

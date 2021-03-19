@@ -1,10 +1,21 @@
 import React, { useEffect, useState } from 'react';
 import Head from 'next/head';
+import dynamic from 'next/dynamic';
 import { exams, submissions } from '@libs/client';
 import { useRouter  } from 'next/router';
 import { parseCookies } from '@libs/client/cookies';
-import TestCode from '../code';
-import TestMCQ from '../mcq';
+import Layout from '../../../components/Layout';
+
+const TestCode = dynamic(
+  () => import('../../../components/TestCode'),
+  { ssr: false }
+);
+
+const TestMCQ = dynamic(
+  () => import('../../../components/TestMCQ'),
+  { ssr: false }
+);
+
 
 export default function Start({id, problems, user}) {
   console.log(id); // use for saving db
@@ -15,11 +26,10 @@ export default function Start({id, problems, user}) {
   const [numberOfCorrect, setNumberOfCorrect] = useState(0);
 
   useEffect(() => {
-    if(user === null)
-    {
+    if (user === null) {
       router.replace('/login');
     }
-  },[]);
+  }, []);
 
   const nextProblem = async (result, correct) => {
     const resultsTemp = results;
@@ -57,14 +67,13 @@ export default function Start({id, problems, user}) {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      {problem.isMCQ === true ? (
-        <TestMCQ problem={problem} nextProblem={nextProblem} />
-      ) : (
-        <TestCode
-          problem={problem}
-          nextProblem={nextProblem}
-        />
-      )}
+      <Layout>
+        {problem.isMCQ === true ? (
+          <TestMCQ problem={problem} nextProblem={nextProblem} />
+        ) : (
+          <TestCode problem={problem} nextProblem={nextProblem} />
+        )}
+      </Layout>
     </>
   );
 }
