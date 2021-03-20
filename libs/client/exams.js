@@ -26,22 +26,28 @@ export async function create(
 
 export async function update(
   examId,
-  { title, content, isPrivate, password, startAt, endAt }
+  { title, content, isPrivate, password, startAt, endAt, problems }
 ) {
-  const { id } = await Firestore().collection(exams).doc(examId).set(
-    {
-      title,
-      content,
-      isPrivate,
-      password,
-      startAt,
-      endAt,
-      modifiedAt: Firestore.Timestamp.now(),
-    },
-    { merge: true }
-  );
+  const docRef = Firestore().collection(exams).doc(examId);
+  await docRef.update({
+    title,
+    content,
+    isPrivate,
+    password,
+    startAt,
+    endAt,
+    modifiedAt: Firestore.Timestamp.now(),
+  });
 
-  return id;
+  const examProblems = await Firestore()
+    .collection(exams)
+    .doc(examId)
+    .collection(problemCollection)
+    .get();
+  const deleteTasks = examProblems.docs.map((item) => item.ref.delete());
+  await Promise.all(deleteTasks);
+  const createTasks = problems.map((item) => createProblem(examId, item));
+  await Promise.all(createTasks);
 }
 export async function get(examId, { withProblems }) {
   if (examId) {
