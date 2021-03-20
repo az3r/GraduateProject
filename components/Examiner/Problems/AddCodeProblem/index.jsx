@@ -311,7 +311,7 @@ public class Program
           p={2}
           m={3}
         >
-          <Button color="primary" type="submit">
+          <Button variant="contained" color="primary" type="submit">
             Submit
           </Button>
         </Box>

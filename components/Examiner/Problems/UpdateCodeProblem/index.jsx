@@ -6,12 +6,11 @@ import {
     makeStyles,
     Typography,
   } from '@material-ui/core';
-import React, {useEffect, useState } from 'react';
+import React, {useState } from 'react';
 import getTestCaseFromInputAndOutput, {
   getFormatResultFromFile,
 } from '@libs/client/business';
 import { test } from '@libs/client/submissions';
-import { useRouter } from 'next/router';
 import { update } from '@libs/client/problems';
 import CodeProblem from '../CodeProblem';
   
@@ -24,14 +23,7 @@ import CodeProblem from '../CodeProblem';
     },
   });
   
-  export default function UpdateCodeProblem({user,problemProps}) {
-    const router = useRouter();
-    useEffect(() => {
-      if(Object.keys(user).length === 0)
-      {
-        router.replace('/login');
-      }
-    },[]);
+  export default function UpdateCodeProblem({problemProps}) {
     const code = {
       c_cpp: `#include <stdio.h>
   int main()
@@ -323,8 +315,8 @@ import CodeProblem from '../CodeProblem';
             p={2}
             m={3}
           >
-            <Button color="primary" type="submit">
-              Submit
+            <Button variant="contained" color="primary" type="submit">
+              Update
             </Button>
           </Box>
         </form>

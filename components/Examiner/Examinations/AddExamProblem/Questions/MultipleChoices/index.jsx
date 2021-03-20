@@ -46,9 +46,24 @@ export default function MultipleChoices({NO,value,handleChangeQuestionMC,handleC
                 <Typography variant="h5">Choose level of difficulty: </Typography>
                 <NativeSelect id={`MC_${NO}`}
                     onChange={handleChangeCPDifficulty}>
-                    <option value={0}>Easy</option>
-                    <option value={1}>Medium</option>
-                    <option value={2}>Hard</option>
+                        {
+                            value.difficulty === 0 ?
+                            <option value={0} selected >Easy</option>
+                            :
+                            <option value={0}>Easy</option>
+                        }
+                        {
+                            value.difficulty === 1 ?
+                            <option value={1} selected>Medium</option>
+                            :
+                            <option value={1}>Medium</option>
+                        }
+                        {
+                            value.difficulty === 2 ?
+                            <option value={2} selected>Hard</option>
+                            :
+                            <option value={2}>Hard</option>
+                        }
                 </NativeSelect>
             </Box>
 
@@ -57,7 +72,7 @@ export default function MultipleChoices({NO,value,handleChangeQuestionMC,handleC
                 <Box display="flex">
                     <input id={`MC_${NO}`}  onChange={handleChangeMinutes} type="number" max="100" min="0" value={value.minutes}  />
                     <Typography>&nbsp;minute(s)&nbsp;&nbsp;&nbsp;:&nbsp;&nbsp;&nbsp;</Typography>
-                    <input id={`MC_${NO}`}  onChange={handleChangeSeconds} type="number" max="60" min="0" value={value.seconds}  />
+                    <input id={`MC_${NO}`}  onChange={handleChangeSeconds} type="number" max="59" min="0" value={value.seconds}  />
                     <Typography>&nbsp;second(s)&nbsp;&nbsp;</Typography>
                 </Box>
             </Box>

@@ -3,11 +3,10 @@ import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import {Box, Breadcrumbs, Button, Checkbox, Link, makeStyles, TextField, Typography} from '@material-ui/core';
 import React, {useEffect, useState} from 'react';
 import { formatQuestionsArray, getFormatResultFromFile } from '@libs/client/business';
-import { create } from '@libs/client/exams';
-import { FirebaseAuth } from '@libs/client/firebase';
-import { useRouter } from 'next/router';
+// import { create } from '@libs/client/exams';
+// import { FirebaseAuth } from '@libs/client/firebase';
 import { test } from '@libs/client/submissions';
-import Questions from './Questions/index';
+import Questions from "@components/Examiner/Examinations/AddExamProblem/Questions/index";
 
 const useStyles = makeStyles({
   textSuccess: {
@@ -18,21 +17,14 @@ const useStyles = makeStyles({
   },
 });
 
-export default function AddTestPage({user}){
-    const router = useRouter();
-    useEffect(() => {
-        if(Object.keys(user).length === 0)
-        {
-        router.replace('/login');
-        }
-    },[]);
+export default function UpdateExamination({examProps}){
     const [examIntro,setExamIntro] = useState({
-        isPrivate: false,
-        password: "",
-        title: "",
-        content: "",
-        start: "",
-        end: "",
+        isPrivate: examProps.isPrivate,
+        password: examProps.password,
+        title: examProps.title,
+        content: examProps.content,
+        start: examProps.startAt,
+        end: examProps.endAt,
         message:{
           password: false,
           title: false,
@@ -42,6 +34,50 @@ export default function AddTestPage({user}){
         }
     })
     const [listOfQuestions,setListOfQuestions] = useState([]);
+    useEffect(()=>{
+        
+        console.log(examProps);
+        const problemsList = examProps.problems.map(item=>{
+            if(item.isMCQ)
+            {
+                return {...item, message:{
+                    question: false,
+                    difficulty: false,
+                    score: false,
+                    minutes: false,
+                    seconds: false,
+                    a: false,
+                    b: false,
+                    c: false,
+                    d: false,
+                    correct: false,
+                  }}
+            }
+            return {
+                ...item,
+                input: [],
+                simpleInput: '',
+                output: [],
+                simpleOutput: '',
+                messageTestCode: '',
+                testCodeSuccess: false,
+                isLoadingTestCode: false,
+                message:{
+                    title: false,
+                    content: false,
+                    score: false,
+                    time: false,
+                    code: false,
+                    input: false,
+                    output: false,
+                }
+            }
+        })
+
+        console.log(problemsList);
+        setListOfQuestions(problemsList);
+    },[])
+
     const [addMessage,setAddMessage] = useState({
       isSuccess: false,
       message: ""
@@ -405,15 +441,17 @@ public class Program
     const questionID = split[1];
     const newListQuestions = [...listOfQuestions];
     const question = newListQuestions[questionID];
-    if (question.simpleInput === '' || question.simpleOutput === '') {
-      question.messageTestCode = 'Have not submited simple input or output yet';
-      setListOfQuestions(newListQuestions);
-      return;
+    if(question)
+    {
+        if (question.simpleInput === '' || question.simpleOutput === '') {
+            question.messageTestCode = 'Have not submited simple input or output yet';
+            setListOfQuestions(newListQuestions);
+            return;
+          }
+        question.isLoadingTestCode = true;
+        setListOfQuestions(newListQuestions);
+        await sendTestRequest(questionID);
     }
-
-    question.isLoadingTestCode = true;
-    setListOfQuestions(newListQuestions);
-    await sendTestRequest(questionID);
   };
 
   function validateExam()
@@ -658,20 +696,7 @@ public class Program
           setListOfQuestions(newListQuestions);
           return false;
         }
-        if(question.input.length === 0)
-        {
-          question.message = {
-            ...question.message,
-            input: true
-          };
-          setAddMessage({...addMessage,
-            isSuccess: false,
-            message: `Submit input file for question #${i+1}`
-          })
-          setListOfQuestions(newListQuestions);
-          return false;
-        }
-        if(question.output.length === 0)
+        if(question.input.length !== 0 && question.output.length === 0)
         {
           question.message = {
             ...question.message,
@@ -679,7 +704,20 @@ public class Program
           };
           setAddMessage({...addMessage,
             isSuccess: false,
-            message: `Submit output file for question #${i+1}`
+            message: `Submit output file again for question #${i+1}`
+          })
+          setListOfQuestions(newListQuestions);
+          return false;
+        }
+        if(question.output.length !== 0 && question.input.length === 0)
+        {
+          question.message = {
+            ...question.message,
+            input: true
+          };
+          setAddMessage({...addMessage,
+            isSuccess: false,
+            message: `Submit input file again for question #${i+1}`
           })
           setListOfQuestions(newListQuestions);
           return false;
@@ -697,16 +735,17 @@ public class Program
       return;
     }
     const formatedQuestions = formatQuestionsArray(listOfQuestions);
-    const { uid } = FirebaseAuth().currentUser;
-    create(uid, {
-      title: examIntro.title,
-      content: examIntro.content,
-      isPrivate: examIntro.isPrivate,
-      password: examIntro.password,
-      startAt: examIntro.start,
-      endAt: examIntro.end,
-      problems: formatedQuestions,
-    });
+    console.log(formatedQuestions);
+    // const { uid } = FirebaseAuth().currentUser;
+    // create(uid, {
+    //   title: examIntro.title,
+    //   content: examIntro.content,
+    //   isPrivate: examIntro.isPrivate,
+    //   password: examIntro.password,
+    //   startAt: examIntro.start,
+    //   endAt: examIntro.end,
+    //   problems: formatedQuestions,
+    // });
      setAddMessage({...addMessage,
       isSuccess: true,
       message: 'Add examination success'
@@ -723,8 +762,10 @@ public class Program
                 <Link color="inherit" href="/examiner/examinations">
                     Examinations
                 </Link>
-
-                <Typography color="textPrimary">Add</Typography>
+                <Link color="inherit"  href={`/examiner/examinations/detail?id=${examProps.id}`}>
+                    Detail
+                </Link>
+                <Typography color="textPrimary">Update</Typography>
             </Breadcrumbs>
         </Box>
         <form onSubmit={handleSubmitExam}>
@@ -747,7 +788,7 @@ public class Program
                     // eslint-disable-next-line no-nested-ternary
                     examIntro.isPrivate ? 
                       !examIntro.message.password ? 
-                        <TextField label="Password" onChange={handleChangeExamPassword} /> :
+                        <TextField label="Password" onChange={handleChangeExamPassword} value={examIntro.password} /> :
                         <TextField label="Password" onChange={handleChangeExamPassword} 
                         error
                         helperText="Password must at least 6 characters"/>
@@ -765,8 +806,6 @@ public class Program
                   <TextField value={examIntro.title} fullWidth onChange={handleChangeExamTitle}
                   error
                   helperText="Enter examination title"/>
-
-
                 }
             </Box>
 
@@ -790,6 +829,7 @@ public class Program
                     <TextField
                         type="datetime-local"
                         onChange={handleChangeStartTime}
+                        value={examIntro.start}
                     />:
                     <TextField
                     type="datetime-local"
@@ -806,6 +846,7 @@ public class Program
                   <TextField
                     type="datetime-local"
                     onChange={handleChangeEndTime}         
+                    value={examIntro.end}
                   />:
                   <TextField
                     type="datetime-local"
@@ -832,7 +873,7 @@ public class Program
             </Box>
 
             <Box display="flex" justifyContent="center" m={3}>
-                <Button variant="contained" color="primary" type="submit">Add Exam</Button>
+                <Button variant="contained" color="primary" type="submit">Update</Button>
             </Box>
         </form>
     </Box>

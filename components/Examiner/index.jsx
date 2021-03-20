@@ -1,6 +1,6 @@
 import { Box, Grid } from '@material-ui/core';
 import { useRouter } from 'next/router';
-import React, { useEffect } from 'react';
+import React from 'react';
 import MenuList from '@material-ui/core/MenuList';
 import MenuItem from '@material-ui/core/MenuItem';
 import Paper from '@material-ui/core/Paper';
@@ -20,16 +20,9 @@ const useStyles = makeStyles({
   }
 });
 
-export default function Examiner({user,children}) {
+export default function Examiner({children}) {
   const router = useRouter();
   const classes = useStyles();
-
-  useEffect(() => {
-    if(Object.keys(user).length === 0)
-    {
-      router.replace('/login');
-    }
-  },[]);
 
   const goToExaminerPage = () => {
     router.replace('/examiner')

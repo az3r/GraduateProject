@@ -1,12 +1,20 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import Head from 'next/head';
 import ExaminationsPage from '@components/Examiner/Examinations';
 import { getExams } from '@libs/client/users';
 import { parseCookies } from '@libs/client/cookies';
+import { useRouter } from 'next/router';
 import Examiner from '../../../components/Examiner';
 import Layout from '../../../components/Layout';
 
 export default function ExaminerPage({user,exams}) {
+  const router = useRouter();
+  useEffect(()=>{
+    if(Object.keys(user).length === 0)
+    {
+      router.replace("/login");
+    }
+  })
   return (
     <>
       <Head>
@@ -15,7 +23,10 @@ export default function ExaminerPage({user,exams}) {
       </Head>
       <Layout>
         <Examiner user={user}>
-            <ExaminationsPage exams={exams} />
+          {
+            Object.keys(exams).length !== 0 ? 
+            <ExaminationsPage exams={exams} /> : null
+          }
         </Examiner>
       </Layout>
     </>
@@ -40,7 +51,8 @@ export async function getServerSideProps({req}) {
   }
   return {
     props: {
-      user: ""
+      user: "",
+      exams: ""
     }
   }
 }

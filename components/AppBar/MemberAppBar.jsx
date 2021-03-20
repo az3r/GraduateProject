@@ -18,7 +18,8 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { auth } from '@libs/client';
 import { useAuth } from '@hooks/auth';
-import { useCookies } from 'react-cookie';
+import Cookies from 'universal-cookie';
+
 
 const useStyles = makeStyles((theme) => ({
   title: {
@@ -98,12 +99,13 @@ export default function MemberAppBar() {
 
 function CompanyActions() {
   const router = useRouter();
-  // eslint-disable-next-line no-unused-vars
-  const [cookies, setCookie, removeCookie] = useCookies(["user"]);
-
   async function logout() {
     await auth.signout();
-    removeCookie("user");
+    const cookies = new Cookies();
+    cookies.remove("user",{
+      path: "/",
+      expire: Date.now()
+    });
     await router.push('/');
   }
 

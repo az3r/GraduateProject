@@ -1,32 +1,32 @@
 import React, { useEffect } from 'react';
 import dynamic from 'next/dynamic';
 import { parseCookies } from '@libs/client/cookies';
-import { get } from '@libs/client/problems';
+import { get } from '@libs/client/exams';
 import { useRouter } from 'next/router';
 import Layout from '../../../components/Layout';
 
-const UpdateCodeProblem  = dynamic(
-  () => import('../../../components/Examiner/Problems/UpdateCodeProblem'),
+const DetailExamination  = dynamic(
+  () => import('../../../components/Examiner/Examinations/DetailExamination'),
   { ssr: false });
 
-export default function AddProblem({user,problem}) {
+export default function ExaminationDetail({user,exam}) {
   const router = useRouter();
-    useEffect(() => {
+  useEffect(() => {
       if(Object.keys(user).length === 0)
       {
-        router.replace('/login');
+      router.replace('/login');
       }
-      if(Object.keys(problem).length === 0)
+      if(Object.keys(exam).length === 0)
       {
-      router.replace('/examiner/problems');
+      router.replace('/examiner/examinations');
       }
-    },[]);
+  },[]);
   return (
     <>
       <Layout>
         {
-          Object.keys(problem).length !== 0 ?
-          <UpdateCodeProblem user={user} problemProps={problem} />
+          Object.keys(exam).length !== 0 ?
+          <DetailExamination user={user} exam={exam} />
           : null
         }
       </Layout>
@@ -42,15 +42,15 @@ export async function getServerSideProps({req,query}) {
     {
       const user = JSON.parse(cookies.user);
       const {id} = query;
-      const problem = await get(id);
-      if(problem)
+      const exam = await get(id,{withProblems: true});
+      if(exam)
       {
-        if(user.uid === problem.owner)
+        if(user.uid === exam.owner)
         {
           return {
             props: {
               user,
-              problem
+              exam
             }, 
           }
         }
@@ -58,7 +58,7 @@ export async function getServerSideProps({req,query}) {
       return {
           props: {
               user,
-              problem: ""
+              exam: ""
           }
       }
     }
@@ -66,7 +66,7 @@ export async function getServerSideProps({req,query}) {
   return {
     props: {
       user: "",
-      problem: ""
+      exam: ""
     }
   }
 }

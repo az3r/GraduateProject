@@ -1,10 +1,18 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import Head from 'next/head';
 import { parseCookies } from '@libs/client/cookies';
+import { useRouter } from 'next/router';
 import Examiner from '../../components/Examiner';
 import Layout from '../../components/Layout';
 
 export default function ExaminerPage({user}) {
+  const router = useRouter();
+  useEffect(()=>{
+    if(Object.keys(user).length === 0)
+    {
+      router.replace("/login");
+    }
+  })
   return (
     <>
       <Head>
@@ -12,7 +20,7 @@ export default function ExaminerPage({user}) {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <Layout>
-        <Examiner user={user}/>
+        <Examiner/>
       </Layout>
     </>
   );

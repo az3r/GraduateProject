@@ -12,6 +12,10 @@ const useStyles = makeStyles({
     },
     textFail: {
         color: '#F74B4D'
+    },
+    testFont: {
+        fontSize: "12px",
+        wordWrap: "break-word",
     }
 })
 
@@ -40,15 +44,16 @@ export default function CodingProblem({
             <Box boxShadow={1} p={2} m={3}>
                 <Typography variant="h5">Enter title: </Typography>
                 <TextField
+                    value={value.title}
                     id={`CP_${NO}`}
-                    onChange={handleChangeCPTitle} fullWidth required />
+                    onChange={handleChangeCPTitle} fullWidth/>
             </Box>
 
             <Box boxShadow={1} p={2} m={3}>
                 <Typography variant="h5">Enter information: </Typography>
                 <CKEditor
                     editor={ ClassicEditor }
-                    data=""
+                    data={value.content}
                     onChange={handleChangeInfo} />
             </Box>
 
@@ -56,9 +61,24 @@ export default function CodingProblem({
                 <Typography variant="h5">Choose level of difficulty: </Typography>
                 <NativeSelect id={`CP_${NO}`}
                     onChange={handleChangeCPDifficulty}>
-                    <option value={0}>Easy</option>
-                    <option value={1}>Medium</option>
-                    <option value={2}>Hard</option>
+                        {
+                            value.difficulty === 0 ?
+                            <option value={0} selected >Easy</option>
+                            :
+                            <option value={0}>Easy</option>
+                        }
+                        {
+                            value.difficulty === 1 ?
+                            <option value={1} selected>Medium</option>
+                            :
+                            <option value={1}>Medium</option>
+                        }
+                        {
+                            value.difficulty === 2 ?
+                            <option value={2} selected>Hard</option>
+                            :
+                            <option value={2}>Hard</option>
+                        }
                 </NativeSelect>
             </Box>
 
@@ -72,7 +92,7 @@ export default function CodingProblem({
                 <Box display="flex">
                     <input id={`CP_${NO}`}  onChange={handleChangeMinutes} type="number" max="100" min="0" value={value.minutes}  />
                     <Typography>&nbsp;minute(s)&nbsp;&nbsp;&nbsp;:&nbsp;&nbsp;&nbsp;</Typography>
-                    <input id={`CP_${NO}`}  onChange={handleChangeSeconds} type="number" max="60" min="0" value={value.seconds}  />
+                    <input id={`CP_${NO}`}  onChange={handleChangeSeconds} type="number" max="59" min="0" value={value.seconds}  />
                     <Typography>&nbsp;second(s)&nbsp;&nbsp;</Typography>
                 </Box>
             </Box>
@@ -81,9 +101,24 @@ export default function CodingProblem({
                 <Typography variant="h5">Choose programming language: </Typography>
                 <NativeSelect
                     onChange={handleChangeLanguague} id={`CP_${NO}`}>
-                    <option value="Csharp">C#</option>
-                    <option value="Java">Java</option>
-                    <option value="Python">Python</option>
+                        {
+                            value.language === "Csharp" ?
+                            <option selected value="Csharp">C#</option>
+                            :
+                            <option value="Csharp">C#</option>
+                        }
+                        {
+                            value.language === "Java" ?
+                            <option selected value="Java">Java</option>
+                            :
+                            <option value="Java">Java</option>
+                        }
+                        {
+                            value.language === "Python" ?
+                            <option selected value="Python">Python</option>
+                            :
+                            <option value="Python">Python</option>
+                        }
                 </NativeSelect>
             </Box>
 
@@ -108,12 +143,11 @@ export default function CodingProblem({
                             <TextField id={`CP_${NO}_SimpleOut`} multiline label="Enter simple output" onChange={handleChangeSimpleTest} />
                         </div>
                         <br />
-
-                        <Typography className={value.testCodeSuccess ? classes.textSuccess : classes.textFail}>{value.messageTestCode}</Typography>
                         <div>
+                            <Button variant="primary" id={`CP_${NO}`} onClick={handleTestCode}>Test code</Button>
                             <SkewLoader color="#088247"  loading={value.isLoadingTestCode} size={20} />
                         </div>
-                        <Button variant="primary" id={`CP_${NO}`} onClick={handleTestCode}>Test code</Button>
+                        <pre className={[value.testCodeSuccess ? classes.textSuccess : classes.textFail,classes.testFont].join(" ")}>{value.messageTestCode}</pre>
                     </Grid>
                 </Grid>
             </Box>
@@ -125,6 +159,17 @@ export default function CodingProblem({
             <Box boxShadow={1} p={2} m={3}>
                 <Typography variant="h5">Submit expected output file: </Typography>
                 <input id={`CP_${NO}_Out`} type="file" onChange={handleChangeCPFiles} />
+            </Box>
+
+            <Box p={2} m={3}>
+                <Typography variant="h6">Once changing input or output file, examiner MUST submit the remaining file again.</Typography>
+            </Box>
+            
+            <Box boxShadow={1} p={2} m={3}>
+                <Typography variant="h5">Current test cases: </Typography>
+                {value.cases.map((item,key)=>(
+                    <Typography><b>#{key+1}:</b> input: {item.input} / output: {item.output}</Typography>
+                ))}
             </Box>
         </Box>
     )

@@ -43,13 +43,15 @@ export function formatQuestionsArray(questions) {
       delete newQuestion.simpleInput;
       delete newQuestion.output;
       delete newQuestion.simpleOutput;
-      delete newQuestion.loadingTestCode;
       delete newQuestion.messageTestCode;
       delete newQuestion.testCodeSuccess;
       delete newQuestion.isLoadingTestCode;
+      delete newQuestion.message;
       return newQuestion;
     }
-    return question;
+    const newQuestion = { ...question };
+    delete newQuestion.message;
+    return newQuestion;
   });
   return newQuestionList;
 }
