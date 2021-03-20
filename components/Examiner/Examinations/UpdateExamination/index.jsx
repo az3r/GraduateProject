@@ -7,6 +7,7 @@ import { formatQuestionsArray, getFormatResultFromFile } from '@libs/client/busi
 // import { FirebaseAuth } from '@libs/client/firebase';
 import { test } from '@libs/client/submissions';
 import Questions from "@components/Examiner/Examinations/AddExamProblem/Questions/index";
+import { update } from '@libs/client/exams';
 
 const useStyles = makeStyles({
   textSuccess: {
@@ -35,8 +36,6 @@ export default function UpdateExamination({examProps}){
     })
     const [listOfQuestions,setListOfQuestions] = useState([]);
     useEffect(()=>{
-        
-        console.log(examProps);
         const problemsList = examProps.problems.map(item=>{
             if(item.isMCQ)
             {
@@ -73,8 +72,6 @@ export default function UpdateExamination({examProps}){
                 }
             }
         })
-
-        console.log(problemsList);
         setListOfQuestions(problemsList);
     },[])
 
@@ -326,6 +323,7 @@ public class Program
     const newListQuestions = [...listOfQuestions];
     const question = newListQuestions[questionID];
     question.title = e.target.value;
+    question.message = {...question.message, title: false};
     setListOfQuestions(newListQuestions);
   };
 
@@ -333,6 +331,7 @@ public class Program
     const newListQuestions = [...listOfQuestions];
     const question = newListQuestions[id];
     question.content = value;
+    question.message = {...question.message, content: false};
     setListOfQuestions(newListQuestions);
   };
 
@@ -344,6 +343,7 @@ public class Program
     const question = newListQuestions[questionID];
     // eslint-disable-next-line radix
     question.difficulty = parseInt(e.target.value);
+
     setListOfQuestions(newListQuestions);
   };
 
@@ -362,6 +362,7 @@ public class Program
     const newListQuestions = [...listOfQuestions];
     const question = newListQuestions[id];
     question.code = newCode;
+    question.message = {...question.message, code: false};
     setListOfQuestions(newListQuestions);
   };
 
@@ -535,7 +536,7 @@ public class Program
           setListOfQuestions(newListQuestions);
           return false;
         }
-        if(question.score === 0)
+        if(question.score === 0 || Number.isNaN(question.score))
         {
           question.message = {
             ...question.message,
@@ -656,11 +657,11 @@ public class Program
           setListOfQuestions(newListQuestions);
           return false;
         }
-        if(question.score === 0)
+        if(question.score === 0 || Number.isNaN(question.score))
         {
           question.message = {
             ...question.message,
-            question: true
+            score: true
           };
           setAddMessage({...addMessage,
             isSuccess: false,
@@ -734,21 +735,19 @@ public class Program
     {
       return;
     }
-    const formatedQuestions = formatQuestionsArray(listOfQuestions);
-    console.log(formatedQuestions);
-    // const { uid } = FirebaseAuth().currentUser;
-    // create(uid, {
-    //   title: examIntro.title,
-    //   content: examIntro.content,
-    //   isPrivate: examIntro.isPrivate,
-    //   password: examIntro.password,
-    //   startAt: examIntro.start,
-    //   endAt: examIntro.end,
-    //   problems: formatedQuestions,
-    // });
+    const formatedQuestions = formatQuestionsArray(listOfQuestions,true);
+    update(examProps.id,{
+      title: examIntro.title,
+      content: examIntro.content,
+      isPrivate: examIntro.isPrivate,
+      password: examIntro.password,
+      startAt: examIntro.start,
+      endAt: examIntro.end,
+      problems: formatedQuestions,
+    });
      setAddMessage({...addMessage,
       isSuccess: true,
-      message: 'Add examination success'
+      message: 'Update examination success'
      });
   };
     

@@ -290,6 +290,7 @@ public class Program
     const newListQuestions = [...listOfQuestions];
     const question = newListQuestions[questionID];
     question.title = e.target.value;
+    question.message = {...question.message, title: false};
     setListOfQuestions(newListQuestions);
   };
 
@@ -297,6 +298,7 @@ public class Program
     const newListQuestions = [...listOfQuestions];
     const question = newListQuestions[id];
     question.content = value;
+    question.message = {...question.message, content: false};
     setListOfQuestions(newListQuestions);
   };
 
@@ -326,6 +328,7 @@ public class Program
     const newListQuestions = [...listOfQuestions];
     const question = newListQuestions[id];
     question.code = newCode;
+    question.message = {...question.message, code: false};
     setListOfQuestions(newListQuestions);
   };
 
@@ -497,7 +500,7 @@ public class Program
           setListOfQuestions(newListQuestions);
           return false;
         }
-        if(question.score === 0)
+        if(question.score === 0 || Number.isNaN(question.score))
         {
           question.message = {
             ...question.message,
@@ -618,11 +621,11 @@ public class Program
           setListOfQuestions(newListQuestions);
           return false;
         }
-        if(question.score === 0)
+        if(question.score === 0 || Number.isNaN(question.score))
         {
           question.message = {
             ...question.message,
-            question: true
+            score: true
           };
           setAddMessage({...addMessage,
             isSuccess: false,

@@ -32,13 +32,28 @@ export function getFormatResultFromFile(text) {
   return result;
 }
 
-export function formatQuestionsArray(questions) {
+export function formatQuestionsArray(questions, isUpdateExam) {
   const newQuestionList = questions.map((question) => {
     if (!question.isMCQ) {
-      const newQuestion = {
-        ...question,
-        cases: getTestCaseFromInputAndOutput(question.input, question.output),
-      };
+      const newQuestion = { ...question };
+      if (!isUpdateExam) {
+        newQuestion.cases = getTestCaseFromInputAndOutput(
+          question.input,
+          question.output
+        );
+      } else {
+        // eslint-disable-next-line no-lonely-if
+        if (newQuestion.input.length !== 0 && newQuestion.output.length !== 0) {
+          newQuestion.cases = getTestCaseFromInputAndOutput(
+            newQuestion.input,
+            newQuestion.output
+          );
+        }
+      }
+      // const newQuestion = {
+      //   ...question,
+      //   cases: getTestCaseFromInputAndOutput(question.input, question.output),
+      // };
       delete newQuestion.input;
       delete newQuestion.simpleInput;
       delete newQuestion.output;
