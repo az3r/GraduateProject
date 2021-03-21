@@ -105,8 +105,8 @@ export default function AccountTab() {
         <Button
           type="submit"
           className={classes.saveButton}
+          color="primary"
           variant="contained"
-          color="secondary"
           startIcon={<SaveOutlinedIcon />}
         >
           Save Changes

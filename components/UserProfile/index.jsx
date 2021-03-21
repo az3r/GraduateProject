@@ -10,9 +10,9 @@ import {
   Tab,
   Grid,
 } from '@material-ui/core';
-import BasicInfoTab from 'components/UserProfile/BasicInfoTab';
-import AccountTab from 'components/UserProfile/AccountTab';
-import ExperiencesTab from 'components/UserProfile/ExperiencesTab';
+import BasicInfoTab from '@components/UserProfile/BasicInfoTab';
+import AccountTab from '@components/UserProfile/AccountTab';
+import ExperiencesTab from '@components/UserProfile/ExperienceTab';
 import PropTypes from 'prop-types';
 
 const useStyles = makeStyles((theme) => ({

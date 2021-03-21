@@ -42,7 +42,8 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const without = (array, filtered) => array.filter((element) => element != filtered);
+const without = (array, filtered) =>
+  array.filter((element) => element != filtered);
 
 export default function BasicInfoTab() {
   const user = {
@@ -52,8 +53,6 @@ export default function BasicInfoTab() {
     location: 'Ho Chi Minh city, Vietnam',
     birthday: '',
     website: 'https://github.com/tttung468',
-    education: 'VNUHCM - University of Science - Bachelor',
-    work: 'VNUHCM - University of Science - Student',
     technicalSkills: ['C++', 'C', 'Java', 'JavaScript'],
   };
 
@@ -65,13 +64,13 @@ export default function BasicInfoTab() {
     location: user.location,
     birthday: user.birthday,
     website: user.website,
-    education: user.education,
-    work: user.work,
   });
   const handleChange = (prop) => (event) => {
     setValues({ ...values, [prop]: event.target.value });
   };
-  const [technicalSkills, setTechnicalSkills] = React.useState(user.technicalSkills);
+  const [technicalSkills, setTechnicalSkills] = React.useState(
+    user.technicalSkills
+  );
   const handleTechnicalSkillsAdd = (skill) => {
     setTechnicalSkills([...technicalSkills, skill]);
   };
@@ -81,7 +80,7 @@ export default function BasicInfoTab() {
   const handleSubmit = (event) => {
     event.preventDefault();
     console.log(
-      `${values.name}\n${values.email}\n${values.gender}\n${values.location}\n${values.birthday}\n${values.website}\n${values.education}\n${values.work}\n${technicalSkills}`
+      `${values.name}\n${values.email}\n${values.gender}\n${values.location}\n${values.birthday}\n${values.website}\n${technicalSkills}`
     );
   };
 
@@ -101,7 +100,7 @@ export default function BasicInfoTab() {
                 onChange={handleChange('name')}
                 required
                 id="nameTextField"
-                defaultValue={values.name}
+                value={values.name}
                 fullWidth
               />
             </Grid>
@@ -117,7 +116,7 @@ export default function BasicInfoTab() {
                 onChange={handleChange('email')}
                 required
                 id="emailTextField"
-                defaultValue={values.email}
+                value={values.email}
                 fullWidth
               />
             </Grid>
@@ -157,7 +156,7 @@ export default function BasicInfoTab() {
                 onChange={handleChange('location')}
                 required
                 id="locationTextField"
-                defaultValue={values.location}
+                value={values.location}
                 fullWidth
               />
             </Grid>
@@ -173,7 +172,7 @@ export default function BasicInfoTab() {
                 onChange={handleChange('birthday')}
                 id="date"
                 type="date"
-                defaultValue={values.birthday}
+                value={values.birthday}
                 className={classes.textField}
                 InputLabelProps={{
                   shrink: true,
@@ -192,43 +191,7 @@ export default function BasicInfoTab() {
                 onChange={handleChange('website')}
                 required
                 id="websiteTextField"
-                defaultValue={values.website}
-                fullWidth
-              />
-            </Grid>
-          </Grid>
-        </Grid>
-
-        <Grid item xs={12} className={classes.groupTitle}>
-          Experience
-        </Grid>
-        <Grid item xs={12} className={classes.divider}>
-          <Grid container spacing={1}>
-            <Grid item xs={12} sm={3} className={classes.paper}>
-              Education
-            </Grid>
-            <Grid item xs={12} sm={9}>
-              <TextField
-                onChange={handleChange('education')}
-                required
-                id="educationTextField"
-                defaultValue={values.education}
-                fullWidth
-              />
-            </Grid>
-          </Grid>
-        </Grid>
-        <Grid item xs={12} className={classes.divider}>
-          <Grid container spacing={1}>
-            <Grid item xs={12} sm={3} className={classes.paper}>
-              Work
-            </Grid>
-            <Grid item xs={12} sm={9}>
-              <TextField
-                onChange={handleChange('work')}
-                required
-                id="workTextField"
-                defaultValue={values.work}
+                value={values.website}
                 fullWidth
               />
             </Grid>
@@ -260,7 +223,7 @@ export default function BasicInfoTab() {
           type="submit"
           className={classes.saveButton}
           variant="contained"
-          color="secondary"
+          color="primary"
           startIcon={<SaveOutlinedIcon />}
         >
           Save Changes
