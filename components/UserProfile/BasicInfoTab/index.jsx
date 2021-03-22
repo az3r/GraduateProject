@@ -9,6 +9,7 @@ import {
   FormControl,
   Select,
   MenuItem,
+  Typography,
 } from '@material-ui/core';
 import SaveOutlinedIcon from '@material-ui/icons/SaveOutlined';
 import ChipInput from 'material-ui-chip-input';
@@ -16,10 +17,6 @@ import ChipInput from 'material-ui-chip-input';
 const useStyles = makeStyles((theme) => ({
   container: {
     backgroundColor: 'white',
-  },
-  groupTitle: {
-    fontWeight: 'bold',
-    fontSize: 'large',
   },
   paper: {
     padding: theme.spacing(1),
@@ -35,10 +32,10 @@ const useStyles = makeStyles((theme) => ({
     borderBottomColor: '#eeeeee',
   },
   formControl: {
-    width: 150,
+    width: 250,
   },
   textField: {
-    width: 150,
+    width: 250,
   },
 }));
 
@@ -86,9 +83,16 @@ export default function BasicInfoTab() {
 
   return (
     <form onSubmit={handleSubmit}>
-      <Grid container spacing={3}>
-        <Grid item xs={12} className={classes.groupTitle}>
-          Basic Information
+      <Grid container spacing={1}>
+        <Grid item xs={12}>
+          <Typography
+            style={{
+              fontWeight: 'bolder',
+              fontSize: 20,
+            }}
+          >
+            Basic Information
+          </Typography>
         </Grid>
         <Grid item xs={12} className={classes.divider}>
           <Grid container spacing={1}>
@@ -98,10 +102,11 @@ export default function BasicInfoTab() {
             <Grid item xs={12} sm={9}>
               <TextField
                 onChange={handleChange('name')}
-                required
                 id="nameTextField"
                 value={values.name}
                 fullWidth
+                required
+                variant="outlined"
               />
             </Grid>
           </Grid>
@@ -114,10 +119,45 @@ export default function BasicInfoTab() {
             <Grid item xs={12} sm={9}>
               <TextField
                 onChange={handleChange('email')}
-                required
                 id="emailTextField"
                 value={values.email}
                 fullWidth
+                required
+                variant="outlined"
+              />
+            </Grid>
+          </Grid>
+        </Grid>
+        <Grid item xs={12} className={classes.divider}>
+          <Grid container spacing={1}>
+            <Grid item xs={12} sm={3} className={classes.paper}>
+              Website
+            </Grid>
+            <Grid item xs={12} sm={9}>
+              <TextField
+                onChange={handleChange('website')}
+                id="websiteTextField"
+                value={values.website}
+                fullWidth
+                required
+                variant="outlined"
+              />
+            </Grid>
+          </Grid>
+        </Grid>
+        <Grid item xs={12} className={classes.divider}>
+          <Grid container spacing={1}>
+            <Grid item xs={12} sm={3} className={classes.paper}>
+              Location
+            </Grid>
+            <Grid item xs={12} sm={9}>
+              <TextField
+                onChange={handleChange('location')}
+                id="locationTextField"
+                value={values.location}
+                fullWidth
+                required
+                variant="outlined"
               />
             </Grid>
           </Grid>
@@ -134,6 +174,7 @@ export default function BasicInfoTab() {
                   onChange={handleChange('gender')}
                   displayEmpty
                   inputProps={{ 'aria-label': 'Without label' }}
+                  variant="outlined"
                 >
                   <MenuItem value="">
                     <em>Not provided</em>
@@ -143,22 +184,6 @@ export default function BasicInfoTab() {
                   <MenuItem value="Other">Other</MenuItem>
                 </Select>
               </FormControl>
-            </Grid>
-          </Grid>
-        </Grid>
-        <Grid item xs={12} className={classes.divider}>
-          <Grid container spacing={1}>
-            <Grid item xs={12} sm={3} className={classes.paper}>
-              Location
-            </Grid>
-            <Grid item xs={12} sm={9}>
-              <TextField
-                onChange={handleChange('location')}
-                required
-                id="locationTextField"
-                value={values.location}
-                fullWidth
-              />
             </Grid>
           </Grid>
         </Grid>
@@ -177,29 +202,21 @@ export default function BasicInfoTab() {
                 InputLabelProps={{
                   shrink: true,
                 }}
-              />
-            </Grid>
-          </Grid>
-        </Grid>
-        <Grid item xs={12} className={classes.divider}>
-          <Grid container spacing={1}>
-            <Grid item xs={12} sm={3} className={classes.paper}>
-              Website
-            </Grid>
-            <Grid item xs={12} sm={9}>
-              <TextField
-                onChange={handleChange('website')}
-                required
-                id="websiteTextField"
-                value={values.website}
-                fullWidth
+                variant="outlined"
               />
             </Grid>
           </Grid>
         </Grid>
 
-        <Grid item xs={12} className={classes.groupTitle}>
-          Skills
+        <Grid item xs={12}>
+          <Typography
+            style={{
+              fontWeight: 'bolder',
+              fontSize: 20,
+            }}
+          >
+            Skills
+          </Typography>
         </Grid>
         <Grid item xs={12} className={classes.divider}>
           <Grid container spacing={1}>
@@ -209,11 +226,12 @@ export default function BasicInfoTab() {
             <Grid item xs={12} sm={9}>
               <ChipInput
                 value={technicalSkills}
-                fullWidth
                 onAdd={(chip) => handleTechnicalSkillsAdd(chip)}
                 onDelete={(chip, index) =>
                   handleTechnicalSkillsDelete(chip, index)
                 }
+                fullWidth
+                variant="outlined"
               />
             </Grid>
           </Grid>

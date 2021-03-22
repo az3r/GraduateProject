@@ -1,15 +1,17 @@
 /* eslint-disable no-console */
 import React from 'react';
-import { makeStyles, Grid, Button, Input } from '@material-ui/core';
+import {
+  makeStyles,
+  Grid,
+  Button,
+  TextField,
+  Typography,
+} from '@material-ui/core';
 import SaveOutlinedIcon from '@material-ui/icons/SaveOutlined';
 
 const useStyles = makeStyles((theme) => ({
   container: {
     backgroundColor: 'white',
-  },
-  groupTitle: {
-    fontWeight: 'bold',
-    fontSize: 'large',
   },
   paper: {
     padding: theme.spacing(1),
@@ -52,9 +54,16 @@ export default function AccountTab() {
 
   return (
     <form onSubmit={handleSubmit}>
-      <Grid container spacing={3}>
-        <Grid item xs={12} className={classes.groupTitle}>
-          Change Your Password
+      <Grid container spacing={1}>
+        <Grid item xs={12}>
+          <Typography
+            style={{
+              fontWeight: 'bolder',
+              fontSize: 20,
+            }}
+          >
+            Change Your Password
+          </Typography>
         </Grid>
         <Grid item xs={12} className={classes.divider}>
           <Grid container spacing={1}>
@@ -62,11 +71,19 @@ export default function AccountTab() {
               Current Password
             </Grid>
             <Grid item xs={12} sm={9}>
-              <Input
+              {/* <Input
                 id="currentPassword"
                 type="password"
                 value={values.currentPassword}
                 onChange={handleChange('currentPassword')}
+                variant="outlined"
+              /> */}
+              <TextField
+                type="password"
+                onChange={handleChange('currentPassword')}
+                value={values.currentPassword}
+                autoComplete="current-password"
+                variant="outlined"
               />
             </Grid>
           </Grid>
@@ -77,11 +94,17 @@ export default function AccountTab() {
               New Password
             </Grid>
             <Grid item xs={12} sm={9}>
-              <Input
+              {/* <Input
                 id="newPassword"
                 type="password"
                 value={values.newPassword}
                 onChange={handleChange('newPassword')}
+              /> */}
+              <TextField
+                type="password"
+                onChange={handleChange('newPassword')}
+                autoComplete="new-password"
+                variant="outlined"
               />
             </Grid>
           </Grid>
@@ -92,11 +115,17 @@ export default function AccountTab() {
               Confirm Password
             </Grid>
             <Grid item xs={12} sm={9}>
-              <Input
+              {/* <Input
                 id="confirmPassword"
                 type="password"
                 value={values.confirmPassword}
                 onChange={handleChange('confirmPassword')}
+              /> */}
+              <TextField
+                type="password"
+                onChange={handleChange('confirmPassword')}
+                autoComplete="confirm-password"
+                variant="outlined"
               />
             </Grid>
           </Grid>

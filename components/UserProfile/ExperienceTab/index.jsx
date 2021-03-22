@@ -3,7 +3,13 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable no-console */
 import React from 'react';
-import { makeStyles, Grid, IconButton, Paper } from '@material-ui/core';
+import {
+  makeStyles,
+  Grid,
+  IconButton,
+  Paper,
+  Typography,
+} from '@material-ui/core';
 import AddRoundedIcon from '@material-ui/icons/AddRounded';
 import WorkIcon from '@material-ui/icons/Work';
 import SchoolIcon from '@material-ui/icons/School';
@@ -15,16 +21,12 @@ import {
 } from 'react-vertical-timeline-component';
 import 'react-vertical-timeline-component/style.min.css';
 import dateFormat from 'dateformat';
-import Controls from '@components/UserProfile/ExperienceTab/Controls/Controls';
-import ExperienceForm from '@components/UserProfile/ExperienceTab/ExperienceForm';
+import Popup from '@components/UserProfile/ExperienceTab/Controls/Popup';
+import ExperienceForm from '@components/UserProfile/ExperienceTab/Controls/ExperienceForm';
 
 const useStyles = makeStyles((theme) => ({
   container: {
     backgroundColor: 'white',
-  },
-  groupTitle: {
-    fontWeight: 'bold',
-    fontSize: 'large',
   },
   paper: {
     padding: theme.spacing(1),
@@ -103,9 +105,16 @@ export default function ExperiencesTab() {
 
   return (
     <>
-      <Grid container spacing={3}>
-        <Grid item xs={12} className={classes.groupTitle}>
-          Work Experience Timeline
+      <Grid container spacing={1}>
+        <Grid item xs={12}>
+          <Typography
+            style={{
+              fontWeight: 'bolder',
+              fontSize: 20,
+            }}
+          >
+            Work Experience Timeline
+          </Typography>
         </Grid>
         <Grid item xs={12} className={classes.divider}>
           <VerticalTimeline>
@@ -177,13 +186,13 @@ export default function ExperiencesTab() {
       </Grid>
 
       {/* Popup Dialog to add new Experience */}
-      <Controls.Popup
+      <Popup
         title="New Experience"
         openPopup={openPopup}
         setOpenPopup={setOpenPopup}
       >
         <ExperienceForm />
-      </Controls.Popup>
+      </Popup>
     </>
   );
 }
