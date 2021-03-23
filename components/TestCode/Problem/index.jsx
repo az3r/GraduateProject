@@ -64,6 +64,7 @@ export default function Problem(props) {
   const {score} = props;
   const {problemSubmissionHistory} = props;
   const {language} = props;
+  const {user} = props;
 
 
   return (
@@ -124,7 +125,7 @@ export default function Problem(props) {
         </Paper>
       </TabPanel>
       <TabPanel style={{backgroundColor: 'white'}}>
-        <Comment problemId={id} />
+        <Comment user={user} problemId={id} />
       </TabPanel>
       <TabPanel>
         <Paper className={classes.submission}>

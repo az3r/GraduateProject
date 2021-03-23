@@ -24,9 +24,8 @@
       <change beforePath="$PROJECT_DIR$/components/TestCode/Problem/Comment/index.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/TestCode/Problem/Comment/index.jsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/components/TestCode/Problem/index.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/TestCode/Problem/index.jsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/components/TestCode/index.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/TestCode/index.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/libs/client/comments.js" beforeDir="false" afterPath="$PROJECT_DIR$/libs/client/comments.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/libs/client/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/libs/client/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/libs/client/users.js" beforeDir="false" afterPath="$PROJECT_DIR$/libs/client/users.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/components/TestMCQ/index.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/TestMCQ/index.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pages/examination/start/[id].jsx" beforeDir="false" afterPath="$PROJECT_DIR$/pages/examination/start/[id].jsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -136,7 +135,9 @@
       <workItem from="1616213626208" duration="1612000" />
       <workItem from="1616215818576" duration="6135000" />
       <workItem from="1616299833305" duration="319000" />
-      <workItem from="1616300188081" duration="7517000" />
+      <workItem from="1616300188081" duration="7722000" />
+      <workItem from="1616474139954" duration="3827000" />
+      <workItem from="1616487159519" duration="6172000" />
     </task>
     <servers />
   </component>

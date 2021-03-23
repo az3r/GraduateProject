@@ -88,6 +88,8 @@ export default function Test({problem, nextProblem}) {
           selectedAnswer: answer,
           correctAnswer: correct
       }}, result);
+
+      setAnswer('');
     }
   }
 
