@@ -23,10 +23,7 @@ export default function ExaminerPage({user,exams}) {
       </Head>
       <Layout>
         <Examiner user={user}>
-          {
-            Object.keys(exams).length !== 0 ? 
-            <ExaminationsPage exams={exams} /> : null
-          }
+            <ExaminationsPage exams={exams} />
         </Examiner>
       </Layout>
     </>
