@@ -262,6 +262,7 @@ export default function Test({ problem, user, problemSubmissionHistory, nextProb
             score={score}
             problemSubmissionHistory={problemSubmissionHistory}
             language={language}
+            id={id}
           />
         </div>
 
@@ -297,7 +298,7 @@ export default function Test({ problem, user, problemSubmissionHistory, nextProb
                 language={language}
                 code={code}
                 onCodeChange={handleCodeChange}
-                width={width}
+                width="100%"
                 height={window.outerHeight - 137 - 100}
               />
             </Box>

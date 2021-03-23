@@ -9,6 +9,7 @@ import {
   FormControl,
   Select,
   MenuItem,
+  Typography,
 } from '@material-ui/core';
 import SaveOutlinedIcon from '@material-ui/icons/SaveOutlined';
 import ChipInput from 'material-ui-chip-input';
@@ -16,10 +17,6 @@ import ChipInput from 'material-ui-chip-input';
 const useStyles = makeStyles((theme) => ({
   container: {
     backgroundColor: 'white',
-  },
-  groupTitle: {
-    fontWeight: 'bold',
-    fontSize: 'large',
   },
   paper: {
     padding: theme.spacing(1),
@@ -35,14 +32,15 @@ const useStyles = makeStyles((theme) => ({
     borderBottomColor: '#eeeeee',
   },
   formControl: {
-    width: 150,
+    width: 250,
   },
   textField: {
-    width: 150,
+    width: 250,
   },
 }));
 
-const without = (array, filtered) => array.filter((element) => element != filtered);
+const without = (array, filtered) =>
+  array.filter((element) => element != filtered);
 
 export default function BasicInfoTab() {
   const user = {
@@ -52,8 +50,6 @@ export default function BasicInfoTab() {
     location: 'Ho Chi Minh city, Vietnam',
     birthday: '',
     website: 'https://github.com/tttung468',
-    education: 'VNUHCM - University of Science - Bachelor',
-    work: 'VNUHCM - University of Science - Student',
     technicalSkills: ['C++', 'C', 'Java', 'JavaScript'],
   };
 
@@ -65,13 +61,13 @@ export default function BasicInfoTab() {
     location: user.location,
     birthday: user.birthday,
     website: user.website,
-    education: user.education,
-    work: user.work,
   });
   const handleChange = (prop) => (event) => {
     setValues({ ...values, [prop]: event.target.value });
   };
-  const [technicalSkills, setTechnicalSkills] = React.useState(user.technicalSkills);
+  const [technicalSkills, setTechnicalSkills] = React.useState(
+    user.technicalSkills
+  );
   const handleTechnicalSkillsAdd = (skill) => {
     setTechnicalSkills([...technicalSkills, skill]);
   };
@@ -81,15 +77,22 @@ export default function BasicInfoTab() {
   const handleSubmit = (event) => {
     event.preventDefault();
     console.log(
-      `${values.name}\n${values.email}\n${values.gender}\n${values.location}\n${values.birthday}\n${values.website}\n${values.education}\n${values.work}\n${technicalSkills}`
+      `${values.name}\n${values.email}\n${values.gender}\n${values.location}\n${values.birthday}\n${values.website}\n${technicalSkills}`
     );
   };
 
   return (
     <form onSubmit={handleSubmit}>
-      <Grid container spacing={3}>
-        <Grid item xs={12} className={classes.groupTitle}>
-          Basic Information
+      <Grid container spacing={1}>
+        <Grid item xs={12}>
+          <Typography
+            style={{
+              fontWeight: 'bolder',
+              fontSize: 20,
+            }}
+          >
+            Basic Information
+          </Typography>
         </Grid>
         <Grid item xs={12} className={classes.divider}>
           <Grid container spacing={1}>
@@ -99,10 +102,11 @@ export default function BasicInfoTab() {
             <Grid item xs={12} sm={9}>
               <TextField
                 onChange={handleChange('name')}
-                required
                 id="nameTextField"
-                defaultValue={values.name}
+                value={values.name}
                 fullWidth
+                required
+                variant="outlined"
               />
             </Grid>
           </Grid>
@@ -115,10 +119,45 @@ export default function BasicInfoTab() {
             <Grid item xs={12} sm={9}>
               <TextField
                 onChange={handleChange('email')}
-                required
                 id="emailTextField"
-                defaultValue={values.email}
+                value={values.email}
                 fullWidth
+                required
+                variant="outlined"
+              />
+            </Grid>
+          </Grid>
+        </Grid>
+        <Grid item xs={12} className={classes.divider}>
+          <Grid container spacing={1}>
+            <Grid item xs={12} sm={3} className={classes.paper}>
+              Website
+            </Grid>
+            <Grid item xs={12} sm={9}>
+              <TextField
+                onChange={handleChange('website')}
+                id="websiteTextField"
+                value={values.website}
+                fullWidth
+                required
+                variant="outlined"
+              />
+            </Grid>
+          </Grid>
+        </Grid>
+        <Grid item xs={12} className={classes.divider}>
+          <Grid container spacing={1}>
+            <Grid item xs={12} sm={3} className={classes.paper}>
+              Location
+            </Grid>
+            <Grid item xs={12} sm={9}>
+              <TextField
+                onChange={handleChange('location')}
+                id="locationTextField"
+                value={values.location}
+                fullWidth
+                required
+                variant="outlined"
               />
             </Grid>
           </Grid>
@@ -135,6 +174,7 @@ export default function BasicInfoTab() {
                   onChange={handleChange('gender')}
                   displayEmpty
                   inputProps={{ 'aria-label': 'Without label' }}
+                  variant="outlined"
                 >
                   <MenuItem value="">
                     <em>Not provided</em>
@@ -150,22 +190,6 @@ export default function BasicInfoTab() {
         <Grid item xs={12} className={classes.divider}>
           <Grid container spacing={1}>
             <Grid item xs={12} sm={3} className={classes.paper}>
-              Location
-            </Grid>
-            <Grid item xs={12} sm={9}>
-              <TextField
-                onChange={handleChange('location')}
-                required
-                id="locationTextField"
-                defaultValue={values.location}
-                fullWidth
-              />
-            </Grid>
-          </Grid>
-        </Grid>
-        <Grid item xs={12} className={classes.divider}>
-          <Grid container spacing={1}>
-            <Grid item xs={12} sm={3} className={classes.paper}>
               Birthday
             </Grid>
             <Grid item xs={12} sm={9}>
@@ -173,70 +197,26 @@ export default function BasicInfoTab() {
                 onChange={handleChange('birthday')}
                 id="date"
                 type="date"
-                defaultValue={values.birthday}
+                value={values.birthday}
                 className={classes.textField}
                 InputLabelProps={{
                   shrink: true,
                 }}
-              />
-            </Grid>
-          </Grid>
-        </Grid>
-        <Grid item xs={12} className={classes.divider}>
-          <Grid container spacing={1}>
-            <Grid item xs={12} sm={3} className={classes.paper}>
-              Website
-            </Grid>
-            <Grid item xs={12} sm={9}>
-              <TextField
-                onChange={handleChange('website')}
-                required
-                id="websiteTextField"
-                defaultValue={values.website}
-                fullWidth
+                variant="outlined"
               />
             </Grid>
           </Grid>
         </Grid>
 
-        <Grid item xs={12} className={classes.groupTitle}>
-          Experience
-        </Grid>
-        <Grid item xs={12} className={classes.divider}>
-          <Grid container spacing={1}>
-            <Grid item xs={12} sm={3} className={classes.paper}>
-              Education
-            </Grid>
-            <Grid item xs={12} sm={9}>
-              <TextField
-                onChange={handleChange('education')}
-                required
-                id="educationTextField"
-                defaultValue={values.education}
-                fullWidth
-              />
-            </Grid>
-          </Grid>
-        </Grid>
-        <Grid item xs={12} className={classes.divider}>
-          <Grid container spacing={1}>
-            <Grid item xs={12} sm={3} className={classes.paper}>
-              Work
-            </Grid>
-            <Grid item xs={12} sm={9}>
-              <TextField
-                onChange={handleChange('work')}
-                required
-                id="workTextField"
-                defaultValue={values.work}
-                fullWidth
-              />
-            </Grid>
-          </Grid>
-        </Grid>
-
-        <Grid item xs={12} className={classes.groupTitle}>
-          Skills
+        <Grid item xs={12}>
+          <Typography
+            style={{
+              fontWeight: 'bolder',
+              fontSize: 20,
+            }}
+          >
+            Skills
+          </Typography>
         </Grid>
         <Grid item xs={12} className={classes.divider}>
           <Grid container spacing={1}>
@@ -246,11 +226,12 @@ export default function BasicInfoTab() {
             <Grid item xs={12} sm={9}>
               <ChipInput
                 value={technicalSkills}
-                fullWidth
                 onAdd={(chip) => handleTechnicalSkillsAdd(chip)}
                 onDelete={(chip, index) =>
                   handleTechnicalSkillsDelete(chip, index)
                 }
+                fullWidth
+                variant="outlined"
               />
             </Grid>
           </Grid>
@@ -260,7 +241,7 @@ export default function BasicInfoTab() {
           type="submit"
           className={classes.saveButton}
           variant="contained"
-          color="secondary"
+          color="primary"
           startIcon={<SaveOutlinedIcon />}
         >
           Save Changes

@@ -30,9 +30,8 @@ export default function CodingProblem({
     const classes = useStyles();
 
     const handleChangeInfo = (event,editor) => {
-        // eslint-disable-next-line no-shadow
-        const value = editor.getData();
-        handleChangeCPInfo(NO,value);
+        const content = editor.getData();
+        handleChangeCPInfo(NO,content);
     }
 
     const handleOnChangeCode = (newCode) => {

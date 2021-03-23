@@ -57,6 +57,7 @@ const editorConfiguration = {
 export default function Problem(props) {
   const classes = useStyles();
 
+  const {id} = props;
   const {title} = props;
   const {difficulty} = props;
   const {content} = props;
@@ -122,8 +123,8 @@ export default function Problem(props) {
             data={content} />
         </Paper>
       </TabPanel>
-      <TabPanel>
-        <Comment />
+      <TabPanel style={{backgroundColor: 'white'}}>
+        <Comment problemId={id} />
       </TabPanel>
       <TabPanel>
         <Paper className={classes.submission}>

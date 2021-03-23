@@ -15,6 +15,7 @@ export async function get() {
   const info = await Firestore().collection(users).doc(uid).get();
   return {
     ...info.data(),
+    uid,
     name,
     email,
     avatar,
