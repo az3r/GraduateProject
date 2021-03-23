@@ -15,7 +15,6 @@ export async function get() {
   const info = await Firestore().collection(users).doc(uid).get();
   return {
     ...info.data(),
-    uid,
     name,
     email,
     avatar,
@@ -28,22 +27,23 @@ export async function update({
   avatar,
   location,
   website,
+  birthday,
+  gender,
   education,
-  work,
   technicalSkills,
+  experiences,
 }) {
   const { displayName, photoURL, uid } = FirebaseAuth().currentUser;
 
-  const infoTask = Firestore().collection(users).doc(uid).set(
-    {
-      location,
-      website,
-      education,
-      work,
-      technicalSkills,
-    },
-    { merge: true }
-  );
+  const infoTask = Firestore().collection(users).doc(uid).update({
+    location,
+    birthday,
+    website,
+    gender,
+    education,
+    experiences,
+    technicalSkills,
+  });
   const profileTask = FirebaseAuth().currentUser.updateProfile({
     displayName: name || displayName,
     photoURL: avatar || photoURL,
@@ -109,8 +109,5 @@ export async function joinExam(uid, examId) {
   return Firestore()
     .collection(users)
     .doc(uid)
-    .set(
-      { joinedExams: Firestore.FieldValue.arrayUnion(examId) },
-      { merge: true }
-    );
+    .update({ joinedExams: Firestore.FieldValue.arrayUnion(examId) });
 }

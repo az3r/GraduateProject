@@ -25,7 +25,7 @@ export async function createProblemComment(
     .doc(userId)
     .collection(problemComments)
     .doc(problemId)
-    .update({ id: true });
+    .set({ ownerId: userId }, { merge: true });
   return id;
 }
 

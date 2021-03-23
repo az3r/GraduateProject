@@ -250,7 +250,7 @@ export default function Login() {
       Firestore()
         .collection(collections.users)
         .doc(credentials.user.uid)
-        .set({ exist: true }, { merge: true });
+        .set({ id: credentials.user.uid }, { merge: true });
 
       router.replace('/');
       setSnackBarState({
