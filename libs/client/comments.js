@@ -60,7 +60,7 @@ export async function getProblemComments(problemId) {
   const snapshot = await Firestore()
     .collection(problems)
     .doc(problemId)
-    .collection(problemComments)
+    .collection(comments)
     .get();
 
   return snapshot.docs.map((doc) => transform({ id: doc.id, ...doc.data() }));
