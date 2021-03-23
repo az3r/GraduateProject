@@ -47,6 +47,15 @@ export async function updateComment(
     });
 }
 
+export async function deleteProblemComment(problemId, commentId) {
+  return Firestore()
+    .collection(problems)
+    .doc(problemId)
+    .collection(comments)
+    .doc(commentId)
+    .delete();
+}
+
 export async function getProblemComments(problemId) {
   const snapshot = await Firestore()
     .collection(problems)
