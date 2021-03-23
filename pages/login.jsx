@@ -1,3 +1,4 @@
+import { collections } from '@utils/constants';
 import React from 'react';
 import {
   Avatar,
@@ -14,7 +15,7 @@ import Head from 'next/head';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
 import { Alert } from '@material-ui/lab';
-import { FirebaseAuth } from '@libs/client/firebase';
+import { FirebaseAuth, Firestore } from '@libs/client/firebase';
 import { auth } from '@libs/client';
 import { useCookies } from 'react-cookie';
 
@@ -34,7 +35,7 @@ export default function Login() {
     message: 'No message',
   });
   // eslint-disable-next-line no-unused-vars
-  const [cookies,setCookies] = useCookies(['user']);
+  const [cookies, setCookies] = useCookies(['user']);
 
   // prefetch home page
   React.useEffect(() => {
@@ -235,18 +236,22 @@ export default function Login() {
     const provider = method && providers[method];
     try {
       setWaiting(true);
-      await auth.signin({ username, password, provider });
-
+      const credentials = await auth.signin({ username, password, provider });
 
       // save cookies
       const user = {
         uid: FirebaseAuth().currentUser.uid,
-        isLogin: true
-      }
-      setCookies(['user'],JSON.stringify(user),{path: '/'});
+        isLogin: true,
+      };
+      setCookies(['user'], JSON.stringify(user), { path: '/' });
       // end save cookies
 
-      
+      // create an user in firestore
+      Firestore()
+        .collection(collections.users)
+        .doc(credentials.user.uid)
+        .set({ exist: true }, { merge: true });
+
       router.replace('/');
       setSnackBarState({
         open: true,
@@ -254,9 +259,6 @@ export default function Login() {
         message: 'Login successfully!',
       });
     } catch (error) {
-      // TODO: handle account existed error
-      console.error(error);
-
       const { code } = error;
       let message;
       if (code.startsWith('auth/')) message = 'Invalid username or password';
