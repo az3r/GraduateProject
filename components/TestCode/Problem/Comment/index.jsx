@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   makeStyles,
   Box,
@@ -16,7 +16,8 @@ import IconButton from '@material-ui/core/IconButton';
 import DeleteIcon from '@material-ui/icons/Delete';
 import EditIcon from '@material-ui/icons/Edit';
 import HelpOutlineRoundedIcon from '@material-ui/icons/HelpOutlineRounded';
-import { users, } from '@libs/client';
+import { comments, users, } from '@libs/client';
+import dateFormat from 'dateformat';
 
 
 const useStyles = makeStyles(() => ({
@@ -36,96 +37,42 @@ const useStyles = makeStyles(() => ({
   }
 }));
 
-const comments2 = [
-  {
-    id: 1,
-    username: "Nguyễn Thanh Tùng",
-    avatar: "/user.png",
-    content: "Nice",
-  },
-  {
-    id: 2,
-    username: "Thái Thanh Tùng",
-    avatar: "/user.png",
-    content: "Ta nói app nó tuyệt vời làm sao ấy! Ahihi. Và còn rất nhiều thứ khác mà app có thể làm được đó.",
-  },
-  {
-    id: 3,
-    username: "Âu Dương Gia Tuấn",
-    avatar: "/user.png",
-    content: "App rất tiện lợi nha các bạn yêu dấu!",
-  },
-  {
-    id: 4,
-    username: "Nguyễn Mạnh Tuấn",
-    avatar: "/user.png",
-    content: "Tuyệt vời!",
-  },
-  {
-    id: 5,
-    username: "La Mạnh Tuấn",
-    avatar: "/user.png",
-    content: "Rất tin tưởng app này rất nhiều!",
-  },
-  {
-    id: 6,
-    username: "Nguyễn Thanh Tùng",
-    avatar: "/user.png",
-    content: "Nice",
-  },
-  {
-    id: 7,
-    username: "Thái Thanh Tùng",
-    avatar: "/user.png",
-    content: "Ta nói app nó tuyệt vời làm sao ấy! Ahihi",
-  },
-  {
-    id: 8,
-    username: "Âu Dương Gia Tuấn",
-    avatar: "/user.png",
-    content: "App rất tiện lợi nha các bạn yêu dấu!",
-  },
-  {
-    id: 9,
-    username: "Nguyễn Mạnh Tuấn",
-    avatar: "/user.png",
-    content: "Tuyệt vời!",
-  },
-  {
-    id: 10,
-    username: "La Mạnh Tuấn",
-    avatar: "/user.png",
-    content: "Rất tin tưởng app này rất nhiều!",
-  }
-]
-
-export default function Comment({problemId}){
+export default function Comment({user, problemId}){
   const classes = useStyles();
-  console.log(problemId); // use for eslint
 
   const [content, setContent] = useState('');
   const [deleteOpen, setDeleteOpen] = useState(false);
   const [editOpen, setEditOpen] = useState(false);
-  // const [commentsArray, setCommentArray] = useState([]);
+  const [commentsArray, setCommentArray] = useState([]);
   const [editedContent, setEditedContent] = useState('');
   const [editedCommentId, setEditedCommentId] = useState('');
   const [deletedCommentId, setDeletedCommentId] = useState('');
+
+  useEffect(async () => {
+    const cmt = await comments.getProblemComments(problemId);
+    setCommentArray(cmt);
+  }, []);
 
   const handlePostComment = async () => {
     if(content === ''){
       return;
     }
 
-    const user = await users.get();
+    const usr = await users.get();
 
-    if(user !== null){
-      // await comments.createProblemComment(problemId,
-      //   {
-      //     userId: user.uid,
-      //     username: user.name,
-      //     avatar: user.avatar,
-      //     content: content
-      //   });
+    if(usr !== null){
+      const newlyCreatedCommentId = await comments.createProblemComment(problemId,
+        {
+          userId: usr.id,
+          username: usr.name,
+          avatar: usr.avatar,
+          content
+        });
+
+      if(newlyCreatedCommentId !== null){
+        const cmt = await comments.getProblemComments(problemId);
+        setCommentArray(cmt);
+      }
 
       setContent('');
     }
@@ -144,55 +91,91 @@ export default function Comment({problemId}){
   const handleDeleteClickOpen = ({comment}) => {
     setDeleteOpen(true);
     setDeletedCommentId(comment.id);
-    console.log(deletedCommentId);
   };
 
   const handleDeleteClose = () => {
     setDeleteOpen(false);
   };
 
-  const handleDelete = () => {
+  const handleDelete = async () => {
     setDeleteOpen(false);
+    await comments.deleteProblemComment(problemId, deletedCommentId);
+    const cmt = await comments.getProblemComments(problemId);
+    setCommentArray(cmt);
   };
 
   const handleEditClickOpen = ({comment}) => {
     setEditOpen(true);
     setEditedContent(comment.content);
     setEditedCommentId(comment.id);
-    console.log(editedCommentId);
   };
 
   const handleEditClose = () => {
     setEditOpen(false);
   };
 
-  const handleUpdate = () => {
+  const handleUpdate = async () => {
     setEditOpen(false);
+    const usr = await users.get();
+
+    if(usr !== null) {
+      await comments.updateComment(problemId, editedCommentId,
+        {
+          userId: usr.id,
+          username: usr.name,
+          avatar: usr.avatar,
+          content: editedContent,
+        });
+
+      const cmt = await comments.getProblemComments(problemId);
+      setCommentArray(cmt);
+    }
   };
 
   return (
     <>
-      <h2 style={{marginLeft: 20, marginRight: 0, marginTop: 0, marginBottom: 0}}>{comments2.length} comments</h2>
+      <h2 style={{marginLeft: 20, marginRight: 0, marginTop: 0, marginBottom: 0}}>{commentsArray.length} comments</h2>
       <Paper style={{maxHeight: window.outerHeight, height: window.outerHeight - 200, overflow: 'auto'}}>
         {
-          comments2.map((comment) => (
+          commentsArray.map((comment) => (
               <Box border={2} className={classes.root}>
-                <Avatar variant="square"  />
+                <Avatar variant="square" src={comment.avatar}  />
                 <Box style={{marginLeft: 10, marginRight: 10}}>
                   <h3 style={{display: 'inline-block', marginLeft: 0, marginRight: 10, marginTop: 0, marginBottom: 10}}>
                     {/* <Link href={`/profile/${comment.id}`}> */}
                       <a href={`/profile/${comment.id}`} style={{color: 'green', textDecoration: 'none'}}>{comment.username}</a>
                     {/* </Link> */}
                   </h3>
-                  <span style={{fontWeight: 'lighter', color: 'gray'}}>Yesterday at 12:30AM</span>
+                  <span style={{fontWeight: 'lighter', color: 'gray'}}>
+                    {dateFormat(
+                      new Date(comment.createdOn),
+                      'mmmm dd, yyyy "at" HH:MM TT'
+                    )}
+                  </span>
                   <div>{comment.content}</div>
                   <div>
-                    <IconButton onClick={() => handleEditClickOpen({comment})} aria-label="edit" style={{padding: 0, marginLeft: 10, marginTop: 10}}>
-                      <EditIcon fontSize="small" />
-                    </IconButton>
-                    <IconButton onClick={() => handleDeleteClickOpen({comment})} aria-label="delete" style={{padding: 0, marginLeft: 10, marginTop: 10}}>
-                      <DeleteIcon fontSize="small" />
-                    </IconButton>
+                      {
+                        comment.userId === user.uid &&
+                          <>
+                            <IconButton onClick={() => handleEditClickOpen({comment})} aria-label="edit" style={{padding: 0, marginLeft: 10, marginTop: 10}}>
+                              <EditIcon fontSize="small" />
+                            </IconButton>
+                            <IconButton onClick={() => handleDeleteClickOpen({comment})} aria-label="delete" style={{padding: 0, marginLeft: 10, marginTop: 10}}>
+                              <DeleteIcon fontSize="small" />
+                            </IconButton>
+                          </>
+                      }
+                      {
+                        comment.userId !==  user.uid &&
+                          <>
+                            <IconButton disabled onClick={() => handleEditClickOpen({comment})} aria-label="edit" style={{padding: 0, marginLeft: 10, marginTop: 10}}>
+                              <EditIcon fontSize="small" />
+                            </IconButton>
+                            <IconButton disabled onClick={() => handleDeleteClickOpen({comment})} aria-label="delete" style={{padding: 0, marginLeft: 10, marginTop: 10}}>
+                              <DeleteIcon fontSize="small" />
+                            </IconButton>
+                          </>
+                      }
                   </div>
                 </Box>
               </Box>

@@ -59,7 +59,9 @@ export default function ProblemsPage({problems}) {
         <Link href="/examiner/problems/add">
           <Button className={classes.addBtn} variant="contained" color="secondary" startIcon={<AddIcon/>}>Add problem</Button>
         </Link>
-        <Box className={classes.itemsContainer} boxShadow={1} p={2}>
+        {
+            Object.keys(problems).length !== 0 ?
+            <Box className={classes.itemsContainer} boxShadow={1} p={2}>
           <Table className={classes.table} size="small" aria-label="a dense table">
             <TableHead>
               <TableRow>
@@ -100,7 +102,8 @@ export default function ProblemsPage({problems}) {
               ))}
             </TableBody>
           </Table>
-        </Box>
+        </Box> : null
+        }
     </>
   );
 }

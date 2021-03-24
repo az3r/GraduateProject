@@ -25,7 +25,7 @@ export default function Start({id, problems, user}) {
   const [results, setResults] = useState([]);
   const [numberOfCorrect, setNumberOfCorrect] = useState(0);
 
-  useEffect(() => {
+  useEffect(async () => {
     if (user === null) {
       router.replace('/login');
     }
@@ -71,7 +71,7 @@ export default function Start({id, problems, user}) {
         {problem.isMCQ === true ? (
           <TestMCQ problem={problem} nextProblem={nextProblem} />
         ) : (
-          <TestCode problem={problem} nextProblem={nextProblem} />
+          <TestCode user={user} problem={problem} nextProblem={nextProblem} />
         )}
       </Layout>
     </>
@@ -82,13 +82,20 @@ export default function Start({id, problems, user}) {
 export async function getServerSideProps({params, req}) {
   const cookies = parseCookies(req);
   let user = null;
+  let items = null;
 
-  if (Object.keys(cookies).length !== 0) {
-    if (cookies.user) {
-      user = JSON.parse(cookies.user);
+  try {
+    items = await exams.getProblems(params.id);
+
+    if (Object.keys(cookies).length !== 0) {
+      if (cookies.user) {
+        user = JSON.parse(cookies.user);
+      }
     }
   }
-  const items = await exams.getProblems(params.id);
+  catch (e){
+    console.log(e);
+  }
 
   return {
     props: {

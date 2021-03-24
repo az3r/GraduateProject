@@ -61,48 +61,52 @@ export default function ExaminationsPage({exams}) {
         <Link href="/examiner/examinations/add">
           <Button className={classes.addBtn} variant="contained" color="secondary" startIcon={<AddIcon/>}>Add examination</Button>
         </Link>
-        <Box className={classes.itemsContainer} boxShadow={1} p={2}>
-          <Table className={classes.table} size="small" aria-label="a dense table">
-            <TableHead>
-              <TableRow>
-                <TableCell style={{ fontWeight: 'bolder' }}>Problems</TableCell>
-                <TableCell style={{ fontWeight: 'bolder' }}>#</TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {exams.map((item, index) => (
-                <TableRow
-                  key={item.id}
-                  className={classes.tableRow}
-                  hover
-                  style={
-                    index % 2
-                      ? { background: 'rgb(250, 250, 250)' }
-                      : { background: 'white' }
-                  }
-                >
-                  <TableCell component="th" scope="row">
-                    <Link href={`/examiner/problems/${item.id}`} underline="none">
-                      <Box>
-                        <Box className={classes.title}>{item.title}</Box>
-                        <Box className={classes.createdDate}>
-                          Created on:&nbsp;
-                          {dateFormat(
-                            new Date(item.createdOn),
-                            'mmmm dd, yyyy "at" HH:MM TT'
-                          )}
-                        </Box>
-                      </Box>
-                    </Link>
-                  </TableCell>
-                  <TableCell>
-                    <Button size="small" variant="contained" color="primary" href={`/examiner/examinations/detail?id=${item.id}`}>Detail</Button>
-                  </TableCell>
+        {
+          Object.keys(exams).length !== 0 ? 
+          <Box className={classes.itemsContainer} boxShadow={1} p={2}>
+            <Table className={classes.table} size="small" aria-label="a dense table">
+              <TableHead>
+                <TableRow>
+                  <TableCell style={{ fontWeight: 'bolder' }}>Problems</TableCell>
+                  <TableCell style={{ fontWeight: 'bolder' }}>#</TableCell>
                 </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </Box>
+              </TableHead>
+              <TableBody>
+                {exams.map((item, index) => (
+                  <TableRow
+                    key={item.id}
+                    className={classes.tableRow}
+                    hover
+                    style={
+                      index % 2
+                        ? { background: 'rgb(250, 250, 250)' }
+                        : { background: 'white' }
+                    }
+                  >
+                    <TableCell component="th" scope="row">
+                      <Link href={`/examiner/problems/${item.id}`} underline="none">
+                        <Box>
+                          <Box className={classes.title}>{item.title}</Box>
+                          <Box className={classes.createdDate}>
+                            Created on:&nbsp;
+                            {dateFormat(
+                              new Date(item.createdOn),
+                              'mmmm dd, yyyy "at" HH:MM TT'
+                            )}
+                          </Box>
+                        </Box>
+                      </Link>
+                    </TableCell>
+                    <TableCell>
+                      <Button size="small" variant="contained" color="primary" href={`/examiner/examinations/detail?id=${item.id}`}>Detail</Button>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </Box>: null
+        }
+        
     </>
   );
 }
