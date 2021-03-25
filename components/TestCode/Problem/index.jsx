@@ -65,14 +65,20 @@ export default function Problem(props) {
   const {problemSubmissionHistory} = props;
   const {language} = props;
   const {user} = props;
+  const {nextProblem} = props;
 
 
   return (
     <Tabs>
       <TabList>
         <Tab>Description</Tab>
-        <Tab>Discuss</Tab>
-        <Tab>Submissions</Tab>
+        {
+          nextProblem === undefined &&
+            <>
+              <Tab>Discuss</Tab>
+              <Tab>Submissions</Tab>
+            </>
+        }
       </TabList>
 
       <TabPanel>
@@ -124,61 +130,66 @@ export default function Problem(props) {
             data={content} />
         </Paper>
       </TabPanel>
-      <TabPanel style={{backgroundColor: 'white'}}>
-        <Comment user={user} problemId={id} />
-      </TabPanel>
-      <TabPanel>
-        <Paper className={classes.submission}>
-          <Table size="small" aria-label="a dense table">
-            <TableHead>
-              <TableRow>
-                <TableCell>Time Submitted</TableCell>
-                <TableCell>Status</TableCell>
-                <TableCell>Score</TableCell>
-                <TableCell>Language</TableCell>
-              </TableRow>
-            </TableHead>
-            {
-              problemSubmissionHistory &&
-              <TableBody>
+      {
+        nextProblem === undefined &&
+        <>
+          <TabPanel style={{backgroundColor: 'white'}}>
+            <Comment user={user} problemId={id} />
+          </TabPanel>
+          <TabPanel>
+            <Paper className={classes.submission}>
+              <Table size="small" aria-label="a dense table">
+                <TableHead>
+                  <TableRow>
+                    <TableCell>Time Submitted</TableCell>
+                    <TableCell>Status</TableCell>
+                    <TableCell>Score</TableCell>
+                    <TableCell>Language</TableCell>
+                  </TableRow>
+                </TableHead>
                 {
-                  problemSubmissionHistory.map((submission, index) => (
-                    <TableRow
-                      key={submission.id}
-                      className={classes.tableRow}
-                      hover
-                      style={
-                        index % 2
-                          ? { background: 'rgb(250, 250, 250)' }
-                          : { background: 'white' }
-                      }
-                    >
-                      <TableCell>
-                        {dateFormat(
-                          new Date(submission.createdOn),
-                          'dd/mm/yyyy HH:MM TT'
-                        )}
-                      </TableCell>
-                      <TableCell>
-                        {
-                          submission.status === 'Accepted' && <p style={{color: 'green', fontWeight: 'bolder'}}>{submission.status}</p>
-                        }
-                        {
-                          submission.status === 'Wrong Answer' && <p style={{color: 'orange', fontWeight: 'bolder'}}>{submission.status}</p>
-                        }
-                        {
-                          submission.status === 'Compiler Error' && <p style={{color: 'red', fontWeight: 'bolder'}}>{submission.status}</p>
-                        }
-                      </TableCell>
-                      <TableCell>{score}</TableCell>
-                      <TableCell>{language}</TableCell>
-                    </TableRow>
-                  ))}
-              </TableBody>
-            }
-          </Table>
-        </Paper>
-      </TabPanel>
+                  problemSubmissionHistory &&
+                  <TableBody>
+                    {
+                      problemSubmissionHistory.map((submission, index) => (
+                        <TableRow
+                          key={submission.id}
+                          className={classes.tableRow}
+                          hover
+                          style={
+                            index % 2
+                              ? { background: 'rgb(250, 250, 250)' }
+                              : { background: 'white' }
+                          }
+                        >
+                          <TableCell>
+                            {dateFormat(
+                              new Date(submission.createdOn),
+                              'dd/mm/yyyy HH:MM TT'
+                            )}
+                          </TableCell>
+                          <TableCell>
+                            {
+                              submission.status === 'Accepted' && <p style={{color: 'green', fontWeight: 'bolder'}}>{submission.status}</p>
+                            }
+                            {
+                              submission.status === 'Wrong Answer' && <p style={{color: 'orange', fontWeight: 'bolder'}}>{submission.status}</p>
+                            }
+                            {
+                              submission.status === 'Compiler Error' && <p style={{color: 'red', fontWeight: 'bolder'}}>{submission.status}</p>
+                            }
+                          </TableCell>
+                          <TableCell>{score}</TableCell>
+                          <TableCell>{language}</TableCell>
+                        </TableRow>
+                      ))}
+                  </TableBody>
+                }
+              </Table>
+            </Paper>
+          </TabPanel>
+        </>
+      }
     </Tabs>
   );
 }

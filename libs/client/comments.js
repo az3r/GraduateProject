@@ -59,6 +59,7 @@ export async function createExamComment(
     .collection(examComments)
     .doc(examId)
     .update({ ownerId: userId });
+
   return id;
 }
 

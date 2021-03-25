@@ -79,6 +79,7 @@ export default function Test({problem, nextProblem}) {
     if (nextProblem) {
       clearTimeout(timeOut);
       const result = correct === answer ? 1 : 0;
+      console.log(problem);
       nextProblem({
         problemId: id,
         problemName: question,

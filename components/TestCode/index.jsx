@@ -264,6 +264,7 @@ export default function Test({ problem, user, problemSubmissionHistory, nextProb
             language={language}
             id={id}
             user={user}
+            nextProblem={nextProblem}
           />
         </div>
 

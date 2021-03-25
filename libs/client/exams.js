@@ -71,7 +71,9 @@ export async function getProblems(examId) {
     .doc(examId)
     .collection(problemCollection)
     .get();
-  return snapshot.docs.map((item) => transform(item.data()));
+  return snapshot.docs.map((item) =>
+    transform({ id: item.id, ...item.data() })
+  );
 }
 
 async function createProblem(examId, props) {
