@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import Head from 'next/head';
 import dynamic from 'next/dynamic';
-import { exams, submissions, users } from '@libs/client';
+import { comments, exams, submissions, users } from '@libs/client';
 import { useRouter  } from 'next/router';
 import { parseCookies } from '@libs/client/cookies';
 import {
@@ -87,13 +87,13 @@ export default function Start({id, problems, user}) {
     const usr = await users.get();
 
     if (usr !== null) {
-      // await comments.createExamComment(id,
-      //   {
-      //     userId: usr.id,
-      //     username: usr.name,
-      //     avatar: usr.avatar,
-      //     content: "No comment!",
-      //   });
+      await comments.createExamComment(id,
+        {
+          userId: usr.id,
+          username: usr.name,
+          avatar: usr.avatar,
+          content: "No comment!",
+        });
       setCommentOpen(false);
       router.push('/examination/end');
     };
@@ -103,13 +103,13 @@ export default function Start({id, problems, user}) {
     const usr = await users.get();
 
     if(usr !== null) {
-      // await comments.createExamComment(id,
-      //   {
-      //     userId: usr.id,
-      //     username: usr.name,
-      //     avatar: usr.avatar,
-      //     content: commentContent,
-      //   });
+      await comments.createExamComment(id,
+        {
+          userId: usr.id,
+          username: usr.name,
+          avatar: usr.avatar,
+          content: commentContent,
+        });
       setCommentOpen(false);
       router.push('/examination/end');
     }
