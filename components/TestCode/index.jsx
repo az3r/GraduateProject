@@ -7,8 +7,13 @@ import ClipLoader from 'react-spinners/ClipLoader';
 
 import { submissions } from '@libs/client';
 import Problem from '@components/TestCode/Problem';
-import Console from './Console';
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import DialogTitle from '@material-ui/core/DialogTitle';
 import CodeEditor from '../CodeEditor';
+import Console from './Console';
 
 
 const useStyles = makeStyles(() => ({
@@ -67,9 +72,25 @@ export default function Test({ problem, user, problemSubmissionHistory, nextProb
   const [testCodeResult, setTestCodeResult] = useState('');
   const [openConsole, setOpenConsole] = useState('hidden');
   const [minutes, setMinutes] = useState(problem.minutes);
-  const [seconds, setSeconds] = useState(problem.seconds);
+  const [seconds, setSeconds] = useState(problem.seconds + 1);
 
   const [loading, setLoading] = useState(false);
+  const [submitOpen, setSubmitOpen] = useState(false);
+  const [submitedStatus, setSubmitedStatus] = useState('');
+
+  const handleSubmitClickOpen = (status) => {
+    setSubmitOpen(true);
+    setSubmitedStatus(status);
+  };
+
+  const handleSubmitClose1 = () => {
+    setSubmitOpen(false);
+  };
+
+  const handleSubmitClose2 = () => {
+    setSubmitOpen(false);
+    Router.push('/');
+  };
 
   useEffect(() => {
     if(user === null)
@@ -82,7 +103,7 @@ export default function Test({ problem, user, problemSubmissionHistory, nextProb
   useEffect(() => {
     setCode(problem.code);
     setMinutes(problem.minutes);
-    setSeconds(problem.seconds);
+    setSeconds(problem.seconds + 1);
   }, [problem]);
 
   useEffect(() => {
@@ -203,7 +224,7 @@ export default function Test({ problem, user, problemSubmissionHistory, nextProb
         });
 
         if (response.failed === 0) {
-          await submissions.createProblemSubmission(
+          await submissions.createProblđemSubmission(
             user.uid,
             {
               problemId: problem.id,
@@ -212,6 +233,7 @@ export default function Test({ problem, user, problemSubmissionHistory, nextProb
               code,
               data: response,
             });
+          handleSubmitClickOpen('Accepted');
         } else {
           await submissions.createProblemSubmission(
             user.uid,
@@ -222,6 +244,7 @@ export default function Test({ problem, user, problemSubmissionHistory, nextProb
               code,
               data: response,
             });
+          handleSubmitClickOpen('Wrong Answer');
         }
       } catch (e) {
         console.log(e);
@@ -234,9 +257,11 @@ export default function Test({ problem, user, problemSubmissionHistory, nextProb
             code,
             data: e,
           });
+        handleSubmitClickOpen('Compiler Error');
       } finally {
         setLoading(false);
-        Router.push('/');
+        // handleSubmitClickOpen('');
+        // Router.push('/');
       }
     }
   };
@@ -344,6 +369,54 @@ export default function Test({ problem, user, problemSubmissionHistory, nextProb
           </Paper>
         </div>
       </SplitPane>
+
+      {/* Commit */}
+      <Dialog
+        open={submitOpen}
+        // onClose={handleSubmitClose}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+        maxWidth="xs"
+        fullWidth
+      >
+        <DialogTitle id="alert-dialog-title">Your Submission</DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-description">
+            {
+              submitedStatus === 'Accepted' &&
+                <>
+                  <img src="/checkmark.png" alt="Accepted" style={{textAlign: 'center',
+                    display: 'block', marginLeft: 'auto', marginRight: 'auto'}} />
+                  <h1 style={{textAlign: 'center', color: 'green'}}>Correct!</h1>
+                </>
+            }
+            {
+              submitedStatus === 'Wrong Answer' &&
+              <>
+                <img src="/warning.png" alt="Wrong Answer" style={{textAlign: 'center',
+                  display: 'block', marginLeft: 'auto', marginRight: 'auto'}} />
+                <h1 style={{textAlign: 'center', color: 'orange'}}>Wrong Answer!</h1>
+              </>
+            }
+            {
+              submitedStatus === 'Compiler Error' &&
+              <>
+                <img src="/cancel.png" alt="Compiler Error" style={{textAlign: 'center',
+                  display: 'block', marginLeft: 'auto', marginRight: 'auto'}} />
+                <h1 style={{textAlign: 'center', color: 'red'}}>Compiler Error!</h1>
+              </>
+            }
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleSubmitClose1} color="secondary" variant="outlined">
+            Cancel
+          </Button>
+          <Button onClick={handleSubmitClose2} color="primary" variant="outlined" autoFocus>
+            Home
+          </Button>
+        </DialogActions>
+      </Dialog>
     </Container>
   );
 }

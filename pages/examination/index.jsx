@@ -56,7 +56,7 @@ export default function Index({examinations, arrProblems}) {
   };
 
   useEffect(() => {
-    setIntroHeight(window.innerWidth / 3);
+    setIntroHeight(window.innerWidth / (7/2));
   }, []);
 
   return (

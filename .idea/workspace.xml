@@ -20,8 +20,18 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="73bd1854-2930-493b-bbd0-fb90442d9327" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/public/cancel.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/checkmark.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/warning.png" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/libs/client/comments.js" beforeDir="false" afterPath="$PROJECT_DIR$/libs/client/comments.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/components/Problems/index.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/Problems/index.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/components/TestCode/Problem/index.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/TestCode/Problem/index.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/components/TestCode/index.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/TestCode/index.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/components/TestMCQ/AnswerMCQ/index.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/TestMCQ/AnswerMCQ/index.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/components/TestMCQ/Problem/index.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/TestMCQ/Problem/index.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/components/TestMCQ/index.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/TestMCQ/index.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pages/examination/[id].jsx" beforeDir="false" afterPath="$PROJECT_DIR$/pages/examination/[id].jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pages/examination/index.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/pages/examination/index.jsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pages/examination/start/[id].jsx" beforeDir="false" afterPath="$PROJECT_DIR$/pages/examination/start/[id].jsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -136,7 +146,8 @@
       <workItem from="1616474139954" duration="3827000" />
       <workItem from="1616487159519" duration="6402000" />
       <workItem from="1616651084443" duration="7211000" />
-      <workItem from="1616730633387" duration="1051000" />
+      <workItem from="1616730633387" duration="7422000" />
+      <workItem from="1616812249271" duration="14754000" />
     </task>
     <servers />
   </component>
@@ -173,17 +184,17 @@
       <screen x="0" y="0" width="1366" height="738" />
     </state>
     <state x="500" y="283" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2/0.0.1366.738/1366.0.1366.738@0.0.1366.738" timestamp="1612509227348" />
-    <state x="1680" y="102" width="1052" height="534" key="find.popup" timestamp="1615876610371">
+    <state x="1680" y="102" width="1052" height="534" key="find.popup" timestamp="1616824625964">
       <screen x="1366" y="0" width="1366" height="738" />
     </state>
-    <state x="1680" y="102" width="1052" height="534" key="find.popup/0.0.1366.738/1366.0.1366.738@1366.0.1366.738" timestamp="1615876610371" />
+    <state x="1680" y="102" width="1052" height="534" key="find.popup/0.0.1366.738/1366.0.1366.738@1366.0.1366.738" timestamp="1616824625964" />
     <state x="1705" y="165" key="run.anything.popup" timestamp="1615276509529">
       <screen x="1366" y="0" width="1366" height="738" />
     </state>
     <state x="1705" y="165" key="run.anything.popup/0.0.1366.738/1366.0.1366.738@1366.0.1366.738" timestamp="1615276509529" />
-    <state x="1712" y="59" width="672" height="678" key="search.everywhere.popup" timestamp="1616305202415">
+    <state x="1712" y="59" width="672" height="678" key="search.everywhere.popup" timestamp="1616821054226">
       <screen x="1366" y="0" width="1366" height="738" />
     </state>
-    <state x="1712" y="59" width="672" height="678" key="search.everywhere.popup/0.0.1366.738/1366.0.1366.738@1366.0.1366.738" timestamp="1616305202415" />
+    <state x="1712" y="59" width="672" height="678" key="search.everywhere.popup/0.0.1366.738/1366.0.1366.738@1366.0.1366.738" timestamp="1616821054226" />
   </component>
 </project>

@@ -60,7 +60,7 @@ export default function Problem({question, difficulty, score}) {
       </TabList>
 
       <TabPanel>
-        <Paper style={{maxHeight: 1000, height: 510, overflow: 'auto'}}>
+        <Paper style={{maxHeight: window.outerHeight, height: window.outerHeight - 181, overflow: 'auto'}}>
           <h2 className={classes.title}>MCQ</h2>
           <div className={classes.problemInfo}>
             {difficulty === 0 &&
@@ -102,7 +102,8 @@ export default function Problem({question, difficulty, score}) {
             editor={ ClassicEditor }
             disabled
             config={ editorConfiguration }
-            data={question} />
+            data={question}
+          />
         </Paper>
       </TabPanel>
     </Tabs>

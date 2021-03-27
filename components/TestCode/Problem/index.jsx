@@ -179,7 +179,17 @@ export default function Problem(props) {
                               submission.status === 'Compiler Error' && <p style={{color: 'red', fontWeight: 'bolder'}}>{submission.status}</p>
                             }
                           </TableCell>
-                          <TableCell>{score}</TableCell>
+                          <TableCell>
+                            {
+                              submission.status === 'Accepted' && score
+                            }
+                            {
+                              submission.status === 'Wrong Answer' && 0
+                            }
+                            {
+                              submission.status === 'Compiler Error' && 0
+                            }
+                          </TableCell>
                           <TableCell>{language}</TableCell>
                         </TableRow>
                       ))}

@@ -36,6 +36,7 @@ export default function Start({id, problems, user}) {
   const [commentOpen, setCommentOpen] = useState(false);
   const [commentContent, setCommentContent] = useState('');
 
+
   useEffect(async () => {
     if (user === null) {
       router.replace('/login');

@@ -170,7 +170,7 @@ export default function Problems({ problems: items }) {
                     : { background: 'white' }
                 }
               >
-                <TableCell>{index + 1}</TableCell>
+                <TableCell>{(currentPage - 1)*10 + index + 1}</TableCell>
                 <TableCell component="th" scope="row">
                   <Link href={`/problem/${problem.id}`}>
                     <Typography className={classes.link}>

@@ -14,7 +14,6 @@ const styles = makeStyles({
   answerMCQBox: {
     paddingLeft: 20,
     paddingTop: 20,
-    height: "500px",
   }
 });
 
@@ -28,7 +27,7 @@ export default function AnswerMCQ({answer, onAnswerChange, a, b, c, d}) {
 
   return (
     <>
-      <Box className={classes.answerMCQBox}>
+      <Box className={classes.answerMCQBox} style={{width: '100%', height: window.outerHeight - 137 - 100}}>
         <h2>Choose your answer: </h2>
         <RadioGroup  aria-label="gender" name="gender1" value={answer} onChange={handleAnswerChange}>
           {

@@ -16,7 +16,7 @@ const useStyles = makeStyles({
   problemList: {
     width: '100%',
     overflow: 'auto',
-    maxHeight: 450,
+    maxHeight: '100vh',
   },
   problemBox: {
     height: 100,

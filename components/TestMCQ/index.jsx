@@ -15,10 +15,8 @@ import Problem from "./Problem";
 
 const useStyles = makeStyles( {
   submitButton: {
-    color: 'black',
-    backgroundColor: 'green',
-    float: 'right',
     marginRight: 10,
+    marginLeft: 'auto',
   },
   MCQ: {
     height: 34,
@@ -31,7 +29,8 @@ const useStyles = makeStyles( {
   submitBox: {
     marginTop: 10,
     height: 50,
-    position: 'relative',
+    display: 'flex',
+    alignItems: 'center',
   },
 });
 
@@ -47,12 +46,12 @@ export default function Test({problem, nextProblem}) {
   const {a, b, c, d} = problem;
   const [answer, setAnswer] = useState('');
   const [minutes, setMinutes] = useState(problem.minutes);
-  const [seconds, setSeconds] = useState(problem.seconds);
+  const [seconds, setSeconds] = useState(problem.seconds + 1);
 
   let timeOut;
   useEffect(() => {
     setMinutes(problem.minutes);
-    setSeconds(problem.seconds);
+    setSeconds(problem.seconds + 1);
   }, [problem]);
 
   useEffect(() => {
@@ -79,7 +78,7 @@ export default function Test({problem, nextProblem}) {
     if (nextProblem) {
       clearTimeout(timeOut);
       const result = correct === answer ? 1 : 0;
-      console.log(problem);
+
       nextProblem({
         problemId: id,
         problemName: question,
@@ -96,12 +95,14 @@ export default function Test({problem, nextProblem}) {
 
   return (
     <Container disableGutters maxWidth={false} fixed>
-      <SplitPane split="vertical"  minSize={350} defaultSize={window.outerWidth/2}>
+      <SplitPane split="vertical"  minSize={350}
+                 style={{height: window.outerHeight - 135}}
+                 defaultSize={window.outerWidth / 2}>
         <div>
           <Problem question={question} difficulty={difficulty} score={score} />
         </div>
         <div>
-          <Paper square>
+          <Paper style={{maxHeight: window.outerHeight, height: window.outerHeight - 137}} square>
             <Box p="10px" className={classes.MCQ} borderBottom={1}>
               <Box component="span" display="inline" p="4px"  borderRadius={5} border={1}
                    bgcolor="#fafafa">
@@ -118,7 +119,11 @@ export default function Test({problem, nextProblem}) {
               <AnswerMCQ answer={answer} onAnswerChange={setAnswer} a={a} b={b} c={c} d={d}/>
             </Box>
             <Box className={classes.submitBox}>
-              <Button size="small" type="submit" variant="outlined" onClick={handleSubmit}
+              <Button color="primary"
+                      variant="contained"
+                      size="small"
+                      type="submit"
+                      onClick={handleSubmit}
                       className={classes.submitButton}>Submit</Button>
             </Box>
           </Paper>
