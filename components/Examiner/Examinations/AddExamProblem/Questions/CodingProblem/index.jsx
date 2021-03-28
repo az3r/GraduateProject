@@ -38,7 +38,7 @@ export default function CodingProblem({
         handleChangeCPTitle,handleChangeCPInfo,handleChangeCPDifficulty,handleChangeScore,
         handleChangeLanguague,handleChangeCPCode,handleChangeSimpleTest,handleTestCode,handleChangeCPFiles,
         handleChangeMinutes,handleChangeSeconds}){
-    
+                
     const [open, setOpen] = React.useState(false);
     
     const handleClickOpen = () => {
@@ -69,15 +69,15 @@ export default function CodingProblem({
                     id={`CP_${NO}`}
                     onChange={handleChangeCPTitle} fullWidth/>
             </Box>
-
+      
             <Box boxShadow={1} p={2} m={3}>
                 <Typography variant="h5">Enter information: </Typography>
                 <CKEditor
-                    editor={ ClassicEditor }
-                    data={value.content}
-                    onChange={handleChangeInfo} />
+                        editor={ ClassicEditor }
+                        data={value.content}
+                        onChange={handleChangeInfo} />
             </Box>
-
+        
             <Box boxShadow={1} p={2} m={3}>
                 <Typography variant="h5">Choose level of difficulty: </Typography>
                 <NativeSelect id={`CP_${NO}`}

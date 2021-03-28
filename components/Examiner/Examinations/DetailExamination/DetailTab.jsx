@@ -1,4 +1,4 @@
-import { Box, Button, IconButton, makeStyles, Tooltip, Typography, withStyles } from '@material-ui/core';
+import { Box, Button, IconButton, makeStyles, Step, StepLabel, Stepper, Tooltip, Typography, withStyles } from '@material-ui/core';
 import dateFormat from 'dateformat';
 import HTMLReactParser from 'html-react-parser';
 import React from 'react';
@@ -49,19 +49,63 @@ const AccordionSummary = withStyles({
 },
 }))(MuiAccordionDetails);
 
-const useStyle = makeStyles({
+const useStyle = makeStyles((theme) => ({
+    root: {
+        width: '100%',
+    },
     oddColor:{
         backgroundColor: '#e9e9e9',
-    }
-})
+    },
+    backButton: {
+        marginRight: theme.spacing(1),
+    },
+    instructions: {
+        marginTop: theme.spacing(1),
+        marginBottom: theme.spacing(1),
+    },
+}));
 
 export default function DetailTab({exam})
 {
     const [expanded, setExpanded] = React.useState('');
+    const [activeStep, setActiveStep] = React.useState(0);
+    const steps =
+    [
+        `Created at ${dateFormat(new Date(exam.createdOn),'HH:MM TT, dd-mmmm-yyyy')}`,
+        `Published at ${dateFormat(new Date(exam.startAt),'HH:MM TT, dd-mmmm-yyyy')}`,
+        `End at ${dateFormat(new Date(exam.endAt),'HH:MM TT, dd-mmmm-yyyy')}`
+    ];
+
+    React.useEffect(()=>{
+        if(Date.parse(exam.startAt) > Date.now())
+        {
+            setActiveStep(1);
+        }
+        if(Date.parse(exam.startAt) < Date.now() && Date.parse(exam.endAt) > Date.now())
+        {
+            setActiveStep(2);
+        }
+        if(Date.parse(exam.endAt) < Date.now())
+        {
+            setActiveStep(3);
+        }
+    },[]);
 
     const handleChange = (panel) => (event, newExpanded) => {
         setExpanded(newExpanded ? panel : false);
     };
+
+    // const handleNext = () => {
+    //     setActiveStep((prevActiveStep) => prevActiveStep + 1);
+    // };
+
+    // const handleBack = () => {
+    //     setActiveStep((prevActiveStep) => prevActiveStep - 1);
+    // };
+
+    // const handleReset = () => {
+    //     setActiveStep(0);
+    // };
 
     const classes = useStyle();
 
@@ -96,22 +140,16 @@ export default function DetailTab({exam})
             }
             {exam.title}
             </Typography>
-            <Typography style={{textAlign: "center"}}>
-                Examination is 
-                {
-                    Date.parse(exam.startAt) - Date.now() > 0 ?
-                    <span> unpublished</span> 
-                    :
-                    <span> published</span> 
-                }
-            </Typography>
+            <div className={classes.root}>
+                <Stepper activeStep={activeStep} alternativeLabel>
+                    {steps.map((label) => (
+                    <Step key={label}>
+                        <StepLabel>{label}</StepLabel>
+                    </Step>
+                    ))}
+                </Stepper>
+            </div>
             <Typography><b>ID</b>: {exam.id}</Typography>
-            <Typography><b>Created at</b>: {
-                dateFormat(
-                    new Date(exam.createdOn),
-                    'HH:MM TT, dd-mmmm-yyyy'
-                  )}
-            </Typography>
             {
                 exam.modifiedAt ?
                 <Typography><b>Modified at</b>: {
@@ -125,18 +163,6 @@ export default function DetailTab({exam})
                 HTMLReactParser(exam.content)
             }
             <Typography><b>Password</b>: {exam.password}</Typography>
-            <Typography><b>Start at</b>: {
-                dateFormat(
-                    new Date(exam.startAt),
-                    'HH:MM TT, dd-mmmm-yyyy'
-                  )}
-            </Typography>       
-            <Typography><b>End at</b>: {
-                dateFormat(
-                    new Date(exam.endAt),
-                    'HH:MM TT, dd-mmmm-yyyy'
-                  )}
-            </Typography> 
             <Typography><b>Questions</b>:</Typography> 
             <div>
                 {
@@ -183,7 +209,18 @@ export default function DetailTab({exam})
                                         </li>
                                     </ul>
                                     <Typography><b>Correct</b>: {value.correct}</Typography>
-                                    <Typography><b>Difficulty</b>: {value.difficulty}</Typography>
+                                    {
+                                        value.difficulty === 0 ? 
+                                        <Typography><b>Difficulty</b>: Easy</Typography> : null
+                                    }
+                                    {
+                                        value.difficulty === 1 ? 
+                                        <Typography><b>Difficulty</b>: Medium</Typography> : null
+                                    }
+                                    {
+                                        value.difficulty === 2 ? 
+                                        <Typography><b>Difficulty</b>: Hard</Typography> : null
+                                    }
                                     <Typography><b>Score</b>: {value.score}</Typography>
                                     <Typography><b>Time</b>: {value.minutes}m {value.seconds}s</Typography>
                                 </div>
@@ -195,10 +232,28 @@ export default function DetailTab({exam})
                                     {
                                         HTMLReactParser(value.content)
                                     }
-                                    <code><pre>{value.code}</pre></code>
-                                    <Typography><b>Difficulty</b>: {value.difficulty}</Typography>
+                                    {
+                                        value.difficulty === 0 ? 
+                                        <Typography><b>Difficulty</b>: Easy</Typography> : null
+                                    }
+                                    {
+                                        value.difficulty === 1 ? 
+                                        <Typography><b>Difficulty</b>: Medium</Typography> : null
+                                    }
+                                    {
+                                        value.difficulty === 2 ? 
+                                        <Typography><b>Difficulty</b>: Hard</Typography> : null
+                                    }
+
+                                    
                                     <Typography><b>Score</b>: {value.score}</Typography>
                                     <Typography><b>Time</b>: {value.minutes}m {value.seconds}s</Typography>
+                                    <Typography><b>Languague</b>: {value.language}</Typography>
+                                    <code><pre>{value.code}</pre></code>
+                                    {value.cases.map((item,k)=>(
+                                        // eslint-disable-next-line react/no-array-index-key
+                                        <Typography key={k}><b>Test case #{k+1}:</b> input: {item.input} / output: {item.output}</Typography>
+                                    ))}
                                 </div>
                             }
                         </AccordionDetails>
