@@ -1,10 +1,22 @@
-import { Box, Button, Grid, makeStyles, NativeSelect, TextField, Typography } from '@material-ui/core';
+import { 
+    Box, 
+    Button, 
+    Grid, 
+    makeStyles, 
+    NativeSelect, 
+    TextField, 
+    Typography } from '@material-ui/core';
 import React from 'react';
 import { CKEditor } from '@ckeditor/ckeditor5-react';
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import SkewLoader from "react-spinners/SkewLoader";
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import Slide from '@material-ui/core/Slide';
 import CodeEditor from '../../../../../CodeEditor';
-
 
 const useStyles = makeStyles({
     textSuccess: {
@@ -19,13 +31,23 @@ const useStyles = makeStyles({
     }
 })
 
-
+const Transition = React.forwardRef((props, ref) => <Slide direction="up" ref={ref} {...props} />);
 
 export default function CodingProblem({
         NO,value,
         handleChangeCPTitle,handleChangeCPInfo,handleChangeCPDifficulty,handleChangeScore,
         handleChangeLanguague,handleChangeCPCode,handleChangeSimpleTest,handleTestCode,handleChangeCPFiles,
         handleChangeMinutes,handleChangeSeconds}){
+    
+    const [open, setOpen] = React.useState(false);
+    
+    const handleClickOpen = () => {
+        setOpen(true);
+    };
+
+    const handleClose = () => {
+        setOpen(false);
+    };
     
     const classes = useStyles();
 
@@ -161,14 +183,30 @@ export default function CodingProblem({
             </Box>
 
             <Box p={2} m={3}>
-                <Typography variant="h6">Once changing input or output file, examiner MUST submit the remaining file again.</Typography>
-            </Box>
-            
-            <Box boxShadow={1} p={2} m={3}>
-                <Typography variant="h5">Current test cases: </Typography>
-                {value.cases.map((item,key)=>(
-                    <Typography><b>#{key+1}:</b> input: {item.input} / output: {item.output}</Typography>
-                ))}
+                <Button color="secondary" onClick={handleClickOpen}>See submitted test cases</Button>
+                <Dialog
+                    open={open}
+                    TransitionComponent={Transition}
+                    keepMounted
+                    onClose={handleClose}
+                    aria-labelledby="alert-dialog-slide-title"
+                    aria-describedby="alert-dialog-slide-description"
+                >
+                    <DialogTitle id="alert-dialog-slide-title">Current test cases</DialogTitle>
+                    <DialogContent>
+                        <DialogContentText id="alert-dialog-slide-description">
+                        {value.cases.map((item,key)=>(
+                            // eslint-disable-next-line react/no-array-index-key
+                            <Typography key={key}><b>#{key+1}:</b> input: {item.input} / output: {item.output}</Typography>
+                        ))}
+                        </DialogContentText>
+                    </DialogContent>
+                    <DialogActions>
+                        <Button onClick={handleClose} color="primary">
+                            Close
+                        </Button>
+                    </DialogActions>
+                </Dialog>
             </Box>
         </Box>
     )

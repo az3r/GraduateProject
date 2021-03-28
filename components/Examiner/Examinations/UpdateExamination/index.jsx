@@ -39,7 +39,8 @@ export default function UpdateExamination({examProps}){
         const problemsList = examProps.problems.map(item=>{
             if(item.isMCQ)
             {
-                return {...item, message:{
+                return {...item, 
+                  message:{
                     question: false,
                     difficulty: false,
                     score: false,
@@ -454,6 +455,11 @@ public class Program
         await sendTestRequest(questionID);
     }
   };
+  const handleDeleteQuestion = (i) => {
+    const newListQuestions = [...listOfQuestions];
+    newListQuestions.splice(i,1)
+    setListOfQuestions(newListQuestions);
+  }
 
   function validateExam()
   {
@@ -860,6 +866,7 @@ public class Program
                 handleChangeQuestionMC={handleChangeQuestionMC} handleChangeAnswerMC={handleChangeAnswerMC}
                 handleChangeCorrectAnswer={handleChangeCorrectAnswer} handleChangeScore={handleChangeScore}
                 handleChangeMinutes={handleChangeMinutes} handleChangeSeconds={handleChangeSeconds}
+                handleDeleteQuestion={handleDeleteQuestion}
 
                 handleChangeCPTitle={handleChangeCPTitle} handleChangeCPInfo={handleChangeCPInfo}
                 handleChangeCPDifficulty={handleChangeCPDifficulty} handleChangeLanguague={handleChangeLanguague}

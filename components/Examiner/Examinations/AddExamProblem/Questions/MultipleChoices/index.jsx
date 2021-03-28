@@ -10,7 +10,6 @@ export default function MultipleChoices({NO,value,handleChangeQuestionMC,handleC
         const data = editor.getData();
         handleChangeQuestionMC(NO,data);
     }
-
     const handleChangeAnswerA = (event,editor) => {
         const data = editor.getData();
         handleChangeAnswerMC(NO,'A',data);
@@ -28,7 +27,7 @@ export default function MultipleChoices({NO,value,handleChangeQuestionMC,handleC
         handleChangeAnswerMC(NO,'D',data);
     } 
     return(
-        <Box boxShadow={4} p={2} maxWidth>
+        <Box boxShadow={4} p={2}>
             <Box boxShadow={1} p={2} m={3}>
                 <Typography variant="h5">Enter question: </Typography>
                 <CKEditor
