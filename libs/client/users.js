@@ -139,7 +139,7 @@ export async function getUsers(role) {
 export async function updateScoreProblem(userId, problemId, value) {
   // update total score
   const ref = Firestore().collection(users).doc(userId);
-  await ref.update({ score: firestore.FieldValue.increment(value) });
+  await ref.update({ problemScore: firestore.FieldValue.increment(value) });
 
   // update passed problems
   await ref
@@ -151,7 +151,7 @@ export async function updateScoreProblem(userId, problemId, value) {
 export async function updateScoreExam(userId, examId, value) {
   // update total score
   const ref = Firestore().collection(users).doc(userId);
-  await ref.update({ score: firestore.FieldValue.increment(value) });
+  await ref.update({ examScore: firestore.FieldValue.increment(value) });
 
   // update participated exams
   await ref

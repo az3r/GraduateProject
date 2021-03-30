@@ -2,7 +2,7 @@ import { collections } from '@utils/constants';
 import { transform } from '@utils/firestore';
 import { Firestore } from './firebase';
 
-const { problems } = collections;
+const { problems, users } = collections;
 
 export async function create(userId, props) {
   const { id } = await Firestore()
@@ -44,4 +44,14 @@ export async function update(problemId, props) {
       modifiedAt: Firestore.Timestamp.now(),
     });
   return true;
+}
+
+export async function getParticipants(problemId) {
+  const problem = await Firestore().collection(problems).doc(problemId).get();
+  const ids = problem.get('participants');
+  const participants = await Firestore()
+    .collection(users)
+    .where(Firestore.FieldPath.documentId(), 'in', ids)
+    .get();
+  return participants.docs.map((item) => item.data());
 }
