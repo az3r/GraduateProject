@@ -39,12 +39,9 @@ export async function update(problemId, props) {
   await Firestore()
     .collection(problems)
     .doc(problemId)
-    .set(
-      {
-        ...props,
-        modifiedAt: Firestore.Timestamp.now(),
-      },
-      { merge: true }
-    );
+    .update({
+      ...props,
+      modifiedAt: Firestore.Timestamp.now(),
+    });
   return true;
 }
