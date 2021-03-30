@@ -14,11 +14,10 @@ import {
   Grid,
 } from '@material-ui/core';
 import { exams } from '@libs/client';
-import Layout from '../../components/Layout';
+import AppLayout from '../../components/Layout';
 
 import Challenge from '../../components/Examinations/Challenge';
 import TopScore from '../../components/Examinations/TopScore';
-
 
 const useStyles = makeStyles({
   introBox: {
@@ -42,7 +41,7 @@ const useStyles = makeStyles({
   },
 });
 
-export default function Index({examinations, arrProblems}) {
+export default function Index({ examinations, arrProblems }) {
   const classes = useStyles();
   const [introHeight, setIntroHeight] = useState(0);
   const [open, setOpen] = useState(false);
@@ -56,7 +55,7 @@ export default function Index({examinations, arrProblems}) {
   };
 
   useEffect(() => {
-    setIntroHeight(window.innerWidth / (7/2));
+    setIntroHeight(window.innerWidth / (7 / 2));
   }, []);
 
   return (
@@ -67,7 +66,7 @@ export default function Index({examinations, arrProblems}) {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <Layout>
+      <AppLayout>
         <Box style={{ height: introHeight }} className={classes.introBox}>
           <Box style={{ textAlign: 'center' }}>
             <img src="/trophy.png" alt="trophy icon" />
@@ -131,15 +130,15 @@ export default function Index({examinations, arrProblems}) {
             </Grid>
           </Grid>
         </Box>
-      </Layout>
+      </AppLayout>
     </>
   );
 }
 
 export async function getServerSideProps() {
-  const items = await exams.get("", {withProblems: false});
+  const items = await exams.get('', { withProblems: false });
   const arrProblems = [];
-  for(let i = 0; i < items.length; i += 1){
+  for (let i = 0; i < items.length; i += 1) {
     // const problems = await exams.getProblems(items[i].id)
     arrProblems.push(exams.getProblems(items[i].id));
   }

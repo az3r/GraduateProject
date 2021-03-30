@@ -10,7 +10,7 @@ import {
 } from '@material-ui/core';
 
 import { exams } from '@libs/client';
-import Layout from '../../components/Layout';
+import AppLayout from '../../components/Layout';
 
 const useStyles = makeStyles({
   problemList: {
@@ -69,7 +69,7 @@ const useStyles = makeStyles({
   },
 });
 
-export default function Introduction({exam}) {
+export default function Introduction({ exam }) {
   const classes = useStyles();
 
   return (
@@ -79,7 +79,7 @@ export default function Introduction({exam}) {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <Layout>
+      <AppLayout>
         <Container component="dev">
           <h1>{exam.title}</h1>
         </Container>
@@ -89,84 +89,86 @@ export default function Introduction({exam}) {
             <Grid item xs={12} md={8}>
               <h1>Problems</h1>
               <List className={classes.problemList}>
-                {
-                  exam.problems.map((problem, index) => (
-                      <Box tabIndex={index} border={2} className={classes.problemBox}>
-                        <Box>
-                          {
-                            problem.title && <h2 className={classes.problemName}>{problem.title}</h2>
-                          }
-                          {
-                            problem.question && <h2 className={classes.problemName}>Multiple Choice Question</h2>
-                          }
-                          <div>
-                            <div className={classes.decorDiv}>
-                              Score: <span className={classes.decorSpan}>{problem.score}</span>
-                            </div>
-                            <div className={classes.decorDiv}>
-                              Difficulty:{' '}
-                              {/* <span className={classes.decorSpan}>{problem.difficulty}</span> */}
-                              {
-                                problem.difficulty === 0 &&
-                                <Box
-                                  component="span"
-                                  display="inline"
-                                  p="4px"
-                                  borderRadius={16}
-                                  color="white"
-                                  pl={1}
-                                  pr={1}
-                                  bgcolor="green"
-                                >
-                                  Easy
-                                </Box>
-                              }
-                              {
-                                problem.difficulty === 1 &&
-                                <Box
-                                  component="span"
-                                  display="inline"
-                                  p="4px"
-                                  borderRadius={16}
-                                  color="white"
-                                  pl={1}
-                                  pr={1}
-                                  bgcolor="orange"
-                                >
-                                  Medium
-                                </Box>
-                              }
-                              {
-                                problem.difficulty === 2 &&
-                                <Box
-                                  component="span"
-                                  display="inline"
-                                  p="4px"
-                                  borderRadius={16}
-                                  color="white"
-                                  pl={1}
-                                  pr={1}
-                                  bgcolor="red"
-                                >
-                                  Hard
-                                </Box>
-                              }
-                            </div>
-                          </div>
-                        </Box>
-                        <Box border={1} className={classes.duration}>
-                          {(`0${  problem.minutes}`).slice(-2)} : {(`0${  problem.seconds}`).slice(-2)}
-                        </Box>
-                      </Box>
-                    ))
-                }
+                {exam.problems.map((problem, index) => (
+                  <Box
+                    tabIndex={index}
+                    border={2}
+                    className={classes.problemBox}
+                  >
+                    <Box>
+                      {problem.title && (
+                        <h2 className={classes.problemName}>{problem.title}</h2>
+                      )}
+                      {problem.question && (
+                        <h2 className={classes.problemName}>
+                          Multiple Choice Question
+                        </h2>
+                      )}
+                      <div>
+                        <div className={classes.decorDiv}>
+                          Score:{' '}
+                          <span className={classes.decorSpan}>
+                            {problem.score}
+                          </span>
+                        </div>
+                        <div className={classes.decorDiv}>
+                          Difficulty:{' '}
+                          {/* <span className={classes.decorSpan}>{problem.difficulty}</span> */}
+                          {problem.difficulty === 0 && (
+                            <Box
+                              component="span"
+                              display="inline"
+                              p="4px"
+                              borderRadius={16}
+                              color="white"
+                              pl={1}
+                              pr={1}
+                              bgcolor="green"
+                            >
+                              Easy
+                            </Box>
+                          )}
+                          {problem.difficulty === 1 && (
+                            <Box
+                              component="span"
+                              display="inline"
+                              p="4px"
+                              borderRadius={16}
+                              color="white"
+                              pl={1}
+                              pr={1}
+                              bgcolor="orange"
+                            >
+                              Medium
+                            </Box>
+                          )}
+                          {problem.difficulty === 2 && (
+                            <Box
+                              component="span"
+                              display="inline"
+                              p="4px"
+                              borderRadius={16}
+                              color="white"
+                              pl={1}
+                              pr={1}
+                              bgcolor="red"
+                            >
+                              Hard
+                            </Box>
+                          )}
+                        </div>
+                      </div>
+                    </Box>
+                    <Box border={1} className={classes.duration}>
+                      {`0${problem.minutes}`.slice(-2)} :{' '}
+                      {`0${problem.seconds}`.slice(-2)}
+                    </Box>
+                  </Box>
+                ))}
               </List>
             </Grid>
             <Grid item xs={12} md={4}>
-              <Box
-                boxShadow={10}
-                className={classes.examinationIntroduction}
-              >
+              <Box boxShadow={10} className={classes.examinationIntroduction}>
                 Examination Introduction
               </Box>
               <hr />
@@ -180,25 +182,30 @@ export default function Introduction({exam}) {
                 Note:{' '}
                 <span style={{ fontWeight: 'normal', color: 'black' }}>
                   If you click &quot;Start&quot; button, you will start making
-                  the examination. In addition, you won&apos;t pause or return the
-                  previous question.
+                  the examination. In addition, you won&apos;t pause or return
+                  the previous question.
                 </span>
               </div>
               <div className={classes.startButtonDiv}>
-                <Button size="large" variant="contained" color="primary" href={`/examination/start/${exam.id}`}>
+                <Button
+                  size="large"
+                  variant="contained"
+                  color="primary"
+                  href={`/examination/start/${exam.id}`}
+                >
                   START
                 </Button>
               </div>
             </Grid>
           </Grid>
         </Container>
-      </Layout>
+      </AppLayout>
     </>
   );
 }
 
-export async function getServerSideProps({params}) {
-  const item = await exams.get(params.id, {withProblems: true});
+export async function getServerSideProps({ params }) {
+  const item = await exams.get(params.id, { withProblems: true });
   return {
     props: {
       exam: item,

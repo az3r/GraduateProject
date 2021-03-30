@@ -7,7 +7,7 @@ import { makeStyles, Box } from '@material-ui/core';
 import { useAuth } from '@hooks/auth';
 import UserAvatar from '@components/UserProfile/UserAvatar';
 import UserProfileTabs from '@components/UserProfile';
-import Layout from '../../components/Layout';
+import AppLayout from '../../components/Layout';
 
 const useStyles = makeStyles({
   introBox: {
@@ -74,14 +74,14 @@ export default function Index({ user }) {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <Layout>
+      <AppLayout>
         <Box style={{ height: introHeight }} className={classes.introBox}>
-          <UserAvatar user={useAuth()}/>
+          <UserAvatar user={useAuth()} />
         </Box>
         <Box p={3}>
           <UserProfileTabs />
         </Box>
-      </Layout>
+      </AppLayout>
     </>
   );
 }

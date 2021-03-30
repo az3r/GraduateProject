@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import Head from 'next/head';
 import dynamic from 'next/dynamic';
 import { comments, exams, submissions, users } from '@libs/client';
-import { useRouter  } from 'next/router';
+import { useRouter } from 'next/router';
 import { parseCookies } from '@libs/client/cookies';
 import {
   Button,
@@ -14,20 +14,17 @@ import {
   TextareaAutosize,
 } from '@material-ui/core';
 import EditIcon from '@material-ui/icons/Edit';
-import Layout from '../../../components/Layout';
+import AppLayout from '../../../components/Layout';
 
-const TestCode = dynamic(
-  () => import('../../../components/TestCode'),
-  { ssr: false }
-);
+const TestCode = dynamic(() => import('../../../components/TestCode'), {
+  ssr: false,
+});
 
-const TestMCQ = dynamic(
-  () => import('../../../components/TestMCQ'),
-  { ssr: false }
-);
+const TestMCQ = dynamic(() => import('../../../components/TestMCQ'), {
+  ssr: false,
+});
 
-
-export default function Start({id, problems, user}) {
+export default function Start({ id, problems, user }) {
   const router = useRouter();
   const [index, setIndex] = useState(0);
   const [problem, setProblem] = useState(problems[0]);
@@ -35,7 +32,6 @@ export default function Start({id, problems, user}) {
   const [numberOfCorrect, setNumberOfCorrect] = useState(0);
   const [commentOpen, setCommentOpen] = useState(false);
   const [commentContent, setCommentContent] = useState('');
-
 
   useEffect(async () => {
     if (user === null) {
@@ -61,7 +57,6 @@ export default function Start({id, problems, user}) {
     if (indexNext < problems.length) {
       setProblem(problems[indexNext]);
     } else {
-
       console.log(resultsTemp);
       await submissions.createExamSubmission(user.uid, {
         examId: id,
@@ -74,11 +69,10 @@ export default function Start({id, problems, user}) {
     }
   };
 
-
   const handleCommentContentChange = (e) => {
     e.preventDefault();
     setCommentContent(e.target.value);
-  }
+  };
 
   const handleCommentClickOpen = () => {
     setCommentOpen(true);
@@ -88,29 +82,27 @@ export default function Start({id, problems, user}) {
     const usr = await users.get();
 
     if (usr !== null) {
-      await comments.createExamComment(id,
-        {
-          userId: usr.id,
-          username: usr.name,
-          avatar: usr.avatar,
-          content: "No comment!",
-        });
+      await comments.createExamComment(id, {
+        userId: usr.id,
+        username: usr.name,
+        avatar: usr.avatar,
+        content: 'No comment!',
+      });
       setCommentOpen(false);
       router.push('/examination/end');
-    };
-  }
+    }
+  };
 
   const handleComment = async () => {
     const usr = await users.get();
 
-    if(usr !== null) {
-      await comments.createExamComment(id,
-        {
-          userId: usr.id,
-          username: usr.name,
-          avatar: usr.avatar,
-          content: commentContent,
-        });
+    if (usr !== null) {
+      await comments.createExamComment(id, {
+        userId: usr.id,
+        username: usr.name,
+        avatar: usr.avatar,
+        content: commentContent,
+      });
       setCommentOpen(false);
       router.push('/examination/end');
     }
@@ -123,20 +115,25 @@ export default function Start({id, problems, user}) {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <Layout>
+      <AppLayout>
         {problem.isMCQ === true ? (
           <TestMCQ problem={problem} nextProblem={nextProblem} />
         ) : (
           <TestCode user={user} problem={problem} nextProblem={nextProblem} />
         )}
-      </Layout>
+      </AppLayout>
 
       {/* Comment */}
-      <Dialog open={commentOpen} onClose={handleCommentClose} aria-labelledby="form-dialog-title" maxWidth="sm" fullWidth>
-        <DialogTitle id="form-dialog-title" style={{color: 'green'}}>
-          <EditIcon fontSize="medium"/>
+      <Dialog
+        open={commentOpen}
+        onClose={handleCommentClose}
+        aria-labelledby="form-dialog-title"
+        maxWidth="sm"
+        fullWidth
+      >
+        <DialogTitle id="form-dialog-title" style={{ color: 'green' }}>
+          <EditIcon fontSize="medium" />
           Your comments!
-
         </DialogTitle>
         <DialogContent>
           <DialogContentText>
@@ -145,14 +142,18 @@ export default function Start({id, problems, user}) {
           <TextareaAutosize
             rowsMax={10}
             rowsMin={10}
-            style={{width: '100%'}}
+            style={{ width: '100%' }}
             value={commentContent}
             onChange={handleCommentContentChange}
             placeholder="Type your comments here!"
           />
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleCommentClose} color="secondary" variant="outlined">
+          <Button
+            onClick={handleCommentClose}
+            color="secondary"
+            variant="outlined"
+          >
             Cancel
           </Button>
           <Button onClick={handleComment} color="primary" variant="outlined">
@@ -164,8 +165,7 @@ export default function Start({id, problems, user}) {
   );
 }
 
-
-export async function getServerSideProps({params, req}) {
+export async function getServerSideProps({ params, req }) {
   const cookies = parseCookies(req);
   let user = null;
   let items = null;
@@ -178,8 +178,7 @@ export async function getServerSideProps({params, req}) {
         user = JSON.parse(cookies.user);
       }
     }
-  }
-  catch (e){
+  } catch (e) {
     console.log(e);
   }
 
@@ -187,7 +186,7 @@ export async function getServerSideProps({params, req}) {
     props: {
       id: params.id,
       problems: items,
-      user
+      user,
     },
   };
 }

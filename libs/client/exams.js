@@ -2,7 +2,7 @@ import { collections } from '@utils/constants';
 import { transform } from '@utils/firestore';
 import { Firestore } from './firebase';
 
-const { exams, problems: problemCollection } = collections;
+const { exams, problems: problemCollection, users } = collections;
 
 export async function create(
   userId,
@@ -77,6 +77,18 @@ export async function getProblems(examId) {
   return snapshot.docs.map((item) =>
     transform({ id: item.id, ...item.data() })
   );
+}
+
+export async function getParticipants(examId) {
+  // get participants' ids
+  const exam = await Firestore().collection(exams).doc(examId).get();
+  const ids = exam.get('participants');
+
+  const participants = await Firestore()
+    .collection(users)
+    .where('id', 'in', ids)
+    .get();
+  return participants.docs.map((item) => item.data());
 }
 
 async function createProblem(examId, props) {

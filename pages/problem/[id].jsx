@@ -4,12 +4,11 @@ import Head from 'next/head';
 import dynamic from 'next/dynamic';
 import { problems as probs, submissions } from '@libs/client';
 import { parseCookies } from '@libs/client/cookies';
-import Layout from '../../components/Layout';
+import AppLayout from '../../components/Layout';
 
-const TestCode = dynamic(
-  () => import('../../components/TestCode'),
-  { ssr: false }
-);
+const TestCode = dynamic(() => import('../../components/TestCode'), {
+  ssr: false,
+});
 
 // const useStyles = makeStyles((theme) => ({
 //   root: {
@@ -32,13 +31,16 @@ export default function Test({ problem, user, problemSubmissionHistory }) {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <Layout>
-        <TestCode problem={problem} user={user} problemSubmissionHistory={problemSubmissionHistory} />
-      </Layout>
+      <AppLayout>
+        <TestCode
+          problem={problem}
+          user={user}
+          problemSubmissionHistory={problemSubmissionHistory}
+        />
+      </AppLayout>
     </>
   );
 }
-
 
 export async function getServerSideProps({ params, req }) {
   const cookies = parseCookies(req);
@@ -51,11 +53,12 @@ export async function getServerSideProps({ params, req }) {
     if (Object.keys(cookies).length !== 0) {
       if (cookies.user) {
         user = JSON.parse(cookies.user);
-        problemSubmissionHistory = await submissions.getProblemSubmissions(user.uid, params.id);
+        problemSubmissionHistory = await submissions.getProblemSubmissions(
+          user.uid,
+          params.id
+        );
       }
     }
-
-
   } catch (e) {
     console.log(e);
   }

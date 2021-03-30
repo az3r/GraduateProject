@@ -7,7 +7,7 @@ import { Grid, Hidden, Container } from '@material-ui/core';
 
 import Problems from '@components/Problems/index';
 import YourProgress from '@components/YourProgress';
-import Layout from '@components/Layout';
+import AppLayout from '@components/Layout';
 
 export default function Home({ problems }) {
   return (
@@ -17,7 +17,7 @@ export default function Home({ problems }) {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <Layout>
+      <AppLayout>
         <Container>
           <Grid container spacing={3}>
             <Grid
@@ -39,7 +39,7 @@ export default function Home({ problems }) {
             </Hidden>
           </Grid>
         </Container>
-      </Layout>
+      </AppLayout>
     </>
   );
 }
@@ -51,7 +51,6 @@ Home.propTypes = {
 
 export async function getServerSideProps() {
   const items = await probs.get();
-
   return {
     props: {
       problems: items,

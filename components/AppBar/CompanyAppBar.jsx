@@ -20,7 +20,6 @@ import { auth } from '@libs/client';
 import { useAuth } from '@hooks/auth';
 import Cookies from 'universal-cookie';
 
-
 const useStyles = makeStyles((theme) => ({
   title: {
     cursor: 'pointer',
@@ -48,20 +47,10 @@ export default function MemberAppBar() {
   return (
     <AppBar position="static">
       <Toolbar className={styles.menu}>
-      <Link href="/">
+        <Link href="/">
           <Typography className={styles.title} variant="h5">
             Smart Coder
           </Typography>
-        </Link>
-        <Link href="/">
-          <MenuItem>
-            <Typography variant="h6">Problems</Typography>
-          </MenuItem>
-        </Link>
-        <Link href="/examination">
-          <MenuItem>
-            <Typography variant="h6">Examinations</Typography>
-          </MenuItem>
         </Link>
         <Link href="/examiner">
           <MenuItem>
@@ -86,7 +75,7 @@ export default function MemberAppBar() {
             >
               <ClickAwayListener onClickAway={() => setOpen(false)}>
                 <Paper>
-                  <CompanyActions />
+                  <ActionList />
                 </Paper>
               </ClickAwayListener>
             </Grow>
@@ -97,14 +86,14 @@ export default function MemberAppBar() {
   );
 }
 
-function CompanyActions() {
+function ActionList() {
   const router = useRouter();
   async function logout() {
     await auth.signout();
     const cookies = new Cookies();
-    cookies.remove("user",{
-      path: "/",
-      expire: Date.now()
+    cookies.remove('user', {
+      path: '/',
+      expire: Date.now(),
     });
     await router.push('/');
   }

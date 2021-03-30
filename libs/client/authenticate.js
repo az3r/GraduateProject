@@ -6,17 +6,20 @@ export async function register({ username, email, password, role }) {
     password
   );
 
+  const avatar = 'https://picsum.photos/200';
   await Firestore()
     .collection('Users')
-    .doc(username)
+    .doc(credentials.user.uid)
     .set({
+      name: username,
       email,
+      avatar,
       role: role || 'developer',
     });
 
   await credentials.user.updateProfile({
     displayName: username,
-    photoURL: 'https://picsum.photos/200',
+    photoURL: avatar,
   });
   return credentials;
 }
