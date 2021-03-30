@@ -96,10 +96,12 @@ export async function getExams(uid) {
 /** get exams in which user joined */
 export async function getJoinedExams(uid) {
   const user = await Firestore().collection(users).doc(uid).get();
+  const joinedExams = user.get('joinedExams');
+  if (joinedExams === []) return [];
 
   const snapshot = await Firestore()
     .collection(exams)
-    .where(Firestore.FieldPath.documentId(), 'in', user.get('joinedExams'))
+    .where(Firestore.FieldPath.documentId(), 'in', joinedExams)
     .get();
 
   return snapshot.docs.map((doc) => transform({ id: doc.id, ...doc.data() }));
