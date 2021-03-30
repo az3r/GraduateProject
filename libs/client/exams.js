@@ -59,7 +59,10 @@ export async function get(examId, { withProblems }) {
       ...snapshot.data(),
     });
   }
-  const snapshot = await Firestore().collection(exams).get();
+  const snapshot = await Firestore()
+    .collection(exams)
+    .orderBy('createdOn', 'desc')
+    .get();
   return snapshot.docs.map((item) =>
     transform({ id: item.id, ...item.data() })
   );

@@ -26,7 +26,10 @@ export async function get(problemId) {
     }
     return null;
   }
-  const snapshot = await Firestore().collection(problems).get();
+  const snapshot = await Firestore()
+    .collection(problems)
+    .orderBy('createdOn', 'desc')
+    .get();
   return snapshot.docs.map((item) =>
     transform({ id: item.id, ...item.data() })
   );
