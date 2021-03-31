@@ -5,7 +5,7 @@ import { useAuth } from '../../hooks/auth';
 
 export default function Layout({ children }) {
   const user = useAuth();
-  const AppBar = getLayout(user.role);
+  const AppBar = getLayout(user?.role);
 
   return (
     <>

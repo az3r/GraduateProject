@@ -64,7 +64,7 @@ export default function MemberAppBar() {
         </Link>
         <Box flexGrow={1} />
         <IconButton onClick={() => setOpen(!open)} ref={anchorRef}>
-          <Avatar alt="user's profile" src={user.photoURL} />
+          <Avatar alt="user's profile" src={user.avatar} />
         </IconButton>
         <Popper
           anchorEl={anchorRef.current}

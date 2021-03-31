@@ -55,7 +55,20 @@ export async function signin({ username, password, provider }) {
     });
   }
 
-  return FirebaseAuth().signInWithPopup(provider);
+  return FirebaseAuth()
+    .signInWithPopup(provider)
+    .then(async (credentials) => {
+      await Firestore().collection('Users').doc(credentials.user.uid).set(
+        {
+          name: credentials.user.displayName,
+          avatar: credentials.user.photoURL,
+          role: 'developer',
+          id: credentials.user.uid,
+        },
+        { merge: true }
+      );
+      return credentials;
+    });
 }
 
 export async function signout() {
