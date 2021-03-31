@@ -1,6 +1,5 @@
 import { collections } from '@utils/constants';
 import { transform } from '@utils/firestore';
-import { firestore } from 'firebase-admin';
 import { Firestore, FirebaseAuth } from './firebase';
 
 const {
@@ -15,7 +14,12 @@ const {
 export async function get(userId) {
   const uid = userId ?? FirebaseAuth().currentUser.uid;
   const user = await Firestore().collection(users).doc(uid).get();
-  if (user.exists) return { ...user.data(), id: user.id };
+  if (user.exists)
+    return {
+      ...user.data(),
+      id: user.id,
+      role: user.get('role') || 'developer',
+    };
   return undefined;
 }
 
@@ -139,7 +143,7 @@ export async function getUsers(role) {
 export async function updateScoreProblem(userId, problemId, value) {
   // update total score
   const ref = Firestore().collection(users).doc(userId);
-  await ref.update({ problemScore: firestore.FieldValue.increment(value) });
+  await ref.update({ problemScore: Firestore.FieldValue.increment(value) });
 
   // update passed problems
   await ref
@@ -151,7 +155,7 @@ export async function updateScoreProblem(userId, problemId, value) {
 export async function updateScoreExam(userId, examId, value) {
   // update total score
   const ref = Firestore().collection(users).doc(userId);
-  await ref.update({ examScore: firestore.FieldValue.increment(value) });
+  await ref.update({ examScore: Firestore.FieldValue.increment(value) });
 
   // update participated exams
   await ref
