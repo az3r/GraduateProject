@@ -32,6 +32,7 @@ export default function Start({ id, problems, user }) {
   const [numberOfCorrect, setNumberOfCorrect] = useState(0);
   const [commentOpen, setCommentOpen] = useState(false);
   const [commentContent, setCommentContent] = useState('');
+  const [totalScore, setTotalScore] = useState(0);
 
   useEffect(async () => {
     if (user === null) {
@@ -42,6 +43,8 @@ export default function Start({ id, problems, user }) {
   const nextProblem = async (result, correct) => {
     const resultsTemp = results;
     let numberOfCorrectTemp = numberOfCorrect;
+    let totalScoreTemp = totalScore;
+
     if (result) {
       resultsTemp.push(result);
       numberOfCorrectTemp += parseInt(correct, 10);
@@ -49,6 +52,11 @@ export default function Start({ id, problems, user }) {
       setResults(resultsTemp);
       // setResults(prevState => [...prevState, result]);
       setNumberOfCorrect(numberOfCorrect + parseInt(correct, 10));
+
+      if(correct === 1){
+        totalScoreTemp += problem.score;
+        setTotalScore(totalScoreTemp);
+      }
     }
 
     const indexNext = index + 1;
@@ -65,6 +73,7 @@ export default function Start({ id, problems, user }) {
         results: resultsTemp,
       });
       // router.push('/examination/end');
+      await users.updateScoreExam(user.uid, id, totalScoreTemp);
       handleCommentClickOpen();
     }
   };
