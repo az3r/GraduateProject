@@ -101,7 +101,7 @@ export async function getExams(uid) {
 export async function getJoinedExams(uid) {
   const user = await Firestore().collection(users).doc(uid).get();
   const exams = user.get('joinedExams');
-  if (exams === []) return [];
+  if (exams === undefined || exams.length === 0) return [];
 
   const snapshot = await Firestore()
     .collection(examCollection)
