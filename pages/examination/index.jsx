@@ -13,11 +13,14 @@ import {
   DialogTitle,
   Grid,
 } from '@material-ui/core';
-import { exams } from '@libs/client';
-import AppLayout from '../../components/Layout';
+import { exams, users } from '@libs/client';
+import { parseCookies } from '@libs/client/cookies';
+import Layout from '../../components/Layout';
 
 import Challenge from '../../components/Examinations/Challenge';
 import TopScore from '../../components/Examinations/TopScore';
+// import { parseCookies } from '@client/cookies';
+
 
 const useStyles = makeStyles({
   introBox: {
@@ -41,7 +44,7 @@ const useStyles = makeStyles({
   },
 });
 
-export default function Index({ examinations, arrProblems }) {
+export default function Index({user, examinations, arrProblems}) {
   const classes = useStyles();
   const [introHeight, setIntroHeight] = useState(0);
   const [open, setOpen] = useState(false);
@@ -55,7 +58,7 @@ export default function Index({ examinations, arrProblems }) {
   };
 
   useEffect(() => {
-    setIntroHeight(window.innerWidth / (7 / 2));
+    setIntroHeight(window.innerWidth / (7/2));
   }, []);
 
   return (
@@ -66,7 +69,7 @@ export default function Index({ examinations, arrProblems }) {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <AppLayout>
+      <Layout>
         <Box style={{ height: introHeight }} className={classes.introBox}>
           <Box style={{ textAlign: 'center' }}>
             <img src="/trophy.png" alt="trophy icon" />
@@ -123,28 +126,46 @@ export default function Index({ examinations, arrProblems }) {
         <Box>
           <Grid container direction="row" justify="center" spacing={3}>
             <Grid item sm={5}>
-              <Challenge exams={examinations} arrProblems={arrProblems} />
+              <Challenge user={user} exams={examinations} arrProblems={arrProblems} />
             </Grid>
             <Grid item sm={4}>
               <TopScore />
             </Grid>
           </Grid>
         </Box>
-      </AppLayout>
+      </Layout>
     </>
   );
 }
 
-export async function getServerSideProps() {
-  const items = await exams.get('', { withProblems: false });
+export async function getServerSideProps({req}) {
+  const cookies = parseCookies(req);
+  let user = null;
+
+  try {
+    if (Object.keys(cookies).length !== 0) {
+      if (cookies.user) {
+        user = JSON.parse(cookies.user);
+
+        const joinedExams = await users.getJoinedExams(user.uid);
+        console.log(joinedExams);
+      }
+    }
+  }
+  catch (e){
+    console.log(e);
+  }
+
+  const items = await exams.get("", {withProblems: false});
   const arrProblems = [];
-  for (let i = 0; i < items.length; i += 1) {
+  for(let i = 0; i < items.length; i += 1){
     // const problems = await exams.getProblems(items[i].id)
     arrProblems.push(exams.getProblems(items[i].id));
   }
 
   return {
     props: {
+      user,
       examinations: items,
       arrProblems: await Promise.all(arrProblems),
     },

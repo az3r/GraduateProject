@@ -5,7 +5,7 @@ import Router, { useRouter } from 'next/router';
 import SplitPane from 'react-split-pane';
 import ClipLoader from 'react-spinners/ClipLoader';
 
-import { submissions } from '@libs/client';
+import { users, submissions } from '@libs/client';
 import Problem from '@components/TestCode/Problem';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
@@ -224,7 +224,7 @@ export default function Test({ problem, user, problemSubmissionHistory, nextProb
         });
 
         if (response.failed === 0) {
-          await submissions.createProblđemSubmission(
+          await submissions.createProblemSubmission(
             user.uid,
             {
               problemId: problem.id,
@@ -233,6 +233,7 @@ export default function Test({ problem, user, problemSubmissionHistory, nextProb
               code,
               data: response,
             });
+          await users.updateScoreProblem(user.uid, id, score);
           handleSubmitClickOpen('Accepted');
         } else {
           await submissions.createProblemSubmission(
@@ -379,7 +380,7 @@ export default function Test({ problem, user, problemSubmissionHistory, nextProb
         maxWidth="xs"
         fullWidth
       >
-        <DialogTitle id="alert-dialog-title">Your Submission</DialogTitle>
+        <DialogTitle id="alert-dialog-title" />
         <DialogContent>
           <DialogContentText id="alert-dialog-description">
             {
