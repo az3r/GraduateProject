@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import Head from 'next/head';
 import {
   makeStyles,
@@ -9,7 +9,10 @@ import {
   Button,
 } from '@material-ui/core';
 
-import { exams } from '@libs/client';
+import { exams, submissions } from '@libs/client';
+import { parseCookies } from '@libs/client/cookies';
+// import { route } from 'next/dist/next-server/server/router';
+import { useRouter  } from 'next/router';
 import AppLayout from '../../components/Layout';
 
 const useStyles = makeStyles({
@@ -69,8 +72,43 @@ const useStyles = makeStyles({
   },
 });
 
-export default function Introduction({ exam }) {
+export default function Introduction({ exam, user }) {
   const classes = useStyles();
+
+  const router = useRouter();
+
+  const beforeunload = (event) => {
+    event.preventDefault();
+    event.returnValue = "Are you sure you want to leave this page?";
+    return event.returnValue;
+  }
+
+  const unload = async () => {
+    await submissions.createExamSubmission(
+      user.uid, {
+      examId: exam.id,
+      total: exam.problems.length,
+      correct: 0,
+      results: []
+    });
+  }
+
+  useEffect(() => {
+    window.addEventListener('beforeunload', beforeunload);
+    window.addEventListener('unload', unload);
+    return () => {
+      window.removeEventListener('beforeunload', beforeunload);
+      window.removeEventListener('unload', unload);
+    }
+  });
+
+  const start = (examId) => {
+    // href={`/examination/start/${exam.id}`}
+    // window.onbeforeunload = null;
+    // window.onunload = null;
+
+    router.push(`/examination/start/${examId}`);
+  }
 
   return (
     <>
@@ -191,7 +229,8 @@ export default function Introduction({ exam }) {
                   size="large"
                   variant="contained"
                   color="primary"
-                  href={`/examination/start/${exam.id}`}
+                  // href={`/examination/start/${exam.id}`}
+                  onClick={() => start(exam.id)}
                 >
                   START
                 </Button>
@@ -204,11 +243,26 @@ export default function Introduction({ exam }) {
   );
 }
 
-export async function getServerSideProps({ params }) {
+export async function getServerSideProps({ params, req }) {
+  const cookies = parseCookies(req);
+  let user = null;
+
+  try {
+    if (Object.keys(cookies).length !== 0) {
+      if (cookies.user) {
+        user = JSON.parse(cookies.user);
+      }
+    }
+  }
+  catch (e){
+    console.log(e);
+  }
+
   const item = await exams.get(params.id, { withProblems: true });
   return {
     props: {
       exam: item,
+      user
     },
   };
 }

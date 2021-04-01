@@ -40,6 +40,7 @@ export default function Start({ id, problems, user }) {
     }
   }, []);
 
+
   const nextProblem = async (result, correct) => {
     const resultsTemp = results;
     let numberOfCorrectTemp = numberOfCorrect;
@@ -65,18 +66,44 @@ export default function Start({ id, problems, user }) {
     if (indexNext < problems.length) {
       setProblem(problems[indexNext]);
     } else {
-      console.log(resultsTemp);
       await submissions.createExamSubmission(user.uid, {
         examId: id,
         total: problems.length,
         correct: numberOfCorrectTemp,
         results: resultsTemp,
       });
-      // router.push('/examination/end');
       await users.updateScoreExam(user.uid, id, totalScoreTemp);
       handleCommentClickOpen();
     }
   };
+
+  const beforeunload = (event) => {
+    event.preventDefault();
+    event.returnValue = 'Are you sure you want to leave this page?';
+    return event.returnValue;
+  }
+
+
+  const unload = async () => {
+    await submissions.createExamSubmission(
+      user.uid, {
+        examId: id,
+        total: problems.length,
+        correct: 0,
+        results: []
+      });
+
+  }
+
+  useEffect(() => {
+    window.addEventListener('beforeunload', beforeunload);
+    window.addEventListener('unload', unload);
+    return () => {
+      window.removeEventListener('beforeunload', beforeunload);
+      window.removeEventListener('unload', unload);
+    }
+  });
+
 
   const handleCommentContentChange = (e) => {
     e.preventDefault();

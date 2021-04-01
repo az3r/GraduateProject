@@ -19,7 +19,6 @@ import Layout from '../../components/Layout';
 
 import Challenge from '../../components/Examinations/Challenge';
 import TopScore from '../../components/Examinations/TopScore';
-// import { parseCookies } from '@client/cookies';
 
 
 const useStyles = makeStyles({
@@ -44,7 +43,7 @@ const useStyles = makeStyles({
   },
 });
 
-export default function Index({user, examinations, arrProblems}) {
+export default function Index({user, examinations}) {
   const classes = useStyles();
   const [introHeight, setIntroHeight] = useState(0);
   const [open, setOpen] = useState(false);
@@ -126,7 +125,7 @@ export default function Index({user, examinations, arrProblems}) {
         <Box>
           <Grid container direction="row" justify="center" spacing={3}>
             <Grid item sm={5}>
-              <Challenge user={user} exams={examinations} arrProblems={arrProblems} />
+              <Challenge user={user} exams={examinations} />
             </Grid>
             <Grid item sm={4}>
               <TopScore />
@@ -141,14 +140,15 @@ export default function Index({user, examinations, arrProblems}) {
 export async function getServerSideProps({req}) {
   const cookies = parseCookies(req);
   let user = null;
+  let joinedExams = null;
 
   try {
     if (Object.keys(cookies).length !== 0) {
       if (cookies.user) {
         user = JSON.parse(cookies.user);
 
-        const joinedExams = await users.getJoinedExams(user.uid);
-        console.log(joinedExams);
+        joinedExams = await users.getJoinedExams(user.uid);
+        // console.log(joinedExams);
       }
     }
   }
@@ -156,18 +156,31 @@ export async function getServerSideProps({req}) {
     console.log(e);
   }
 
-  const items = await exams.get("", {withProblems: false});
-  const arrProblems = [];
-  for(let i = 0; i < items.length; i += 1){
-    // const problems = await exams.getProblems(items[i].id)
-    arrProblems.push(exams.getProblems(items[i].id));
+  let items = await exams.get(undefined, {withProblems: true});
+
+  if(joinedExams !== null){
+    const itemsTemp = [];
+
+    for(let i = 0; i < items.length; i += 1){
+      let flag = false;
+      for(let j = 0; j < joinedExams.length; j += 1){
+        if(items[i].id === joinedExams[j].id){
+          flag = true;
+          break;
+        }
+      }
+
+      if(flag !== true){
+        itemsTemp.push(items[i]);
+      }
+    }
+    items = itemsTemp;
   }
 
   return {
     props: {
       user,
-      examinations: items,
-      arrProblems: await Promise.all(arrProblems),
+      examinations: items
     },
   };
 }
