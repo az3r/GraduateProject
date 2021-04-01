@@ -53,7 +53,7 @@ export async function update({
     photoURL: avatar || photoURL,
   });
 
-  await Promise.all(infoTask, profileTask);
+  await Promise.all([infoTask, profileTask]);
 }
 
 /** get problems own by user */
@@ -141,15 +141,23 @@ export async function getUsers(role) {
 }
 
 export async function updateScoreProblem(userId, problemId, value) {
-  // update total score
   const ref = Firestore().collection(users).doc(userId);
+  // check if user has passed this problem
+  const isSolved = await ref
+    .collection(solvedProblems)
+    .where('id', '==', problemId)
+    .limit(1)
+    .get();
+  if (isSolved.size > 0) return;
+
+  // update total score
   await ref.update({ problemScore: Firestore.FieldValue.increment(value) });
 
   // update passed problems
   await ref
     .collection(solvedProblems)
     .doc(problemId)
-    .set({ id: problemId, score: value });
+    .set({ id: problemId, score: value, createdOn: Firestore.Timestamp.now() });
 }
 
 export async function updateScoreExam(userId, examId, value) {
@@ -161,5 +169,5 @@ export async function updateScoreExam(userId, examId, value) {
   await ref
     .collection(joinedExams)
     .doc(examId)
-    .set({ id: examId, score: value });
+    .set({ id: examId, score: value, createdOn: Firestore.Timestamp.now() });
 }

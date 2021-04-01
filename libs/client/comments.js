@@ -121,6 +121,7 @@ export async function getProblemComments(problemId) {
     .collection(problems)
     .doc(problemId)
     .collection(comments)
+    .orderBy('createdOn', 'asc')
     .get();
 
   return snapshot.docs.map((doc) => transform({ id: doc.id, ...doc.data() }));
@@ -131,6 +132,7 @@ export async function getExamComments(examId) {
     .collection(exams)
     .doc(examId)
     .collection(comments)
+    .orderBy('createdOn', 'asc')
     .get();
 
   return snapshot.docs.map((doc) => transform({ id: doc.id, ...doc.data() }));

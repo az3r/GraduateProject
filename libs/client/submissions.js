@@ -46,6 +46,7 @@ export async function getProblemSubmissions(userId, problemId) {
     .doc(userId)
     .collection(problemSubmissions)
     .where('problemId', '==', problemId)
+    .orderBy('createdOn', 'desc')
     .get();
 
   return snapshot.docs.map((doc) => transform(doc.data()));
