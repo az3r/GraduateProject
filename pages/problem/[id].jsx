@@ -57,7 +57,6 @@ export async function getServerSideProps({ params, req }) {
           user.uid,
           params.id
         );
-        console.log(problemSubmissionHistory);
       }
     }
   } catch (e) {

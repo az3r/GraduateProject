@@ -136,7 +136,7 @@ export default function Challenge({user, exams}) {
         </TableHead>
         <TableBody>
           {examinations.map((examination, index) => {
-              if (Date.parse(examination.startAt) <= Date.now() && Date.parse(examination.endAt) >= Date.now()) {
+              if (examination.isPrivate === false && Date.parse(examination.startAt) <= Date.now() && Date.parse(examination.endAt) >= Date.now()) {
                 return (
                   <TableRow
                     key={examination.id}

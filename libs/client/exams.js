@@ -51,6 +51,7 @@ export async function update(
 }
 export async function get(examId, { withProblems }) {
   if (examId) {
+    console.log(examId);
     const snapshot = await Firestore().collection(exams).doc(examId).get();
     const problems = withProblems && (await getProblems(examId));
     return transform({
