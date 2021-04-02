@@ -1,4 +1,3 @@
-import { collections } from '@utils/constants';
 import React from 'react';
 import {
   Avatar,
@@ -15,7 +14,7 @@ import Head from 'next/head';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
 import { Alert } from '@material-ui/lab';
-import { FirebaseAuth, Firestore } from '@libs/client/firebase';
+import { FirebaseAuth } from '@libs/client/firebase';
 import { auth } from '@libs/client';
 import { useCookies } from 'react-cookie';
 
@@ -236,7 +235,7 @@ export default function Login() {
     const provider = method && providers[method];
     try {
       setWaiting(true);
-      const credentials = await auth.signin({ username, password, provider });
+      await auth.signin({ username, password, provider });
 
       // save cookies
       const user = {
@@ -245,12 +244,6 @@ export default function Login() {
       };
       setCookies(['user'], JSON.stringify(user), { path: '/' });
       // end save cookies
-
-      // create an user in firestore
-      Firestore()
-        .collection(collections.users)
-        .doc(credentials.user.uid)
-        .set({ id: credentials.user.uid }, { merge: true });
 
       router.replace('/');
       setSnackBarState({

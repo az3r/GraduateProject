@@ -2,7 +2,7 @@ import { CKEditor } from '@ckeditor/ckeditor5-react';
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import {Box, Breadcrumbs, Button, Checkbox, Link, makeStyles, TextField, Typography} from '@material-ui/core';
 import React, {useEffect, useState} from 'react';
-import { formatQuestionsArray, getFormatResultFromFile } from '@libs/client/business';
+import getTestCaseFromInputAndOutput, { formatQuestionsArray, getFormatResultFromFile } from '@libs/client/business';
 // import { create } from '@libs/client/exams';
 // import { FirebaseAuth } from '@libs/client/firebase';
 import { test } from '@libs/client/submissions';
@@ -39,7 +39,8 @@ export default function UpdateExamination({examProps}){
         const problemsList = examProps.problems.map(item=>{
             if(item.isMCQ)
             {
-                return {...item, message:{
+                return {...item, 
+                  message:{
                     question: false,
                     difficulty: false,
                     score: false,
@@ -383,6 +384,7 @@ public class Program
         if (fileType === 'In') question.input = testCases;
         else question.output = testCases;
 
+        question.cases = getTestCaseFromInputAndOutput(question.input,question.output);
         setListOfQuestions(newListQuestions);
       };
       fileReader.readAsText(e.target.files[0]);
@@ -454,6 +456,11 @@ public class Program
         await sendTestRequest(questionID);
     }
   };
+  const handleDeleteQuestion = (i) => {
+    const newListQuestions = [...listOfQuestions];
+    newListQuestions.splice(i,1)
+    setListOfQuestions(newListQuestions);
+  }
 
   function validateExam()
   {
@@ -860,6 +867,7 @@ public class Program
                 handleChangeQuestionMC={handleChangeQuestionMC} handleChangeAnswerMC={handleChangeAnswerMC}
                 handleChangeCorrectAnswer={handleChangeCorrectAnswer} handleChangeScore={handleChangeScore}
                 handleChangeMinutes={handleChangeMinutes} handleChangeSeconds={handleChangeSeconds}
+                handleDeleteQuestion={handleDeleteQuestion}
 
                 handleChangeCPTitle={handleChangeCPTitle} handleChangeCPInfo={handleChangeCPInfo}
                 handleChangeCPDifficulty={handleChangeCPDifficulty} handleChangeLanguague={handleChangeLanguague}

@@ -14,7 +14,10 @@ import {
 
 import Pagination from '@material-ui/lab/Pagination';
 import dateFormat from 'dateformat';
-import { calculateTotalExamTime } from '@libs/client/business';
+import { users } from '@libs/client';
+import { useRouter  } from 'next/router';
+import Swal from 'sweetalert2'
+import withReactContent from 'sweetalert2-react-content'
 
 const useStyles = makeStyles(() => ({
   tableContainer: {
@@ -49,7 +52,9 @@ const useStyles = makeStyles(() => ({
 
 const PROBLEM_PER_PAGE = 10;
 
-export default function Examinations({exams, arrProblems}) {
+export default function Challenge({user, exams}) {
+  const router = useRouter();
+
   const classes = useStyles();
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPage] = useState(
@@ -60,6 +65,27 @@ export default function Examinations({exams, arrProblems}) {
       (currentPage - 1) * PROBLEM_PER_PAGE,
       currentPage * PROBLEM_PER_PAGE
     ));
+
+  const MySwal = withReactContent(Swal);
+
+  const handleJoinExam = async (examId) => {
+    if(user){
+      await users.joinExam(user.uid, examId);
+      router.push(`/examination/${examId}`);
+    }
+    else{
+      MySwal.fire({
+        title: <p>You have not logged in yet, please log into your account!</p>,
+        icon: 'info',
+        showCancelButton: true,
+        confirmButtonText: 'Login'
+      }).then((result) => {
+        if(result.isConfirmed){
+          router.push('/login');
+        }
+      });
+    }
+  }
 
 
   const handlePagination = (e, page) => {
@@ -109,36 +135,44 @@ export default function Examinations({exams, arrProblems}) {
           </TableRow>
         </TableHead>
         <TableBody>
-          {examinations.map((examination, index) => (
-            <TableRow
-              key={examination.id}
-              className={classes.tableRow}
-              hover
-              style={
-                index % 2
-                  ? { background: 'rgb(250, 250, 250)' }
-                  : { background: 'white' }
+          {examinations.map((examination, index) => {
+              if (examination.isPrivate === false && Date.parse(examination.startAt) <= Date.now() && Date.parse(examination.endAt) >= Date.now()) {
+                return (
+                  <TableRow
+                    key={examination.id}
+                    className={classes.tableRow}
+                    hover
+                    style={
+                      index % 2
+                        ? { background: 'rgb(250, 250, 250)' }
+                        : { background: 'white' }
+                    }
+                  >
+                    <TableCell component="th" scope="row">
+                      <Link onClick={() => handleJoinExam(examination.id)} style={{cursor: 'pointer'}}  underline="none">
+                        <Box>
+                          <Box className={classes.title}>{examination.title}</Box>
+                          <Box className={classes.createdDate}>
+                            {dateFormat(
+                              new Date(examination.createdOn),
+                              'mmmm dd, yyyy "at" HH:MM TT'
+                            )}
+                          </Box>
+                        </Box>
+                      </Link>
+                    </TableCell>
+                    <TableCell>1h 20m 0s</TableCell>
+                    <TableCell>
+                      <Button size="small" variant="contained" color="primary"
+                              onClick={() => handleJoinExam(examination.id)}>JOIN</Button>
+                    </TableCell>
+                  </TableRow>
+                );
               }
-            >
-              <TableCell component="th" scope="row">
-                <Link href={`/examination/${examination.id}`} underline="none">
-                  <Box>
-                    <Box className={classes.title}>{examination.title}</Box>
-                    <Box className={classes.createdDate}>
-                      {dateFormat(
-                        new Date(examination.createdOn),
-                        'mmmm dd, yyyy "at" HH:MM TT'
-                      )}
-                    </Box>
-                  </Box>
-                </Link>
-              </TableCell>
-              <TableCell>{calculateTotalExamTime(arrProblems[index]).toString()}</TableCell>
-              <TableCell>
-                <Button size="small" variant="contained" color="primary" href={`/examination/${examination.id}`}>JOIN</Button>
-              </TableCell>
-            </TableRow>
-          ))}
+              return null;
+            }
+          )
+          }
         </TableBody>
       </Table>
       <div className={classes.pagination}>

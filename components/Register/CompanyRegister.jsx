@@ -180,7 +180,7 @@ export default function DeveloperRegister({ onRegistered }) {
         username,
         email,
         password,
-        roll: 'company',
+        role: 'company',
       });
       onRegistered(credentials.user);
     } catch (error) {

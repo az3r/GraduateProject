@@ -11,6 +11,7 @@
           "@models": ["./model"],
           "@styles": ["./styles"],
           "@utils": ["./utils"],
+          "@server": ["./libs/server"],
           "@hooks": ["./hooks"]
         }
       }

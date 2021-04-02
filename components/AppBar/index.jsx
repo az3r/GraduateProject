@@ -1,4 +1,5 @@
 import GuestAppBar from './GuestAppBar';
-import MemberAppBar from './MemberAppBar';
+import DeveloperAppBar from './DeveloperAppBar';
+import CompanyAppBar from './CompanyAppBar';
 
-export { GuestAppBar, MemberAppBar };
+export { GuestAppBar, DeveloperAppBar, CompanyAppBar };

@@ -1,7 +1,27 @@
-import { Box, Breadcrumbs, Button, Link, Typography } from '@material-ui/core';
+import { AppBar, Box, Breadcrumbs, Link, makeStyles, Tab, Tabs, Typography } from '@material-ui/core';
 import React from 'react';
+import DetailTab from './DetailTab';
+import InvitationTab from './InvitationTab';
+
+const useStyles = makeStyles((theme) => ({
+    root: {
+      flexGrow: 1,
+      width: '100%',
+      backgroundColor: theme.palette.background.paper,
+    },
+    tabsStyle:{
+        backgroundColor: "#ffffff",
+        color: "#000000"
+    }
+  }));
 
 export default function DetailExamination({exam}){
+    const [value, setValue] = React.useState(0);
+    const classes = useStyles();
+    const handleChange = (event, newValue) => {
+        setValue(newValue);
+      };
+    
     return(
         <Box m={1}>
             <Box p={2}>
@@ -16,8 +36,57 @@ export default function DetailExamination({exam}){
                 </Breadcrumbs>
             </Box>
             <Box display="float" p={2}>
-                <Button color="primary" href={`/examiner/examinations/update?id=${exam.id}`}>Update</Button>
+                <div className={classes.root}>
+                    <AppBar position="static">
+                        <Tabs className={classes.tabsStyle} value={value} onChange={handleChange} centered aria-label="simple tabs example">
+                            <Tab label="Detail" {...a11yProps(0)} />
+                            {
+                                exam.isPrivate ?
+                                <Tab label="Invitation" {...a11yProps(1)} /> :
+                                null
+                            }
+                            <Tab label="Participants" {...a11yProps(2)} />
+                        </Tabs>
+                    </AppBar>
+                    <TabPanel value={value} index={0}>
+                        <DetailTab exam={exam}/>
+                    </TabPanel>
+                    {
+                      exam.isPrivate ?
+                      <TabPanel value={value} index={1}>
+                        <InvitationTab/>
+                      </TabPanel> : null
+                    }
+                    <TabPanel value={value} index={2}>
+                        Item Three
+                    </TabPanel>
+                </div>
             </Box>
         </Box>
     )
 }
+
+function TabPanel( { children, value, index, ...other }) {  
+    return (
+      <div
+        role="tabpanel"
+        hidden={value !== index}
+        id={`simple-tabpanel-${index}`}
+        aria-labelledby={`simple-tab-${index}`}
+        {...other}
+      >
+        {value === index && (
+          <Box p={3}>
+            <Typography>{children}</Typography>
+          </Box>
+        )}
+      </div>
+    );
+  }
+
+  function a11yProps(index) {
+    return {
+      id: `simple-tab-${index}`,
+      'aria-controls': `simple-tabpanel-${index}`,
+    };
+  }

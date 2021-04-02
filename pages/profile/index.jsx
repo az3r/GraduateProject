@@ -9,7 +9,7 @@ import { useAuth } from '@hooks/auth';
 import * as userServices from '@libs/client/users';
 import UserAvatar from '@components/UserProfile/UserAvatar';
 import UserProfileTabs from '@components/UserProfile';
-import Layout from '../../components/Layout';
+import AppLayout from '../../components/Layout';
 
 const useStyles = makeStyles({
   introBox: {
@@ -164,7 +164,7 @@ export default function Index(props) {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <Layout>
+      <AppLayout>
         <Box style={{ height: introHeight }} className={classes.introBox}>
           <UserAvatar user={user} handleUserInfoChange={handleUserInfoChange} />
         </Box>
@@ -175,7 +175,7 @@ export default function Index(props) {
             handleUserInfoChange={handleUserInfoChange}
           />
         </Box>
-      </Layout>
+      </AppLayout>
     </>
   );
 }

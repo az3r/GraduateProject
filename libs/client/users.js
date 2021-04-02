@@ -2,23 +2,25 @@ import { collections } from '@utils/constants';
 import { transform } from '@utils/firestore';
 import { Firestore, FirebaseAuth } from './firebase';
 
-const { problems, exams, users, problemSubmissions } = collections;
+const {
+  problems,
+  exams: examCollection,
+  users,
+  problemSubmissions,
+  joinedExams,
+  solvedProblems,
+} = collections;
 
-/** require user to be signed in */
-export async function get() {
-  const {
-    displayName: name,
-    email,
-    photoURL: avatar,
-    uid,
-  } = FirebaseAuth().currentUser;
-  const info = await Firestore().collection(users).doc(uid).get();
-  return {
-    ...info.data(),
-    name,
-    email,
-    avatar,
-  };
+export async function get(userId) {
+  const uid = userId || FirebaseAuth().currentUser.uid;
+  const user = await Firestore().collection(users).doc(uid).get();
+  if (user.exists)
+    return {
+      ...user.data(),
+      id: user.id,
+      role: user.get('role') || 'developer',
+    };
+  return undefined;
 }
 
 /** require user to be signed in */
@@ -82,7 +84,7 @@ export async function getSubmittedProblems(uid) {
 /** get exams own by user */
 export async function getExams(uid) {
   const snapshot = await Firestore()
-    .collection(exams)
+    .collection(examCollection)
     .where('owner', '==', uid)
     .get();
 
@@ -94,18 +96,74 @@ export async function getExams(uid) {
 /** get exams in which user joined */
 export async function getJoinedExams(uid) {
   const user = await Firestore().collection(users).doc(uid).get();
+  const exams = user.get('joinedExams');
+  if (exams === undefined || exams.length === 0) return [];
 
   const snapshot = await Firestore()
-    .collection(exams)
-    .where(Firestore.FieldPath.documentId(), 'in', user.get('joinedExams'))
+    .collection(examCollection)
+    .where(Firestore.FieldPath.documentId(), 'in', exams)
     .get();
 
   return snapshot.docs.map((doc) => transform({ id: doc.id, ...doc.data() }));
 }
 
 export async function joinExam(uid, examId) {
+  // add user to exam's participants
+  await Firestore()
+    .collection(examCollection)
+    .doc(examId)
+    .update({
+      participants: Firestore.FieldValue.arrayUnion(uid),
+    });
+
+  // add exam to user's particated exams
   return Firestore()
     .collection(users)
     .doc(uid)
     .update({ joinedExams: Firestore.FieldValue.arrayUnion(examId) });
+}
+
+/**
+ * retrieve user by their roles
+ * @param {string} role one of 'developer', 'admin', 'company'
+ * @returns
+ */
+export async function getUsers(role) {
+  const results = await Firestore()
+    .collection(users)
+    .where('role', '==', role)
+    .get();
+  return results.docs.map((item) => item.data());
+}
+
+export async function updateScoreProblem(userId, problemId, value) {
+  const ref = Firestore().collection(users).doc(userId);
+  // check if user has passed this problem
+  const isSolved = await ref
+    .collection(solvedProblems)
+    .where('id', '==', problemId)
+    .limit(1)
+    .get();
+  if (isSolved.size > 0) return;
+
+  // update total score
+  await ref.update({ problemScore: Firestore.FieldValue.increment(value) });
+
+  // update passed problems
+  await ref
+    .collection(solvedProblems)
+    .doc(problemId)
+    .set({ id: problemId, score: value, createdOn: Firestore.Timestamp.now() });
+}
+
+export async function updateScoreExam(userId, examId, value) {
+  // update total score
+  const ref = Firestore().collection(users).doc(userId);
+  await ref.update({ examScore: Firestore.FieldValue.increment(value) });
+
+  // update participated exams
+  await ref
+    .collection(joinedExams)
+    .doc(examId)
+    .set({ id: examId, score: value, createdOn: Firestore.Timestamp.now() });
 }

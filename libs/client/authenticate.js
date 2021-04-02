@@ -6,17 +6,20 @@ export async function register({ username, email, password, role }) {
     password
   );
 
+  const avatar = 'https://picsum.photos/200';
   await Firestore()
     .collection('Users')
-    .doc(username)
+    .doc(credentials.user.uid)
     .set({
+      name: username,
       email,
+      avatar,
       role: role || 'developer',
     });
 
   await credentials.user.updateProfile({
     displayName: username,
-    photoURL: 'https://picsum.photos/200',
+    photoURL: avatar,
   });
   return credentials;
 }
@@ -52,7 +55,20 @@ export async function signin({ username, password, provider }) {
     });
   }
 
-  return FirebaseAuth().signInWithPopup(provider);
+  return FirebaseAuth()
+    .signInWithPopup(provider)
+    .then(async (credentials) => {
+      await Firestore().collection('Users').doc(credentials.user.uid).set(
+        {
+          name: credentials.user.displayName,
+          avatar: credentials.user.photoURL,
+          role: 'developer',
+          id: credentials.user.uid,
+        },
+        { merge: true }
+      );
+      return credentials;
+    });
 }
 
 export async function signout() {

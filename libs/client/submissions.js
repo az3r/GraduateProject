@@ -2,7 +2,7 @@ import { collections, urls } from '@utils/constants';
 import { transform } from '@utils/firestore';
 import { Firestore, FirebaseAuth } from './firebase';
 
-const { users, problemSubmissions, examSubmissions } = collections;
+const { users, problemSubmissions, examSubmissions, problems } = collections;
 const { compiler } = urls;
 const langs = {
   csharp: 'csharp',
@@ -46,6 +46,7 @@ export async function getProblemSubmissions(userId, problemId) {
     .doc(userId)
     .collection(problemSubmissions)
     .where('problemId', '==', problemId)
+    .orderBy('createdOn', 'desc')
     .get();
 
   return snapshot.docs.map((doc) => transform(doc.data()));
@@ -122,5 +123,11 @@ export async function createProblemSubmission(
       details: { code, ...data },
       createdOn: Firestore.Timestamp.now(),
     });
+
+  // add user to problem's participants
+  await Firestore()
+    .collection(problems)
+    .doc(problemId)
+    .update({ participants: Firestore.FieldValue.arrayUnion(userId) });
   return id;
 }

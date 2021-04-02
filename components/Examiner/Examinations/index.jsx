@@ -88,7 +88,7 @@ export default function ExaminationsPage({exams}) {
                         <Box>
                           <Box className={classes.title}>{item.title}</Box>
                           <Box className={classes.createdDate}>
-                            Created on:&nbsp;
+                            Created at:&nbsp;
                             {dateFormat(
                               new Date(item.createdOn),
                               'mmmm dd, yyyy "at" HH:MM TT'

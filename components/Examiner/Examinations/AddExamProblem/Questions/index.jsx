@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
-import { withStyles } from '@material-ui/core/styles';
+import { makeStyles, withStyles } from '@material-ui/core/styles';
 import MuiAccordion from '@material-ui/core/Accordion';
 import MuiAccordionSummary from '@material-ui/core/AccordionSummary';
 import MuiAccordionDetails from '@material-ui/core/AccordionDetails';
 import Typography from '@material-ui/core/Typography';
+import { Box } from '@material-ui/core';
+// import DeleteOutlineIcon from '@material-ui/icons/DeleteOutline';
 import CodingProblem from './CodingProblem/index';
-import MultipleChoices from './MultipleChoices/index';
+import MultipleChoices from './MultipleChoices/index'; 
 
 const Accordion = withStyles({
     root: {
@@ -48,53 +50,62 @@ const Accordion = withStyles({
     },
   }))(MuiAccordionDetails);
 
+  const useStyle = makeStyles({
+    oddColor:{
+        backgroundColor: '#e9e9e9',
+    },
+    deleteIcon:{
+      color: "red",
+      float: "right"
+    }
+})
 
 export default function Questions({listOfQuestions,handleChangeQuestionMC,handleChangeAnswerMC,handleChangeCorrectAnswer,handleChangeScore,
     handleChangeCPTitle,handleChangeLanguague,handleChangeCPInfo,handleChangeCPDifficulty,handleChangeCPCode,handleChangeCPFiles,
     handleChangeSimpleTest,handleTestCode,handleChangeMinutes,handleChangeSeconds}){
 
-    const [expanded, setExpanded] = useState('panel0');
-    const handleChange = (panel) => (event, newExpanded) => {
-        setExpanded(newExpanded ? panel : false);
-    };
-    return (
-        <>
-            {listOfQuestions.map((value,key)=> (
-                // eslint-disable-next-line react/no-array-index-key
-                <div key={key}>
+  const [expanded, setExpanded] = useState('');
+  const classes = useStyle();
+  const handleChange = (panel) => (event, newExpanded) => {
+      setExpanded(newExpanded ? panel : false);
+  };
+  return (
+    <div>
+      {/* <Button onClick={()=>handleDeleteQuestion(0)}>haha</Button> */}
+      {listOfQuestions.map((value,key)=> (
+          // eslint-disable-next-line react/no-array-index-key
+          <Box style={{marginLeft: "1.5em", marginRight: "1.5em"}} key={key}>
+            <Accordion square expanded={expanded === `panel${key}`} onChange={handleChange(`panel${key}`)}>
+                <AccordionSummary className={key % 2 !== 0 ? classes.oddColor : null} aria-controls="panel1d-content" id="panel1d-header">
                     {
-                        value.isMCQ ? 
-                        <Accordion square expanded={expanded === `panel${key}`} onChange={handleChange(`panel${key}`)}>
-                            <AccordionSummary aria-controls="panel1d-content" id="panel1d-header">
-                                <Typography>Question #{key + 1} (Multiple choices)</Typography>
-                            </AccordionSummary>
-                            <AccordionDetails>
-                                <MultipleChoices NO={key} value={value} handleChangeQuestionMC={handleChangeQuestionMC}
-                                handleChangeAnswerMC={handleChangeAnswerMC}
-                                handleChangeCorrectAnswer={handleChangeCorrectAnswer}
-                                handleChangeScore={handleChangeScore} handleChangeMinutes={handleChangeMinutes} 
-                                handleChangeSeconds={handleChangeSeconds} handleChangeCPDifficulty={handleChangeCPDifficulty}/>
-                            </AccordionDetails>
-                        </Accordion>
-                        :
-                        <Accordion square expanded={expanded ===`panel${key}`} onChange={handleChange(`panel${key}`)}>
-                            <AccordionSummary aria-controls="panel1d-content" id="panel1d-header">
-                                <Typography>Question #{key + 1} (Coding problem)</Typography>
-                            </AccordionSummary>
-                            <AccordionDetails>
-                                <CodingProblem NO={key} value={value} handleChangeScore={handleChangeScore} handleChangeCPTitle={handleChangeCPTitle}
-                                    handleChangeCPInfo={handleChangeCPInfo} handleChangeLanguague={handleChangeLanguague} 
-                                    handleChangeCPDifficulty={handleChangeCPDifficulty} handleChangeCPCode={handleChangeCPCode}
-                                    handleChangeCPFiles={handleChangeCPFiles} handleChangeSimpleTest={handleChangeSimpleTest}
-                                    handleTestCode={handleTestCode} handleChangeMinutes={handleChangeMinutes} 
-                                    handleChangeSeconds={handleChangeSeconds}/>
-                            </AccordionDetails>
-                        </Accordion>
+                      value.isMCQ ?
+                      <Typography>Question #{key + 1} (Multiple choices)</Typography>    
+                      :
+                      <Typography>Question #{key + 1} (Coding problem)</Typography>                                 
                     }
-                    <br/>
-                </div>
-            ))}
-        </>
-
-    )
+                </AccordionSummary>
+                <AccordionDetails>
+                  <div style={{width: "100%"}}>
+                  {
+                      value.isMCQ ?
+                        <MultipleChoices NO={key} value={value} handleChangeQuestionMC={handleChangeQuestionMC}
+                          handleChangeAnswerMC={handleChangeAnswerMC}
+                          handleChangeCorrectAnswer={handleChangeCorrectAnswer}
+                          handleChangeScore={handleChangeScore} handleChangeMinutes={handleChangeMinutes} 
+                          handleChangeSeconds={handleChangeSeconds} handleChangeCPDifficulty={handleChangeCPDifficulty}/>   
+                      :
+                        <CodingProblem NO={key} value={value} handleChangeScore={handleChangeScore} handleChangeCPTitle={handleChangeCPTitle}
+                          handleChangeCPInfo={handleChangeCPInfo} handleChangeLanguague={handleChangeLanguague} 
+                          handleChangeCPDifficulty={handleChangeCPDifficulty} handleChangeCPCode={handleChangeCPCode}
+                          handleChangeCPFiles={handleChangeCPFiles} handleChangeSimpleTest={handleChangeSimpleTest}
+                          handleTestCode={handleTestCode} handleChangeMinutes={handleChangeMinutes} 
+                          handleChangeSeconds={handleChangeSeconds}/>                             
+                    }
+                  </div>                                  
+                </AccordionDetails>
+            </Accordion>
+          </Box>
+      ))}
+    </div>
+  )
 }

@@ -2,7 +2,7 @@ import { CKEditor } from '@ckeditor/ckeditor5-react';
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import {Box, Breadcrumbs, Button, Checkbox, Link, makeStyles, TextField, Typography} from '@material-ui/core';
 import React, {useEffect, useState} from 'react';
-import { formatQuestionsArray, getFormatResultFromFile } from '@libs/client/business';
+import getTestCaseFromInputAndOutput, { formatQuestionsArray, getFormatResultFromFile } from '@libs/client/business';
 import { create } from '@libs/client/exams';
 import { FirebaseAuth } from '@libs/client/firebase';
 import { useRouter } from 'next/router';
@@ -348,6 +348,7 @@ public class Program
 
         if (fileType === 'In') question.input = testCases;
         else question.output = testCases;
+        question.cases = getTestCaseFromInputAndOutput(question.input,question.output);
 
         setListOfQuestions(newListQuestions);
       };
@@ -418,6 +419,12 @@ public class Program
     setListOfQuestions(newListQuestions);
     await sendTestRequest(questionID);
   };
+
+  const handleDeleteQuestion = (i) => {
+    const newListQuestions = [...listOfQuestions];
+    newListQuestions.splice(i,1)
+    setListOfQuestions(newListQuestions);
+  }
 
   function validateExam()
   {
@@ -823,6 +830,7 @@ public class Program
                 handleChangeQuestionMC={handleChangeQuestionMC} handleChangeAnswerMC={handleChangeAnswerMC}
                 handleChangeCorrectAnswer={handleChangeCorrectAnswer} handleChangeScore={handleChangeScore}
                 handleChangeMinutes={handleChangeMinutes} handleChangeSeconds={handleChangeSeconds}
+                handleDeleteQuestion={handleDeleteQuestion}
 
                 handleChangeCPTitle={handleChangeCPTitle} handleChangeCPInfo={handleChangeCPInfo}
                 handleChangeCPDifficulty={handleChangeCPDifficulty} handleChangeLanguague={handleChangeLanguague}

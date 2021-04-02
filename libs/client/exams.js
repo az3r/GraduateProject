@@ -2,7 +2,7 @@ import { collections } from '@utils/constants';
 import { transform } from '@utils/firestore';
 import { Firestore } from './firebase';
 
-const { exams, problems: problemCollection } = collections;
+const { exams, problems: problemCollection, users } = collections;
 
 export async function create(
   userId,
@@ -51,6 +51,7 @@ export async function update(
 }
 export async function get(examId, { withProblems }) {
   if (examId) {
+    console.log(examId);
     const snapshot = await Firestore().collection(exams).doc(examId).get();
     const problems = withProblems && (await getProblems(examId));
     return transform({
@@ -59,7 +60,10 @@ export async function get(examId, { withProblems }) {
       ...snapshot.data(),
     });
   }
-  const snapshot = await Firestore().collection(exams).get();
+  const snapshot = await Firestore()
+    .collection(exams)
+    .orderBy('createdOn', 'desc')
+    .get();
   return snapshot.docs.map((item) =>
     transform({ id: item.id, ...item.data() })
   );
@@ -74,6 +78,18 @@ export async function getProblems(examId) {
   return snapshot.docs.map((item) =>
     transform({ id: item.id, ...item.data() })
   );
+}
+
+export async function getParticipants(examId) {
+  // get participants' ids
+  const exam = await Firestore().collection(exams).doc(examId).get();
+  const ids = exam.get('participants');
+
+  const participants = await Firestore()
+    .collection(users)
+    .where('id', 'in', ids)
+    .get();
+  return participants.docs.map((item) => item.data());
 }
 
 async function createProblem(examId, props) {
