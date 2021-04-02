@@ -25,31 +25,29 @@ export async function get() {
 export async function update({
   name,
   avatar,
+  websites,
   location,
-  website,
-  birthday,
   gender,
-  education,
+  birthday,
   technicalSkills,
   experiences,
 }) {
   const { displayName, photoURL, uid } = FirebaseAuth().currentUser;
 
   const infoTask = Firestore().collection(users).doc(uid).update({
+    websites,
     location,
-    birthday,
-    website,
     gender,
-    education,
-    experiences,
+    birthday,
     technicalSkills,
+    experiences,
   });
   const profileTask = FirebaseAuth().currentUser.updateProfile({
     displayName: name || displayName,
     photoURL: avatar || photoURL,
   });
 
-  await Promise.all(infoTask, profileTask);
+  await Promise.all([infoTask, profileTask]);
 }
 
 /** get problems own by user */

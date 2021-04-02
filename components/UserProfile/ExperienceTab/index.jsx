@@ -80,19 +80,24 @@ const experiences = [
   },
 ];
 
+// create a new array without filtered element
 const without = (array, filtered) =>
   array.filter((element) => element != filtered);
 
-export default function ExperiencesTab() {
+export default function ExperiencesTab(props) {
   const classes = useStyles();
-  const [timelineElements, setTimelineElements] = React.useState(experiences);
+  const { user, setUser } = props;
+  const [openPopup, setOpenPopup] = React.useState(false);
+
+  const [timelineElements, setTimelineElements] = React.useState(user.experiences);
   const handleTimelineElementsEdit = (elements) => {
     setTimelineElements(elements);
   };
   const handleTimelineElementDelete = (event) => {
     const index = event.currentTarget.value;
     const element = timelineElements[index];
-    setTimelineElements(without(timelineElements, element));
+    const filteredElements = without(timelineElements, element);
+    setTimelineElements(filteredElements);
   };
   const handleElementAdd = (event) => {
     console.log('Add experience');
@@ -100,8 +105,6 @@ export default function ExperiencesTab() {
   const handleElementEdit = (event) => {
     console.log('Edit experience');
   };
-
-  const [openPopup, setOpenPopup] = React.useState(false);
 
   return (
     <>

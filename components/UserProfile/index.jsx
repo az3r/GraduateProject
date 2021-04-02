@@ -1,3 +1,5 @@
+/* eslint-disable react/destructuring-assignment */
+/* eslint-disable no-unused-vars */
 /* eslint-disable react/forbid-prop-types */
 /* eslint-disable react/require-default-props */
 /* eslint-disable react/jsx-props-no-spreading */
@@ -60,10 +62,11 @@ function a11yProps(index) {
   };
 }
 
-export default function UserProfileTabs() {
+export default function UserProfileTabs(props) {
   const classes = useStyles();
-  const [value, setValue] = React.useState(0);
 
+  // tab values
+  const [value, setValue] = React.useState(0);
   const handleChangeTab = (event, newValue) => {
     setValue(newValue);
   };
@@ -87,13 +90,23 @@ export default function UserProfileTabs() {
 
       <Grid item xs={9}>
         <TabPanel value={value} index={0}>
-          <BasicInfoTab />
+          <BasicInfoTab
+            user={props.user}
+            setUser={props.setUser}
+            handleUserInfoChange={props.handleUserInfoChange}
+          />
         </TabPanel>
         <TabPanel value={value} index={1}>
-          <AccountTab />
+          <AccountTab
+            user={props.user}
+            handleUserInfoChange={props.handleUserInfoChange}
+          />
         </TabPanel>
         <TabPanel value={value} index={2}>
-          <ExperiencesTab />
+          <ExperiencesTab
+            user={props.user}
+            handleUserInfoChange={props.handleUserInfoChange}
+          />
         </TabPanel>
       </Grid>
     </Grid>

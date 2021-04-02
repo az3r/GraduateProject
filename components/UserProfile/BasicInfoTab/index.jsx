@@ -1,6 +1,6 @@
 /* eslint-disable eqeqeq */
 /* eslint-disable no-console */
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   makeStyles,
   Grid,
@@ -10,9 +10,19 @@ import {
   Select,
   MenuItem,
   Typography,
+  IconButton,
+  Link,
+  Dialog,
+  DialogTitle,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
 } from '@material-ui/core';
 import SaveOutlinedIcon from '@material-ui/icons/SaveOutlined';
 import ChipInput from 'material-ui-chip-input';
+import AddCircleRoundedIcon from '@material-ui/icons/AddCircleRounded';
+import DeleteRoundedIcon from '@material-ui/icons/DeleteRounded';
+import * as userServices from '@libs/client/users';
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -39,50 +49,78 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+// create a new array without filtered element
 const without = (array, filtered) =>
   array.filter((element) => element != filtered);
 
-export default function BasicInfoTab() {
-  const user = {
-    name: 'Thanh Tung Thai',
-    email: 'tttung468@gmail.com',
-    gender: '',
-    location: 'Ho Chi Minh city, Vietnam',
-    birthday: '',
-    website: 'https://github.com/tttung468',
-    technicalSkills: ['C++', 'C', 'Java', 'JavaScript'],
+export default function BasicInfoTab(props) {
+  const classes = useStyles();
+
+  // alert dialog state
+  const [openAlertDialog, setOpenAlertDialog] = React.useState(false);
+  const handleOpenAlertDialog = () => {
+    setOpenAlertDialog(true);
+  };
+  const handleCloseAlertDialog = () => {
+    setOpenAlertDialog(false);
   };
 
-  const classes = useStyles();
-  const [values, setValues] = React.useState({
-    name: user.name,
-    email: user.email,
-    gender: user.gender,
-    location: user.location,
-    birthday: user.birthday,
-    website: user.website,
-  });
-  const handleChange = (prop) => (event) => {
-    setValues({ ...values, [prop]: event.target.value });
-  };
-  const [technicalSkills, setTechnicalSkills] = React.useState(
-    user.technicalSkills
-  );
+  // original user state
+  const { user, setUser } = props;
+
+  // user state in this tab
+  const [tabUser, setTabUser] = useState(user);
+  const handleChange = (prop) => (event) =>
+    setTabUser({ ...tabUser, [prop]: event.target.value });
+
+  // technicalSkills state
+  const [technicalSkills, setTechnicalSkills] = useState(user.technicalSkills);
   const handleTechnicalSkillsAdd = (skill) => {
-    setTechnicalSkills([...technicalSkills, skill]);
+    const newTechnicalSkills = [...technicalSkills, skill];
+    setTechnicalSkills(newTechnicalSkills);
+    setTabUser({ ...tabUser, technicalSkills: newTechnicalSkills });
   };
+
   const handleTechnicalSkillsDelete = (skill) => {
-    setTechnicalSkills(without(technicalSkills, skill));
+    const newTechnicalSkills = without(technicalSkills, skill);
+    setTechnicalSkills(newTechnicalSkills);
+    setTabUser({ ...tabUser, technicalSkills: newTechnicalSkills });
   };
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    console.log(
-      `${values.name}\n${values.email}\n${values.gender}\n${values.location}\n${values.birthday}\n${values.website}\n${technicalSkills}`
-    );
+
+  // use effect when original user changes
+  useEffect(() => {
+    setTabUser(user);
+    setTechnicalSkills(user.technicalSkills);
+  }, [user]);
+
+  // website state
+  const [website, setWebsite] = useState('');
+  const handleChangeWebsiteTxt = (event) => {
+    setWebsite(event.target.value);
+  };
+  const handleAddNewWebsite = () => {
+    const removedSpaceStr = website.replace(/\s+/g, ' ').trim();
+    const checkArrayIncludesStr = tabUser.websites.includes(removedSpaceStr);
+    if (removedSpaceStr != '' && !checkArrayIncludesStr) {
+      const newWebsites = [...tabUser.websites, removedSpaceStr];
+      setTabUser({ ...tabUser, websites: newWebsites });
+    }
+  };
+  const handleDeleteWebsite = (event) => {
+    const index = event.currentTarget.value;
+    const newWebsites = without(tabUser.websites, tabUser.websites[index]);
+    setTabUser({ ...tabUser, websites: newWebsites });
+  };
+
+  // update user
+  const handleUpdateUser = () => {
+    userServices.update(tabUser);
+    setUser(tabUser);
+    handleCloseAlertDialog();
   };
 
   return (
-    <form onSubmit={handleSubmit}>
+    <>
       <Grid container spacing={1}>
         <Grid item xs={12}>
           <Typography
@@ -103,9 +141,8 @@ export default function BasicInfoTab() {
               <TextField
                 onChange={handleChange('name')}
                 id="nameTextField"
-                value={values.name}
+                value={tabUser.name}
                 fullWidth
-                required
                 variant="outlined"
               />
             </Grid>
@@ -120,27 +157,10 @@ export default function BasicInfoTab() {
               <TextField
                 onChange={handleChange('email')}
                 id="emailTextField"
-                value={values.email}
+                value={tabUser.email}
                 fullWidth
-                required
                 variant="outlined"
-              />
-            </Grid>
-          </Grid>
-        </Grid>
-        <Grid item xs={12} className={classes.divider}>
-          <Grid container spacing={1}>
-            <Grid item xs={12} sm={3} className={classes.paper}>
-              Website
-            </Grid>
-            <Grid item xs={12} sm={9}>
-              <TextField
-                onChange={handleChange('website')}
-                id="websiteTextField"
-                value={values.website}
-                fullWidth
-                required
-                variant="outlined"
+                disabled
               />
             </Grid>
           </Grid>
@@ -154,11 +174,56 @@ export default function BasicInfoTab() {
               <TextField
                 onChange={handleChange('location')}
                 id="locationTextField"
-                value={values.location}
+                value={tabUser.location}
                 fullWidth
-                required
                 variant="outlined"
               />
+            </Grid>
+          </Grid>
+        </Grid>
+        <Grid item xs={12} className={classes.divider}>
+          <Grid container spacing={1}>
+            <Grid item xs={12} sm={3} className={classes.paper}>
+              Websites
+            </Grid>
+            <Grid item xs={12} sm={9}>
+              <Grid container spacing={1} style={{ paddingBottom: '8px' }}>
+                <Grid item xs={11} sm={11} className={classes.paper}>
+                  <TextField
+                    onChange={handleChangeWebsiteTxt}
+                    id="websiteTextField"
+                    fullWidth
+                    variant="outlined"
+                    placeholder="Example: https://github.com/elon-musk"
+                  />
+                </Grid>
+                <Grid item xs={1} sm={1} className={classes.paper}>
+                  <IconButton onClick={handleAddNewWebsite}>
+                    <AddCircleRoundedIcon />
+                  </IconButton>
+                </Grid>
+              </Grid>
+
+              {tabUser.websites.map((element, index) => (
+                <Grid container spacing={1}>
+                  <Grid item className={classes.paper}>
+                    <div className={classes.paper}>
+                      <Link
+                        href={element}
+                        target="_blank"
+                        style={{ color: '#1890ff' }}
+                      >
+                        {element}
+                      </Link>
+                    </div>
+                  </Grid>
+                  <Grid item className={classes.paper}>
+                    <IconButton onClick={handleDeleteWebsite} value={index}>
+                      <DeleteRoundedIcon />
+                    </IconButton>
+                  </Grid>
+                </Grid>
+              ))}
             </Grid>
           </Grid>
         </Grid>
@@ -170,7 +235,7 @@ export default function BasicInfoTab() {
             <Grid item xs={12} sm={9}>
               <FormControl className={classes.formControl}>
                 <Select
-                  value={values.gender}
+                  value={tabUser.gender}
                   onChange={handleChange('gender')}
                   displayEmpty
                   inputProps={{ 'aria-label': 'Without label' }}
@@ -197,7 +262,7 @@ export default function BasicInfoTab() {
                 onChange={handleChange('birthday')}
                 id="date"
                 type="date"
-                value={values.birthday}
+                value={tabUser.birthday}
                 className={classes.textField}
                 InputLabelProps={{
                   shrink: true,
@@ -238,15 +303,37 @@ export default function BasicInfoTab() {
         </Grid>
 
         <Button
-          type="submit"
           className={classes.saveButton}
           variant="contained"
           color="primary"
           startIcon={<SaveOutlinedIcon />}
+          onClick={handleOpenAlertDialog}
         >
           Save Changes
         </Button>
       </Grid>
-    </form>
+
+      <Dialog
+        open={openAlertDialog}
+        onClose={handleCloseAlertDialog}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle id="alert-dialog-title">Confirmation</DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-description">
+            Do you want to save these changes?
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCloseAlertDialog} color="primary">
+            Cancel
+          </Button>
+          <Button onClick={handleUpdateUser} color="primary" autoFocus>
+            OK
+          </Button>
+        </DialogActions>
+      </Dialog>
+    </>
   );
 }

@@ -21,8 +21,8 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function Popup(props) {
-  const { title, children, openPopup, setOpenPopup } = props;
   const classes = useStyles();
+  const { title, children, openPopup, setOpenPopup } = props;
 
   return (
     <Dialog
@@ -36,7 +36,7 @@ export default function Popup(props) {
             {title}
           </Typography>
           <Button
-            color="secondary"
+            color="#088247"
             onClick={() => {
               setOpenPopup(false);
             }}

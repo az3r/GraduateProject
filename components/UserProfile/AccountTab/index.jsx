@@ -27,7 +27,7 @@ const useStyles = makeStyles((theme) => ({
     borderBottomColor: '#eeeeee',
   },
   textField: {
-    width: 150,
+    width: 250,
   },
 }));
 
@@ -80,6 +80,7 @@ export default function AccountTab() {
               /> */}
               <TextField
                 type="password"
+                className={classes.textField}
                 onChange={handleChange('currentPassword')}
                 value={values.currentPassword}
                 autoComplete="current-password"
@@ -102,6 +103,7 @@ export default function AccountTab() {
               /> */}
               <TextField
                 type="password"
+                className={classes.textField}
                 onChange={handleChange('newPassword')}
                 autoComplete="new-password"
                 variant="outlined"
@@ -123,6 +125,7 @@ export default function AccountTab() {
               /> */}
               <TextField
                 type="password"
+                className={classes.textField}
                 onChange={handleChange('confirmPassword')}
                 autoComplete="confirm-password"
                 variant="outlined"
