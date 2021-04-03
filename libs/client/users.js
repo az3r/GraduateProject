@@ -23,6 +23,19 @@ export async function get(userId) {
   return undefined;
 }
 
+/**
+ * retrieve user by their roles
+ * @param {string} role one of 'developer', 'admin', 'company'
+ * @returns
+ */
+export async function getUsersByRole(role) {
+  const results = await Firestore()
+    .collection(users)
+    .where('role', '==', role)
+    .get();
+  return results.docs.map((item) => item.data());
+}
+
 /** require user to be signed in */
 export async function update({
   name,
@@ -137,19 +150,6 @@ export async function leaveExam(uid, examId) {
     .collection(users)
     .doc(uid)
     .update({ joinedExams: Firestore.FieldValue.arrayRemove(examId) });
-}
-
-/**
- * retrieve user by their roles
- * @param {string} role one of 'developer', 'admin', 'company'
- * @returns
- */
-export async function getUsers(role) {
-  const results = await Firestore()
-    .collection(users)
-    .where('role', '==', role)
-    .get();
-  return results.docs.map((item) => item.data());
 }
 
 export async function updateScoreProblem(userId, problemId, value) {

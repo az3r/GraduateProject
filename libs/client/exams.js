@@ -8,6 +8,11 @@ export async function create(
   userId,
   { title, content, isPrivate, password, startAt, endAt, problems }
 ) {
+  const { minutes, seconds, score } = problems.reduce((prev, current) => ({
+    minutes: prev.minutes + current.minutes,
+    seconds: prev.seconds + current.seconds,
+    score: prev.score + current.score,
+  }));
   const { id } = await Firestore().collection(exams).add({
     title,
     content,
@@ -15,6 +20,9 @@ export async function create(
     password,
     startAt,
     endAt,
+    minutes,
+    seconds,
+    score,
     owner: userId,
     createdOn: Firestore.Timestamp.now(),
   });
