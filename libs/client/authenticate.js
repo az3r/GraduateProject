@@ -1,3 +1,4 @@
+import { collections } from '@utils/constants';
 import { Firestore, FirebaseAuth } from './firebase';
 
 export async function register({ username, email, password, role }) {
@@ -44,7 +45,13 @@ export async function sendVerifyEmail(url) {
 
 export async function signin({ username, password, provider }) {
   if (username && password) {
-    const email = await Firestore().collection('User').doc(username).get();
+    const results = await Firestore()
+      .collection(collections.users)
+      .where('name', '==', username)
+      .limit(1)
+      .get();
+    if (results.empty) throw new Error({ code: 'auth/user_not_found' });
+    const { email } = results[0];
     return FirebaseAuth().signInWithEmailAndPassword(email, password);
   }
 

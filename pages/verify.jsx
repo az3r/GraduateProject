@@ -1,20 +1,20 @@
+import { Typography } from '@material-ui/core';
 import * as React from 'react';
 
-export default function AccountVerification() {
-  return <p>Redirecting...</p>;
+export default function AccountVerification({ uid }) {
+  if (uid === undefined)
+    return <Typography variant="h1">missing uid</Typography>;
 }
 export async function getServerSideProps({ query }) {
-  if (!query.uid) {
+  if (query.uid) {
     return {
       redirect: {
         destination: '/',
-        permanent: false,
+        permanent: true,
       },
     };
   }
   return {
-    props: {
-      uid: query.uid,
-    },
+    props: {},
   };
 }

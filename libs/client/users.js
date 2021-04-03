@@ -123,6 +123,22 @@ export async function joinExam(uid, examId) {
     .update({ joinedExams: Firestore.FieldValue.arrayUnion(examId) });
 }
 
+export async function leaveExam(uid, examId) {
+  // add user to exam's participants
+  await Firestore()
+    .collection(examCollection)
+    .doc(examId)
+    .update({
+      participants: Firestore.FieldValue.arrayRemove(uid),
+    });
+
+  // add exam to user's particated exams
+  return Firestore()
+    .collection(users)
+    .doc(uid)
+    .update({ joinedExams: Firestore.FieldValue.arrayRemove(examId) });
+}
+
 /**
  * retrieve user by their roles
  * @param {string} role one of 'developer', 'admin', 'company'

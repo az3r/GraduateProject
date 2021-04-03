@@ -5,16 +5,13 @@ import {
   TextField,
   Typography,
 } from '@material-ui/core';
-import { Send } from '@material-ui/icons';
 import Link from 'next/link';
 import PropTypes from 'prop-types';
 import * as React from 'react';
 import { auth } from '@libs/client';
 import { getBaseUrl } from '@utils/urls';
-import { useAuth } from '@hooks/auth';
 
-export default function VerifyEmail({ email }) {
-  const user = useAuth();
+export default function VerifyEmail(user) {
   const styles = useStyles();
 
   return (
@@ -36,8 +33,9 @@ export default function VerifyEmail({ email }) {
           <Typography>Your account has been verified</Typography>
         ) : (
           <Typography>
-            Your new account has been registered successfully, but first you
-            need to verify your email before using our service{' '}
+            Hello <b>{user.displayName}</b>, your new account has been
+            registered successfully, but first you need to verify your email
+            before using our service{' '}
           </Typography>
         )}
       </Grid>
@@ -48,7 +46,7 @@ export default function VerifyEmail({ email }) {
           label="Email"
           fullWidth
           contentEditable={false}
-          value={email}
+          value={user.email}
         />
       </Grid>
       <Grid item>
@@ -66,32 +64,23 @@ export default function VerifyEmail({ email }) {
   );
 
   function VerifyButton() {
-    const [resend, setResend] = React.useState(false);
     const [cooldown, setCooldown] = React.useState(0);
+    const [waiting, setWaiting] = React.useState(false);
 
     React.useEffect(() => {
-      let timer;
-      if (cooldown > 0) {
-        timer = setTimeout(() => {
-          setCooldown(cooldown - 1);
-        }, 1000);
-      }
-      return clearTimeout(timer);
-    }, [cooldown]);
+      const timer = setInterval(() => {
+        setCooldown((prev) => {
+          if (prev <= 0) setWaiting(false);
+          return prev - 1;
+        });
+      }, 1000);
+      return () => clearInterval(timer);
+    }, []);
     return (
       <>
-        {resend ? (
-          <Button
-            startIcon={cooldown <= 0 && <Send />}
-            disabled={cooldown > 0}
-            variant="contained"
-            color={cooldown > 0 ? 'default' : 'primary'}
-            fullWidth
-            onClick={onVerifyEmail}
-          >
-            {cooldown > 0
-              ? `Please wait for ${cooldown}s...'`
-              : 'Resend verification'}
+        {waiting ? (
+          <Button disabled variant="contained" color="default" fullWidth>
+            Please wait for {cooldown} seconds...
           </Button>
         ) : (
           <Button
@@ -108,13 +97,12 @@ export default function VerifyEmail({ email }) {
 
     async function onVerifyEmail() {
       // update ui
-      if (!resend) setResend(true);
       setCooldown(60);
+      setWaiting(true);
 
       try {
-        auth.sendVerifyEmail({
-          url: `${getBaseUrl()}verify?uid=${user.uid}`,
-        });
+        const url = `${getBaseUrl()}verify?uid=${user.uid}`;
+        auth.sendVerifyEmail(url);
       } catch (error) {
         // TODO: handler this error
         console.error(error);
@@ -124,7 +112,11 @@ export default function VerifyEmail({ email }) {
 }
 
 VerifyEmail.propTypes = {
-  email: PropTypes.string.isRequired,
+  user: PropTypes.shape({
+    displayName: PropTypes.string.isRequired,
+    uid: PropTypes.string.isRequired,
+    email: PropTypes.string.isRequired,
+  }).isRequired,
 };
 const useStyles = makeStyles((theme) => ({
   root: {

@@ -51,7 +51,6 @@ export async function update(
 }
 export async function get(examId, { withProblems }) {
   if (examId) {
-    console.log(examId);
     const snapshot = await Firestore().collection(exams).doc(examId).get();
     const problems = withProblems && (await getProblems(examId));
     return transform({
@@ -103,4 +102,22 @@ async function createProblem(examId, props) {
     .collection(problemCollection)
     .add(props);
   return id;
+}
+
+export async function inviteUsers(examId, userIds) {
+  await Firestore()
+    .collection(exams)
+    .doc(examId)
+    .update({
+      invitedUsers: Firestore.FieldValue.arrayUnion(userIds),
+    });
+}
+
+export async function uninviteUser(examId, userIds) {
+  await Firestore()
+    .collection(exams)
+    .doc(examId)
+    .update({
+      invitedUsers: Firestore.FieldValue.arrayRemove(userIds),
+    });
 }
