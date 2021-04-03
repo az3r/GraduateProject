@@ -36,6 +36,12 @@ export async function update(
   examId,
   { title, content, isPrivate, password, startAt, endAt, problems }
 ) {
+  const { minutes, seconds, score } = problems.reduce((prev, current) => ({
+    minutes: prev.minutes + current.minutes,
+    seconds: prev.seconds + current.seconds,
+    score: prev.score + current.score,
+  }));
+
   const docRef = Firestore().collection(exams).doc(examId);
   await docRef.update({
     title,
@@ -44,6 +50,9 @@ export async function update(
     password,
     startAt,
     endAt,
+    minutes,
+    seconds,
+    score,
     modifiedAt: Firestore.Timestamp.now(),
   });
 
