@@ -1,3 +1,7 @@
+import emailjs from 'emailjs-com';
+import { getInvitedUsers } from './exams';
+import { getUsersByRole } from './users';
+
 export default function getTestCaseFromInputAndOutput(input, output) {
   let cases = [];
   for (let i = 0; i < input.length; i += 1) {
@@ -89,4 +93,43 @@ export function calculateTotalExamTime(problems) {
   totalMinutes = parseInt(totalMinutes % 60, 10);
 
   return `${totalHours}h ${totalMinutes}m ${totalSeconds}s`;
+}
+
+export async function getUsersForInvitation(examId) {
+  const invitedUsers = await getInvitedUsers(examId);
+  const usersDB = await getUsersByRole('developer');
+  const modifiedUsers = usersDB.map((value) => {
+    const isInvited =
+      invitedUsers.filter((invitedEmail) => invitedEmail === value.email)
+        .length > 0 || false;
+    return {
+      id: value.id,
+      avatar: value.avatar,
+      name: value.name,
+      email: value.email,
+      isInvited,
+    };
+  });
+  return modifiedUsers;
+}
+
+export function sendInvitation(
+  toName,
+  examinerName,
+  examId,
+  examPassword,
+  sendTo
+) {
+  emailjs.send(
+    'service_6zw4uj8',
+    'template_nm4zffi',
+    {
+      to_name: toName,
+      examiner_name: examinerName,
+      exam_id: examId,
+      exam_password: examPassword,
+      send_to: sendTo,
+    },
+    'user_vdAvQzs8a2nH9TdfDiLcK'
+  );
 }

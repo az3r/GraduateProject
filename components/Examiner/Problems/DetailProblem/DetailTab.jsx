@@ -71,6 +71,12 @@ export default function DetailTab({problem})
             {problem.title}
             </Typography>
             <Typography><b>ID</b>: {problem.id}</Typography>
+            <Typography><b>Created at</b>: {
+                    dateFormat(
+                        new Date(problem.createdOn),
+                        'HH:MM TT, dd-mmmm-yyyy'
+                      )}
+                </Typography>
             {
                 problem.modifiedAt ?
                 <Typography><b>Modified at</b>: {

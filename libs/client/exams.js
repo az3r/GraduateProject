@@ -121,12 +121,12 @@ async function createProblem(examId, props) {
   return id;
 }
 
-export async function inviteUsers(examId, userIds) {
+export async function inviteUsers(examId, email) {
   await Firestore()
     .collection(exams)
     .doc(examId)
     .update({
-      invitedUsers: Firestore.FieldValue.arrayUnion(userIds),
+      invitedUsers: Firestore.FieldValue.arrayUnion(email),
     });
 }
 

@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import Head from 'next/head';
 import ExaminationsPage from '@components/Examiner/Examinations';
-import { getExams } from '@libs/client/users';
+import { get, getExams } from '@libs/client/users';
 import { parseCookies } from '@libs/client/cookies';
 import { useRouter } from 'next/router';
 import Examiner from '../../../components/Examiner';
@@ -33,14 +33,17 @@ export async function getServerSideProps({ req }) {
   const cookies = parseCookies(req);
   if (Object.keys(cookies).length !== 0) {
     if (cookies.user) {
-      const user = JSON.parse(cookies.user);
-      const exams = await getExams(user.uid);
-      return {
-        props: {
-          user,
-          exams,
-        },
-      };
+      const user = await get(JSON.parse(cookies.user).uid);
+      if(user.role === 'company')
+      {
+        const exams = await getExams(user.id);
+        return {
+          props: {
+            user,
+            exams,
+          },
+        };
+      }
     }
   }
   return {

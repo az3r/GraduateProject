@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import Head from 'next/head';
 import { parseCookies } from '@libs/client/cookies';
 import { useRouter } from 'next/router';
+import { get } from '@libs/client/users';
 import Examiner from '../../components/Examiner';
 import AppLayout from '../../components/Layout';
 
@@ -30,11 +31,15 @@ export async function getServerSideProps({ req }) {
 
   if (Object.keys(cookies).length !== 0) {
     if (cookies.user) {
-      return {
-        props: {
-          user: JSON.parse(cookies.user),
-        },
-      };
+      const user = await get(JSON.parse(cookies.user).uid);
+      if(user.role === 'company')
+      {
+        return {
+          props: {
+            user: JSON.parse(cookies.user),
+            },
+        };
+      }
     }
   }
   return {
