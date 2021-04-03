@@ -63,12 +63,21 @@ const useStyle = makeStyles((theme) => ({
         marginTop: theme.spacing(1),
         marginBottom: theme.spacing(1),
     },
+    codeContainer:{
+        paddingLeft: '10px',
+        paddingTop: '5px',
+        paddingRight: '5px',
+        paddingBottom: '5px',
+        borderLeft: "5px solid #e5e5e5",
+        marginBottom: "10px"
+    }
 }));
 
 export default function DetailTab({exam})
 {
     const [expanded, setExpanded] = React.useState('');
     const [activeStep, setActiveStep] = React.useState(0);
+
     const steps =
     [
         `Created at ${dateFormat(new Date(exam.createdOn),'HH:MM TT, dd-mmmm-yyyy')}`,
@@ -95,24 +104,12 @@ export default function DetailTab({exam})
         setExpanded(newExpanded ? panel : false);
     };
 
-    // const handleNext = () => {
-    //     setActiveStep((prevActiveStep) => prevActiveStep + 1);
-    // };
-
-    // const handleBack = () => {
-    //     setActiveStep((prevActiveStep) => prevActiveStep - 1);
-    // };
-
-    // const handleReset = () => {
-    //     setActiveStep(0);
-    // };
-
     const classes = useStyle();
 
     return (
         <>
             <Box display="flex" justifyContent="flex-end">
-                <Tooltip title="Update is only available before start time of exam">
+                <Tooltip title="Update is only available before examination's publishment">
                     <IconButton aria-label="delete">
                         <HelpIcon/>
                     </IconButton>
@@ -158,12 +155,16 @@ export default function DetailTab({exam})
                         'HH:MM TT, dd-mmmm-yyyy'
                       )}
                 </Typography> : null
+            }
+            {
+                exam.isPrivate ? 
+                <Typography><b>Password</b>: {exam.password}</Typography> : null
             } 
+            <hr />
             {
                 HTMLReactParser(exam.content)
             }
-            <Typography><b>Password</b>: {exam.password}</Typography>
-            <Typography><b>Questions</b>:</Typography> 
+            <hr />
             <div>
                 {
                     exam.problems.map((value,key)=>(
@@ -186,7 +187,7 @@ export default function DetailTab({exam})
                                     {
                                         HTMLReactParser(value.question)
                                     }
-                                    <ul>
+                                    <ol type="A">
                                         <li>
                                         {
                                             HTMLReactParser(value.a)
@@ -207,7 +208,7 @@ export default function DetailTab({exam})
                                             HTMLReactParser(value.d)
                                         }
                                         </li>
-                                    </ul>
+                                    </ol>
                                     <Typography><b>Correct</b>: {value.correct}</Typography>
                                     {
                                         value.difficulty === 0 ? 
@@ -249,7 +250,12 @@ export default function DetailTab({exam})
                                     <Typography><b>Score</b>: {value.score}</Typography>
                                     <Typography><b>Time</b>: {value.minutes}m {value.seconds}s</Typography>
                                     <Typography><b>Languague</b>: {value.language}</Typography>
-                                    <code><pre>{value.code}</pre></code>
+                                    <div className={classes.codeContainer}>
+                                        <code>
+                                            <pre>{value.code}</pre>
+                                        </code>
+                                    </div>
+                                    
                                     {value.cases.map((item,k)=>(
                                         // eslint-disable-next-line react/no-array-index-key
                                         <Typography key={k}><b>Test case #{k+1}:</b> input: {item.input} / output: {item.output}</Typography>

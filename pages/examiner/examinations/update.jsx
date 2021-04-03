@@ -39,7 +39,7 @@ export async function getServerSideProps({ req, query }) {
       const { id } = query;
       const exam = await get(id, { withProblems: true });
       if (exam) {
-        if (user.uid === exam.owner) {
+        if (user.uid === exam.owner && Date.parse(exam.startAt) > Date.now()) {
           return {
             props: {
               user,

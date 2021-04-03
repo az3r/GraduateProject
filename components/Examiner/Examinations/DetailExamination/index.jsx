@@ -2,6 +2,7 @@ import { AppBar, Box, Breadcrumbs, Link, makeStyles, Tab, Tabs, Typography } fro
 import React from 'react';
 import DetailTab from './DetailTab';
 import InvitationTab from './InvitationTab';
+import ParticipantTabs from './ParticipantsTab';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -40,26 +41,26 @@ export default function DetailExamination({exam}){
                     <AppBar position="static">
                         <Tabs className={classes.tabsStyle} value={value} onChange={handleChange} centered aria-label="simple tabs example">
                             <Tab label="Detail" {...a11yProps(0)} />
+                            <Tab label="Participants" {...a11yProps(1)} />
                             {
                                 exam.isPrivate ?
-                                <Tab label="Invitation" {...a11yProps(1)} /> :
+                                <Tab label="Invitation" {...a11yProps(2)} /> :
                                 null
                             }
-                            <Tab label="Participants" {...a11yProps(2)} />
                         </Tabs>
                     </AppBar>
                     <TabPanel value={value} index={0}>
                         <DetailTab exam={exam}/>
                     </TabPanel>
+                    <TabPanel value={value} index={1}>
+                        <ParticipantTabs exam={exam}/>
+                    </TabPanel>
                     {
                       exam.isPrivate ?
-                      <TabPanel value={value} index={1}>
-                        <InvitationTab/>
+                      <TabPanel value={value} index={2}>
+                        <InvitationTab exam={exam}/>
                       </TabPanel> : null
                     }
-                    <TabPanel value={value} index={2}>
-                        Item Three
-                    </TabPanel>
                 </div>
             </Box>
         </Box>

@@ -84,6 +84,9 @@ export async function getParticipants(examId) {
   // get participants' ids
   const exam = await Firestore().collection(exams).doc(examId).get();
   const ids = exam.get('participants');
+  if (ids.length === 0) {
+    return [];
+  }
 
   const participants = await Firestore()
     .collection(users)
