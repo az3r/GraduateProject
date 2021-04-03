@@ -1,20 +1,27 @@
-/* eslint-disable no-lone-blocks */
 /* eslint-disable eqeqeq */
+/* eslint-disable no-lone-blocks */
 /* eslint-disable no-unused-vars */
 /* eslint-disable no-console */
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   makeStyles,
   Grid,
   IconButton,
-  Paper,
   Typography,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogContentText,
+  DialogActions,
+  Button,
 } from '@material-ui/core';
 import AddRoundedIcon from '@material-ui/icons/AddRounded';
 import WorkIcon from '@material-ui/icons/Work';
 import SchoolIcon from '@material-ui/icons/School';
 import DeleteIcon from '@material-ui/icons/Delete';
 import EditIcon from '@material-ui/icons/Edit';
+import SaveOutlinedIcon from '@material-ui/icons/SaveOutlined';
+
 import {
   VerticalTimeline,
   VerticalTimelineElement,
@@ -23,6 +30,7 @@ import 'react-vertical-timeline-component/style.min.css';
 import dateFormat from 'dateformat';
 import Popup from '@components/UserProfile/ExperienceTab/Controls/Popup';
 import ExperienceForm from '@components/UserProfile/ExperienceTab/Controls/ExperienceForm';
+import * as userServices from '@libs/client/users';
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -50,36 +58,6 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const experiences = [
-  {
-    beginDate: '2021-01-01',
-    endDate: '2021-02-01',
-    company: 'ABC Company',
-    title: 'Developer',
-    description:
-      'Lorem ipsum dolor sit amet, nt, sunt in culpa qui officia deserunt mollit anim id est laborum',
-    type: 'work',
-  },
-  {
-    beginDate: '2020-05-01',
-    endDate: '2020-06-01',
-    company: 'Xyz Company',
-    title: 'Designer',
-    description:
-      'Lorem ipsum dolor sit amet, nt, sunt in culpa qui officia deserunt mollit anim id est laborum',
-    type: 'work',
-  },
-  {
-    beginDate: '2017-09-01',
-    endDate: '2019-12-01',
-    company: 'VNUHCM - University of Science',
-    title: 'Student',
-    description:
-      'Lorem ipsum dolor sit amet, nt, sunt in culpa qui officia deserunt mollit anim id est laborum',
-    type: 'school',
-  },
-];
-
 // create a new array without filtered element
 const without = (array, filtered) =>
   array.filter((element) => element != filtered);
@@ -87,50 +65,104 @@ const without = (array, filtered) =>
 export default function ExperiencesTab(props) {
   const classes = useStyles();
   const { user, setUser } = props;
-  const [openPopup, setOpenPopup] = React.useState(false);
+  const [openPopup, setOpenPopup] = useState(false);
+  const [openAlertDialog, setOpenAlertDialog] = React.useState(false);
 
-  const [timelineElements, setTimelineElements] = React.useState(user.experiences);
-  const handleTimelineElementsEdit = (elements) => {
-    setTimelineElements(elements);
-  };
-  const handleTimelineElementDelete = (event) => {
+  // check action for popup: add new exp or edit exp
+  const [isAddNewExp, setIsAddNewExp] = useState(true);
+
+  // experience can be edited in popup
+  const [elementForEdit, setElementForEdit] = useState(null);
+
+  // save index of elementForEdit
+  const [elementForEditID, setElementForEditID] = useState(-1);
+
+  // timeline elements
+  const [timelineElements, setTimelineElements] = React.useState(
+    user.experiences
+  );
+
+  useEffect(() => {
+    setTimelineElements(user.experiences);
+  }, [user.experiences]);
+
+  const handleDeleteElement = (event) => {
     const index = event.currentTarget.value;
     const element = timelineElements[index];
     const filteredElements = without(timelineElements, element);
     setTimelineElements(filteredElements);
   };
-  const handleElementAdd = (event) => {
-    console.log('Add experience');
+
+  const handleEditElement = (id, editedExp) => {
+    timelineElements[id] = editedExp;
+    setOpenPopup(false);
   };
-  const handleElementEdit = (event) => {
-    console.log('Edit experience');
+
+  const handleAddElement = (newExp) => {
+    setTimelineElements([...timelineElements, newExp]);
+    setOpenPopup(false);
+  };
+
+  const handleUpdateUser = () => {
+    setOpenAlertDialog(false);
+    const newUser = { ...user, experiences: timelineElements };
+    setUser(newUser);
+    userServices.update(newUser);
+  };
+
+  // open popup to add new exp
+  const openPopupToAddNew = (event) => {
+    setElementForEdit(null);
+    setOpenPopup(true);
+    setIsAddNewExp(true);
+    setElementForEditID(-1);
+  };
+
+  // open experience in popup to edit
+  const openPopupToEdit = (event) => {
+    const index = event.currentTarget.value;
+    const element = timelineElements[index];
+    setElementForEdit(element);
+    setOpenPopup(true);
+    setIsAddNewExp(false);
+    setElementForEditID(index);
   };
 
   return (
     <>
       <Grid container spacing={1}>
         <Grid item xs={12}>
-          <Typography
-            style={{
-              fontWeight: 'bolder',
-              fontSize: 20,
-            }}
-          >
-            Work Experience Timeline
-          </Typography>
+          <Grid container spacing={1}>
+            <Grid item xs={12} sm={10}>
+              <Typography
+                style={{
+                  fontWeight: 'bolder',
+                  fontSize: 20,
+                }}
+              >
+                Work Experience Timeline
+              </Typography>
+            </Grid>
+            <Grid item xs={12} sm={2}>
+              <Button
+                className={classes.saveButton}
+                variant="contained"
+                color="primary"
+                startIcon={<SaveOutlinedIcon />}
+                onClick={() => setOpenAlertDialog(true)}
+              >
+                Save Changes
+              </Button>
+            </Grid>
+          </Grid>
         </Grid>
         <Grid item xs={12} className={classes.divider}>
           <VerticalTimeline>
             {timelineElements.map((element, index) => {
               const isWorkIcon = element.type === 'work';
-              {
-                /* const date = `${element.beginDate} - ${element.endDate}`; */
-              }
-              const formattedBeginDate = dateFormat(
-                element.beginDate,
-                'mm/yyyy'
-              );
-              const formattedEndDate = dateFormat(element.endDate, 'mm/yyyy');
+              const format = 'dd/mmm/yyyy';
+              const formattedBeginDate = dateFormat(element.beginDate, format);
+              const formattedEndDate = dateFormat(element.endDate, format);
               const date = `${formattedBeginDate} - ${formattedEndDate}`;
 
               return (
@@ -162,14 +194,14 @@ export default function ExperiencesTab(props) {
                     <IconButton
                       aria-label="delete"
                       value={index}
-                      onClick={handleTimelineElementDelete}
+                      onClick={handleDeleteElement}
                     >
                       <DeleteIcon />
                     </IconButton>
                     <IconButton
                       aria-label="edit"
                       value={index}
-                      onClick={setOpenPopup}
+                      onClick={openPopupToEdit}
                     >
                       <EditIcon />
                     </IconButton>
@@ -181,7 +213,7 @@ export default function ExperiencesTab(props) {
             <VerticalTimelineElement
               iconStyle={{ background: '#088247', color: '#fff' }}
               icon={<AddRoundedIcon />}
-              iconOnClick={setOpenPopup}
+              iconOnClick={openPopupToAddNew}
               date="Add New Experience"
             />
           </VerticalTimeline>
@@ -190,12 +222,41 @@ export default function ExperiencesTab(props) {
 
       {/* Popup Dialog to add new Experience */}
       <Popup
-        title="New Experience"
+        title="Experience"
         openPopup={openPopup}
         setOpenPopup={setOpenPopup}
       >
-        <ExperienceForm />
+        <ExperienceForm
+          handleAddElement={handleAddElement}
+          handleEditElement={handleEditElement}
+          isAddNewExp={isAddNewExp}
+          elementForEdit={elementForEdit}
+          elementForEditID={elementForEditID}
+        />
       </Popup>
+
+      {/* alert dialog to save user */}
+      <Dialog
+        open={openAlertDialog}
+        onClose={() => setOpenAlertDialog(false)}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle id="alert-dialog-title">Confirmation</DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-description">
+            Do you want to save these changes?
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setOpenAlertDialog(false)} color="primary">
+            Cancel
+          </Button>
+          <Button onClick={handleUpdateUser} color="primary" autoFocus>
+            OK
+          </Button>
+        </DialogActions>
+      </Dialog>
     </>
   );
 }

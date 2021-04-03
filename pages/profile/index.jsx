@@ -29,7 +29,7 @@ const useStyles = makeStyles({
   },
 });
 
-const dummyUser = {
+const initialUser = {
   name: '',
   avatar: '',
   password: '',
@@ -41,38 +41,6 @@ const dummyUser = {
   technicalSkills: [],
   experiences: [],
 };
-
-// const dummyUser2 = {
-//   name: 'Thanh Tung Thai',
-//   avatar: '',
-//   password: '',
-//   email: 'tttung468@gmail.com',
-//   website: ['https://github.com/tttung468', 'https://abc.com'],
-//   location: 'Ho Chi Minh city, Vietnam',
-//   gender: '',
-//   birthday: '2021-03-22',
-//   technicalSkills: ['C++', 'C', 'Java', 'JavaScript'],
-//   experiences: [
-//     {
-//       beginDate: '2021-01-01',
-//       endDate: '2021-02-01',
-//       company: 'ABC Company',
-//       title: 'Developer',
-//       description:
-//         'Lorem ipsum dolor sit amet, nt, sunt in culpa qui officia deserunt mollit anim id est laborum',
-//       type: 'work',
-//     },
-//     {
-//       beginDate: '2017-09-01',
-//       endDate: '2019-12-01',
-//       company: 'VNUHCM - University of Science',
-//       title: 'Student',
-//       description:
-//         'Lorem ipsum dolor sit amet, nt, sunt in culpa qui officia deserunt mollit anim id est laborum',
-//       type: 'school',
-//     },
-//   ],
-// };
 
 const defaultUserProps = [
   'name',
@@ -94,7 +62,6 @@ export async function getServerSideProps({ req }) {
     return {
       props: {
         user: JSON.parse(cookies.user),
-        // user: dummyUser,
       },
     };
   }
@@ -127,7 +94,7 @@ export default function Index(props) {
   }
 
   // user info state
-  const [user, setUser] = useState(dummyUser);
+  const [user, setUser] = useState(initialUser);
   const handleUserInfoChange = (prop, newValue) =>
     setUser({ ...user, [prop]: newValue });
 

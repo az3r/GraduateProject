@@ -99,12 +99,14 @@ export default function UserProfileTabs(props) {
         <TabPanel value={value} index={1}>
           <AccountTab
             user={props.user}
+            setUser={props.setUser}
             handleUserInfoChange={props.handleUserInfoChange}
           />
         </TabPanel>
         <TabPanel value={value} index={2}>
           <ExperiencesTab
             user={props.user}
+            setUser={props.setUser}
             handleUserInfoChange={props.handleUserInfoChange}
           />
         </TabPanel>
