@@ -38,6 +38,9 @@ export default function Start({ id, problems, user }) {
     if (user === null) {
       router.replace('/login');
     }
+    else{
+        await users.updateScoreExam(user.uid, id, 0);
+    }
   }, []);
 
 
@@ -77,30 +80,23 @@ export default function Start({ id, problems, user }) {
     }
   };
 
-  const beforeunload = (event) => {
+  const beforeunload = async (event) => {
     event.preventDefault();
-    event.returnValue = 'Are you sure you want to leave this page?';
+    event.returnValue = "Are you sure you want to leave this page?";
     return event.returnValue;
   }
 
 
-  const unload = async () => {
-    await submissions.createExamSubmission(
-      user.uid, {
-        examId: id,
-        total: problems.length,
-        correct: 0,
-        results: []
-      });
-
-  }
+  // const unload = async () => {
+  //   await users.updateScoreExam(user.uid, id, 0);
+  // }
 
   useEffect(() => {
     window.addEventListener('beforeunload', beforeunload);
-    window.addEventListener('unload', unload);
+    // window.addEventListener('unload', unload);
     return () => {
       window.removeEventListener('beforeunload', beforeunload);
-      window.removeEventListener('unload', unload);
+      // window.removeEventListener('unload', unload);
     }
   });
 

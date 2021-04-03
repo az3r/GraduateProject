@@ -9,7 +9,7 @@ import {
   Button,
 } from '@material-ui/core';
 
-import { exams, submissions } from '@libs/client';
+import { exams, users } from '@libs/client';
 import { parseCookies } from '@libs/client/cookies';
 // import { route } from 'next/dist/next-server/server/router';
 import { useRouter  } from 'next/router';
@@ -77,33 +77,30 @@ export default function Introduction({ exam, user }) {
 
   const router = useRouter();
 
-  const beforeunload = (event) => {
+  useEffect(async () => {
+    await users.updateScoreExam(user.uid, exam.id, 0);
+  }, []);
+
+  const beforeunload = async (event) => {
     event.preventDefault();
     event.returnValue = "Are you sure you want to leave this page?";
     return event.returnValue;
   }
 
-  const unload = async () => {
-    await submissions.createExamSubmission(
-      user.uid, {
-      examId: exam.id,
-      total: exam.problems.length,
-      correct: 0,
-      results: []
-    });
-  }
+  // const unload = async () => {
+  //   await users.updateScoreExam(user.uid, exam.id, 0);
+  // }
 
   useEffect(() => {
     window.addEventListener('beforeunload', beforeunload);
-    window.addEventListener('unload', unload);
+    // window.addEventListener('unload', unload);
     return () => {
       window.removeEventListener('beforeunload', beforeunload);
-      window.removeEventListener('unload', unload);
+      // window.removeEventListener('unload', unload);
     }
   });
 
   const start = (examId) => {
-    // href={`/examination/start/${exam.id}`}
     // window.onbeforeunload = null;
     // window.onunload = null;
 

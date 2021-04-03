@@ -8,6 +8,8 @@ import {
   Link,
 } from '@material-ui/core';
 
+import {useRouter} from 'next/router';
+
 const useStyles = makeStyles({
   root: {
     marginTop: 20,
@@ -66,7 +68,11 @@ const useStyles = makeStyles({
 
 export default function TopScore() {
   const classes = useStyles();
+  const router = useRouter();
 
+  const viewMore = () => {
+    router.push('/examination/ranking');
+  }
   return (
     <>
       <Paper className={classes.root} elevation={20}>
@@ -332,7 +338,7 @@ export default function TopScore() {
               <img alt="Score" src="/coins_28px.png" />
             </Box>
           </Box>
-          <Box className={[classes.topScoreItem, classes.viewMore]}>
+          <Box className={[classes.topScoreItem, classes.viewMore]} onClick={() => viewMore()}>
             View More...
           </Box>
         </Box>
