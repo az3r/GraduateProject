@@ -1,4 +1,4 @@
-import { get, getUsersByRole, joinExam } from '@libs/client/users';
+import { get, getUsersByRole } from '@libs/client/users';
 import emailjs from 'emailjs-com';
 import React, { useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
@@ -10,7 +10,7 @@ import ListItemAvatar from '@material-ui/core/ListItemAvatar';
 import Avatar from '@material-ui/core/Avatar';
 import Typography from '@material-ui/core/Typography';
 import { Button } from '@material-ui/core';
-import { getParticipants } from '@libs/client/exams';
+import { getInvitedUsers, inviteUsers } from '@libs/client/exams';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -34,12 +34,10 @@ export default function InvitationTab({ exam }) {
 
   React.useEffect(async () => {
     const usersDB = await getUsersByRole('developer');
-    const participants = await getParticipants(exam.id);
+    const invitedUsers = await getInvitedUsers(exam.id);
     const examOwner = await get(exam.owner);
     const modifiedUsers = usersDB.map((value) => {
-      const isInvited =
-        participants.filter((examinee) => examinee.id === value.id).length >
-          0 || false;
+      const isInvited = invitedUsers.filter((userId) => userId === value.id).length > 0 || false;
       return {
         id: value.id,
         avatar: value.avatar,
@@ -53,7 +51,7 @@ export default function InvitationTab({ exam }) {
   }, []);
 
   const sendInivation = (key, invitedUser) => {
-    joinExam(invitedUser.id, exam.id);
+    inviteUsers(exam.id,invitedUser.id);
     emailjs.send(
       'service_6zw4uj8',
       'template_nm4zffi',
