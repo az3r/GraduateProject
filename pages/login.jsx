@@ -254,7 +254,7 @@ export default function Login() {
     } catch (error) {
       const { code } = error;
       let message;
-      if (code.startsWith('auth/')) message = 'Invalid username or password';
+      if (code?.startsWith('auth/')) message = 'Invalid username or password';
       else message = 'Internal server error';
 
       // only display message if user signs in with username and password

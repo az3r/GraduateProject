@@ -54,7 +54,7 @@ export async function signin({ username, password, provider }) {
       .limit(1)
       .get();
     if (results.empty) return Promise.reject({ code: 'auth/user_not_found' });
-    const { email } = results[0];
+    const email = results.docs[0].get('email');
     return FirebaseAuth().signInWithEmailAndPassword(email, password);
   }
 
