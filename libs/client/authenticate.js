@@ -17,6 +17,8 @@ export async function register({ username, email, password, role }) {
       email,
       avatar,
       role: role || 'developer',
+      problemScore: 0,
+      examScore: 0,
     });
 
   await credentials.user.updateProfile({
@@ -70,6 +72,8 @@ export async function signin({ username, password, provider }) {
         .collection('Users')
         .doc(credentials.user.uid)
         .get();
+
+      // create new user if this is first time login
       if (!user.exists) {
         await Firestore().collection('Users').doc(credentials.user.uid).set(
           {
@@ -78,6 +82,8 @@ export async function signin({ username, password, provider }) {
             email: credentials.user.email,
             role: 'developer',
             id: credentials.user.uid,
+            problemScore: 0,
+            examScore: 0,
           },
           { merge: true }
         );

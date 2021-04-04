@@ -183,3 +183,18 @@ export async function updateScoreExam(userId, examId, value) {
     .doc(examId)
     .set({ id: examId, score: value, createdOn: Firestore.Timestamp.now() });
 }
+
+export async function getUsersByExamScore() {
+  const result = await Firestore()
+    .collection(users)
+    .where('role', '==', 'developer')
+    .get();
+  return result.docs
+    .map((doc) => doc.data())
+    .sort((a, b) => {
+      if (a.examScore === b.examScore) {
+        return a.name.localeCompare(b.name) >= 0;
+      }
+      return a.examScore > b.examScore;
+    });
+}
