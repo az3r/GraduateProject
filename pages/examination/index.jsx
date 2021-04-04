@@ -106,6 +106,7 @@ export default function Index({user, examinations}) {
 
         // Get user info by uid
         const userInfo = await users.get(user.uid);
+        console.log(userInfo);
 
         let isInvited = false;
 

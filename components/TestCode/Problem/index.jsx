@@ -29,6 +29,7 @@ const useStyles = makeStyles({
   },
   difficultyBox: {
     color: 'white',
+    textAlign: 'center',
   },
   scoreBox: {
     display: 'flex',
@@ -46,6 +47,18 @@ const useStyles = makeStyles({
   submission: {
     marginLeft: 20,
     marginRight: 20,
+  },
+  '@global': {
+    '*::-webkit-scrollbar': {
+      width: '0.4em'
+    },
+    '*::-webkit-scrollbar-track': {
+      '-webkit-box-shadow': 'inset 0 0 6px rgba(0,0,0,0.00)'
+    },
+    '*::-webkit-scrollbar-thumb': {
+      backgroundColor: 'rgba(0,0,0,.1)',
+      outline: '1px solid slategrey'
+    }
   }
 });
 
@@ -82,7 +95,7 @@ export default function Problem(props) {
       </TabList>
 
       <TabPanel>
-        <Paper style={{maxHeight: window.outerHeight, height: window.outerHeight - 181, overflow: 'auto'}}>
+        <Paper style={{marginLeft: '20px', maxHeight: window.outerHeight, height: window.outerHeight - 181, overflow: 'auto'}}>
           <h2 className={classes.title}>
             {
               title
@@ -91,22 +104,22 @@ export default function Problem(props) {
           <div className={classes.problemInfo}>
             {
               difficulty === 0 &&
-              <Box component="span" display="inline" p="4px" borderRadius={16} className={classes.difficultyBox}
+              <Box component="span" display="inline" p="4px" pl={1} pr={1} mb={1} borderRadius={16} className={classes.difficultyBox}
                    bgcolor="green">Easy</Box>
             }
             {
               difficulty === 1 &&
-              <Box component="span" display="inline" p="4px" borderRadius={16} className={classes.difficultyBox}
+              <Box component="span" display="inline" p="4px" pl={1} pr={1} mb={1} borderRadius={16} className={classes.difficultyBox}
                    bgcolor="orange">Medium</Box>
             }
             {
               difficulty === 2 &&
-              <Box component="span" display="inline" p="4px" borderRadius={16} className={classes.difficultyBox}
+              <Box component="span" display="inline" p="4px" pl={1} pr={1} mb={1} borderRadius={16} className={classes.difficultyBox}
                    bgcolor="red">Hard</Box>
             }
 
             <Box className={classes.scoreBox}>
-              <Box>
+              <Box p="4px">
                 Score: {score}
               </Box>
               <Avatar className={classes.scoreAvatar} alt="Score" src="/coins_48px.png" />
