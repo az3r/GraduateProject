@@ -50,13 +50,13 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 // create a new array without filtered element
-const without = (array, filtered) =>
+const without = (array, filtered) => 
   array.filter((element) => element != filtered);
 
 export default function BasicInfoTab(props) {
   const classes = useStyles();
+  const { user, setUser } = props;
 
-  // alert dialog state
   const [openAlertDialog, setOpenAlertDialog] = React.useState(false);
   const handleOpenAlertDialog = () => {
     setOpenAlertDialog(true);
@@ -65,33 +65,23 @@ export default function BasicInfoTab(props) {
     setOpenAlertDialog(false);
   };
 
-  // original user state
-  const { user, setUser } = props;
-
   // user state in this tab
   const [tabUser, setTabUser] = useState(user);
-  const handleChange = (prop) => (event) =>
+  const handleChangeTabUser = (prop) => (event) =>
     setTabUser({ ...tabUser, [prop]: event.target.value });
 
   // technicalSkills state
   const [technicalSkills, setTechnicalSkills] = useState(user.technicalSkills);
-  const handleTechnicalSkillsAdd = (skill) => {
+  const handleAddTechSkills = (skill) => {
     const newTechnicalSkills = [...technicalSkills, skill];
     setTechnicalSkills(newTechnicalSkills);
     setTabUser({ ...tabUser, technicalSkills: newTechnicalSkills });
   };
-
-  const handleTechnicalSkillsDelete = (skill) => {
+  const handleDeleteTechSkills = (skill) => {
     const newTechnicalSkills = without(technicalSkills, skill);
     setTechnicalSkills(newTechnicalSkills);
     setTabUser({ ...tabUser, technicalSkills: newTechnicalSkills });
   };
-
-  // use effect when original user changes
-  useEffect(() => {
-    setTabUser(user);
-    setTechnicalSkills(user.technicalSkills);
-  }, [user]);
 
   // website state
   const [website, setWebsite] = useState('');
@@ -111,6 +101,12 @@ export default function BasicInfoTab(props) {
     const newWebsites = without(tabUser.websites, tabUser.websites[index]);
     setTabUser({ ...tabUser, websites: newWebsites });
   };
+
+  // use effect when original user changes
+  useEffect(() => {
+    setTabUser(user);
+    setTechnicalSkills(user.technicalSkills);
+  }, [user]);
 
   // update user
   const handleUpdateUser = () => {
@@ -139,7 +135,7 @@ export default function BasicInfoTab(props) {
             </Grid>
             <Grid item xs={12} sm={9}>
               <TextField
-                onChange={handleChange('name')}
+                onChange={handleChangeTabUser('name')}
                 id="nameTextField"
                 value={tabUser.name}
                 fullWidth
@@ -155,7 +151,7 @@ export default function BasicInfoTab(props) {
             </Grid>
             <Grid item xs={12} sm={9}>
               <TextField
-                onChange={handleChange('email')}
+                onChange={handleChangeTabUser('email')}
                 id="emailTextField"
                 value={tabUser.email}
                 fullWidth
@@ -172,7 +168,7 @@ export default function BasicInfoTab(props) {
             </Grid>
             <Grid item xs={12} sm={9}>
               <TextField
-                onChange={handleChange('location')}
+                onChange={handleChangeTabUser('location')}
                 id="locationTextField"
                 value={tabUser.location}
                 fullWidth
@@ -236,7 +232,7 @@ export default function BasicInfoTab(props) {
               <FormControl className={classes.formControl}>
                 <Select
                   value={tabUser.gender}
-                  onChange={handleChange('gender')}
+                  onChange={handleChangeTabUser('gender')}
                   displayEmpty
                   inputProps={{ 'aria-label': 'Without label' }}
                   variant="outlined"
@@ -259,7 +255,7 @@ export default function BasicInfoTab(props) {
             </Grid>
             <Grid item xs={12} sm={9}>
               <TextField
-                onChange={handleChange('birthday')}
+                onChange={handleChangeTabUser('birthday')}
                 id="date"
                 type="date"
                 value={tabUser.birthday}
@@ -291,10 +287,8 @@ export default function BasicInfoTab(props) {
             <Grid item xs={12} sm={9}>
               <ChipInput
                 value={technicalSkills}
-                onAdd={(chip) => handleTechnicalSkillsAdd(chip)}
-                onDelete={(chip, index) =>
-                  handleTechnicalSkillsDelete(chip, index)
-                }
+                onAdd={(chip) => handleAddTechSkills(chip)}
+                onDelete={(chip, index) => handleDeleteTechSkills(chip, index)}
                 fullWidth
                 variant="outlined"
               />

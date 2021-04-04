@@ -25,6 +25,7 @@ const useStyles = makeStyles(() => ({
   },
   box: {
     color: 'white',
+    textAlign: 'center',
   },
   tableRow: {
     hover: { color: '#7EA5FF' },

@@ -22,12 +22,10 @@ import dateFormat from 'dateformat';
 
 const useStyles = makeStyles(() => ({
   root: {
-    margin: 10,
-    padding: 10,
     display: 'flex',
     backgroundColor: 'white',
     alignItems: 'start',
-    borderRadius: 10,
+    // borderRadius: 10,
     borderColor: 'green',
   },
   commentBox: {
@@ -138,7 +136,7 @@ export default function Comment({user, problemId}){
       <Paper style={{maxHeight: window.outerHeight, height: window.outerHeight - 200, overflow: 'auto'}}>
         {
           commentsArray.map((comment) => (
-              <Box border={2} className={classes.root}>
+              <Box boxShadow={3} border={1} className={classes.root}>
                 <Avatar variant="square" src={comment.avatar}  />
                 <Box style={{marginLeft: 10, marginRight: 10}}>
                   <h3 style={{display: 'inline-block', marginLeft: 0, marginRight: 10, marginTop: 0, marginBottom: 10}}>
@@ -165,17 +163,17 @@ export default function Comment({user, problemId}){
                             </IconButton>
                           </>
                       }
-                      {
-                        comment.userId !==  user.uid &&
-                          <>
-                            <IconButton disabled onClick={() => handleEditClickOpen({comment})} aria-label="edit" style={{padding: 0, marginLeft: 10, marginTop: 10}}>
-                              <EditIcon fontSize="small" />
-                            </IconButton>
-                            <IconButton disabled onClick={() => handleDeleteClickOpen({comment})} aria-label="delete" style={{padding: 0, marginLeft: 10, marginTop: 10}}>
-                              <DeleteIcon fontSize="small" />
-                            </IconButton>
-                          </>
-                      }
+                      {/* { */}
+                      {/*  comment.userId !==  user.uid && */}
+                      {/*    <> */}
+                      {/*      <IconButton disabled onClick={() => handleEditClickOpen({comment})} aria-label="edit" style={{padding: 0, marginLeft: 10, marginTop: 10}}> */}
+                      {/*        <EditIcon fontSize="small" /> */}
+                      {/*      </IconButton> */}
+                      {/*      <IconButton disabled onClick={() => handleDeleteClickOpen({comment})} aria-label="delete" style={{padding: 0, marginLeft: 10, marginTop: 10}}> */}
+                      {/*        <DeleteIcon fontSize="small" /> */}
+                      {/*      </IconButton> */}
+                      {/*    </> */}
+                      {/* } */}
                   </div>
                 </Box>
               </Box>

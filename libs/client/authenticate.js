@@ -12,6 +12,7 @@ export async function register({ username, email, password, role }) {
     .collection('Users')
     .doc(credentials.user.uid)
     .set({
+      id: credentials.user.uid,
       name: username,
       email,
       avatar,

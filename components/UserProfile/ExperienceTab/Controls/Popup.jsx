@@ -36,7 +36,11 @@ export default function Popup(props) {
             {title}
           </Typography>
           <Button
-            color="#088247"
+            style={{
+              color: 'white',
+              backgroundColor: 'black',
+              borderRadius: '100%',
+            }}
             onClick={() => {
               setOpenPopup(false);
             }}

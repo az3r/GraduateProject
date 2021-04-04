@@ -49,6 +49,9 @@ export async function update(problemId, props) {
 export async function getParticipants(problemId) {
   const problem = await Firestore().collection(problems).doc(problemId).get();
   const ids = problem.get('participants');
+  if (ids === undefined || ids.length === 0) {
+    return [];
+  }
   const participants = await Firestore()
     .collection(users)
     .where(Firestore.FieldPath.documentId(), 'in', ids)

@@ -7,7 +7,7 @@ import ListItemText from '@material-ui/core/ListItemText';
 import ListItemAvatar from '@material-ui/core/ListItemAvatar';
 import Avatar from '@material-ui/core/Avatar';
 import Typography from '@material-ui/core/Typography';
-import { getParticipants } from '@libs/client/exams';
+import { getParticipants } from '@libs/client/problems';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -24,12 +24,12 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function ParticipantsTab({exam})
+export default function ParticipantsTab({problem})
 {
     const classes = useStyles();
     const [participants,setParticipants]=useState([]);
     useEffect(async ()=>{
-        const examJoiners = await getParticipants(exam.id);
+        const examJoiners = await getParticipants(problem.id);
         setParticipants(examJoiners);
     },[]);
     return (

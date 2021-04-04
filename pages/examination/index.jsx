@@ -84,49 +84,77 @@ export default function Index({user, examinations}) {
 
   const handleJoin = async () => {
     if(user) {
-      // If ExamId empty
+      // If examId empty
       if (values.examId === '') {
         setValues({ ...values, note: "Exam ID is not valid!" });
         return;
       }
-      // Get all joined exams by user
-      const joinedExam = await users.getJoinedExams(user.uid);
 
-      let isJoined = false;
-      // Check whether user have participated?
-      for (let i = 0; i < joinedExam.length; i += 1) {
-        if (joinedExam[i].id === values.examId) {
-          isJoined = true;
-          break;
-        }
+      // Get exam by examId
+      const participatedExam = await exams.get(values.examId, { withProblems: false });
+
+      // Check whether exam exist?
+      if (participatedExam.createdOn === null) {
+        setValues({ ...values, note: "This exam don't exist!" });
+
       }
+      else{
+        // Check whether user have been invited yet?
+        // Get invited users by examId
+        const invitedUsers = await exams.getInvitedUsers(values.examId);
 
-      if (isJoined) {
-        setValues({ ...values, note: "You have participated this exam!" });
-      } else {
-        // Get exam by examId
-        const participatedExam = await exams.get(values.examId, { withProblems: false });
 
-        // Check whether exam exist?
-        if (participatedExam.createdOn === null) {
-          setValues({ ...values, note: "This exam don't exist!" });
+        // Get user info by uid
+        const userInfo = await users.get(user.uid);
+        console.log(userInfo);
 
-        }  // Check whether exam have expired?
-        else if (Date.parse(participatedExam.startAt) <= Date.now() && Date.parse(participatedExam.endAt) >= Date.now()) {
-          // If participated exam is not private
-          if (participatedExam.isPrivate === false) {
-            await users.joinExam(user.uid, participatedExam.id);
-            router.push(`/examination/${participatedExam.id}`);
-          } else if (participatedExam.password === values.password) {
-            await users.joinExam(user.uid, participatedExam.id);
-            router.push(`/examination/${participatedExam.id}`);
-          } else {
-            setValues({ ...values, note: "Password is not valid!" });
+        let isInvited = false;
+
+        for(let i = 0; i < invitedUsers.length; i += 1){
+          if(userInfo.email === invitedUsers[i]){
+            isInvited = true;
+            break;
           }
-        } else {
-          setValues({ ...values, note: "This exam have expired or have not started yet!" });
+        }
+
+        if(isInvited === false){
+          setValues({ ...values, note: "You have not been invited yet!" });
+        }
+        else{
+          // Check whether user have participated?
+          // Get all joined exams by user
+          const joinedExam = await users.getJoinedExams(user.uid);
+
+          let isJoined = false;
+
+          for (let i = 0; i < joinedExam.length; i += 1) {
+            if (joinedExam[i].id === values.examId) {
+              isJoined = true;
+              break;
+            }
+          }
+
+          if (isJoined) {
+            setValues({ ...values, note: "You have participated this exam!" });
+          }             // Check whether exam have expired?
+                        // Get exam by examId
+          else if (Date.parse(participatedExam.startAt) <= Date.now() && Date.parse(participatedExam.endAt) >= Date.now()) {
+              // If participated exam is not private
+              if (participatedExam.isPrivate === false) {
+                await users.joinExam(user.uid, participatedExam.id);
+                router.push(`/examination/${participatedExam.id}`);
+              } else if (participatedExam.password === values.password) {
+                await users.joinExam(user.uid, participatedExam.id);
+                router.push(`/examination/${participatedExam.id}`);
+              } else {
+                setValues({ ...values, note: "Password is not valid!" });
+              }
+            } else {
+              setValues({ ...values, note: "This exam have expired or have not started yet!" });
+            }
         }
       }
+
     }
     else{
       setOpen(false);

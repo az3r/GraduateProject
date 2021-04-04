@@ -100,7 +100,7 @@ export async function getParticipants(examId) {
   // get participants' ids
   const exam = await Firestore().collection(exams).doc(examId).get();
   const ids = exam.get('participants');
-  if (ids.length === 0) {
+  if (ids === undefined || ids.length === 0) {
     return [];
   }
 
@@ -121,13 +121,22 @@ async function createProblem(examId, props) {
   return id;
 }
 
-export async function inviteUsers(examId, userIds) {
+export async function inviteUsers(examId, email) {
   await Firestore()
     .collection(exams)
     .doc(examId)
     .update({
-      invitedUsers: Firestore.FieldValue.arrayUnion(userIds),
+      invitedUsers: Firestore.FieldValue.arrayUnion(email),
     });
+}
+
+export async function getInvitedUsers(examId) {
+  const exam = await Firestore().collection(exams).doc(examId).get();
+  const usersInvited = exam.get('invitedUsers');
+  if (usersInvited === undefined || usersInvited.length === 0) {
+    return [];
+  }
+  return usersInvited;
 }
 
 export async function uninviteUser(examId, userIds) {
