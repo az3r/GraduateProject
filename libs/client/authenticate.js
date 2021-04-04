@@ -50,7 +50,7 @@ export async function signin({ username, password, provider }) {
       .where('name', '==', username)
       .limit(1)
       .get();
-    if (results.empty) throw new Error({ code: 'auth/user_not_found' });
+    if (results.empty) return Promise.reject({ code: 'auth/user_not_found' });
     const { email } = results[0];
     return FirebaseAuth().signInWithEmailAndPassword(email, password);
   }
