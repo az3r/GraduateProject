@@ -21,9 +21,7 @@
   <component name="ChangeListManager">
     <list default="true" id="73bd1854-2930-493b-bbd0-fb90442d9327" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/components/Problems/index.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/Problems/index.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/components/TestCode/Problem/Comment/index.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/TestCode/Problem/Comment/index.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/components/TestCode/Problem/index.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/TestCode/Problem/index.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pages/examination/[id].jsx" beforeDir="false" afterPath="$PROJECT_DIR$/pages/examination/[id].jsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pages/examination/index.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/pages/examination/index.jsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -148,7 +146,9 @@
       <workItem from="1617244185323" duration="24321000" />
       <workItem from="1617335776985" duration="10471000" />
       <workItem from="1617427422724" duration="7095000" />
-      <workItem from="1617507339493" duration="8124000" />
+      <workItem from="1617507339493" duration="8329000" />
+      <workItem from="1617516021133" duration="158000" />
+      <workItem from="1617551457870" duration="2143000" />
     </task>
     <servers />
   </component>
@@ -189,17 +189,17 @@
       <screen x="0" y="0" width="1366" height="738" />
     </state>
     <state x="500" y="283" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2/0.0.1366.738/1366.0.1366.738@0.0.1366.738" timestamp="1612509227348" />
-    <state x="1504" y="99" width="1052" height="534" key="find.popup" timestamp="1617267993588">
+    <state x="1504" y="99" width="1052" height="534" key="find.popup" timestamp="1617553099790">
       <screen x="1366" y="0" width="1366" height="738" />
     </state>
-    <state x="1504" y="99" width="1052" height="534" key="find.popup/0.0.1366.738/1366.0.1366.738@1366.0.1366.738" timestamp="1617267993588" />
+    <state x="1504" y="99" width="1052" height="534" key="find.popup/0.0.1366.738/1366.0.1366.738@1366.0.1366.738" timestamp="1617553099790" />
     <state x="1705" y="165" key="run.anything.popup" timestamp="1617336303421">
       <screen x="1366" y="0" width="1366" height="738" />
     </state>
     <state x="1705" y="165" key="run.anything.popup/0.0.1366.738/1366.0.1366.738@1366.0.1366.738" timestamp="1617336303421" />
-    <state x="1712" y="59" width="672" height="678" key="search.everywhere.popup" timestamp="1617432085979">
+    <state x="1712" y="59" width="672" height="678" key="search.everywhere.popup" timestamp="1617553199867">
       <screen x="1366" y="0" width="1366" height="738" />
     </state>
-    <state x="1712" y="59" width="672" height="678" key="search.everywhere.popup/0.0.1366.738/1366.0.1366.738@1366.0.1366.738" timestamp="1617432085979" />
+    <state x="1712" y="59" width="672" height="678" key="search.everywhere.popup/0.0.1366.738/1366.0.1366.738@1366.0.1366.738" timestamp="1617553199867" />
   </component>
 </project>
