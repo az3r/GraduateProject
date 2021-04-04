@@ -313,7 +313,7 @@ export async function getServerSideProps({req}) {
 
   let items = await exams.get(undefined, {withProblems: true});
 
-  console.log(items);
+  // console.log(items);
 
   if(joinedExams !== null){
     const itemsTemp = [];
