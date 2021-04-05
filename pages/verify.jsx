@@ -9,7 +9,7 @@ export async function getServerSideProps({ query }) {
   if (query.uid) {
     return {
       redirect: {
-        destination: '/',
+        destination: '/login',
         permanent: true,
       },
     };
