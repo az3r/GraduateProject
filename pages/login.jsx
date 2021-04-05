@@ -257,6 +257,7 @@ export default function Login() {
       setWaiting(true);
       const credentials = await auth.signin({ username, password, provider });
       if (!credentials.user.emailVerified) {
+        await auth.signout();
         setLoggedUser(credentials.user);
         return;
       }
