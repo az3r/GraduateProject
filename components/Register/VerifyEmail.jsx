@@ -11,7 +11,13 @@ import * as React from 'react';
 import { auth } from '@libs/client';
 import { getBaseUrl } from '@utils/urls';
 
-export default function VerifyEmail(user) {
+export default function VerifyEmail({
+  displayName,
+  uid,
+  email,
+  emailVerified,
+  message,
+}) {
   const styles = useStyles();
 
   return (
@@ -25,17 +31,15 @@ export default function VerifyEmail(user) {
     >
       <Grid item>
         <Typography align="center" variant="h3">
-          {user.emailVerfied ? 'Acount alredy verified' : 'Verify Your Account'}
+          {emailVerified ? 'Acount alredy verified' : 'Verify Your Account'}
         </Typography>
       </Grid>
       <Grid item>
-        {user.emailVerfied ? (
+        {emailVerified ? (
           <Typography>Your account has been verified</Typography>
         ) : (
           <Typography>
-            Hello <b>{user.displayName}</b>, your new account has been
-            registered successfully, but first you need to verify your email
-            before using our service{' '}
+            Hello <b>{displayName}</b>, {message}
           </Typography>
         )}
       </Grid>
@@ -46,11 +50,11 @@ export default function VerifyEmail(user) {
           label="Email"
           fullWidth
           contentEditable={false}
-          value={user.email}
+          value={email}
         />
       </Grid>
       <Grid item>
-        {user.emailVerfied ? (
+        {emailVerified ? (
           <Link href="/">
             <Button variant="contained" color="secondary" fullWidth>
               Back to Dashboard
@@ -101,7 +105,7 @@ export default function VerifyEmail(user) {
       setWaiting(true);
 
       try {
-        const url = `${getBaseUrl()}verify?uid=${user.uid}`;
+        const url = `${getBaseUrl()}verify?uid=${uid}`;
         auth.sendVerifyEmail(url);
       } catch (error) {
         // TODO: handler this error
@@ -112,11 +116,20 @@ export default function VerifyEmail(user) {
 }
 
 VerifyEmail.propTypes = {
-  user: PropTypes.shape({
-    displayName: PropTypes.string.isRequired,
-    uid: PropTypes.string.isRequired,
-    email: PropTypes.string.isRequired,
-  }).isRequired,
+  displayName: PropTypes.string.isRequired,
+  uid: PropTypes.string.isRequired,
+  email: PropTypes.string.isRequired,
+  emailVerified: PropTypes.bool.isRequired,
+  message: PropTypes.node,
+};
+
+VerifyEmail.defaultProps = {
+  message: (
+    <Typography>
+      your new account has been registered successfully, but first you need to
+      verify your email before using our service{' '}
+    </Typography>
+  ),
 };
 const useStyles = makeStyles((theme) => ({
   root: {

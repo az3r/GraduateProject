@@ -94,12 +94,13 @@ export default function Register() {
 
   function VerifyAccountStep() {
     function onVerified() {}
-    const { email, uid, displayName } = dataRef.current.account;
+    const { email, uid, displayName, emailVerified } = dataRef.current.account;
     return (
       <VerifyEmail
         email={email}
         uid={uid}
         displayName={displayName}
+        emailVerified={emailVerified}
         onVerified={onVerified}
       />
     );

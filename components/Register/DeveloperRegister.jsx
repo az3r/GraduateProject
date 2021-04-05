@@ -177,6 +177,7 @@ export default function DeveloperRegister({ onRegistered }) {
     try {
       setWaiting(true);
       const credentials = await auth.register({ username, email, password });
+      auth.signout();
       onRegistered(credentials.user);
     } catch (error) {
       setSnackBarState({
