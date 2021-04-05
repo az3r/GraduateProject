@@ -13,6 +13,7 @@ import { exams, users } from '@libs/client';
 import { parseCookies } from '@libs/client/cookies';
 // import { route } from 'next/dist/next-server/server/router';
 import { useRouter  } from 'next/router';
+import HTMLReactParser from 'html-react-parser';
 import AppLayout from '../../components/Layout';
 
 const useStyles = makeStyles({
@@ -25,7 +26,6 @@ const useStyles = makeStyles({
     height: 100,
     backgroundColor: 'white',
     margin: 10,
-    borderRadius: 15,
     borderColor: 'green',
     display: 'flex',
     justifyContent: 'space-between',
@@ -51,7 +51,7 @@ const useStyles = makeStyles({
     textAlign: 'center',
     paddingTop: 35,
     paddingBottom: 35,
-    borderRadius: 20,
+    // borderRadius: 20,
     alignContent: 'center',
     backgroundColor: '#960955',
     color: 'white',
@@ -65,11 +65,22 @@ const useStyles = makeStyles({
   },
   duration: {
     marginRight: 25,
-    borderRadius: 5,
     padding: 5,
     color: 'red',
     fontWeight: 'bolder',
   },
+  '@global': {
+    '*::-webkit-scrollbar': {
+      width: '0.4em'
+    },
+    '*::-webkit-scrollbar-track': {
+      '-webkit-box-shadow': 'inset 0 0 6px rgba(0,0,0,0.00)'
+    },
+    '*::-webkit-scrollbar-thumb': {
+      backgroundColor: 'rgba(0,0,0,.1)',
+      outline: '1px solid slategrey'
+    }
+  }
 });
 
 export default function Introduction({ exam, user }) {
@@ -126,8 +137,9 @@ export default function Introduction({ exam, user }) {
               <List className={classes.problemList}>
                 {exam.problems.map((problem, index) => (
                   <Box
+                    boxShadow={3}
                     tabIndex={index}
-                    border={2}
+                    border={1}
                     className={classes.problemBox}
                   >
                     <Box>
@@ -211,6 +223,24 @@ export default function Introduction({ exam, user }) {
                 Time estimated:{' '}
                 <span style={{ fontWeight: 'normal', color: 'black' }}>
                   120 minutes
+                </span>
+              </div>
+              <div style={{ fontWeight: 'bolder', color: 'blue' }}>
+                Start Date:{' '}
+                <span style={{ fontWeight: 'normal', color: 'black' }}>
+                  {exam.startAt}
+                </span>
+              </div>
+              <div style={{ fontWeight: 'bolder', color: 'blue' }}>
+                End Date:{' '}
+                <span style={{ fontWeight: 'normal', color: 'black' }}>
+                  {exam.endAt}
+                </span>
+              </div>
+              <div style={{ fontWeight: 'bolder', color: 'blue' }}>
+                Content:{' '}
+                <span style={{ fontWeight: 'normal', color: 'black' }}>
+                  {HTMLReactParser(exam.content)}
                 </span>
               </div>
               <div style={{ fontWeight: 'bolder', color: 'blue' }}>
