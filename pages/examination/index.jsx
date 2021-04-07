@@ -59,7 +59,7 @@ const useStyles = makeStyles({
   },
 });
 
-export default function Index({user, examinations}) {
+export default function Index({user, examinations, usersExamScore}) {
   const classes = useStyles();
   const router = useRouter();
 
@@ -283,7 +283,7 @@ export default function Index({user, examinations}) {
               <Challenge user={user} exams={examinations} />
             </Grid>
             <Grid item sm={4}>
-              <TopScore />
+              <TopScore usersExamScore={usersExamScore} />
             </Grid>
           </Grid>
         </Box>
@@ -334,10 +334,14 @@ export async function getServerSideProps({req}) {
     items = itemsTemp;
   }
 
+  // Get users score for TOP SCORE
+  const usersExamScore = await users.getUsersByExamScore();
+
   return {
     props: {
       user,
-      examinations: items
+      examinations: items,
+      usersExamScore
     },
   };
 }

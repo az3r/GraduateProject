@@ -19,7 +19,12 @@
     <select />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="73bd1854-2930-493b-bbd0-fb90442d9327" name="Default Changelist" comment="" />
+    <list default="true" id="73bd1854-2930-493b-bbd0-fb90442d9327" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/components/Examinations/TopScore/index.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/Examinations/TopScore/index.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pages/examination/index.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/pages/examination/index.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pages/examination/ranking/index.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/pages/examination/ranking/index.jsx" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -144,7 +149,10 @@
       <workItem from="1617427422724" duration="7095000" />
       <workItem from="1617507339493" duration="8329000" />
       <workItem from="1617516021133" duration="158000" />
-      <workItem from="1617551457870" duration="2505000" />
+      <workItem from="1617551457870" duration="3061000" />
+      <workItem from="1617590724270" duration="391000" />
+      <workItem from="1617688131092" duration="9272000" />
+      <workItem from="1617806197531" duration="3812000" />
     </task>
     <servers />
   </component>
@@ -172,11 +180,11 @@
       <screen x="1366" y="0" width="1366" height="738" />
     </state>
     <state x="1786" y="171" key="#com.intellij.fileTypes.FileTypeChooser/0.0.1366.738/1366.0.1366.738@1366.0.1366.738" timestamp="1614507422683" />
-    <state x="1829" y="124" key="FileChooserDialogImpl" timestamp="1612698749575">
+    <state x="1829" y="124" key="FileChooserDialogImpl" timestamp="1617591139745">
       <screen x="1366" y="0" width="1366" height="738" />
     </state>
     <state x="463" y="124" key="FileChooserDialogImpl/0.0.1366.738/1366.0.1366.738@0.0.1366.738" timestamp="1612066063244" />
-    <state x="1829" y="124" key="FileChooserDialogImpl/0.0.1366.738/1366.0.1366.738@1366.0.1366.738" timestamp="1612698749575" />
+    <state x="1829" y="124" key="FileChooserDialogImpl/0.0.1366.738/1366.0.1366.738@1366.0.1366.738" timestamp="1617591139745" />
     <state width="498" height="446" key="SwitcherDM" timestamp="1617338221615">
       <screen x="1366" y="0" width="1366" height="738" />
     </state>

@@ -66,7 +66,7 @@ const useStyles = makeStyles({
   },
 });
 
-export default function TopScore() {
+export default function TopScore({usersExamScore}) {
   const classes = useStyles();
   const router = useRouter();
 
@@ -90,7 +90,7 @@ export default function TopScore() {
           </Typography>
         </Box>
         <Box className={classes.top1}>
-          <Link href="/avatar" underline="none">
+          <Link href={`/profile/${usersExamScore[0].id}`} underline="none">
             <Avatar
               style={{
                 display: 'block',
@@ -99,13 +99,13 @@ export default function TopScore() {
               }}
               className={classes.large}
               alt="avatar"
-              src="https://picsum.photos/200"
+              src={usersExamScore[0].avatar}
             />
-            <Typography>maykase (120)</Typography>
+            <Typography>{usersExamScore[0].name} ({usersExamScore[0].examScore})</Typography>
           </Link>
         </Box>
         <Box className={classes.top23}>
-          <Link href="/avatar" underline="none">
+          <Link href={`/profile/${usersExamScore[1].id}`} underline="none">
             <Avatar
               style={{
                 display: 'block',
@@ -114,11 +114,11 @@ export default function TopScore() {
               }}
               className={classes.large}
               alt="avatar"
-              src="https://picsum.photos/201"
+              src={usersExamScore[1].avatar}
             />
-            <Typography>hakachi (120)</Typography>
+            <Typography>{usersExamScore[1].name} ({usersExamScore[1].examScore})</Typography>
           </Link>
-          <Link href="/avatar" underline="none">
+          <Link href={`/profile/${usersExamScore[2].id}`} underline="none">
             <Avatar
               style={{
                 display: 'block',
@@ -127,217 +127,39 @@ export default function TopScore() {
               }}
               className={classes.large}
               alt="avatar"
-              src="https://picsum.photos/202"
+              src={usersExamScore[2].avatar}
             />
-            <Typography>masura (120)</Typography>
+            <Typography>{usersExamScore[2].name} ({usersExamScore[2].examScore})</Typography>
           </Link>
         </Box>
 
         <Box m={1} border={1} className={classes.topScoreList}>
-          <Box borderBottom={1} className={classes.topScoreItem}>
-            <Typography variant="h6" style={{ margin: 10 }}>
-              4
-            </Typography>
-            <Avatar
-              className={classes.small}
-              alt="avatar"
-              src="https://picsum.photos/304"
-            />
-            <Typography color="primary" variant="h6" style={{ margin: 10 }}>
-              JOHNKRAM
-            </Typography>
-            <Box className={classes.score}>
-              120
-              <img alt="Score" src="/coins_28px.png" />
-            </Box>
-          </Box>
-          <Box borderBottom={1} className={classes.topScoreItem}>
-            <Typography variant="h6" style={{ margin: 10 }}>
-              5
-            </Typography>
-            <Avatar
-              className={classes.small}
-              alt="avatar"
-              src="https://picsum.photos/305"
-            />
-            <Typography color="primary" variant="h6" style={{ margin: 10 }}>
-              tmwilliamlin168
-            </Typography>
-            <Box className={classes.score}>
-              120
-              <img alt="Score" src="/coins_28px.png" />
-            </Box>
-          </Box>
-          <Box borderBottom={1} className={classes.topScoreItem}>
-            <Typography variant="h6" style={{ margin: 10 }}>
-              6
-            </Typography>
-            <Avatar
-              className={classes.small}
-              alt="avatar"
-              src="https://picsum.photos/306"
-            />
-            <Typography color="primary" variant="h6" style={{ margin: 10 }}>
-              uwi
-            </Typography>
-            <Box className={classes.score}>
-              120
-              <img alt="Score" src="/coins_28px.png" />
-            </Box>
-          </Box>
-          <Box borderBottom={1} className={classes.topScoreItem}>
-            <Typography variant="h6" style={{ margin: 10 }}>
-              7
-            </Typography>
-            <Avatar
-              className={classes.small}
-              alt="avatar"
-              src="https://picsum.photos/307"
-            />
-            <Typography color="primary" variant="h6" style={{ margin: 10 }}>
-              natsugiri
-            </Typography>
-            <Box className={classes.score}>
-              120
-              <img alt="Score" src="/coins_28px.png" />
-            </Box>
-          </Box>
-          <Box borderBottom={1} className={classes.topScoreItem}>
-            <Typography variant="h6" style={{ margin: 10 }}>
-              8
-            </Typography>
-            <Avatar
-              className={classes.small}
-              alt="avatar"
-              src="https://picsum.photos/308"
-            />
-            <Typography color="primary" variant="h6" style={{ margin: 10 }}>
-              hitonanode
-            </Typography>
-            <Box className={classes.score}>
-              120
-              <img alt="Score" src="/coins_28px.png" />
-            </Box>
-          </Box>
-          <Box borderBottom={1} className={classes.topScoreItem}>
-            <Typography variant="h6" style={{ margin: 10 }}>
-              9
-            </Typography>
-            <Avatar
-              className={classes.small}
-              alt="avatar"
-              src="https://picsum.photos/309"
-            />
-            <Typography color="primary" variant="h6" style={{ margin: 10 }}>
-              huzecong
-            </Typography>
-            <Box className={classes.score}>
-              120
-              <img alt="Score" src="/coins_28px.png" />
-            </Box>
-          </Box>
-          <Box borderBottom={1} className={classes.topScoreItem}>
-            <Typography variant="h6" style={{ margin: 10 }}>
-              10
-            </Typography>
-            <Avatar
-              className={classes.small}
-              alt="avatar"
-              src="https://picsum.photos/3010"
-            />
-            <Typography color="primary" variant="h6" style={{ margin: 10 }}>
-              zcgzcgzcg
-            </Typography>
-            <Box className={classes.score}>
-              120
-              <img alt="Score" src="/coins_28px.png" />
-            </Box>
-          </Box>
-          <Box borderBottom={1} className={classes.topScoreItem}>
-            <Typography variant="h6" style={{ margin: 10 }}>
-              11
-            </Typography>
-            <Avatar
-              className={classes.small}
-              alt="avatar"
-              src="https://picsum.photos/311"
-            />
-            <Typography color="primary" variant="h6" style={{ margin: 10 }}>
-              wifiii
-            </Typography>
-            <Box className={classes.score}>
-              120
-              <img alt="Score" src="/coins_28px.png" />
-            </Box>
-          </Box>
-          <Box borderBottom={1} className={classes.topScoreItem}>
-            <Typography variant="h6" style={{ margin: 10 }}>
-              12
-            </Typography>
-            <Avatar
-              className={classes.small}
-              alt="avatar"
-              src="https://picsum.photos/3012"
-            />
-            <Typography color="primary" variant="h6" style={{ margin: 10 }}>
-              arknave
-            </Typography>
-            <Box className={classes.score}>
-              120
-              <img alt="Score" src="/coins_28px.png" />
-            </Box>
-          </Box>
-          <Box borderBottom={1} className={classes.topScoreItem}>
-            <Typography variant="h6" style={{ margin: 10 }}>
-              13
-            </Typography>
-            <Avatar
-              className={classes.small}
-              alt="avatar"
-              src="https://picsum.photos/3013"
-            />
-            <Typography color="primary" variant="h6" style={{ margin: 10 }}>
-              heyshb
-            </Typography>
-            <Box className={classes.score}>
-              120
-              <img alt="Score" src="/coins_28px.png" />
-            </Box>
-          </Box>
-          <Box borderBottom={1} className={classes.topScoreItem}>
-            <Typography variant="h6" style={{ margin: 10 }}>
-              14
-            </Typography>
-            <Avatar
-              className={classes.small}
-              alt="avatar"
-              src="https://picsum.photos/3014"
-            />
-            <Typography color="primary" variant="h6" style={{ margin: 10 }}>
-              Dymonchyk
-            </Typography>
-            <Box className={classes.score}>
-              120
-              <img alt="Score" src="/coins_28px.png" />
-            </Box>
-          </Box>
-          <Box borderBottom={1} className={classes.topScoreItem}>
-            <Typography variant="h6" style={{ margin: 10 }}>
-              15
-            </Typography>
-            <Avatar
-              className={classes.small}
-              alt="avatar"
-              src="https://picsum.photos/3015"
-            />
-            <Typography color="primary" variant="h6" style={{ margin: 10 }}>
-              kmjp
-            </Typography>
-            <Box className={classes.score}>
-              120
-              <img alt="Score" src="/coins_28px.png" />
-            </Box>
-          </Box>
+          {
+            usersExamScore.map((usersexamscore, index) => {
+              if(index >= 3 && index <= 14){
+                return (
+                  <Box key={usersexamscore.id} borderBottom={1} className={classes.topScoreItem}>
+                    <Typography variant="h6" style={{ margin: 10 }}>
+                      {index + 1}
+                    </Typography>
+                    <Avatar
+                      className={classes.small}
+                      alt="avatar"
+                      src={usersexamscore.avatar}
+                    />
+                    <Typography color="primary" variant="h6" style={{ margin: 10 }}>
+                      {usersexamscore.name}
+                    </Typography>
+                    <Box className={classes.score}>
+                      {usersexamscore.examScore}
+                      <img alt="Score" src="/coins_28px.png" />
+                    </Box>
+                  </Box>
+                );
+              }
+              return false;
+            })
+          }
           <Box className={[classes.topScoreItem, classes.viewMore]} onClick={() => viewMore()}>
             View More...
           </Box>
