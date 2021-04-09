@@ -124,13 +124,13 @@ export default function Login() {
       })
     );
     return (
-      <>
+      <Box maxWidth="1440px" margin="auto">
         <Typography variant="h2" align="center">
           <b>Smart Coder</b>
         </Typography>
         <Box display="flex" marginTop={theme.spacing(1)}>
           <Box display="flex" flexGrow={3} justifyContent="center">
-            <Box width="80%">
+            <Box width="80%" maxWidth="560px">
               <EmailForm />
             </Box>
           </Box>
@@ -142,7 +142,7 @@ export default function Login() {
             flexGrow={5}
             marginTop="2em"
           >
-            <Box width={width970 ? '80%' : '60%'}>
+            <Box width={width970 ? '80%' : '60%'} maxWidth="560px">
               <ProviderSignin />
             </Box>
           </Box>
@@ -161,7 +161,7 @@ export default function Login() {
             </Link>
           </Box>
         </Box>
-      </>
+      </Box>
     );
   }
 
@@ -236,7 +236,7 @@ export default function Login() {
 
       try {
         setSubmitting(true);
-        await signin({ username, password });
+        await signInWithEmail({ username, password });
 
         // save cookies
         const user = {
@@ -406,7 +406,7 @@ export default function Login() {
               variant="contained"
               color={item.color}
               disabled={item.disabled}
-              onClick={() => signInWithProvider({ method: item.method })}
+              onClick={() => onSignin({ method: item.method })}
               fullWidth
               startIcon={
                 <Avatar className={styles.logo} alt={item.alt} src={item.src} />
@@ -418,10 +418,44 @@ export default function Login() {
         ))}
       </Grid>
     );
+
+    async function onSignin({ method }) {
+      try {
+        await signInWithProvider({ method });
+
+        // save cookies
+        const user = {
+          uid: FirebaseAuth().currentUser.uid,
+          isLogin: true,
+        };
+        setCookies(['user'], JSON.stringify(user), { path: '/' });
+        // end save cookies
+
+        router.replace('/');
+        setSnackBarState({
+          open: true,
+          severity: 'success',
+          message: 'Login successfully!',
+        });
+      } catch (error) {
+        const { code } = error;
+
+        let message;
+        if (code?.contain('auth/')) message = 'Invalid username or password';
+        else message = 'Internal server error';
+
+        // only display message if user signs in with username and password
+        setSnackBarState({
+          open: true,
+          severity: 'error',
+          message,
+        });
+      }
+    }
   }
 }
 
-async function signin({ username, password }) {
+async function signInWithEmail({ username, password }) {
   const credentials = await auth.signin({ username, password });
   if (!credentials.user.emailVerified) {
     await auth.signout();
