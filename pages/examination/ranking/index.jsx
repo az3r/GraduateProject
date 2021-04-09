@@ -70,7 +70,7 @@ export default function Ranking({usersExamScore}) {
   return (
     <>
       <Head>
-        <title>Smart Code - Ranking</title>
+        <title>Ranking - Smart Code</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
@@ -100,7 +100,7 @@ export default function Ranking({usersExamScore}) {
                   <Box style={{marginLeft: 30, marginRight: 30}}>
                     {(currentPage - 1)*10 + index + 1}
                   </Box>
-                  <Avatar variant="square" src={userScore.avatar} />
+                  <Avatar variant="circle" src={userScore.avatar} />
                   <Box style={{marginRight: 'auto'}}>
                     <h3 style={{display: 'inline-block', marginLeft: 20, marginRight: 0, marginTop: 0, marginBottom: 0}}>
                       <a href={`/profile/${userScore.id}`} style={{color: 'green', textDecoration: 'none'}}>{userScore.name}</a>

@@ -22,7 +22,9 @@ import dateFormat from 'dateformat';
 
 const useStyles = makeStyles(() => ({
   root: {
-    margin: 10,
+    marginLeft: 10,
+    marginRight: 10,
+    marginBottom: 1,
     padding: 10,
     display: 'flex',
     backgroundColor: 'white',
@@ -139,7 +141,7 @@ export default function Comment({user, problemId}){
         {
           commentsArray.map((comment) => (
               <Box boxShadow={3} border={1} className={classes.root}>
-                <Avatar variant="square" src={comment.avatar}  />
+                <Avatar variant="circle" src={comment.avatar}  />
                 <Box style={{marginLeft: 10, marginRight: 10}}>
                   <h3 style={{display: 'inline-block', marginLeft: 0, marginRight: 10, marginTop: 0, marginBottom: 10}}>
                     {/* <Link href={`/profile/${comment.id}`}> */}
