@@ -187,7 +187,7 @@ export async function updateScoreExam(userId, examId, value) {
 export async function getUsersByExamScore() {
   const result = await Firestore()
     .collection(users)
-    .where('role', '==', 'developer')
+    // .where('role', '==', 'developer')
     .get();
   return result.docs
     .map((doc) => doc.data())

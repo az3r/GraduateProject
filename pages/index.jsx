@@ -1,15 +1,16 @@
 import React from 'react';
-import { problems as probs } from '@libs/client';
+import { problems as probs, users } from '@libs/client';
 import PropTypes from 'prop-types';
 
 import Head from 'next/head';
 import { Grid, Hidden, Container } from '@material-ui/core';
 
 import Problems from '@components/Problems/index';
-import YourProgress from '@components/YourProgress';
+import YourProgress from '@components/Problems/YourProgress';
 import AppLayout from '@components/Layout';
+import { parseCookies } from '@libs/client/cookies';
 
-export default function Home({ problems }) {
+export default function Home({ problems, user }) {
   return (
     <>
       <Head>
@@ -34,7 +35,7 @@ export default function Home({ problems }) {
             </Grid>
             <Hidden smDown>
               <Grid item xs={false} md={4} lg={4}>
-                <YourProgress />
+                <YourProgress user={user} />
               </Grid>
             </Hidden>
           </Grid>
@@ -49,11 +50,31 @@ Home.propTypes = {
   problems: PropTypes.array.isRequired,
 };
 
-export async function getServerSideProps() {
+export async function getServerSideProps({req}) {
+  const cookies = parseCookies(req);
+  let user = null;
+  let userDetail = null;
+
+  try {
+
+    if (Object.keys(cookies).length !== 0) {
+      if (cookies.user) {
+        user = JSON.parse(cookies.user);
+
+        if(user){
+          userDetail = await users.get(user.uid);
+        }
+      }
+    }
+  } catch (e) {
+    console.log(e);
+  }
+
   const items = await probs.get();
   return {
     props: {
       problems: items,
+      user: userDetail
     },
   };
 }

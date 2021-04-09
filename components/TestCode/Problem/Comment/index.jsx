@@ -22,6 +22,8 @@ import dateFormat from 'dateformat';
 
 const useStyles = makeStyles(() => ({
   root: {
+    margin: 10,
+    padding: 10,
     display: 'flex',
     backgroundColor: 'white',
     alignItems: 'start',
@@ -163,17 +165,17 @@ export default function Comment({user, problemId}){
                             </IconButton>
                           </>
                       }
-                      {/* { */}
-                      {/*  comment.userId !==  user.uid && */}
-                      {/*    <> */}
-                      {/*      <IconButton disabled onClick={() => handleEditClickOpen({comment})} aria-label="edit" style={{padding: 0, marginLeft: 10, marginTop: 10}}> */}
-                      {/*        <EditIcon fontSize="small" /> */}
-                      {/*      </IconButton> */}
-                      {/*      <IconButton disabled onClick={() => handleDeleteClickOpen({comment})} aria-label="delete" style={{padding: 0, marginLeft: 10, marginTop: 10}}> */}
-                      {/*        <DeleteIcon fontSize="small" /> */}
-                      {/*      </IconButton> */}
-                      {/*    </> */}
-                      {/* } */}
+                       {/* { */}
+                       {/* comment.userId !==  user.uid && */}
+                       {/*   <> */}
+                       {/*     <IconButton disabled onClick={() => handleEditClickOpen({comment})} aria-label="edit" style={{padding: 0, marginLeft: 10, marginTop: 10}}> */}
+                       {/*       <EditIcon fontSize="small" /> */}
+                       {/*     </IconButton> */}
+                       {/*     <IconButton disabled onClick={() => handleDeleteClickOpen({comment})} aria-label="delete" style={{padding: 0, marginLeft: 10, marginTop: 10}}> */}
+                       {/*       <DeleteIcon fontSize="small" /> */}
+                       {/*     </IconButton> */}
+                       {/*   </> */}
+                       {/* } */}
                   </div>
                 </Box>
               </Box>

@@ -14,6 +14,7 @@ import { parseCookies } from '@libs/client/cookies';
 // import { route } from 'next/dist/next-server/server/router';
 import { useRouter  } from 'next/router';
 import HTMLReactParser from 'html-react-parser';
+import { calculateTotalExamTime } from '@libs/client/business';
 import AppLayout from '../../components/Layout';
 
 const useStyles = makeStyles({
@@ -222,7 +223,7 @@ export default function Introduction({ exam, user }) {
               <div style={{ fontWeight: 'bolder', color: 'blue' }}>
                 Time estimated:{' '}
                 <span style={{ fontWeight: 'normal', color: 'black' }}>
-                  120 minutes
+                  {calculateTotalExamTime(exam.minutes, exam.seconds)}
                 </span>
               </div>
               <div style={{ fontWeight: 'bolder', color: 'blue' }}>

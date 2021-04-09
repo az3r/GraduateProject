@@ -75,22 +75,16 @@ export function formatQuestionsArray(questions, isUpdateExam) {
   return newQuestionList;
 }
 
-export function calculateTotalExamTime(problems) {
+export function calculateTotalExamTime(minutes, seconds) {
   let totalHours = 0;
   let totalMinutes = 0;
   let totalSeconds = 0;
 
-  problems.map((problem) => {
-    totalMinutes += parseInt(problem.minutes, 10);
-    totalSeconds += parseInt(problem.seconds, 10);
-    return null;
-  });
+  totalMinutes += parseInt(seconds / 60, 10);
+  totalSeconds = parseInt(seconds % 60, 10);
 
-  totalMinutes += parseInt(totalSeconds / 60, 10);
-
-  totalHours = parseInt(totalMinutes / 60, 10);
-  totalSeconds = parseInt(totalSeconds % 60, 10);
-  totalMinutes = parseInt(totalMinutes % 60, 10);
+  totalHours += parseInt(minutes / 60, 10);
+  totalMinutes = parseInt(minutes % 60, 10);
 
   return `${totalHours}h ${totalMinutes}m ${totalSeconds}s`;
 }

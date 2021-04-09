@@ -18,6 +18,7 @@ import { users } from '@libs/client';
 import { useRouter  } from 'next/router';
 import Swal from 'sweetalert2'
 import withReactContent from 'sweetalert2-react-content'
+import { calculateTotalExamTime } from '@libs/client/business';
 
 const useStyles = makeStyles(() => ({
   tableContainer: {
@@ -161,7 +162,7 @@ export default function Challenge({user, exams}) {
                         </Box>
                       </Link>
                     </TableCell>
-                    <TableCell>1h 20m 0s</TableCell>
+                    <TableCell>{calculateTotalExamTime(examination.minutes, examination.seconds)}</TableCell>
                     <TableCell>
                       <Button size="small" variant="contained" color="primary"
                               onClick={() => handleJoinExam(examination.id)}>JOIN</Button>

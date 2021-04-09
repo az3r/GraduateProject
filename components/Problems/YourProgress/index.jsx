@@ -13,6 +13,8 @@ import {
   Paper
 } from '@material-ui/core';
 
+import SettingsIcon from '@material-ui/icons/Settings';
+
 const data = [
   { name: 'ToDo', value: 400 },
   { name: 'Solved', value: 300 },
@@ -92,7 +94,7 @@ const renderActiveShape = (props) => {
   );
 };
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles({
   root: {
     display: 'flex',
   },
@@ -108,21 +110,20 @@ const useStyles = makeStyles((theme) => ({
     fontWeight: 'bold',
   },
   settings: {
-    height: 25,
-    width: 25,
     marginTop: 8,
     marginLeft: 'auto',
     marginRight: 10,
     float: 'right',
+    cursor:'pointer',
   },
-}));
+});
 
 const COLORS = ['#0088FE', '#00C49F', '#FFBB28'];
 
-export default function YourProgress() {
+export default function YourProgress({user}) {
   const classes = useStyles();
 
-  const jsfiddleUrl = 'https://jsfiddle.net/alidingling/hqnrgxpj/';
+  // const jsfiddleUrl = 'https://jsfiddle.net/alidingling/hqnrgxpj/';
   const [activeIndex, setActiveIndex] = React.useState(0);
 
   // state = {
@@ -136,23 +137,33 @@ export default function YourProgress() {
   return (
     <Paper>
       <div className={classes.root}>
-        <Avatar alt="Your Progress" src={'/increase_100px.png'} />
+        <Avatar alt="Your Progress" src="/increase_100px.png" />
         <Typography className={classes.progress} variant="h5" gutterBottom>
           Your Progress
         </Typography>
-        <Avatar
-          alt="Settings"
-          className={classes.settings}
-          src={'/settings_24px.png'}
-        />
+        {/* <Avatar */}
+        {/*  alt="Settings" */}
+        {/*  className={classes.settings} */}
+        {/*  src={'/settings_24px.png'} */}
+        {/* /> */}
+        <SettingsIcon className={classes.settings} fontSize="large" />
       </div>
 
       <hr />
       <div className={classes.root}>
-        <Typography variant="h6" gutterBottom>
-          Coin: 300
-        </Typography>
-        <Avatar alt="Coins" src={'/coins_48px.png'} />
+        {
+          user !== null &&
+          <Typography variant="h6" style={{marginLeft: 5}} gutterBottom>
+            Problem Score: {user.problemScore}
+          </Typography>
+        }
+        {
+          user === null &&
+          <Typography variant="h6" style={{marginLeft: 5}} gutterBottom>
+            Problem Score: 0
+          </Typography>
+        }
+        <Avatar alt="Coins" src="/coins_48px.png" />
       </div>
 
       <PieChart width={400} height={250}>
@@ -164,12 +175,12 @@ export default function YourProgress() {
           outerRadius={80}
           fill="#8884d8"
           dataKey="value"
-          onMouseOver={(data, index) => {
+          onMouseOver={(data1, index) => {
             setActiveIndex(index);
           }}
         >
           {data.map((entry, index) => (
-            <Cell key={`cell-${index}`} fill={COLORS[index]} />
+            <Cell fill={COLORS[index]} /> // key={`cell-${index}`}
           ))}
         </Pie>
       </PieChart>

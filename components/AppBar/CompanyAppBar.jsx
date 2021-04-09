@@ -52,6 +52,16 @@ export default function MemberAppBar() {
             Smart Coder
           </Typography>
         </Link>
+        <Link href="/">
+          <MenuItem>
+            <Typography variant="h6">Problems</Typography>
+          </MenuItem>
+        </Link>
+        <Link href="/examination">
+          <MenuItem>
+            <Typography variant="h6">Examinations</Typography>
+          </MenuItem>
+        </Link>
         <Link href="/examiner">
           <MenuItem>
             <Typography variant="h6">Examiner</Typography>
