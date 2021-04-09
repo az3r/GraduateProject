@@ -27,6 +27,7 @@
     "firebase": "^8.2.1",
     "firebase-admin": "^9.4.2",
     "html-react-parser": "^1.2.4",
+    "json2mq": "^0.2.0",
     "material-ui-chip-input": "^1.1.0",
     "next": "10.0.4",
     "prop-types": "^15.7.2",

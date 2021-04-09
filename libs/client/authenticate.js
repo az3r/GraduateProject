@@ -40,8 +40,8 @@ export async function existed({ username, email }) {
   return false;
 }
 
-export async function sendVerifyEmail(url) {
-  return FirebaseAuth().currentUser.sendEmailVerification({
+export async function sendVerifyEmail(user, url) {
+  return user.sendEmailVerification({
     url,
   });
 }

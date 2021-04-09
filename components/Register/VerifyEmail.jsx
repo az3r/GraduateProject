@@ -11,14 +11,10 @@ import * as React from 'react';
 import { auth } from '@libs/client';
 import { getBaseUrl } from '@utils/urls';
 
-export default function VerifyEmail({
-  displayName,
-  uid,
-  email,
-  emailVerified,
-  message,
-}) {
+export default function VerifyEmail({ user }) {
   const styles = useStyles();
+
+  const { displayName, uid, email, emailVerified, message } = user;
 
   return (
     <Grid
@@ -106,7 +102,7 @@ export default function VerifyEmail({
 
       try {
         const url = `${getBaseUrl()}verify?uid=${uid}`;
-        auth.sendVerifyEmail(url);
+        auth.sendVerifyEmail(user, url);
       } catch (error) {
         // TODO: handler this error
         console.error(error);
