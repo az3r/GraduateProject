@@ -52,6 +52,17 @@ export async function getProblemSubmissions(userId, problemId) {
   return snapshot.docs.map((doc) => transform(doc.data()));
 }
 
+export async function getExamSubmissions(userId, examId) {
+  const snapshot = await Firestore()
+    .collection(users)
+    .doc(userId)
+    .collection(examSubmissions)
+    .where('examId', '==', examId)
+    .orderBy('createdOn', 'desc')
+    .get();
+  return snapshot.docs.map((doc) => transform(doc.data()));
+}
+
 /**
  * @example
  * // for code problems, retrieve data from test function

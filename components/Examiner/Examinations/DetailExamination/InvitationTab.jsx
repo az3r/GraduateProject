@@ -17,7 +17,7 @@ import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import Slide from '@material-ui/core/Slide';
 import { getUsersForInvitation, sendInvitation } from '@libs/client/business';
-// import { Pagination } from '@material-ui/lab';
+import { Pagination } from '@material-ui/lab';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -42,7 +42,7 @@ const useStyles = makeStyles((theme) => ({
 
 const Transition = React.forwardRef((props, ref) => <Slide direction="up" ref={ref} {...props} />);
 
-// const ITEMS_PER_PAGE = 1;
+ const ITEMS_PER_PAGE = 3;
 
 export default function InvitationTab({ exam }) {
   const classes = useStyles();
@@ -53,13 +53,18 @@ export default function InvitationTab({ exam }) {
   const [open, setOpen] = useState(false);
   const [searchKey,setSearchKey] = useState("");
   const [sendEmailNotify,setSendEmailNotify] = useState("");
+  const [numberOfPages,setNumberOfPages] = useState(1);
+  const [page,setPage] = useState(1);
 
   React.useEffect(async () => {
     const examOwner = await get(exam.owner);
+    setExaminer(examOwner);
     const modifiedUsers = await getUsersForInvitation(exam.id);
     setUsers(modifiedUsers);
-    setFilterUsers(modifiedUsers);
-    setExaminer(examOwner);
+    const filtered = getDisplayListForPagination(modifiedUsers,0,ITEMS_PER_PAGE,searchKey);
+    setFilterUsers(filtered);
+    const pages = getNumberOfPages(modifiedUsers);
+    setNumberOfPages(pages)
   }, []);
 
   const handleClickOpen = () => {
@@ -78,19 +83,23 @@ export default function InvitationTab({ exam }) {
     setSearchKey(e.target.value);
   }
 
-  // const handleChangePage = (event, value) => {
-  //   setFilterUsers(filtedUsers.splice(value-1,ITEMS_PER_PAGE));
-  // };
+  const handleChangePage = (event, value) => {
+    setPage(value);
+    const filtered = getDisplayListForPagination(users,value-1,ITEMS_PER_PAGE,searchKey);
+    setFilterUsers(filtered);
+  };
 
   const handleSearchKeyPress = (e) => {
     if (e.key === 'Enter') {
-      const newList = users.filter((user) => user.name.toLowerCase().includes(searchKey.toLowerCase()) 
-                                            || user.email.toLowerCase().includes(searchKey.toLowerCase()));
-      setFilterUsers(newList);
+      const newList = getListAfterSearch(users,searchKey);
+      const pages = getNumberOfPages(newList);
+      setNumberOfPages(pages)
+      const filtered = getDisplayListForPagination(users,0,ITEMS_PER_PAGE,searchKey);
+      setFilterUsers(filtered);
     }
   }
 
-  const sendInivation = (key,invitedUser) => {
+  const sendInivation = (invitedUser) => {
     inviteUsers(exam.id,invitedUser.email);
     sendInvitation(invitedUser.name,examiner.name,exam.id,exam.password,invitedUser.email);
     const newUsers = [...users];
@@ -101,11 +110,16 @@ export default function InvitationTab({ exam }) {
 
   const sendInvitationByEmail = async () => {
     inviteUsers(exam.id,email);
+    setSendEmailNotify(`Sent invitation to email ${email}`);
     sendInvitation("Examinee",examiner.name,exam.id,exam.password,email);
     const modifiedUsers = await getUsersForInvitation(exam.id);
     setUsers(modifiedUsers);
-    setFilterUsers(modifiedUsers);
-    setSendEmailNotify(`Sent invitation to email ${email}`);
+    const filtered = getDisplayListForPagination(modifiedUsers,0,ITEMS_PER_PAGE,"");
+    setFilterUsers(filtered);
+    const pages = getNumberOfPages(modifiedUsers);
+    setNumberOfPages(pages)
+    setSearchKey("");
+    setPage(1);
   };
 
   return (
@@ -150,7 +164,7 @@ export default function InvitationTab({ exam }) {
         />
       </Box>
       <List className={classes.root}>
-        {filtedUsers.map((value, key) => (
+        {filtedUsers.map((value) => (
           <div key={value.id}>
             <ListItem alignItems="flex-start">
               <ListItemAvatar>
@@ -182,7 +196,7 @@ export default function InvitationTab({ exam }) {
                         color="primary"
                         variant="contained"
                         style={{ float: 'right' }}
-                        onClick={() => sendInivation(key, value)}
+                        onClick={() => sendInivation(value)}
                       >
                         Invite
                       </Button>
@@ -195,12 +209,29 @@ export default function InvitationTab({ exam }) {
           </div>
         ))}
       </List>
-      {/* <Box display="flex" justifyContent="center" p={2}>
-        <Pagination count={numberOfPages} color="primary" onChange={handleChangePage} />
-      </Box> */}
+      <Box display="flex" justifyContent="center" p={2}>
+        <Pagination count={numberOfPages} page={page} color="primary" onChange={handleChangePage} />
+      </Box>
     </div>
   );
 }
-/**
- * <Pagination count={10} variant="outlined" />
- */
+
+function getNumberOfPages(list)
+{
+  return list.length % ITEMS_PER_PAGE === 0 ? Math.floor(list.length / ITEMS_PER_PAGE) : Math.floor(list.length / ITEMS_PER_PAGE) + 1;
+}
+
+function getListAfterSearch(list,filterName)
+{
+  const result = list.filter(item => item.name.toLowerCase().includes(filterName.toLowerCase()) 
+                                       || item.email.toLowerCase().includes(filterName.toLowerCase()));
+  return result;
+}
+
+function getDisplayListForPagination(list,start,numberOfItemsPerPage,filterName)
+{
+  const result = list.filter(item => item.name.toLowerCase().includes(filterName.toLowerCase()) 
+                                      || item.email.toLowerCase().includes(filterName.toLowerCase()))
+                      .slice(start*numberOfItemsPerPage, (start+1)*numberOfItemsPerPage);
+  return result;
+}

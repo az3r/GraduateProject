@@ -8,6 +8,7 @@ import ListItemAvatar from '@material-ui/core/ListItemAvatar';
 import Avatar from '@material-ui/core/Avatar';
 import Typography from '@material-ui/core/Typography';
 import { getParticipants } from '@libs/client/exams';
+import { Button } from '@material-ui/core';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -57,6 +58,11 @@ export default function ParticipantsTab({exam})
                                         >
                                             {value.email}
                                         </Typography>
+                                        <Button 
+                                            href={`/examiner/examinations/result?id=${exam.id}&uid=${value.id}`}
+                                            variant="contained" color="secondary" style={{float: "right"}}>
+                                            Result
+                                        </Button>
                                     </>
                                 }
                                 />
