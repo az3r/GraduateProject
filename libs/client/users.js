@@ -3,7 +3,7 @@ import { transform } from '@utils/firestore';
 import { Firestore, FirebaseAuth } from './firebase';
 
 const {
-  problems,
+  problems: problemCollection,
   exams: examCollection,
   users,
   problemSubmissions,
@@ -68,7 +68,7 @@ export async function update({
 /** get problems own by user */
 export async function getProblems(uid) {
   const snapshot = await Firestore()
-    .collection(problems)
+    .collection(problemCollection)
     .where('owner', '==', uid)
     .get();
   return snapshot.docs.map((item) =>
@@ -87,7 +87,7 @@ export async function getSubmittedProblems(uid) {
   const ids = new Set(submissions.docs.map((doc) => doc.get('problemId')));
 
   const snapshot = await Firestore()
-    .collection(problems)
+    .collection(problemCollection)
     .where(Firestore.FieldPath.documentId(), 'in', ids)
     .get();
 
@@ -187,14 +187,60 @@ export async function updateScoreExam(userId, examId, value) {
 export async function getUsersByExamScore() {
   const result = await Firestore()
     .collection(users)
-    // .where('role', '==', 'developer')
+    .where('role', 'in', ['developer', 'company'])
+    .orderBy('score', 'desc')
+    .orderBy('name', 'asc')
     .get();
-  return result.docs
-    .map((doc) => doc.data())
-    .sort((a, b) => {
-      if (a.examScore === b.examScore) {
-        return a.name.localeCompare(b.name) >= 0;
-      }
-      return a.examScore > b.examScore;
-    });
+  return result.docs.map((doc) => doc.data());
+}
+
+/** get all created problems and exams by user */
+export async function getCreatedAll(uid) {
+  const problemTask = Firestore()
+    .collection(problemCollection)
+    .where('owner', '==', uid)
+    .get();
+  const examTask = Firestore()
+    .collection(examCollection)
+    .where('owner', '==', uid)
+    .get();
+
+  const problems = await problemTask;
+  const exams = await examTask;
+  return [].concat(
+    problems.docs.map((item) =>
+      transform({
+        id: item.id,
+        createdOn: item.get('createdOn'),
+        modifiedAt: item.get('modifiedAt'),
+      })
+    ),
+    exams.docs.map((item) =>
+      transform({
+        id: item.id,
+        createdOn: item.get('createdOn'),
+        modifiedAt: item.get('modifiedAt'),
+      })
+    )
+  );
+}
+
+export async function getSolvedProblems(uid) {
+  const problemIds = await Firestore()
+    .collection(users)
+    .doc(uid)
+    .collection(solvedProblems)
+    .get();
+
+  const problems = await Firestore()
+    .collection(problemCollection)
+    .where(
+      Firestore.FieldPath.documentId(),
+      'in',
+      problemIds.docs.map((item) => item.id)
+    )
+    .get();
+  return problems.docs.map((item) =>
+    transform({ id: item.id, ...item.data() })
+  );
 }
