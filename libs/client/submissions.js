@@ -103,7 +103,7 @@ export async function getExamSubmissions(userId, examId) {
  */
 export async function createExamSubmission(
   userId,
-  { examId, total, correct, results, score, totalScore }
+  { examId, total, correct, results }
 ) {
   const { id } = await Firestore()
     .collection(users)
@@ -113,8 +113,6 @@ export async function createExamSubmission(
       examId,
       total,
       correct,
-      score,
-      totalScore,
       createdOn: Firestore.Timestamp.now(),
       results,
     });
