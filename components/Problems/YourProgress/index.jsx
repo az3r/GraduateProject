@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   PieChart,
   Pie,
@@ -15,11 +15,11 @@ import {
 
 import SettingsIcon from '@material-ui/icons/Settings';
 
-const data = [
-  { name: 'ToDo', value: 400 },
-  { name: 'Solved', value: 300 },
-  { name: 'Attempted', value: 300 },
-];
+// const data = [
+//   { name: 'ToDo', value: 400 },
+//   { name: 'Solved', value: 300 },
+//   { name: 'Attempted', value: 300 },
+// ];
 
 const renderActiveShape = (props) => {
   const RADIAN = Math.PI / 180;
@@ -120,11 +120,16 @@ const useStyles = makeStyles({
 
 const COLORS = ['#0088FE', '#00C49F', '#FFBB28'];
 
-export default function YourProgress({user}) {
+export default function YourProgress({user, problemsNumber, solvedProblemsNumber, unsolvedProblemsNumber}) {
   const classes = useStyles();
 
   // const jsfiddleUrl = 'https://jsfiddle.net/alidingling/hqnrgxpj/';
   const [activeIndex, setActiveIndex] = React.useState(0);
+  const [data] = useState([
+    { name: 'ToDo', value: problemsNumber - solvedProblemsNumber - unsolvedProblemsNumber },
+    { name: 'Solved', value: solvedProblemsNumber },
+    { name: 'Attempted', value: unsolvedProblemsNumber },
+  ]);
 
   // state = {
   //   activeIndex: 0,
@@ -189,15 +194,15 @@ export default function YourProgress({user}) {
 
       <div className={classes.caption}>
         <div className={classes.captionItem} style={{ color: COLORS[0] }}>
-          <div>200</div>
+          <div>{problemsNumber - solvedProblemsNumber - unsolvedProblemsNumber}</div>
           <span>Todo</span>
         </div>
         <div className={classes.captionItem} style={{ color: COLORS[1] }}>
-          <div>2/198</div>
+          <div>{ solvedProblemsNumber}/{ problemsNumber }</div>
           <span>Solved</span>
         </div>
         <div className={classes.captionItem} style={{ color: COLORS[2] }}>
-          <div>0</div>
+          <div>{unsolvedProblemsNumber}</div>
           <span>Attempted</span>
         </div>
       </div>

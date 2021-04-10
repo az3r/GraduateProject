@@ -84,7 +84,12 @@ export async function getSubmittedProblems(uid) {
     .doc(uid)
     .collection(problemSubmissions)
     .get();
-  const ids = new Set(submissions.docs.map((doc) => doc.get('problemId')));
+
+  if (submissions.empty) return [];
+
+  const ids = submissions.docs.map((doc) => doc.get('problemId'));
+
+  if (ids.length === 0) return [];
 
   const snapshot = await Firestore()
     .collection(problemCollection)
@@ -92,6 +97,20 @@ export async function getSubmittedProblems(uid) {
     .get();
 
   return snapshot.docs.map((doc) => transform({ id: doc.id, ...doc.data() }));
+}
+
+/** get problem submissions bu uid */
+export async function getProblemSubmissions(uid) {
+  // get all problems' ids in user submission collection
+  const submissions = await Firestore()
+    .collection(users)
+    .doc(uid)
+    .collection(problemSubmissions)
+    .get();
+
+  return submissions.docs.map((item) =>
+    transform({ id: item.id, ...item.data() })
+  );
 }
 
 /** get exams own by user */

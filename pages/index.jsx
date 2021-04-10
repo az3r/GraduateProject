@@ -10,7 +10,7 @@ import YourProgress from '@components/Problems/YourProgress';
 import AppLayout from '@components/Layout';
 import { parseCookies } from '@libs/client/cookies';
 
-export default function Home({ problems, user }) {
+export default function Home({ problems, user, solvedProblemsNumber, unsolvedProblemsNumber }) {
   return (
     <>
       <Head>
@@ -35,7 +35,7 @@ export default function Home({ problems, user }) {
             </Grid>
             <Hidden smDown>
               <Grid item xs={false} md={4} lg={4}>
-                <YourProgress user={user} />
+                <YourProgress user={user} problemsNumber={problems.length} solvedProblemsNumber={solvedProblemsNumber} unsolvedProblemsNumber={unsolvedProblemsNumber} />
               </Grid>
             </Hidden>
           </Grid>
@@ -54,6 +54,8 @@ export async function getServerSideProps({req}) {
   const cookies = parseCookies(req);
   let user = null;
   let userDetail = null;
+  let solvedProblemsNumber = 0;
+  let unsolvedProblemsNumber = 0;
 
   try {
 
@@ -63,7 +65,45 @@ export async function getServerSideProps({req}) {
 
         if(user){
           userDetail = await users.get(user.uid);
+
+
+          // Get solved problems
+          const solvedProblems = await users.getSolvedProblems(user.uid);
+          solvedProblemsNumber = solvedProblems.length;
+
+          const problemSubmissions = await users.getProblemSubmissions(user.uid);
+          const unacceptedSubmittedProblems = problemSubmissions.filter(
+            (problem) => {
+              let isAccepted = false;
+              for(let i = 0; i < solvedProblems.length; i += 1){
+                if (solvedProblems[i].id === problem.problemId) {
+                  isAccepted = true;
+                  break;
+                }
+              }
+
+              if(isAccepted === false && problem.status !== "Accepted"){
+                return problem;
+              }
+              return null;
+            });
+
+          const unacceptedSubmittedProblemsDump = [];
+          for(let i = 0; i < unacceptedSubmittedProblems.length; i += 1) {
+            let flag = false;
+            for(let j = 0; j < unacceptedSubmittedProblemsDump.length; j += 1) {
+              if(unacceptedSubmittedProblems[i].problemId === unacceptedSubmittedProblemsDump[j].problemId){
+                flag = true;
+                break;
+              }
+            }
+            if(flag === false){
+              unacceptedSubmittedProblemsDump.push(unacceptedSubmittedProblems[i]);
+            }
+          }
+          unsolvedProblemsNumber = unacceptedSubmittedProblemsDump.length;
         }
+
       }
     }
   } catch (e) {
@@ -74,7 +114,9 @@ export async function getServerSideProps({req}) {
   return {
     props: {
       problems: items,
-      user: userDetail
+      user: userDetail,
+      solvedProblemsNumber,
+      unsolvedProblemsNumber
     },
   };
 }
