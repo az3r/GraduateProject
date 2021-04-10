@@ -207,8 +207,8 @@ export async function getUsersByExamScore() {
   const result = await Firestore()
     .collection(users)
     .where('role', 'in', ['developer', 'company'])
-    .orderBy('score', 'desc')
-    .orderBy('name', 'asc')
+    // .orderBy('examScore:', 'desc')
+    // .orderBy('name', 'asc')
     .get();
   return result.docs.map((doc) => doc.data());
 }
