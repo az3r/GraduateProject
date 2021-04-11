@@ -37,29 +37,31 @@ export async function getUsersByRole(role) {
 }
 
 /** require user to be signed in */
-export async function update({
-  name,
-  avatar,
-  websites,
-  location,
-  gender,
-  birthday,
-  technicalSkills,
-  experiences,
-}) {
+export async function update(user) {
   const { displayName, photoURL, uid } = FirebaseAuth().currentUser;
+  let infoTask = null;
 
-  const infoTask = Firestore().collection(users).doc(uid).update({
-    websites,
-    location,
-    gender,
-    birthday,
-    technicalSkills,
-    experiences,
-  });
+  if (user.role === 'developer') {
+    infoTask = Firestore().collection(users).doc(uid).update({
+      websites: user.websites,
+      location: user.location,
+      gender: user.gender,
+      birthday: user.birthday,
+      technicalSkills: user.technicalSkills,
+      experiences: user.experiences,
+    });
+  } else {
+    infoTask = Firestore().collection(users).doc(uid).update({
+      introduction: user.introduction,
+      website: user.website,
+      industry: user.industry,
+      headquarter: user.headquarter,
+      specialties: user.specialties,
+    });
+  }
   const profileTask = FirebaseAuth().currentUser.updateProfile({
-    displayName: name || displayName,
-    photoURL: avatar || photoURL,
+    displayName: user.name || displayName,
+    photoURL: user.avatar || photoURL,
   });
 
   await Promise.all([infoTask, profileTask]);

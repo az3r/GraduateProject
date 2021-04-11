@@ -156,40 +156,6 @@ export default function BasicInfoTab(props) {
         <Grid item xs={12} className={classes.divider}>
           <Grid container spacing={1}>
             <Grid item xs={12} sm={3} className={classes.paper}>
-              Role
-            </Grid>
-            <Grid item xs={12} sm={9}>
-              <TextField
-                onChange={handleChangeTabUser('role')}
-                id="roleTextField"
-                value={tabUser.role}
-                fullWidth
-                variant="outlined"
-                disabled
-              />
-            </Grid>
-          </Grid>
-        </Grid>
-        <Grid item xs={12} className={classes.divider}>
-          <Grid container spacing={1}>
-            <Grid item xs={12} sm={3} className={classes.paper}>
-              Email
-            </Grid>
-            <Grid item xs={12} sm={9}>
-              <TextField
-                onChange={handleChangeTabUser('email')}
-                id="emailTextField"
-                value={tabUser.email}
-                fullWidth
-                variant="outlined"
-                disabled
-              />
-            </Grid>
-          </Grid>
-        </Grid>
-        <Grid item xs={12} className={classes.divider}>
-          <Grid container spacing={1}>
-            <Grid item xs={12} sm={3} className={classes.paper}>
               Name
             </Grid>
             <Grid item xs={12} sm={9}>

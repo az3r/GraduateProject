@@ -8,9 +8,9 @@ import { makeStyles, Box, Snackbar } from '@material-ui/core';
 import { Alert } from '@material-ui/lab';
 import { useAuth } from '@hooks/auth';
 import * as userServices from '@libs/client/users';
-import UserAvatar from '@components/UserProfile/UserAvatar';
-import UserProfileTabs from '@components/UserProfile';
-import AppLayout from '../../components/Layout';
+import UserAvatar from '@components/UserProfile/Components/UserAvatar';
+import DevProfileTabs from '@components/UserProfile/Developer';
+import AppLayout from '@components/Layout';
 
 const useStyles = makeStyles({
   introBox: {
@@ -96,8 +96,6 @@ export default function Index(props) {
 
   // user info state
   const [user, setUser] = useState(initialUser);
-  // const handleUserInfoChange = (prop, newValue) =>
-  //   setUser({ ...user, [prop]: newValue });
 
   // get user from api
   let apiUser = null;
@@ -148,7 +146,7 @@ export default function Index(props) {
           />
         </Box>
         <Box p={3}>
-          <UserProfileTabs
+          <DevProfileTabs
             user={user}
             setUser={setUser}
             setSnackBarState={setSnackBarState}

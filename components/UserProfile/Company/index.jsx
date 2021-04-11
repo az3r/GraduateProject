@@ -9,9 +9,8 @@ import {
   Tab,
   Grid,
 } from '@material-ui/core';
-import BasicInfoTab from '@components/UserProfile/BasicInfoTab';
-import AccountTab from '@components/UserProfile/AccountTab';
-import ExperiencesTab from '@components/UserProfile/ExperienceTab';
+import BasicInfoTab from '@components/UserProfile/Company/BasicInfoTab';
+import AccountTab from '@components/UserProfile/Components/AccountTab';
 import PropTypes from 'prop-types';
 
 const useStyles = makeStyles((theme) => ({
@@ -80,9 +79,8 @@ export default function UserProfileTabs(props) {
           aria-label="Vertical tabs example"
           className={classes.tabs}
         >
-          <Tab label="Basic Info" {...a11yProps(0)} />
-          <Tab label="Password" {...a11yProps(1)} />
-          <Tab label="Experiences" {...a11yProps(2)} />
+          <Tab label="About" {...a11yProps(0)} />
+          <Tab label="Account" {...a11yProps(1)} />
         </Tabs>
       </Grid>
 
@@ -96,13 +94,6 @@ export default function UserProfileTabs(props) {
         </TabPanel>
         <TabPanel value={value} index={1}>
           <AccountTab
-            user={user}
-            setUser={setUser}
-            setSnackBarState={setSnackBarState}
-          />
-        </TabPanel>
-        <TabPanel value={value} index={2}>
-          <ExperiencesTab
             user={user}
             setUser={setUser}
             setSnackBarState={setSnackBarState}

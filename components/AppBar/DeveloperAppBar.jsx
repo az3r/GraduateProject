@@ -105,7 +105,7 @@ function ActionList() {
 
   return (
     <MenuList>
-      <Link href="/profile">
+      <Link href="/profile/dev">
         <MenuItem>Profile</MenuItem>
       </Link>
       <Link href="/setting">

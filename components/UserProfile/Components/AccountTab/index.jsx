@@ -69,8 +69,25 @@ export default function AccountTab(props) {
               fontSize: 20,
             }}
           >
-            Change Your Password
+            Your Account
           </Typography>
+        </Grid>
+        <Grid item xs={12} className={classes.divider}>
+          <Grid container spacing={1}>
+            <Grid item xs={12} sm={3} className={classes.paper}>
+              Email
+            </Grid>
+            <Grid item xs={12} sm={9}>
+              <TextField
+                id="emailTextField"
+                value={user.email}
+                className={classes.textField}
+                fullWidth
+                variant="outlined"
+                disabled
+              />
+            </Grid>
+          </Grid>
         </Grid>
         <Grid item xs={12} className={classes.divider}>
           <Grid container spacing={1}>

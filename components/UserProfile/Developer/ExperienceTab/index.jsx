@@ -27,8 +27,8 @@ import {
 } from 'react-vertical-timeline-component';
 import 'react-vertical-timeline-component/style.min.css';
 import dateFormat from 'dateformat';
-import Popup from '@components/UserProfile/ExperienceTab/Controls/Popup';
-import ExperienceForm from '@components/UserProfile/ExperienceTab/Controls/ExperienceForm';
+import Popup from '@components/UserProfile/Developer/ExperienceTab/Controls/Popup';
+import ExperienceForm from '@components/UserProfile/Developer/ExperienceTab/Controls/ExperienceForm';
 import * as userServices from '@libs/client/users';
 
 const useStyles = makeStyles((theme) => ({
