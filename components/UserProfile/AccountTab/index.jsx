@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 /* eslint-disable no-console */
 import React from 'react';
 import {
@@ -31,24 +32,30 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function AccountTab() {
-  const user = {
-    password: '123456',
-  };
-
+export default function AccountTab(props) {
   const classes = useStyles();
-  const [values, setValues] = React.useState({
-    currentPassword: user.password,
+  const { user, setUser, setSnackBarState } = props;
+  const [strongPassword, setStrongPassword] = React.useState(true);
+
+  // passwords state
+  const [passwords, setPasswords] = React.useState({
+    currentPassword: '',
     newPassword: '',
     confirmPassword: '',
   });
-  const handleChange = (prop) => (event) => {
-    setValues({ ...values, [prop]: event.target.value });
+  const handleChangePasswords = (prop) => (event) => {
+    setPasswords({ ...passwords, [prop]: event.target.value });
   };
+
+  // submit
   const handleSubmit = (event) => {
     event.preventDefault();
+
+    // const isValidCurrentPass = checkCurrentPass(passwords.currentPassword);
     console.log(
-      `${values.currentPassword}\n${values.newPassword}\n${values.confirmPassword}`
+      `cur: ${passwords.currentPassword}
+      new: ${passwords.newPassword}
+      confirm: ${passwords.confirmPassword}`
     );
   };
 
@@ -71,20 +78,13 @@ export default function AccountTab() {
               Current Password
             </Grid>
             <Grid item xs={12} sm={9}>
-              {/* <Input
-                id="currentPassword"
-                type="password"
-                value={values.currentPassword}
-                onChange={handleChange('currentPassword')}
-                variant="outlined"
-              /> */}
               <TextField
                 type="password"
+                name="currentPassword"
                 className={classes.textField}
-                onChange={handleChange('currentPassword')}
-                value={values.currentPassword}
-                autoComplete="current-password"
+                onChange={handleChangePasswords('currentPassword')}
                 variant="outlined"
+                required
               />
             </Grid>
           </Grid>
@@ -95,18 +95,16 @@ export default function AccountTab() {
               New Password
             </Grid>
             <Grid item xs={12} sm={9}>
-              {/* <Input
-                id="newPassword"
-                type="password"
-                value={values.newPassword}
-                onChange={handleChange('newPassword')}
-              /> */}
               <TextField
                 type="password"
+                name="newPassword"
                 className={classes.textField}
-                onChange={handleChange('newPassword')}
+                onChange={handleChangePasswords('newPassword')}
                 autoComplete="new-password"
                 variant="outlined"
+                required
+                error={!strongPassword}
+                helperText={strongPassword ? null : 'Weak password'}
               />
             </Grid>
           </Grid>
@@ -117,18 +115,14 @@ export default function AccountTab() {
               Confirm Password
             </Grid>
             <Grid item xs={12} sm={9}>
-              {/* <Input
-                id="confirmPassword"
-                type="password"
-                value={values.confirmPassword}
-                onChange={handleChange('confirmPassword')}
-              /> */}
               <TextField
                 type="password"
+                name="confirmPassword"
                 className={classes.textField}
-                onChange={handleChange('confirmPassword')}
+                onChange={handleChangePasswords('confirmPassword')}
                 autoComplete="confirm-password"
                 variant="outlined"
+                required
               />
             </Grid>
           </Grid>

@@ -1,8 +1,5 @@
-/* eslint-disable react/destructuring-assignment */
-/* eslint-disable no-unused-vars */
 /* eslint-disable react/forbid-prop-types */
 /* eslint-disable react/require-default-props */
-/* eslint-disable react/jsx-props-no-spreading */
 import React from 'react';
 import {
   makeStyles,
@@ -64,6 +61,7 @@ function a11yProps(index) {
 
 export default function UserProfileTabs(props) {
   const classes = useStyles();
+  const { user, setUser, setSnackBarState } = props;
 
   // tab values
   const [value, setValue] = React.useState(0);
@@ -91,23 +89,23 @@ export default function UserProfileTabs(props) {
       <Grid item xs={9}>
         <TabPanel value={value} index={0}>
           <BasicInfoTab
-            user={props.user}
-            setUser={props.setUser}
-            handleUserInfoChange={props.handleUserInfoChange}
+            user={user}
+            setUser={setUser}
+            setSnackBarState={setSnackBarState}
           />
         </TabPanel>
         <TabPanel value={value} index={1}>
           <AccountTab
-            user={props.user}
-            setUser={props.setUser}
-            handleUserInfoChange={props.handleUserInfoChange}
+            user={user}
+            setUser={setUser}
+            setSnackBarState={setSnackBarState}
           />
         </TabPanel>
         <TabPanel value={value} index={2}>
           <ExperiencesTab
-            user={props.user}
-            setUser={props.setUser}
-            handleUserInfoChange={props.handleUserInfoChange}
+            user={user}
+            setUser={setUser}
+            setSnackBarState={setSnackBarState}
           />
         </TabPanel>
       </Grid>

@@ -172,7 +172,7 @@ export default function ExperienceForm(props) {
                 variant="contained"
                 startIcon={<SaveOutlinedIcon />}
               >
-                Save
+                Edit
               </Button>
             </Grid>
           </Grid>

@@ -1,6 +1,5 @@
 /* eslint-disable eqeqeq */
 /* eslint-disable no-lone-blocks */
-/* eslint-disable no-unused-vars */
 /* eslint-disable no-console */
 import React, { useState, useEffect } from 'react';
 import {
@@ -64,7 +63,7 @@ const without = (array, filtered) =>
 
 export default function ExperiencesTab(props) {
   const classes = useStyles();
-  const { user, setUser } = props;
+  const { user, setUser, setSnackBarState } = props;
   const [openPopup, setOpenPopup] = useState(false);
   const [openAlertDialog, setOpenAlertDialog] = React.useState(false);
 
@@ -103,15 +102,30 @@ export default function ExperiencesTab(props) {
     setOpenPopup(false);
   };
 
-  const handleUpdateUser = () => {
+  const handleUpdateUser = async () => {
     setOpenAlertDialog(false);
-    const newUser = { ...user, experiences: timelineElements };
-    setUser(newUser);
-    userServices.update(newUser);
+
+    try {
+      const newUser = { ...user, experiences: timelineElements };
+      await userServices.update(newUser);
+      setUser(newUser);
+      setSnackBarState({
+        open: true,
+        severity: 'success',
+        message: 'Update successfully!',
+      });
+    } catch (err) {
+      console.log(err);
+      setSnackBarState({
+        open: true,
+        severity: 'error',
+        message: 'Internal server error',
+      });
+    }
   };
 
   // open popup to add new exp
-  const openPopupToAddNew = (event) => {
+  const openPopupToAddNew = () => {
     setElementForEdit(null);
     setOpenPopup(true);
     setIsAddNewExp(true);

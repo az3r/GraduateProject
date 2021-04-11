@@ -50,12 +50,12 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 // create a new array without filtered element
-const without = (array, filtered) => 
+const without = (array, filtered) =>
   array.filter((element) => element != filtered);
 
 export default function BasicInfoTab(props) {
   const classes = useStyles();
-  const { user, setUser } = props;
+  const { user, setUser, setSnackBarState } = props;
 
   const [openAlertDialog, setOpenAlertDialog] = React.useState(false);
   const handleOpenAlertDialog = () => {
@@ -73,9 +73,16 @@ export default function BasicInfoTab(props) {
   // technicalSkills state
   const [technicalSkills, setTechnicalSkills] = useState(user.technicalSkills);
   const handleAddTechSkills = (skill) => {
-    const newTechnicalSkills = [...technicalSkills, skill];
-    setTechnicalSkills(newTechnicalSkills);
-    setTabUser({ ...tabUser, technicalSkills: newTechnicalSkills });
+    const lowerCaseStr = skill.toLowerCase();
+
+    // check array includes lowerCaseStr, return true if string is found
+    const checkIncludesStr = technicalSkills.includes(lowerCaseStr);
+
+    if (!checkIncludesStr) {
+      const newTechnicalSkills = [...technicalSkills, skill];
+      setTechnicalSkills(newTechnicalSkills);
+      setTabUser({ ...tabUser, technicalSkills: newTechnicalSkills });
+    }
   };
   const handleDeleteTechSkills = (skill) => {
     const newTechnicalSkills = without(technicalSkills, skill);
@@ -90,8 +97,11 @@ export default function BasicInfoTab(props) {
   };
   const handleAddNewWebsite = () => {
     const removedSpaceStr = website.replace(/\s+/g, ' ').trim();
-    const checkArrayIncludesStr = tabUser.websites.includes(removedSpaceStr);
-    if (removedSpaceStr != '' && !checkArrayIncludesStr) {
+
+    // check array includes removedSpaceStr, return true if string is found
+    const checkIncludesStr = tabUser.websites.includes(removedSpaceStr);
+
+    if (removedSpaceStr != '' && !checkIncludesStr) {
       const newWebsites = [...tabUser.websites, removedSpaceStr];
       setTabUser({ ...tabUser, websites: newWebsites });
     }
@@ -109,10 +119,25 @@ export default function BasicInfoTab(props) {
   }, [user]);
 
   // update user
-  const handleUpdateUser = () => {
-    userServices.update(tabUser);
-    setUser(tabUser);
+  const handleUpdateUser = async () => {
     handleCloseAlertDialog();
+
+    try {
+      await userServices.update(tabUser);
+      setUser(tabUser);
+      setSnackBarState({
+        open: true,
+        severity: 'success',
+        message: 'Update successfully!',
+      });
+    } catch (err) {
+      console.log(err);
+      setSnackBarState({
+        open: true,
+        severity: 'error',
+        message: 'Internal server error',
+      });
+    }
   };
 
   return (
@@ -131,15 +156,16 @@ export default function BasicInfoTab(props) {
         <Grid item xs={12} className={classes.divider}>
           <Grid container spacing={1}>
             <Grid item xs={12} sm={3} className={classes.paper}>
-              Name
+              Role
             </Grid>
             <Grid item xs={12} sm={9}>
               <TextField
-                onChange={handleChangeTabUser('name')}
-                id="nameTextField"
-                value={tabUser.name}
+                onChange={handleChangeTabUser('role')}
+                id="roleTextField"
+                value={tabUser.role}
                 fullWidth
                 variant="outlined"
+                disabled
               />
             </Grid>
           </Grid>
@@ -157,6 +183,22 @@ export default function BasicInfoTab(props) {
                 fullWidth
                 variant="outlined"
                 disabled
+              />
+            </Grid>
+          </Grid>
+        </Grid>
+        <Grid item xs={12} className={classes.divider}>
+          <Grid container spacing={1}>
+            <Grid item xs={12} sm={3} className={classes.paper}>
+              Name
+            </Grid>
+            <Grid item xs={12} sm={9}>
+              <TextField
+                onChange={handleChangeTabUser('name')}
+                id="nameTextField"
+                value={tabUser.name}
+                fullWidth
+                variant="outlined"
               />
             </Grid>
           </Grid>
@@ -190,7 +232,7 @@ export default function BasicInfoTab(props) {
                     id="websiteTextField"
                     fullWidth
                     variant="outlined"
-                    placeholder="Example: https://github.com/elon-musk"
+                    placeholder="Example: https://github.com/abel-tesfaye"
                   />
                 </Grid>
                 <Grid item xs={1} sm={1} className={classes.paper}>

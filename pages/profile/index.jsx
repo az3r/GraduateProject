@@ -4,7 +4,8 @@ import React, { useState, useEffect } from 'react';
 import Head from 'next/head';
 import { parseCookies } from '@libs/client/cookies';
 import { useRouter } from 'next/router';
-import { makeStyles, Box } from '@material-ui/core';
+import { makeStyles, Box, Snackbar } from '@material-ui/core';
+import { Alert } from '@material-ui/lab';
 import { useAuth } from '@hooks/auth';
 import * as userServices from '@libs/client/users';
 import UserAvatar from '@components/UserProfile/UserAvatar';
@@ -95,8 +96,8 @@ export default function Index(props) {
 
   // user info state
   const [user, setUser] = useState(initialUser);
-  const handleUserInfoChange = (prop, newValue) =>
-    setUser({ ...user, [prop]: newValue });
+  // const handleUserInfoChange = (prop, newValue) =>
+  //   setUser({ ...user, [prop]: newValue });
 
   // get user from api
   let apiUser = null;
@@ -123,6 +124,13 @@ export default function Index(props) {
     }
   }, [auth]);
 
+  // snackbar
+  const [snackBarState, setSnackBarState] = React.useState({
+    open: false,
+    severity: 'info',
+    message: 'No message',
+  });
+
   return (
     <>
       <Head>
@@ -133,16 +141,40 @@ export default function Index(props) {
 
       <AppLayout>
         <Box style={{ height: introHeight }} className={classes.introBox}>
-          <UserAvatar user={user} handleUserInfoChange={handleUserInfoChange} />
+          <UserAvatar
+            user={user}
+            setUser={setUser}
+            setSnackBarState={setSnackBarState}
+          />
         </Box>
         <Box p={3}>
           <UserProfileTabs
             user={user}
             setUser={setUser}
-            handleUserInfoChange={handleUserInfoChange}
+            setSnackBarState={setSnackBarState}
           />
         </Box>
       </AppLayout>
+
+      <Snackbar
+        anchorOrigin={{
+          vertical: 'bottom',
+          horizontal: 'right',
+        }}
+        open={snackBarState.open}
+        autoHideDuration={2000}
+        onClose={() =>
+          setSnackBarState((prev) => ({
+            open: false,
+            message: prev.message,
+            severity: prev.severity,
+          }))
+        }
+      >
+        <Alert variant="filled" severity={snackBarState.severity}>
+          {snackBarState.message}
+        </Alert>
+      </Snackbar>
     </>
   );
 }
