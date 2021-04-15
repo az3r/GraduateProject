@@ -1,6 +1,6 @@
 import { collections } from '@utils/constants';
 import { transform } from '@utils/refactor-firestore';
-import { Firestore, FirebaseAuth } from './firebase';
+import { Firestore, Storage } from './firebase';
 
 const {
   problems: problemCollection,
@@ -9,21 +9,9 @@ const {
   problemSubmissions,
   joinedExams,
   solvedProblems,
-  developers,
-  companies,
 } = collections;
 
-export async function getDeveloper(uid) {
-  const document = await Firestore().collection(developers).doc(uid).get();
-  return transform(document);
-}
-
-export async function getCompany(uid) {
-  const document = await Firestore().collection(companies).doc(uid).get();
-  return transform(document);
-}
-
-export async function findUser(uid) {
+export async function find(uid) {
   if (!uid) return undefined;
 
   // search in Developers then Companies collection
@@ -32,58 +20,39 @@ export async function findUser(uid) {
     .where(Firestore.FieldPath.documentId(), '==', uid)
     .limit(1)
     .get();
-  if (results.size > 0) return transform(results.docs[0]);
+  if (results.size > 0)
+    return transform({ ...results.docs[0], role: 'developer' });
 
   results = await Firestore()
     .collection(collections.companies)
     .where(Firestore.FieldPath.documentId(), '==', uid)
     .limit(1)
     .get();
-  if (results.size > 0) return transform(results.docs[0]);
+  if (results.size > 0)
+    return transform({ ...results.docs[0], role: 'company' });
 
   return undefined;
 }
 
-/** require user to be signed in */
-export async function update(user) {
-  const { displayName, photoURL, uid } = FirebaseAuth().currentUser;
-  let infoTask = null;
-
-  if (user.role === 'developer') {
-    infoTask = Firestore().collection(users).doc(uid).update({
-      websites: user.websites,
-      location: user.location,
-      gender: user.gender,
-      birthday: user.birthday,
-      technicalSkills: user.technicalSkills,
-      experiences: user.experiences,
-    });
-  } else {
-    infoTask = Firestore().collection(users).doc(uid).update({
-      introduction: user.introduction,
-      website: user.website,
-      industry: user.industry,
-      headquarter: user.headquarter,
-      specialties: user.specialties,
-    });
-  }
-  const profileTask = FirebaseAuth().currentUser.updateProfile({
-    displayName: user.name || displayName,
-    photoURL: user.avatar || photoURL,
-  });
-
-  await Promise.all([infoTask, profileTask]);
+export async function updateName(user, displayName) {
+  await user.updateProfile({ displayName });
 }
 
-/** get problems own by user */
-export async function getProblems(uid) {
-  const snapshot = await Firestore()
-    .collection(problemCollection)
-    .where('owner', '==', uid)
-    .get();
-  return snapshot.docs.map((item) =>
-    transform({ id: item.id, ...item.data() })
-  );
+export async function updateAvatar(user, file) {
+  // upload to storage
+  const ref = Storage().ref(`avatars/${user.uid}`);
+  await ref.put(file);
+  const url = await ref.getDownloadURL();
+
+  // update avatar using upload url
+  await user.updateProfile({ photoURL: url });
+  return url;
+}
+
+export async function updateEmail(user, callback, email) {
+  await user.verifyBeforeUpdateEmail(email, {
+    url: callback,
+  });
 }
 
 /** get problems which user submitted answers */

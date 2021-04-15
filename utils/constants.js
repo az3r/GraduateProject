@@ -12,6 +12,8 @@ export const collections = {
   accounts: 'Accounts',
   developers: 'Developers',
   companies: 'Companies',
+  examResults: 'ExamResults',
+  participants: 'Participants',
 };
 export const urls = {
   compiler: 'https://online-code-exercise.herokuapp.com/',

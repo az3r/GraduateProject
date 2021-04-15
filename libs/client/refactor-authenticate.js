@@ -48,7 +48,9 @@ async function setupAccount(credentials, username, email, role) {
     role === 'developer' ? collections.developers : collections.companies;
   await Firestore().collection(collection).doc(uid).set({
     id: uid,
-    role,
+    name: username,
+    email,
+    avatar: credentials.user.photoURL,
   });
 
   // add new account to registered accounts
@@ -56,6 +58,8 @@ async function setupAccount(credentials, username, email, role) {
     id: uid,
     name: username,
     email,
+    avatar: credentials.user.photoURL,
+    role,
   });
 
   return credentials;

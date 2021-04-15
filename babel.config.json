@@ -12,6 +12,7 @@
           "@styles": ["./styles"],
           "@utils": ["./utils"],
           "@server": ["./libs/server"],
+          "@client": ["./libs/client"],
           "@hooks": ["./hooks"]
         }
       }
