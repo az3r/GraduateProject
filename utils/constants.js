@@ -9,6 +9,9 @@ export const collections = {
   comments: 'Comments',
   solvedProblems: 'SolvedProblems',
   joinedExams: 'JoinedExams',
+  accounts: 'Accounts',
+  developers: 'Developers',
+  companies: 'Companies',
 };
 export const urls = {
   compiler: 'https://online-code-exercise.herokuapp.com/',
