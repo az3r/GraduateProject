@@ -1,26 +1,16 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { FirebaseAuth } from '@libs/client/firebase';
-import { get } from '@libs/client/users';
+import { findUser } from '@libs/client/refactor-users';
 
-const authContext = React.createContext(undefined);
+const authContext = React.createContext();
 
 export default function AuthProvider({ children }) {
-  const [user, setUser] = React.useState(undefined);
+  const [user, setUser] = React.useState();
   React.useEffect(() => {
-    const unsubscribe = FirebaseAuth().onAuthStateChanged(async (auth) => {
-      if (auth) {
-        const newUser = await get(auth.uid);
-        // in first time login, user hasn't created in firestore yet
-        if (newUser === undefined) {
-          setUser({
-            name: auth.displayName,
-            avatar: auth.photoURL,
-            id: auth.uid,
-            role: 'developer',
-          });
-        } else setUser(newUser);
-      } else setUser(undefined);
+    const unsubscribe = FirebaseAuth().onAuthStateChanged(async (value) => {
+      const merged = Object.assign(value, findUser(value.uid));
+      setUser(merged);
     });
     return unsubscribe;
   }, []);

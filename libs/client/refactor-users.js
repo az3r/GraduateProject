@@ -1,0 +1,275 @@
+import { collections } from '@utils/constants';
+import { transform } from '@utils/refactor-firestore';
+import { Firestore, FirebaseAuth } from './firebase';
+
+const {
+  problems: problemCollection,
+  exams: examCollection,
+  users,
+  problemSubmissions,
+  joinedExams,
+  solvedProblems,
+  developers,
+  companies,
+} = collections;
+
+export async function getDeveloper(uid) {
+  const document = await Firestore().collection(developers).doc(uid).get();
+  return transform(document);
+}
+
+export async function getCompany(uid) {
+  const document = await Firestore().collection(companies).doc(uid).get();
+  return transform(document);
+}
+
+export async function findUser(uid) {
+  if (!uid) return undefined;
+
+  // search in Developers then Companies collection
+  let results = await Firestore()
+    .collection(collections.developers)
+    .where(Firestore.FieldPath.documentId(), '==', uid)
+    .limit(1)
+    .get();
+  if (results.size > 0) return transform(results.docs[0]);
+
+  results = await Firestore()
+    .collection(collections.companies)
+    .where(Firestore.FieldPath.documentId(), '==', uid)
+    .limit(1)
+    .get();
+  if (results.size > 0) return transform(results.docs[0]);
+
+  return undefined;
+}
+
+/** require user to be signed in */
+export async function update(user) {
+  const { displayName, photoURL, uid } = FirebaseAuth().currentUser;
+  let infoTask = null;
+
+  if (user.role === 'developer') {
+    infoTask = Firestore().collection(users).doc(uid).update({
+      websites: user.websites,
+      location: user.location,
+      gender: user.gender,
+      birthday: user.birthday,
+      technicalSkills: user.technicalSkills,
+      experiences: user.experiences,
+    });
+  } else {
+    infoTask = Firestore().collection(users).doc(uid).update({
+      introduction: user.introduction,
+      website: user.website,
+      industry: user.industry,
+      headquarter: user.headquarter,
+      specialties: user.specialties,
+    });
+  }
+  const profileTask = FirebaseAuth().currentUser.updateProfile({
+    displayName: user.name || displayName,
+    photoURL: user.avatar || photoURL,
+  });
+
+  await Promise.all([infoTask, profileTask]);
+}
+
+/** get problems own by user */
+export async function getProblems(uid) {
+  const snapshot = await Firestore()
+    .collection(problemCollection)
+    .where('owner', '==', uid)
+    .get();
+  return snapshot.docs.map((item) =>
+    transform({ id: item.id, ...item.data() })
+  );
+}
+
+/** get problems which user submitted answers */
+export async function getSubmittedProblems(uid) {
+  // get all problems' ids in user submission collection
+  const submissions = await Firestore()
+    .collection(users)
+    .doc(uid)
+    .collection(problemSubmissions)
+    .get();
+
+  if (submissions.empty) return [];
+
+  const ids = submissions.docs.map((doc) => doc.get('problemId'));
+
+  if (ids.length === 0) return [];
+
+  const snapshot = await Firestore()
+    .collection(problemCollection)
+    .where(Firestore.FieldPath.documentId(), 'in', ids)
+    .get();
+
+  return snapshot.docs.map((doc) => transform({ id: doc.id, ...doc.data() }));
+}
+
+/** get problem submissions bu uid */
+export async function getProblemSubmissions(uid) {
+  // get all problems' ids in user submission collection
+  const submissions = await Firestore()
+    .collection(users)
+    .doc(uid)
+    .collection(problemSubmissions)
+    .get();
+
+  return submissions.docs.map((item) =>
+    transform({ id: item.id, ...item.data() })
+  );
+}
+
+/** get exams own by user */
+export async function getExams(uid) {
+  const snapshot = await Firestore()
+    .collection(examCollection)
+    .where('owner', '==', uid)
+    .get();
+
+  return snapshot.docs.map((item) =>
+    transform({ id: item.id, ...item.data() })
+  );
+}
+
+/** get exams in which user joined */
+export async function getJoinedExams(uid) {
+  const user = await Firestore().collection(users).doc(uid).get();
+  const exams = user.get('joinedExams');
+  if (exams === undefined || exams.length === 0) return [];
+
+  const snapshot = await Firestore()
+    .collection(examCollection)
+    .where(Firestore.FieldPath.documentId(), 'in', exams)
+    .get();
+
+  return snapshot.docs.map((doc) => transform({ id: doc.id, ...doc.data() }));
+}
+
+export async function joinExam(uid, examId) {
+  // add user to exam's participants
+  await Firestore()
+    .collection(examCollection)
+    .doc(examId)
+    .update({
+      participants: Firestore.FieldValue.arrayUnion(uid),
+    });
+
+  // add exam to user's particated exams
+  return Firestore()
+    .collection(users)
+    .doc(uid)
+    .update({ joinedExams: Firestore.FieldValue.arrayUnion(examId) });
+}
+
+export async function leaveExam(uid, examId) {
+  // add user to exam's participants
+  await Firestore()
+    .collection(examCollection)
+    .doc(examId)
+    .update({
+      participants: Firestore.FieldValue.arrayRemove(uid),
+    });
+
+  // add exam to user's particated exams
+  return Firestore()
+    .collection(users)
+    .doc(uid)
+    .update({ joinedExams: Firestore.FieldValue.arrayRemove(examId) });
+}
+
+export async function updateScoreProblem(userId, problemId, value) {
+  const ref = Firestore().collection(users).doc(userId);
+  // check if user has passed this problem
+  const isSolved = await ref
+    .collection(solvedProblems)
+    .where('id', '==', problemId)
+    .limit(1)
+    .get();
+  if (isSolved.size > 0) return;
+
+  // update total score
+  await ref.update({ problemScore: Firestore.FieldValue.increment(value) });
+
+  // update passed problems
+  await ref
+    .collection(solvedProblems)
+    .doc(problemId)
+    .set({ id: problemId, score: value, createdOn: Firestore.Timestamp.now() });
+}
+
+export async function updateScoreExam(userId, examId, value) {
+  // update total score
+  const ref = Firestore().collection(users).doc(userId);
+  await ref.update({ examScore: Firestore.FieldValue.increment(value) });
+
+  // update participated exams
+  await ref
+    .collection(joinedExams)
+    .doc(examId)
+    .set({ id: examId, score: value, createdOn: Firestore.Timestamp.now() });
+}
+
+export async function getUsersByExamScore() {
+  const result = await Firestore()
+    .collection(users)
+    .where('role', 'in', ['developer', 'company'])
+    // .orderBy('examScore:', 'desc')
+    // .orderBy('name', 'asc')
+    .get();
+  return result.docs.map((doc) => doc.data());
+}
+
+/** get all created problems and exams by user */
+export async function getCreatedAll(uid) {
+  const problemTask = Firestore()
+    .collection(problemCollection)
+    .where('owner', '==', uid)
+    .get();
+  const examTask = Firestore()
+    .collection(examCollection)
+    .where('owner', '==', uid)
+    .get();
+
+  const problems = await problemTask;
+  const exams = await examTask;
+  return [].concat(
+    problems.docs.map((item) =>
+      transform({
+        id: item.id,
+        createdOn: item.get('createdOn'),
+        modifiedAt: item.get('modifiedAt'),
+      })
+    ),
+    exams.docs.map((item) =>
+      transform({
+        id: item.id,
+        createdOn: item.get('createdOn'),
+        modifiedAt: item.get('modifiedAt'),
+      })
+    )
+  );
+}
+
+export async function getSolvedProblems(uid) {
+  const problemIds = await Firestore()
+    .collection(users)
+    .doc(uid)
+    .collection(solvedProblems)
+    .get();
+
+  const problems = await Firestore()
+    .collection(problemCollection)
+    .where(
+      Firestore.FieldPath.documentId(),
+      'in',
+      problemIds.docs.map((item) => item.id)
+    )
+    .get();
+  return problems.docs.map((item) =>
+    transform({ id: item.id, ...item.data() })
+  );
+}
