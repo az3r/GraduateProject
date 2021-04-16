@@ -30,7 +30,7 @@ const useStyles = makeStyles(() => ({
     backgroundColor: 'white',
     alignItems: 'start',
     // borderRadius: 10,
-    borderColor: 'green',
+    // borderColor: 'green',
   },
   commentBox: {
     marginLeft: 10,
@@ -147,7 +147,7 @@ export default function Comment({user, problemId}){
         </Box>
         {
           commentsArray.map((comment) => (
-            <Box boxShadow={3} border={1} className={classes.root}>
+            <Box boxShadow={3} className={classes.root}>
               <Avatar variant="circle" src={comment.avatar}  />
               <Box style={{marginLeft: 10, marginRight: 10}}>
                 <h3 style={{display: 'inline-block', marginLeft: 0, marginRight: 10, marginTop: 0, marginBottom: 10}}>

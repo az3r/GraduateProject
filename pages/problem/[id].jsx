@@ -9,7 +9,6 @@ import Link from '@material-ui/core/Link';
 import Typography from '@material-ui/core/Typography';
 import { Container, Hidden, makeStyles } from '@material-ui/core';
 import Grid from '@material-ui/core/Grid';
-import Avatar from '@material-ui/core/Avatar';
 import AppLayout from '../../components/Layout';
 
 const Problem = dynamic(() => import('../../components/Problems/Problem/index'), {
@@ -70,18 +69,18 @@ export default function Test({ problem, user }) {   // , problemSubmissionHistor
                     </Breadcrumbs>
                     <Typography variant="h4" style={{fontWeight: "bolder"}}>{problem.title}</Typography>
                   </Box>
-                {
-                  problem.language === 'Java' &&
-                  <Avatar style={{marginRight: 80}} alt="Remy Sharp" src="/java.png" />
-                }
-                {
-                  problem.language === 'Csharp' &&
-                  <Avatar style={{marginRight: 80}} alt="Remy Sharp" src="/c.png" />
-                }
-                {
-                  problem.language === 'Python' &&
-                  <Avatar style={{marginRight: 80}} alt="Remy Sharp" src="/python.png" />
-                }
+                {/* { */}
+                {/*  problem.language === 'Java' && */}
+                {/*  <Avatar style={{marginRight: 80}} alt="Remy Sharp" src="/java.png" /> */}
+                {/* } */}
+                {/* { */}
+                {/*  problem.language === 'Csharp' && */}
+                {/*  <Avatar style={{marginRight: 80}} alt="Remy Sharp" src="/c.png" /> */}
+                {/* } */}
+                {/* { */}
+                {/*  problem.language === 'Python' && */}
+                {/*  <Avatar style={{marginRight: 80}} alt="Remy Sharp" src="/python.png" /> */}
+                {/* } */}
               </Grid>
             </Hidden>
             <Grid item xs={12} md={9}>

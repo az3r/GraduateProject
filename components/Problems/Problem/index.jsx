@@ -98,10 +98,10 @@ const useStyles = makeStyles(() => ({
     marginTop: 30,
     flexGrow: 1,
   },
-  code: {
+  controlBoard: {
     display: 'flex',
     alignItems: 'center',
-    justifyContent: 'space-between',
+    justifyContent: 'flex-end',
     height: 50,
     marginLeft: 20,
     marginRight: 20
@@ -340,19 +340,19 @@ export default function Problem({problem, user}) {  // { problemSubmissionHistor
           <br />
           <br />
           <Box boxShadow={3}>
-            <Box className={classes.code}>
-              <Box
-                component="span"
-                display="inline"
-                p="8px"
-                borderRadius={5}
-                border={1}
-                borderColor="green"
-                bgcolor="#fafafa"
-                style={{fontWeight: 'bolder', width: 100}}
-              >
-                {problem.language}
-              </Box>
+            <Box className={classes.controlBoard}>
+              {/* <Box */}
+              {/*  component="span" */}
+              {/*  display="inline" */}
+              {/*  p="8px" */}
+              {/*  borderRadius={5} */}
+              {/*  border={1} */}
+              {/*  borderColor="green" */}
+              {/*  bgcolor="#fafafa" */}
+              {/*  style={{fontWeight: 'bolder', width: 100}} */}
+              {/* > */}
+              {/*  {problem.language} */}
+              {/* </Box> */}
               <Box>
                 <Select
                   style={{minWidth: 50, marginRight: 20}}
@@ -468,24 +468,24 @@ export default function Problem({problem, user}) {  // { problemSubmissionHistor
                                 <Tab icon={<CloseIcon />} label={`Sample Test case ${index}`} style={{backgroundColor: 'white', color: 'red'}} />
                               )
                             }
-                            
+
                               return (
                                 <Tab icon={<CheckIcon />} label={`Sample Test case ${index}`} style={{backgroundColor: 'white', color: 'green'}} />
                               )
-                            
+
                           }
-                          
+
                             if(result.passed === false){
                               return (
                                 <Tab icon={<CloseIcon />} label={`Sample Test case ${index}`} style={{color: 'red'}} />
                               )
                             }
-                            
+
                               return (
                                 <Tab icon={<CheckIcon />} label={`Sample Test case ${index}`} style={{color: 'green'}} />
                               )
-                            
-                          
+
+
                         })
                       }
                     </Tabs>
