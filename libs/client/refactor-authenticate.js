@@ -46,21 +46,18 @@ async function setupAccount(credentials, username, email, role) {
   const { uid } = credentials.user;
   const collection =
     role === 'developer' ? collections.developers : collections.companies;
-  await Firestore().collection(collection).doc(uid).set({
+  const ref = Firestore().collection(collection).doc(uid);
+  await ref.set({
     id: uid,
     name: username,
     email,
-    avatar: credentials.user.photoURL,
-  });
-
-  // add new account to registered accounts
-  await Firestore().collection(collections.accounts).doc(uid).set({
-    id: uid,
-    name: username,
-    email,
-    avatar: credentials.user.photoURL,
     role,
+    avatar: credentials.user.photoURL,
   });
 
-  return credentials;
+  // user's private attributes
+  await ref
+    .collection(collections.attributes)
+    .doc(collections.attributes)
+    .set({ id: uid });
 }

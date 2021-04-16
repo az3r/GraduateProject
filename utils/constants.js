@@ -14,6 +14,7 @@ export const collections = {
   companies: 'Companies',
   examResults: 'ExamResults',
   participants: 'Participants',
+  attributes: 'Attributes',
 };
 export const urls = {
   compiler: 'https://online-code-exercise.herokuapp.com/',

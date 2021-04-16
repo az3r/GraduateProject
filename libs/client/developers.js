@@ -1,5 +1,5 @@
 import { collections } from '@utils/constants';
-import { transform } from '@utils/refactor-firestore';
+import { getAttributeReference, transform } from '@utils/refactor-firestore';
 import { Firestore } from './firebase';
 
 export async function get(uid) {
@@ -11,11 +11,11 @@ export async function get(uid) {
 }
 
 /** get problems which user submitted answers */
-export async function getProblemSubmissions(uid) {
+export async function getProblemSubmissions(developerId) {
   // get all problems' ids in user submission collection
   const submissions = await Firestore()
     .collection(collections.developers)
-    .doc(uid)
+    .doc(developerId)
     .collection(collections.problemSubmissions)
     .get();
 
@@ -32,7 +32,13 @@ export async function getProblemSubmissions(uid) {
 }
 
 /** get exams in which developer participated */
-export async function getJoinedExams(examIds) {
+export async function getJoinedExams(uid) {
+  const examIds = getAttributeReference(collections.developers, uid).get(
+    'joinedExams'
+  );
+
+  if (!examIds.length) return [];
+
   const snapshot = await Firestore()
     .collection(collections.exams)
     .where(Firestore.FieldPath.documentId(), 'in', examIds)
@@ -43,34 +49,26 @@ export async function getJoinedExams(examIds) {
 
 export async function joinExam(uid, examId) {
   // add user to exam's participants
-  await Firestore()
-    .collection(collections.exams)
-    .doc(examId)
-    .update({
-      participants: Firestore.FieldValue.arrayUnion(uid),
-    });
+  await getAttributeReference(collections.exams, examId).update({
+    participants: Firestore.FieldValue.arrayUnion(uid),
+  });
 
   // add exam to user's particated exams
-  return Firestore()
-    .collection(collections.developers)
-    .doc(uid)
-    .update({ joinedExams: Firestore.FieldValue.arrayUnion(examId) });
+  return getAttributeReference(collections.developers, uid).update({
+    joinedExams: Firestore.FieldValue.arrayUnion(examId),
+  });
 }
 
 export async function leaveExam(uid, examId) {
   // remove user from exam's participants
-  await Firestore()
-    .collection(collections.exams)
-    .doc(examId)
-    .update({
-      participants: Firestore.FieldValue.arrayRemove(uid),
-    });
+  await getAttributeReference(collections.exams, examId).update({
+    participants: Firestore.FieldValue.arrayRemove(uid),
+  });
 
   // remove exam from user's particated exams
-  return Firestore()
-    .collection(collections.developers)
-    .doc(uid)
-    .update({ joinedExams: Firestore.FieldValue.arrayRemove(examId) });
+  return getAttributeReference(collections.developers, uid).update({
+    joinedExams: Firestore.FieldValue.arrayRemove(examId),
+  });
 }
 
 export async function updateScoreProblem(
@@ -110,7 +108,7 @@ export async function updateScoreExam({ id, examScore }, examId, score) {
   });
 }
 
-export async function getExamScoreboard() {
+export async function getUserByExamScore() {
   const result = await Firestore()
     .collection(collections.developers)
     .orderBy('examScore:', 'desc')
