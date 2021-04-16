@@ -2,49 +2,51 @@ import { collections } from '@utils/constants';
 import { getAttributeReference, transform } from '@utils/refactor-firestore';
 import { Firestore } from './firebase';
 
+/** get a developer and its private attirbutes */
 export async function get(uid) {
   const document = await Firestore()
     .collection(collections.developers)
     .doc(uid)
     .get();
-  return transform(document);
+  const attributes = await getAttributeReference(
+    collections.developers,
+    uid
+  ).get();
+  return transform(document, attributes);
 }
 
-/** get problems which user submitted answers */
-export async function getProblemSubmissions(developerId) {
-  // get all problems' ids in user submission collection
-  const submissions = await Firestore()
-    .collection(collections.developers)
-    .doc(developerId)
-    .collection(collections.problemSubmissions)
-    .get();
-
-  if (submissions.empty) return [];
-
-  const ids = submissions.docs.map((doc) => doc.get('problemId'));
-
-  const snapshot = await Firestore()
-    .collection(collections.problems)
-    .where(Firestore.FieldPath.documentId(), 'in', [...new Set(ids)])
-    .get();
-
-  return snapshot.docs.map((doc) => transform(doc));
+/** get all developers' basic info */
+export async function getAll() {
+  const developers = await Firestore().collection(collections.developers).get();
+  return developers.docs.map((dev) => transform(dev));
 }
 
-/** get exams in which developer participated */
-export async function getJoinedExams(uid) {
-  const examIds = getAttributeReference(collections.developers, uid).get(
-    'joinedExams'
-  );
+export async function update(
+  uid,
+  { websites, location, gender, birthday, technicalSkills, experiences }
+) {
+  await getAttributeReference(collections.developers, uid).update({
+    websites,
+    location,
+    gender,
+    birthday,
+    technicalSkills,
+    experiences,
+  });
+}
 
-  if (!examIds.length) return [];
+/** get exams' basic info in which developer participated */
+export async function getJoinedExams(developer) {
+  if (developer?.joinedExams?.length > 0) {
+    const snapshot = await Firestore()
+      .collection(collections.exams)
+      .where(Firestore.FieldPath.documentId(), 'in', developer.joinedExams)
+      .get();
 
-  const snapshot = await Firestore()
-    .collection(collections.exams)
-    .where(Firestore.FieldPath.documentId(), 'in', examIds)
-    .get();
+    return snapshot.docs.map((doc) => transform(doc));
+  }
 
-  return snapshot.docs.map((doc) => transform(doc));
+  return [];
 }
 
 export async function joinExam(uid, examId) {
@@ -72,11 +74,11 @@ export async function leaveExam(uid, examId) {
 }
 
 export async function updateScoreProblem(
-  { id, problemScore },
+  { developerId, problemScore },
   problemId,
   score
 ) {
-  const ref = Firestore().collection(collections.developers).doc(id);
+  const ref = Firestore().collection(collections.developers).doc(developerId);
 
   // add or update problem in user's solveProblems collection
   const problem = await ref

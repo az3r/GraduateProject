@@ -1,20 +1,31 @@
 import { Firestore } from '@client/firebase';
 import { collections } from '@utils/constants';
-import { transform } from '@utils/refactor-firestore';
+import { getAttributeReference, transform } from '@utils/refactor-firestore';
 
-export async function get(uid) {
-  const document = await Firestore()
+/** get comany's basic info and its private attributes */
+export async function get(companyId) {
+  const company = await Firestore()
     .collection(collections.companies)
-    .doc(uid)
+    .doc(companyId)
     .get();
-  return transform(document);
+  const attributes = await getAttributeReference(
+    collections.companies,
+    companyId
+  ).get();
+  return transform(company, attributes);
+}
+
+/** get all companies' basic info */
+export async function getAll() {
+  const companies = await Firestore().collection(collections.companies).get();
+  return companies.docs.map((company) => transform(company));
 }
 
 export async function update(
-  uid,
+  companyId,
   { introduction, website, industry, headquarter, specialties }
 ) {
-  await Firestore().collection(collections.companies).doc(uid).update({
+  await getAttributeReference(collections.companies, companyId).update({
     introduction,
     website,
     industry,

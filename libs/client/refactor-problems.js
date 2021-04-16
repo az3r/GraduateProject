@@ -1,28 +1,34 @@
 import { collections } from '@utils/constants';
-import { transform } from '@utils/refactor-firestore';
+import { transform, getAttributeReference } from '@utils/refactor-firestore';
 import { Firestore } from './firebase';
 
 export async function create(
   id,
-  { cases, code, content, difficulty, language, score, title }
+  { cases, code, content, difficulty, language, score, title, published }
 ) {
-  const { id: problemId } = await Firestore()
+  const { id: problemId, parent } = await Firestore()
     .collection(collections.problems)
     .add({
       owner: id,
-      cases,
-      code,
-      content,
       difficulty,
       language,
       score,
       title,
+      published,
       createdOn: Firestore.Timestamp.now(),
       deleted: false,
     });
+
+  // create private attributes
+  await parent
+    .doc(problemId)
+    .collection(collections.attributes)
+    .doc(collections.attributes)
+    .set({ id: problemId, cases, code, content });
   return problemId;
 }
 
+/** get all problems basic info without their private attributes */
 export async function getAll(id) {
   const snapshot = await Firestore()
     .collection(collections.problems)
@@ -33,12 +39,29 @@ export async function getAll(id) {
   return snapshot.docs.map((doc) => transform(doc));
 }
 
-export async function get(problemId) {
-  const document = await Firestore()
-    .collection(collections.problems)
-    .doc(problemId)
-    .get();
-  return transform(document);
+/** get a problem and its private attributes, using a problemId or a problem itself */
+export async function get({ problemId, problem }) {
+  if (problem) {
+    const attributes = await getAttributeReference(
+      collections.problems,
+      problem.id
+    ).get();
+    return Object.assign(problem, { ...attributes.data() });
+  }
+  if (problemId) {
+    const snippet = await Firestore()
+      .collection(collections.problems)
+      .doc(problemId)
+      .get();
+
+    const attributes = await getAttributeReference(
+      collections.problems,
+      problemId
+    ).get();
+
+    return Object.assign(snippet, { ...attributes.data() });
+  }
+  return undefined;
 }
 
 export async function update(
@@ -46,14 +69,17 @@ export async function update(
   { cases, code, content, difficulty, language, score, title }
 ) {
   await Firestore().collection(collections.problems).doc(problemId).update({
-    cases,
-    code,
-    content,
     difficulty,
     language,
     score,
     title,
     modifiedAt: Firestore.Timestamp.now(),
+  });
+
+  await getAttributeReference(collections.problems, problemId).update({
+    cases,
+    code,
+    content,
   });
   return true;
 }
@@ -67,31 +93,19 @@ export async function remove(problemId) {
 
 /** add developer to problem's partcipants list */
 export async function addDeveloper(problemId, developerId) {
-  const doc = await Firestore()
-    .collection(collections.problems)
-    .doc(problemId)
-    .collection(collections.participants)
-    .doc(developerId)
-    .get();
-  if (!doc.exists) await doc.ref.set({ createdOn: Firestore.Timestamp.now() });
+  await getAttributeReference(collections.problems, problemId).update({
+    participants: Firestore.FieldValue.arrayUnion(developerId),
+  });
 }
 
 /** get all developers who have at least 1 submission */
-export async function getParticipants(problemId) {
-  const participants = await Firestore()
-    .collection(collections.problems)
-    .doc(problemId)
-    .collection(collections.participants)
-    .get();
-  if (participants.empty) return [];
-
-  const developers = await Firestore()
-    .collection(collections.accounts)
-    .where(
-      Firestore.FieldPath.documentId(),
-      'in',
-      participants.docs.map((doc) => doc.id)
-    )
-    .get();
-  return developers.docs.map((item) => item.data());
+export async function getParticipants(problem) {
+  if (problem?.participants?.length > 0) {
+    const developers = await Firestore()
+      .collection(collections.developers)
+      .where(Firestore.FieldPath.documentId(), 'in', problem.participants)
+      .get();
+    return developers.docs.map((item) => item.data());
+  }
+  return [];
 }
