@@ -23,6 +23,18 @@ export async function get(userId) {
   return undefined;
 }
 
+export async function getInFirestore(userId) {
+  const user = await Firestore().collection(users).doc(userId).get();
+  if (user.exists) {
+    return {
+      ...user.data(),
+      id: user.id,
+      role: user.get('role') || 'developer',
+    };
+  }
+  return null;
+}
+
 /**
  * retrieve user by their roles
  * @param {string} role one of 'developer', 'admin', 'company'

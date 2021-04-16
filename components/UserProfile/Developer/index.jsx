@@ -61,7 +61,7 @@ function a11yProps(index) {
 
 export default function UserProfileTabs(props) {
   const classes = useStyles();
-  const { user, setUser, setSnackBarState } = props;
+  const { user, setUser, setSnackBarState, isOnlyWatch } = props;
 
   // tab values
   const [value, setValue] = React.useState(0);
@@ -81,8 +81,11 @@ export default function UserProfileTabs(props) {
           className={classes.tabs}
         >
           <Tab label="Basic Info" {...a11yProps(0)} />
-          <Tab label="Account" {...a11yProps(1)} />
-          <Tab label="Experiences" {...a11yProps(2)} />
+
+          {isOnlyWatch ? <Tab label="Experiences" {...a11yProps(1)} /> : null}
+
+          {isOnlyWatch ? null : <Tab label="Account" {...a11yProps(1)} />}
+          {isOnlyWatch ? null : <Tab label="Experiences" {...a11yProps(2)} />}
         </Tabs>
       </Grid>
 
@@ -92,22 +95,39 @@ export default function UserProfileTabs(props) {
             user={user}
             setUser={setUser}
             setSnackBarState={setSnackBarState}
+            isOnlyWatch={isOnlyWatch}
           />
         </TabPanel>
-        <TabPanel value={value} index={1}>
-          <AccountTab
-            user={user}
-            setUser={setUser}
-            setSnackBarState={setSnackBarState}
-          />
-        </TabPanel>
-        <TabPanel value={value} index={2}>
-          <ExperiencesTab
-            user={user}
-            setUser={setUser}
-            setSnackBarState={setSnackBarState}
-          />
-        </TabPanel>
+
+        {isOnlyWatch ? (
+          <TabPanel value={value} index={1}>
+            <ExperiencesTab
+              user={user}
+              setUser={setUser}
+              setSnackBarState={setSnackBarState}
+              isOnlyWatch={isOnlyWatch}
+            />
+          </TabPanel>
+        ) : null}
+
+        {isOnlyWatch ? null : (
+          <TabPanel value={value} index={1}>
+            <AccountTab
+              user={user}
+              setUser={setUser}
+              setSnackBarState={setSnackBarState}
+            />
+          </TabPanel>
+        )}
+        {isOnlyWatch ? null : (
+          <TabPanel value={value} index={2}>
+            <ExperiencesTab
+              user={user}
+              setUser={setUser}
+              setSnackBarState={setSnackBarState}
+            />
+          </TabPanel>
+        )}
       </Grid>
     </Grid>
   );

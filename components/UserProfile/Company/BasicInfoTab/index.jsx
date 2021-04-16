@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 /* eslint-disable eqeqeq */
 /* eslint-disable no-console */
 import React, { useState, useEffect } from 'react';
@@ -13,7 +12,7 @@ import {
   DialogActions,
   DialogContent,
   DialogContentText,
-  TextareaAutosize,
+  Link,
 } from '@material-ui/core';
 import SaveOutlinedIcon from '@material-ui/icons/SaveOutlined';
 import ChipInput from 'material-ui-chip-input';
@@ -53,7 +52,7 @@ const without = (array, filtered) =>
 
 export default function BasicInfoTab(props) {
   const classes = useStyles();
-  const { user, setUser, setSnackBarState } = props;
+  const { user, setUser, setSnackBarState, isOnlyWatch } = props;
 
   const [openAlertDialog, setOpenAlertDialog] = React.useState(false);
   const handleOpenAlertDialog = () => {
@@ -143,6 +142,7 @@ export default function BasicInfoTab(props) {
                 variant="outlined"
                 multiline
                 inputProps={{ className: classes.textarea }}
+                disabled={isOnlyWatch}
               />
             </Grid>
           </Grid>
@@ -159,6 +159,7 @@ export default function BasicInfoTab(props) {
                 value={tabUser.name}
                 fullWidth
                 variant="outlined"
+                disabled={isOnlyWatch}
               />
             </Grid>
           </Grid>
@@ -169,14 +170,26 @@ export default function BasicInfoTab(props) {
               Website
             </Grid>
             <Grid item xs={11} sm={9}>
-              <TextField
-                onChange={handleChangeTabUser('website')}
-                id="websiteTextField"
-                value={tabUser.website}
-                fullWidth
-                variant="outlined"
-                placeholder="E.g: https://www.hcmus.edu.vn/"
-              />
+              {isOnlyWatch ? (
+                <div className={classes.paper}>
+                  <Link
+                    href={tabUser.website}
+                    target="_blank"
+                    style={{ color: '#1890ff' }}
+                  >
+                    {tabUser.website}
+                  </Link>
+                </div>
+              ) : (
+                <TextField
+                  onChange={handleChangeTabUser('website')}
+                  id="websiteTextField"
+                  value={tabUser.website}
+                  fullWidth
+                  variant="outlined"
+                  placeholder="E.g: https://www.hcmus.edu.vn/"
+                />
+              )}
             </Grid>
           </Grid>
         </Grid>
@@ -192,7 +205,12 @@ export default function BasicInfoTab(props) {
                 value={tabUser.industry}
                 fullWidth
                 variant="outlined"
-                placeholder="E.g: Higher Education, Internet, Information Technology, Services..."
+                placeholder={
+                  isOnlyWatch
+                    ? ''
+                    : 'E.g: Higher Education, Internet, Information Technology, Services...'
+                }
+                disabled={isOnlyWatch}
               />
             </Grid>
           </Grid>
@@ -209,6 +227,7 @@ export default function BasicInfoTab(props) {
                 value={tabUser.headquarter}
                 fullWidth
                 variant="outlined"
+                disabled={isOnlyWatch}
               />
             </Grid>
           </Grid>
@@ -225,20 +244,23 @@ export default function BasicInfoTab(props) {
                 onDelete={(chip, index) => handleDeleteSpecialties(chip, index)}
                 fullWidth
                 variant="outlined"
+                disabled={isOnlyWatch}
               />
             </Grid>
           </Grid>
         </Grid>
 
-        <Button
-          className={classes.saveButton}
-          variant="contained"
-          color="primary"
-          startIcon={<SaveOutlinedIcon />}
-          onClick={handleOpenAlertDialog}
-        >
-          Save Changes
-        </Button>
+        {isOnlyWatch ? null : (
+          <Button
+            className={classes.saveButton}
+            variant="contained"
+            color="primary"
+            startIcon={<SaveOutlinedIcon />}
+            onClick={handleOpenAlertDialog}
+          >
+            Save Changes
+          </Button>
+        )}
       </Grid>
 
       <Dialog
