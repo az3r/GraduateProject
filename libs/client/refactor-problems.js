@@ -1,5 +1,5 @@
 import { collections } from '@utils/constants';
-import { transform, getAttributeReference } from '@utils/refactor-firestore';
+import { getAttributeReference, transform } from '@utils/refactor-firestore';
 import { Firestore } from './firebase';
 
 export async function create(
@@ -28,17 +28,6 @@ export async function create(
   return problemId;
 }
 
-/** get all problems basic info without their private attributes */
-export async function getAll(id) {
-  const snapshot = await Firestore()
-    .collection(collections.problems)
-    .where('owner', '==', id)
-    .where('deleted', '==', false)
-    .orderBy('createdOn', 'desc')
-    .get();
-  return snapshot.docs.map((doc) => transform(doc));
-}
-
 /** get a problem and its private attributes, using a problemId or a problem itself */
 export async function get({ problemId, problem }) {
   if (problem) {
@@ -46,7 +35,7 @@ export async function get({ problemId, problem }) {
       collections.problems,
       problem.id
     ).get();
-    return Object.assign(problem, { ...attributes.data() });
+    return Object.assign(problem, attributes.data());
   }
   if (problemId) {
     const snippet = await Firestore()
@@ -59,7 +48,7 @@ export async function get({ problemId, problem }) {
       problemId
     ).get();
 
-    return Object.assign(snippet, { ...attributes.data() });
+    return Object.assign(transform(snippet), attributes.data());
   }
   return undefined;
 }
