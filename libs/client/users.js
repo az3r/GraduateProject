@@ -14,6 +14,7 @@ const {
 export async function get(userId) {
   const uid = userId || FirebaseAuth().currentUser.uid;
   const user = await Firestore().collection(users).doc(uid).get();
+
   if (user.exists)
     return {
       ...user.data(),
