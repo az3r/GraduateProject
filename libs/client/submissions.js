@@ -1,6 +1,6 @@
 import { collections, urls } from '@utils/constants';
 import { transform } from '@utils/firestore';
-import { Firestore, FirebaseAuth } from './firebase';
+import { Firestore } from './firebase'; // FirebaseAuth
 
 const { users, problemSubmissions, examSubmissions, problems } = collections;
 const { compiler } = urls;
@@ -16,7 +16,8 @@ const statuses = {
 };
 
 export async function test({ lang, code, testcases }) {
-  const token = await FirebaseAuth().currentUser.getIdToken(true);
+  // const token = await FirebaseAuth().currentUser.getIdToken(true);
+  const token = 'userId';
   const response = await fetch(`${compiler}${langs[lang.toLowerCase()]}`, {
     method: 'POST',
     headers: {
