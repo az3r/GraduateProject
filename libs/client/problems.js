@@ -3,13 +3,13 @@ import { getAttributeReference, transform } from '@utils/firestore';
 import { Firestore } from './firebase';
 
 export async function create(
-  id,
+  companyId,
   { cases, code, content, difficulty, language, title, published }
 ) {
   const { id: problemId, parent } = await Firestore()
     .collection(collections.problems)
     .add({
-      owner: id,
+      owner: companyId,
       difficulty,
       language,
       title,
@@ -25,6 +25,31 @@ export async function create(
     .collection(collections.attributes)
     .doc(collections.attributes)
     .set({ id: problemId, cases, code, content });
+  return problemId;
+}
+
+export async function createMCQ(
+  companyId,
+  { title, score, difficulty, answers, correctIndices }
+) {
+  const { id: problemId, parent } = await Firestore()
+    .collection(collections.problems)
+    .add({
+      owner: companyId,
+      difficulty,
+      title,
+      score,
+      isMCQ: true,
+      createdOn: Firestore.Timestamp.now(),
+      deleted: false,
+    });
+
+  // create private attributes
+  await parent
+    .doc(problemId)
+    .collection(collections.attributes)
+    .doc(collections.attributes)
+    .set({ id: problemId, answers, correctIndices });
   return problemId;
 }
 
