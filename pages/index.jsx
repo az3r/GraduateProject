@@ -14,7 +14,7 @@ export default function Home({ problems, user, solvedProblemsNumber, unsolvedPro
   return (
     <>
       <Head>
-        <title>Problems - Smart Coder</title>
+        <title>Problems | Smart Coder</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
 

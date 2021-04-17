@@ -1,5 +1,5 @@
 import { collections } from '@utils/constants';
-import { transform } from '@utils/refactor-firestore';
+import { transform } from '@utils/firestore';
 import { FirebaseAuth, Firestore, Storage } from './firebase';
 
 export async function find(uid) {

@@ -103,6 +103,11 @@ export default function Index(props) {
     if (auth) {
       // get info
       apiUser = await userServices.get();
+      
+      // check role is company
+      if(apiUser.role === 'company'){
+        router.replace('/profile/co');
+      }
 
       // set default values for undefined field
       defaultUserProps.forEach((prop) => {

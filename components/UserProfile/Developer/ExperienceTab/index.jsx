@@ -63,7 +63,7 @@ const without = (array, filtered) =>
 
 export default function ExperiencesTab(props) {
   const classes = useStyles();
-  const { user, setUser, setSnackBarState } = props;
+  const { user, setUser, setSnackBarState, isOnlyWatch } = props;
   const [openPopup, setOpenPopup] = useState(false);
   const [openAlertDialog, setOpenAlertDialog] = React.useState(false);
 
@@ -158,15 +158,17 @@ export default function ExperiencesTab(props) {
               </Typography>
             </Grid>
             <Grid item xs={12} sm={2}>
-              <Button
-                className={classes.saveButton}
-                variant="contained"
-                color="primary"
-                startIcon={<SaveOutlinedIcon />}
-                onClick={() => setOpenAlertDialog(true)}
-              >
-                Save Changes
-              </Button>
+              {isOnlyWatch ? null : (
+                <Button
+                  className={classes.saveButton}
+                  variant="contained"
+                  color="primary"
+                  startIcon={<SaveOutlinedIcon />}
+                  onClick={() => setOpenAlertDialog(true)}
+                >
+                  Save Changes
+                </Button>
+              )}
             </Grid>
           </Grid>
         </Grid>
@@ -204,32 +206,36 @@ export default function ExperiencesTab(props) {
                     </h4>
                     <p>{element.description}</p>
                   </div>
-                  <div className={classes.leftButtonsInDiv}>
-                    <IconButton
-                      aria-label="delete"
-                      value={index}
-                      onClick={handleDeleteElement}
-                    >
-                      <DeleteIcon />
-                    </IconButton>
-                    <IconButton
-                      aria-label="edit"
-                      value={index}
-                      onClick={openPopupToEdit}
-                    >
-                      <EditIcon />
-                    </IconButton>
-                  </div>
+                  {isOnlyWatch ? null : (
+                    <div className={classes.leftButtonsInDiv}>
+                      <IconButton
+                        aria-label="delete"
+                        value={index}
+                        onClick={handleDeleteElement}
+                      >
+                        <DeleteIcon />
+                      </IconButton>
+                      <IconButton
+                        aria-label="edit"
+                        value={index}
+                        onClick={openPopupToEdit}
+                      >
+                        <EditIcon />
+                      </IconButton>
+                    </div>
+                  )}
                 </VerticalTimelineElement>
               );
             })}
 
-            <VerticalTimelineElement
-              iconStyle={{ background: '#088247', color: '#fff' }}
-              icon={<AddRoundedIcon />}
-              iconOnClick={openPopupToAddNew}
-              date="Add New Experience"
-            />
+            {isOnlyWatch ? null : (
+              <VerticalTimelineElement
+                iconStyle={{ background: '#088247', color: '#fff' }}
+                icon={<AddRoundedIcon />}
+                iconOnClick={openPopupToAddNew}
+                date="Add New Experience"
+              />
+            )}
           </VerticalTimeline>
         </Grid>
       </Grid>

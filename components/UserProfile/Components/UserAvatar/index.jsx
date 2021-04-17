@@ -27,7 +27,7 @@ const useStyles = makeStyles({
 
 export default function UserAvatar(props) {
   const classes = useStyles();
-  const { user, setUser, setSnackBarState } = props;
+  const { user, setUser, setSnackBarState, isOnlyWatch } = props;
 
   const handleChangeAvatar = (event) => {
     const image = event.target.files[0];
@@ -49,11 +49,15 @@ export default function UserAvatar(props) {
           hidden="hidden"
           onChange={handleChangeAvatar}
         />
-        <Tooltip title="Edit avatar" placement="right">
-          <IconButton style={{ color: 'white' }} onClick={handleEditAvatar}>
-            <EditIcon />
-          </IconButton>
-        </Tooltip>
+
+        {/* is in only watch mode */}
+        {isOnlyWatch ? null : (
+          <Tooltip title="Edit avatar" placement="right">
+            <IconButton style={{ color: 'white' }} onClick={handleEditAvatar}>
+              <EditIcon />
+            </IconButton>
+          </Tooltip>
+        )}
       </div>
       <Typography variant="h4" className={classes.introTitle}>
         {user.name}

@@ -1,3 +1,4 @@
+/* eslint-disable react/destructuring-assignment */
 /* eslint-disable eqeqeq */
 /* eslint-disable no-console */
 import React, { useState, useEffect } from 'react';
@@ -55,8 +56,9 @@ const without = (array, filtered) =>
 
 export default function BasicInfoTab(props) {
   const classes = useStyles();
-  const { user, setUser, setSnackBarState } = props;
+  const { user, setUser, setSnackBarState, isOnlyWatch } = props;
 
+  // alert dialog
   const [openAlertDialog, setOpenAlertDialog] = React.useState(false);
   const handleOpenAlertDialog = () => {
     setOpenAlertDialog(true);
@@ -161,10 +163,10 @@ export default function BasicInfoTab(props) {
             <Grid item xs={12} sm={9}>
               <TextField
                 onChange={handleChangeTabUser('name')}
-                id="nameTextField"
                 value={tabUser.name}
                 fullWidth
                 variant="outlined"
+                disabled={isOnlyWatch}
               />
             </Grid>
           </Grid>
@@ -177,10 +179,10 @@ export default function BasicInfoTab(props) {
             <Grid item xs={12} sm={9}>
               <TextField
                 onChange={handleChangeTabUser('location')}
-                id="locationTextField"
                 value={tabUser.location}
                 fullWidth
                 variant="outlined"
+                disabled={isOnlyWatch}
               />
             </Grid>
           </Grid>
@@ -191,22 +193,24 @@ export default function BasicInfoTab(props) {
               Websites
             </Grid>
             <Grid item xs={12} sm={9}>
-              <Grid container spacing={1} style={{ paddingBottom: '8px' }}>
-                <Grid item xs={11} sm={11} className={classes.paper}>
-                  <TextField
-                    onChange={handleChangeWebsiteTxt}
-                    id="websiteTextField"
-                    fullWidth
-                    variant="outlined"
-                    placeholder="Example: https://github.com/abel-tesfaye"
-                  />
+              {isOnlyWatch ? null : (
+                <Grid container spacing={1} style={{ paddingBottom: '8px' }}>
+                  <Grid item xs={11} sm={11} className={classes.paper}>
+                    <TextField
+                      onChange={handleChangeWebsiteTxt}
+                      id="websiteTextField"
+                      fullWidth
+                      variant="outlined"
+                      placeholder="Example: https://github.com/abel-tesfaye"
+                    />
+                  </Grid>
+                  <Grid item xs={1} sm={1} className={classes.paper}>
+                    <IconButton onClick={handleAddNewWebsite}>
+                      <AddCircleRoundedIcon />
+                    </IconButton>
+                  </Grid>
                 </Grid>
-                <Grid item xs={1} sm={1} className={classes.paper}>
-                  <IconButton onClick={handleAddNewWebsite}>
-                    <AddCircleRoundedIcon />
-                  </IconButton>
-                </Grid>
-              </Grid>
+              )}
 
               {tabUser.websites.map((element, index) => (
                 <Grid container spacing={1}>
@@ -221,11 +225,14 @@ export default function BasicInfoTab(props) {
                       </Link>
                     </div>
                   </Grid>
-                  <Grid item className={classes.paper}>
-                    <IconButton onClick={handleDeleteWebsite} value={index}>
-                      <DeleteRoundedIcon />
-                    </IconButton>
-                  </Grid>
+
+                  {isOnlyWatch ? null : (
+                    <Grid item className={classes.paper}>
+                      <IconButton onClick={handleDeleteWebsite} value={index}>
+                        <DeleteRoundedIcon />
+                      </IconButton>
+                    </Grid>
+                  )}
                 </Grid>
               ))}
             </Grid>
@@ -244,6 +251,7 @@ export default function BasicInfoTab(props) {
                   displayEmpty
                   inputProps={{ 'aria-label': 'Without label' }}
                   variant="outlined"
+                  disabled={isOnlyWatch}
                 >
                   <MenuItem value="">
                     <em>Not provided</em>
@@ -264,7 +272,6 @@ export default function BasicInfoTab(props) {
             <Grid item xs={12} sm={9}>
               <TextField
                 onChange={handleChangeTabUser('birthday')}
-                id="date"
                 type="date"
                 value={tabUser.birthday}
                 className={classes.textField}
@@ -272,6 +279,7 @@ export default function BasicInfoTab(props) {
                   shrink: true,
                 }}
                 variant="outlined"
+                disabled={isOnlyWatch}
               />
             </Grid>
           </Grid>
@@ -299,20 +307,23 @@ export default function BasicInfoTab(props) {
                 onDelete={(chip, index) => handleDeleteTechSkills(chip, index)}
                 fullWidth
                 variant="outlined"
+                disabled={isOnlyWatch}
               />
             </Grid>
           </Grid>
         </Grid>
 
-        <Button
-          className={classes.saveButton}
-          variant="contained"
-          color="primary"
-          startIcon={<SaveOutlinedIcon />}
-          onClick={handleOpenAlertDialog}
-        >
-          Save Changes
-        </Button>
+        {isOnlyWatch ? null : (
+          <Button
+            className={classes.saveButton}
+            variant="contained"
+            color="primary"
+            startIcon={<SaveOutlinedIcon />}
+            onClick={handleOpenAlertDialog}
+          >
+            Save Changes
+          </Button>
+        )}
       </Grid>
 
       <Dialog

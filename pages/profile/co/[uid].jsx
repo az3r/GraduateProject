@@ -1,16 +1,13 @@
 /* eslint-disable react/destructuring-assignment */
-/* eslint-disable no-console */
 import React, { useState, useEffect } from 'react';
 import Head from 'next/head';
-import { parseCookies } from '@libs/client/cookies';
-import { useRouter } from 'next/router';
 import { makeStyles, Box, Snackbar } from '@material-ui/core';
 import { Alert } from '@material-ui/lab';
-import { useAuth } from '@hooks/auth';
-import * as userServices from '@libs/client/users';
 import UserAvatar from '@components/UserProfile/Components/UserAvatar';
 import CompanyProfileTabs from '@components/UserProfile/Company';
 import AppLayout from '@components/Layout';
+import ErrorPage from '@components/CustomErrorPage';
+import * as userServices from '@libs/client/users';
 
 const useStyles = makeStyles({
   introBox: {
@@ -28,19 +25,14 @@ const useStyles = makeStyles({
     position: 'absolute',
     top: -50,
   },
+  centered: {
+    position: 'fixed',
+    top: '50%',
+    left: '50%',
+    marginTop: '-50px',
+    marginLeft: '-100px',
+  },
 });
-
-const initialUser = {
-  name: '',
-  avatar: '',
-  password: '',
-  email: '',
-  introduction: '',
-  website: '',
-  industry: '',
-  headquarter: '',
-  specialties: [],
-};
 
 const defaultUserProps = [
   'name',
@@ -54,27 +46,41 @@ const defaultUserProps = [
   'specialties',
 ];
 
-export async function getServerSideProps({ req }) {
-  const cookies = parseCookies(req);
+export async function getServerSideProps(context) {
+  const { uid } = context.query;
+  const user = await userServices.getInFirestore(uid);
 
-  if (Object.keys(cookies).length !== 0 && cookies.user) {
-    return {
-      props: {
-        user: JSON.parse(cookies.user),
-      },
-    };
-  }
+  // set default values for undefined field
+  defaultUserProps.forEach((prop) => {
+    if (user[prop] === undefined) {
+      if (prop === 'specialties') {
+        user[prop] = [];
+      } else {
+        user[prop] = '';
+      }
+    }
+  });
+
   return {
     props: {
-      user: '',
+      user,
     },
   };
 }
 
 export default function Index(props) {
   const classes = useStyles();
-  const router = useRouter();
-  const auth = useAuth();
+
+  // flag to avoid change user info
+  const isOnlyWatch = true;
+
+  // get user by UID in query
+  const apiUser = props.user;
+
+  // check user exist or role is company
+  if (!apiUser || apiUser.role !== 'company') {
+    return <ErrorPage />;
+  }
 
   // introHeight state
   const [introHeight, setIntroHeight] = useState(0);
@@ -82,44 +88,8 @@ export default function Index(props) {
     setIntroHeight(window.innerWidth / 5);
   }, []);
 
-  // check user login by checking user info in cookie
-  useEffect(() => {
-    if (Object.keys(props.user).length === 0) {
-      router.replace('/login');
-    }
-  });
-  if (!props.user) {
-    return null;
-  }
-
   // user info state
-  const [user, setUser] = useState(initialUser);
-
-  // get user from api
-  let apiUser = null;
-  useEffect(async () => {
-    if (auth) {
-      // get info
-      apiUser = await userServices.get();
-
-      // check role is company
-      if(apiUser.role === 'developer'){
-        router.replace('/profile/dev');
-      }
-
-      // set default values for undefined field
-      defaultUserProps.forEach((prop) => {
-        if (apiUser[prop] === undefined) {
-          if (prop === 'specialties') {
-            apiUser[prop] = [];
-          } else {
-            apiUser[prop] = '';
-          }
-        }
-      });
-      setUser(apiUser);
-    }
-  }, [auth]);
+  const [user, setUser] = useState(apiUser);
 
   // snackbar
   const [snackBarState, setSnackBarState] = React.useState({
@@ -142,6 +112,7 @@ export default function Index(props) {
             user={user}
             setUser={setUser}
             setSnackBarState={setSnackBarState}
+            isOnlyWatch={isOnlyWatch}
           />
         </Box>
         <Box p={3}>
@@ -149,6 +120,7 @@ export default function Index(props) {
             user={user}
             setUser={setUser}
             setSnackBarState={setSnackBarState}
+            isOnlyWatch={isOnlyWatch}
           />
         </Box>
       </AppLayout>
