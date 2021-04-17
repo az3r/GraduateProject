@@ -285,7 +285,7 @@ export default function CodingQuestionForm({onFormSubmit, propQuestion, displayS
                                 <DialogContent>
                                     <DialogContentText id="alert-dialog-slide-description">
                                     {question.cases?.map((item,key)=>(
-                                        <Typography key ><b>#{key+1}:</b> input: {item.input} / output: {item.output}</Typography>
+                                        <Typography><b>#{key+1}:</b> input: {item.input} / output: {item.output}</Typography>
                                     ))}
                                     </DialogContentText>
                                 </DialogContent>
