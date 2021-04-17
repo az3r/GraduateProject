@@ -268,6 +268,7 @@ export default function Problem({problem, user}) {  // { problemSubmissionHistor
           {
             problemId: problem.id,
             problemName: problem.title,
+            language: problem.language,
             status: "Accepted",
             code,
             data: response,
@@ -283,6 +284,7 @@ export default function Problem({problem, user}) {  // { problemSubmissionHistor
           {
             problemId: problem.id,
             problemName: problem.title,
+            language: problem.language,
             status: "Wrong Answer",
             code,
             data: response,
@@ -298,6 +300,7 @@ export default function Problem({problem, user}) {  // { problemSubmissionHistor
         {
           problemId: problem.id,
           problemName: problem.title,
+          language: problem.language,
           status: "Compilation Error",
           code,
           data: e,
@@ -305,6 +308,10 @@ export default function Problem({problem, user}) {  // { problemSubmissionHistor
     } finally {
       setDisplayWaiting('none');
       setDisplayRunCode('block');
+
+      // Update problem submission histories
+      const histories = await submissions.getProblemSubmissions(user.uid, problem.id);
+      setProblemSubmissionHistories(histories);
     }
   };
 

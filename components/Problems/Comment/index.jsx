@@ -5,7 +5,6 @@ import {
   Avatar,
   Paper,
   Button,
-  TextareaAutosize,
   Dialog,
   DialogActions,
   DialogContent,
@@ -18,6 +17,13 @@ import EditIcon from '@material-ui/icons/Edit';
 import HelpOutlineRoundedIcon from '@material-ui/icons/HelpOutlineRounded';
 import { comments, users, } from '@libs/client';
 import dateFormat from 'dateformat';
+import withReactContent from 'sweetalert2-react-content';
+import Swal from "sweetalert2";
+import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
+import { CKEditor } from '@ckeditor/ckeditor5-react';
+import { useRouter } from 'next/router';
+import HTMLReactParser from 'html-react-parser';
+
 
 
 const useStyles = makeStyles(() => ({
@@ -36,11 +42,13 @@ const useStyles = makeStyles(() => ({
     marginLeft: 10,
     marginBottom: 10,
     padding: 10,
-  }
+  },
 }));
+
 
 export default function Comment({user, problemId}){
   const classes = useStyles();
+  const router = useRouter();
 
   const [content, setContent] = useState('');
   const [deleteOpen, setDeleteOpen] = useState(false);
@@ -56,7 +64,23 @@ export default function Comment({user, problemId}){
     setCommentArray(cmt);
   }, []);
 
+  const MySwal = withReactContent(Swal);
+
   const handlePostComment = async () => {
+    if(user === null){
+      MySwal.fire({
+        title: <p>You have not logged in yet, please log into your account!</p>,
+        icon: 'info',
+        showCancelButton: true,
+        confirmButtonText: 'Login'
+      }).then((result) => {
+        if(result.isConfirmed){
+          router.push('/login');
+        }
+      });
+      return;
+    }
+
     if(content === ''){
       return;
     }
@@ -81,14 +105,12 @@ export default function Comment({user, problemId}){
     }
   }
 
-  const handleContentChange = (e) => {
-    e.preventDefault();
-    setContent(e.target.value);
+  const handleContentChange = (event, editor) => {
+    setContent(editor.getData());
   }
 
-  const handleEditedContentChange = (e) => {
-    e.preventDefault();
-    setEditedContent(e.target.value);
+  const handleEditedContentChange = (event, editor) => {
+    setEditedContent(editor.getData());
   }
 
   const handleDeleteClickOpen = ({comment}) => {
@@ -140,8 +162,25 @@ export default function Comment({user, problemId}){
       <Paper>
         <h2 style={{marginLeft: 20, marginRight: 0, marginTop: 0, marginBottom: 0}}>{commentsArray.length} comments</h2>
         <Box className={classes.commentBox}>
-          <TextareaAutosize onChange={handleContentChange} value={content} style={{width: '100%', marginBottom: 10, display: 'block'}} rowsMin={5} rowsMax={5} aria-label="textarea" placeholder="Type your comment here!" />
-          <Button onClick={handlePostComment} variant="contained" color="primary" size="small" className={classes.button}>
+          {/* <TextareaAutosize onChange={handleContentChange} value={content} style={{width: '100%', marginBottom: 10, display: 'block'}} rowsMin={5} rowsMax={5} aria-label="textarea" placeholder="Type your comment here!" /> */}
+          <CKEditor
+            editor={ClassicEditor}
+            data={content}
+            onChange={handleContentChange}
+            onInit={editor => {
+              // You can store the "editor" and use when it is needed.
+              // console.log("Editor is ready to use!", editor);
+              editor.editing.view.change(writer => {
+                writer.setStyle(
+                  "height",
+                  "200px",
+                  editor.editing.view.document.getRoot()
+                );
+              });
+            }}
+             />
+             <br />
+          <Button onClick={handlePostComment} variant="contained" color="primary" size="small">
             Post Comment
           </Button>
         </Box>
@@ -161,7 +200,7 @@ export default function Comment({user, problemId}){
                       'mmmm dd, yyyy "at" HH:MM TT'
                     )}
                   </span>
-                <div>{comment.content}</div>
+                <div>{HTMLReactParser(comment.content)}</div>
                 <div>
                   {
                     (user && comment.userId === user.uid) &&
@@ -190,6 +229,7 @@ export default function Comment({user, problemId}){
             </Box>
           ))
         }
+        <br />
       </Paper>
 
       {/* Edit */}
@@ -203,13 +243,21 @@ export default function Comment({user, problemId}){
           <DialogContentText>
             Do you really want to update this comment?
           </DialogContentText>
-          <TextareaAutosize
-            rowsMax={10}
-            rowsMin={10}
-            style={{width: '100%'}}
-            value={editedContent}
+          <CKEditor
+            editor={ClassicEditor}
+            data={editedContent}
             onChange={handleEditedContentChange}
-            placeholder="Type your comments here!"
+            onInit={editor => {
+              // You can store the "editor" and use when it is needed.
+              // console.log("Editor is ready to use!", editor);
+              editor.editing.view.change(writer => {
+                writer.setStyle(
+                  "height",
+                  "200px",
+                  editor.editing.view.document.getRoot()
+                );
+              });
+            }}
           />
         </DialogContent>
         <DialogActions>

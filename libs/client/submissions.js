@@ -50,7 +50,21 @@ export async function getProblemSubmissions(userId, problemId) {
     .orderBy('createdOn', 'desc')
     .get();
 
-  return snapshot.docs.map((doc) => transform(doc.data()));
+  return snapshot.docs.map((item) =>
+    transform({ id: item.id, ...item.data() })
+  );
+}
+
+export async function getProblemSubmissionDetails(userId, problemSubmissionId) {
+  const snapshot = await Firestore()
+    .collection(users)
+    .doc(userId)
+    .collection(problemSubmissions)
+    .doc(problemSubmissionId)
+    .get();
+
+  // return snapshot.docs.map((doc) => transform(doc.data()));
+  return transform(snapshot.data());
 }
 
 export async function getExamSubmissions(userId, examId) {
@@ -122,7 +136,7 @@ export async function createExamSubmission(
 
 export async function createProblemSubmission(
   userId,
-  { problemId, problemName, status, code, data }
+  { problemId, problemName, language, status, code, data }
 ) {
   const { id } = await Firestore()
     .collection(users)
@@ -131,8 +145,9 @@ export async function createProblemSubmission(
     .add({
       problemId,
       problemName,
+      language,
       status,
-      details: { code, ...data },
+      details: { ...data, code },
       createdOn: Firestore.Timestamp.now(),
     });
 

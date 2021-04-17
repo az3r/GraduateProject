@@ -5,6 +5,7 @@ import { CookiesProvider } from 'react-cookie';
 import { LightTheme } from '../styles/themes';
 import AuthProvider from '../hooks/auth';
 import '../styles/edit.css';
+import '../styles/ckeditor.css';
 
 function MainApp({ Component, pageProps }) {
   return (

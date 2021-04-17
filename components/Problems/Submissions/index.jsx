@@ -6,13 +6,17 @@ import {
   TableHead,
   TableRow,
   TableCell,
-  TableBody,
+  TableBody, Typography,
 } from '@material-ui/core';
 import dateFormat from 'dateformat';
+import Link from 'next/link';
 
 
 const useStyles = makeStyles(() => ({
-
+  link: {
+    color: 'green',
+    cursor: 'pointer',
+  },
 }));
 
 export default function Submissions({problemSubmissionHistories}){
@@ -28,6 +32,7 @@ export default function Submissions({problemSubmissionHistories}){
               <TableCell>Status</TableCell>
               <TableCell>Runtime</TableCell>
               <TableCell>Score</TableCell>
+              <TableCell />
             </TableRow>
           </TableHead>
           {
@@ -73,6 +78,13 @@ export default function Submissions({problemSubmissionHistories}){
                       {
                         submission.status === 'Compilation Error' && 0
                       }
+                    </TableCell>
+                    <TableCell>
+                      <Link href={`/problem/submissiondetail/${submission.id}`}>
+                        <Typography className={classes.link}>
+                          View Results
+                        </Typography>
+                      </Link>
                     </TableCell>
                   </TableRow>
                 ))}
