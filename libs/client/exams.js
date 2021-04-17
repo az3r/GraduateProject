@@ -1,6 +1,7 @@
 import { collections } from '@utils/constants';
 import { getAttributeReference, transform } from '@utils/firestore';
 import { Firestore } from './firebase';
+import { get as getProblem } from './problems';
 
 export async function create(
   companyId,
@@ -14,11 +15,10 @@ export async function create(
       password,
       duration,
       score: problems.reduce((a, b) => a.score + b.score),
-      problemIds: problems.map((item) => item.id),
       owner: companyId,
       createdOn: Firestore.Timestamp.now(),
     });
-  await getAttributeReference(collections.exams, id).set({ id });
+  await getAttributeReference(collections.exams, id).set({ id, problems });
   return id;
 }
 
@@ -35,32 +35,32 @@ export async function update(
       password,
       duration,
       score: problems.reduce((a, b) => a.score + b.score),
-      problemIds: problems.map((item) => item.id),
       modifiedAt: Firestore.Timestamp.now(),
     });
+  await getAttributeReference(collections.exams, examId).update({ problems });
 }
 
 /** get exam and its private attributes using either examId or exam itself */
-export async function get({ exam, examId }) {
-  if (exam) {
-    const attributes = await getAttributeReference(
-      collections.exams,
-      exam.id
-    ).get();
-    return Object.assign(exam, attributes.data());
+export async function get({ exam = undefined, examId = undefined }) {
+  let value;
+  if (!exam && !examId) return undefined;
+  if (exam) value = exam;
+  else {
+    value = await Firestore().collection(collections.exams).doc(examId).get();
   }
-  if (examId) {
-    const snippet = await Firestore()
-      .collection(collections.exams)
-      .doc(examId)
-      .get();
-    const attributes = await getAttributeReference(
-      collections.exams,
-      examId
-    ).get();
-    return Object.assign(transform(snippet), attributes.data());
-  }
-  return undefined;
+  const attributes = await getAttributeReference(
+    collections.exams,
+    value.id
+  ).get();
+  const items = attributes.get('problems');
+  const problemTasks = items.map(async (item) => {
+    if (item.score) return item;
+    return getProblem({ problemId: item });
+  });
+  return Object.assign(value, {
+    ...attributes.data(),
+    problems: await problemTasks,
+  });
 }
 
 /** get all exams' basic info */

@@ -54,7 +54,7 @@ export async function createMCQ(
 }
 
 /** get a problem and its private attributes, using a problemId or a problem itself */
-export async function get({ problemId, problem }) {
+export async function get({ problem = undefined, problemId = undefined }) {
   if (problem) {
     const attributes = await getAttributeReference(
       collections.problems,
