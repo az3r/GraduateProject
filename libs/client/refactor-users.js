@@ -1,6 +1,6 @@
 import { collections } from '@utils/constants';
 import { transform } from '@utils/refactor-firestore';
-import { Firestore, Storage } from './firebase';
+import { FirebaseAuth, Firestore, Storage } from './firebase';
 
 export async function find(uid) {
   if (!uid) return undefined;
@@ -71,6 +71,16 @@ export async function updateAvatar(user, role, file) {
 }
 
 /**
+ * send a password reset email and redirect user back to app
+ * @param {object} user an user object retrieved from useAuth()
+ * @param {string} email email to send
+ * @param {string} redirect redirect url to your app
+ */
+export async function sendPasswordResetEmail(user, email, redirect) {
+  await FirebaseAuth().sendPasswordResetEmail(email, { url: redirect });
+}
+
+/**
  * send an update email verification to the new email
  * @note redirected page should call updateEmail function below
  * @param {*} user object returned fron useAuth()
@@ -89,7 +99,7 @@ export async function sendUpdateEmailVerification(user, callback, email) {
  * @param {string} role either developer or company
  * @param {string} email new email
  */
-export async function updateEmail(user, role, email) {
+export async function syncEmail(user, role, email) {
   const collection =
     role === 'developer' ? collections.developers : collections.companies;
 
