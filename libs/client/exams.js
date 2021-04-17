@@ -73,6 +73,16 @@ export async function getAll(companyId) {
   return exams.docs.map((exam) => transform(exam));
 }
 
+export async function getPublishedExams() {
+  const exams = await Firestore()
+    .collection(collections.exams)
+    .where('published', '==', true)
+    .orderBy('startAt', 'desc')
+    .orderBy('createdOn', 'asc')
+    .get();
+  return exams.docs.map((exam) => transform(exam));
+}
+
 /** get problems' basic info of an exam */
 export async function getProblems(exam) {
   if (exam?.problemIds?.length > 0) {
@@ -131,4 +141,18 @@ export async function removeFromInvitation(examId, developersIds) {
     await getAttributeReference(collections.exams, examId).update({
       invited: Firestore.FieldValue.arrayRemove(developersIds),
     });
+}
+
+/**
+ * @param {string} examId
+ * @param {Date} startAt
+ * @param {Date} endAt
+ */
+export async function publishExam(examId, startAt, endAt) {
+  await Firestore().collection(collections.exams).doc(examId).update({
+    published: true,
+    startAt,
+    endAt,
+    modifiedAt: Firestore.Timestamp.now(),
+  });
 }

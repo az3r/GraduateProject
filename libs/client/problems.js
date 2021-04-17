@@ -78,6 +78,15 @@ export async function get({ problemId, problem }) {
   return undefined;
 }
 
+export async function getPublishedProblems() {
+  const problems = await Firestore()
+    .collection(collections.problems)
+    .where('published', '==', true)
+    .orderBy('createdOn', 'desc')
+    .get();
+  return problems.docs.map((problem) => transform(problem));
+}
+
 export async function update(
   problemId,
   { cases, code, content, difficulty, language, title }
