@@ -11,7 +11,6 @@ export const collections = {
   joinedExams: 'JoinedExams',
   developers: 'Developers',
   companies: 'Companies',
-  examResults: 'ExamResults',
   participants: 'Participants',
   attributes: 'Attributes',
 };

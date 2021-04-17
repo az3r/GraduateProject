@@ -4,7 +4,7 @@ import { Firestore } from './firebase';
 
 export async function create(
   id,
-  { cases, code, content, difficulty, language, score, title, published }
+  { cases, code, content, difficulty, language, title, published }
 ) {
   const { id: problemId, parent } = await Firestore()
     .collection(collections.problems)
@@ -12,9 +12,9 @@ export async function create(
       owner: id,
       difficulty,
       language,
-      score,
       title,
       published,
+      score: cases.reduce((a, b) => a.score + b.score),
       createdOn: Firestore.Timestamp.now(),
       deleted: false,
     });
@@ -55,15 +55,18 @@ export async function get({ problemId, problem }) {
 
 export async function update(
   problemId,
-  { cases, code, content, difficulty, language, score, title }
+  { cases, code, content, difficulty, language, title }
 ) {
-  await Firestore().collection(collections.problems).doc(problemId).update({
-    difficulty,
-    language,
-    score,
-    title,
-    modifiedAt: Firestore.Timestamp.now(),
-  });
+  await Firestore()
+    .collection(collections.problems)
+    .doc(problemId)
+    .update({
+      difficulty,
+      language,
+      score: cases.reduce((a, b) => a.score + b.score),
+      title,
+      modifiedAt: Firestore.Timestamp.now(),
+    });
 
   await getAttributeReference(collections.problems, problemId).update({
     cases,
@@ -78,13 +81,6 @@ export async function remove(problemId) {
     .collection(collections.problems)
     .doc(problemId)
     .update({ deleted: true });
-}
-
-/** add developer to problem's partcipants list */
-export async function addDeveloper(problemId, developerId) {
-  await getAttributeReference(collections.problems, problemId).update({
-    participants: Firestore.FieldValue.arrayUnion(developerId),
-  });
 }
 
 /** get all developers who have at least 1 submission */
