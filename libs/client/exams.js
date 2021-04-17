@@ -1,149 +1,134 @@
 import { collections } from '@utils/constants';
-import { transform } from '@utils/firestore';
+import { getAttributeReference, transform } from '@utils/firestore';
 import { Firestore } from './firebase';
 
-const { exams, problems: problemCollection, users } = collections;
-
 export async function create(
-  userId,
-  { title, content, isPrivate, password, startAt, endAt, problems }
+  companyId,
+  { title, content, duration, password, problems }
 ) {
-  const { minutes, seconds, score } = problems.reduce((prev, current) => ({
-    minutes: prev.minutes + current.minutes,
-    seconds: prev.seconds + current.seconds,
-    score: prev.score + current.score,
-  }));
-  const { id } = await Firestore().collection(exams).add({
-    title,
-    content,
-    isPrivate,
-    password,
-    startAt,
-    endAt,
-    minutes,
-    seconds,
-    score,
-    owner: userId,
-    createdOn: Firestore.Timestamp.now(),
-  });
-
-  const tasks = problems.map((item) => createProblem(id, item));
-  await Promise.all(tasks);
+  const { id } = await Firestore()
+    .collection(collections.exams)
+    .add({
+      title,
+      content,
+      password,
+      duration,
+      score: problems.reduce((a, b) => a.score + b.score),
+      problemIds: problems.map((item) => item.id),
+      owner: companyId,
+      createdOn: Firestore.Timestamp.now(),
+    });
+  await getAttributeReference(collections.exams, id).set({ id });
   return id;
 }
 
 export async function update(
   examId,
-  { title, content, isPrivate, password, startAt, endAt, problems }
+  { title, content, password, duration, problems }
 ) {
-  const { minutes, seconds, score } = problems.reduce((prev, current) => ({
-    minutes: prev.minutes + current.minutes,
-    seconds: prev.seconds + current.seconds,
-    score: prev.score + current.score,
-  }));
-
-  const docRef = Firestore().collection(exams).doc(examId);
-  await docRef.update({
-    title,
-    content,
-    isPrivate,
-    password,
-    startAt,
-    endAt,
-    minutes,
-    seconds,
-    score,
-    modifiedAt: Firestore.Timestamp.now(),
-  });
-
-  const examProblems = await Firestore()
-    .collection(exams)
+  await Firestore()
+    .collection(collections.exams)
     .doc(examId)
-    .collection(problemCollection)
-    .get();
-  const deleteTasks = examProblems.docs.map((item) => item.ref.delete());
-  await Promise.all(deleteTasks);
-  const createTasks = problems.map((item) => createProblem(examId, item));
-  await Promise.all(createTasks);
-}
-export async function get(examId, { withProblems }) {
-  if (examId) {
-    const snapshot = await Firestore().collection(exams).doc(examId).get();
-    const problems = withProblems && (await getProblems(examId));
-    return transform({
-      id: examId,
-      problems: problems || null,
-      ...snapshot.data(),
+    .update({
+      title,
+      content,
+      password,
+      duration,
+      score: problems.reduce((a, b) => a.score + b.score),
+      problemIds: problems.map((item) => item.id),
+      modifiedAt: Firestore.Timestamp.now(),
     });
+}
+
+/** get exam and its private attributes using either examId or exam itself */
+export async function get({ exam, examId }) {
+  if (exam) {
+    const attributes = await getAttributeReference(
+      collections.exams,
+      exam.id
+    ).get();
+    return Object.assign(exam, attributes.data());
   }
-  const snapshot = await Firestore()
-    .collection(exams)
+  if (examId) {
+    const snippet = await Firestore()
+      .collection(collections.exams)
+      .doc(examId)
+      .get();
+    const attributes = await getAttributeReference(
+      collections.exams,
+      examId
+    ).get();
+    return Object.assign(transform(snippet), attributes.data());
+  }
+  return undefined;
+}
+
+/** get all exams' basic info */
+export async function getAll(companyId) {
+  const exams = await Firestore()
+    .collection(collections.exams)
+    .where(Firestore.FieldPath.documentId(), '==', companyId)
     .orderBy('createdOn', 'desc')
     .get();
-  return snapshot.docs.map((item) =>
-    transform({ id: item.id, ...item.data() })
-  );
+  return exams.docs.map((exam) => transform(exam));
 }
 
-export async function getProblems(examId) {
-  const snapshot = await Firestore()
-    .collection(exams)
-    .doc(examId)
-    .collection(problemCollection)
-    .get();
-  return snapshot.docs.map((item) =>
-    transform({ id: item.id, ...item.data() })
-  );
+/** get problems' basic info of an exam */
+export async function getProblems(exam) {
+  if (exam?.problemIds?.length > 0) {
+    const snapshot = await Firestore()
+      .collection(collections.problems)
+      .where(Firestore.FieldPath.documentId(), 'in', exam.problemIds)
+      .get();
+    return snapshot.docs.map((item) => transform(item));
+  }
+  return [];
 }
 
 export async function getParticipants(examId) {
-  // get participants' ids
-  const exam = await Firestore().collection(exams).doc(examId).get();
-  const ids = exam.get('participants');
-  if (ids === undefined || ids.length === 0) {
-    return [];
+  const attributes = await getAttributeReference(
+    collections.exams,
+    examId
+  ).get();
+  const ids = attributes.get('participants');
+  if (ids?.length > 0) {
+    const participants = await Firestore()
+      .collection(collections.developers)
+      .where(Firestore.FieldPath.documentId(), 'in', ids)
+      .get();
+    return participants.docs.map((item) => item.data());
   }
-
-  const participants = await Firestore()
-    .collection(users)
-    .where('id', 'in', ids)
-    .get();
-  return participants.docs.map((item) => item.data());
+  return [];
 }
 
-async function createProblem(examId, props) {
-  // exam already had owner and createdOn fields
-  const { id } = await Firestore()
-    .collection(exams)
-    .doc(examId)
-    .collection(problemCollection)
-    .add(props);
-  return id;
+/** add developer to invitation list */
+export async function addToInvitation(examId, developerId) {
+  await getAttributeReference(collections.exams, examId).update({
+    invited: Firestore.FieldValue.arrayUnion(developerId),
+  });
 }
 
-export async function inviteUsers(examId, email) {
-  await Firestore()
-    .collection(exams)
-    .doc(examId)
-    .update({
-      invitedUsers: Firestore.FieldValue.arrayUnion(email),
-    });
-}
+export async function getInvitedDevelopers(examId) {
+  const attributes = await getAttributeReference(
+    collections.exam,
+    examId
+  ).get();
+  const developerIds = attributes.get('invited');
+  if (developerIds?.length > 0) {
+    const developers = await Firestore()
+      .collection(collections.developers)
+      .where(Firestore.FieldPath.documentId(), 'in', developerIds)
+      .get();
 
-export async function getInvitedUsers(examId) {
-  const exam = await Firestore().collection(exams).doc(examId).get();
-  const usersInvited = exam.get('invitedUsers');
-  if (usersInvited === undefined || usersInvited.length === 0) {
-    return [];
+    return developers.docs.map((dev) => dev.data());
   }
-  return usersInvited;
+  return [];
 }
 
-export async function uninviteUser(examId, userIds) {
-  await Firestore()
-    .collection(exams)
-    .doc(examId)
-    .update({
-      invitedUsers: Firestore.FieldValue.arrayRemove(userIds),
+/** remove developers from invigation list, does not remove them from participants list */
+export async function removeFromInvitation(examId, developersIds) {
+  if (developersIds?.length > 0)
+    await getAttributeReference(collections.exams, examId).update({
+      invited: Firestore.FieldValue.arrayRemove(developersIds),
     });
 }

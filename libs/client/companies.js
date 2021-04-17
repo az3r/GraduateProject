@@ -1,6 +1,6 @@
 import { Firestore } from '@client/firebase';
 import { collections } from '@utils/constants';
-import { getAttributeReference, transform } from '@utils/refactor-firestore';
+import { getAttributeReference, transform } from '@utils/firestore';
 
 /** get comany's basic info and its private attributes */
 export async function get(companyId) {

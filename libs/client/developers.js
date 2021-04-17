@@ -1,5 +1,5 @@
 import { collections } from '@utils/constants';
-import { getAttributeReference, transform } from '@utils/refactor-firestore';
+import { getAttributeReference, transform } from '@utils/firestore';
 import { Firestore } from './firebase';
 
 /** get a developer and its private attirbutes */
