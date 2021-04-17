@@ -1,0 +1,54 @@
+import { Box, Breadcrumbs, Button, Link, makeStyles, OutlinedInput, Typography } from '@material-ui/core';
+import React from 'react';
+
+const useStyles = makeStyles({
+    root: {
+      width: 300,
+    },
+    outlinedInput: {
+      height: 30,
+      margin: 20,
+      width: 350,
+      borderRadius: 16,
+    },
+    addBtn:{
+        float: "right",
+        marginBottom: "10px"
+    },
+    itemsContainer:{
+        clear: "right",
+    },
+    createdDate:{
+      color: "black",
+    },
+    typeStyle: {
+        margin: "20px"
+    }
+  });
+
+export default function GroupExaminations(){
+    const classes = useStyles();
+
+    return(
+        <Box m={3}>
+            <Breadcrumbs>
+                <Link color="inherit" href="/company-groups">
+                    Company groups
+                </Link>
+                <Typography color="textPrimary">1</Typography>
+
+                <Typography color="textPrimary">Group member</Typography>
+            </Breadcrumbs>
+            <Box display="flex" justifyContent="center">
+                <OutlinedInput
+                    className={classes.outlinedInput}
+                    placeholder="Search..."
+                />
+                
+            </Box>
+            <Box display="flex" justifyContent="flex-end">  
+                <Button color="secondary" variant="contained" href="/company-groups/1/examinations/add">Add examination</Button>
+            </Box>
+        </Box>
+    );
+}

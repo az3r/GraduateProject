@@ -17,6 +17,27 @@ export default function getTestCaseFromInputAndOutput(input, output) {
   return cases;
 }
 
+export function getInitialCode(language) {
+  const code = {
+    Csharp: `using System;
+class HelloWorld {
+    static void Main() {
+        Console.WriteLine("Hello World");
+    }
+}`,
+    Java: `import java.util.Scanner;
+public class Program
+{
+    public static void main(String[] args) {
+        System.out.println("Hello World");
+    }
+}`,
+    Python: `print("Hello World!")`,
+  };
+
+  return code[language];
+}
+
 export function getFormatResultFromFile(text) {
   const splitedText = text.split('\r');
   let result = [];
