@@ -1,6 +1,6 @@
 import emailjs from 'emailjs-com';
-import { getInvitedUsers } from './exams';
-import { getUsersByRole } from './users';
+import { getInvitedDevelopers } from './exams';
+import { getAll } from './developers';
 
 export default function getTestCaseFromInputAndOutput(input, output) {
   let cases = [];
@@ -80,18 +80,18 @@ export function calculateTotalExamTime(minutes, seconds) {
   let totalMinutes = 0;
   let totalSeconds = 0;
 
-  totalMinutes += parseInt(seconds / 60, 10);
-  totalSeconds = parseInt(seconds % 60, 10);
+  totalMinutes += Math.floor(seconds / 60);
+  totalSeconds = seconds % 60;
 
-  totalHours += parseInt(minutes / 60, 10);
-  totalMinutes = parseInt(minutes % 60, 10);
+  totalHours += Math.floor(minutes / 60);
+  totalMinutes = minutes % 60;
 
   return `${totalHours}h ${totalMinutes}m ${totalSeconds}s`;
 }
 
 export async function getUsersForInvitation(examId) {
-  const invitedUsers = await getInvitedUsers(examId);
-  const usersDB = await getUsersByRole('developer');
+  const invitedUsers = await getInvitedDevelopers(examId);
+  const usersDB = await getAll();
   const modifiedUsers = usersDB.map((value) => {
     const isInvited =
       invitedUsers.filter((invitedEmail) => invitedEmail === value.email)

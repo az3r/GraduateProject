@@ -89,7 +89,9 @@ export async function addSolvedProblem(developer, { problemId, score }) {
   // update total problem score
   await ref.update({
     problemScore:
-      developer.problemScore - problem.exists ? problem.score : 0 + score,
+      developer.problemScore -
+      (problem.exists ? problem.get('score') : 0) +
+      score,
   });
 }
 
@@ -107,7 +109,8 @@ export async function addExamResult(developer, { examId, score }) {
 
   // update total score
   await ref.update({
-    examScore: developer.examScore - exam.exists ? exam.score : 0 + score,
+    examScore:
+      developer.examScore - (exam.exists ? exam.get('score') : 0) + score,
   });
 }
 

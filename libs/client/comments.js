@@ -185,5 +185,5 @@ export async function updateUserComments(userId, { username, avatar }) {
       )
     );
   });
-  await Promise.all(problemTasks, examTasks);
+  await Promise.all([problemTasks, examTasks]);
 }

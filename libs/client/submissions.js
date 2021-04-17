@@ -39,9 +39,7 @@ export async function test({ lang, code, testcases }) {
     status = failed > 0 ? statuses.failed : statuses.passed;
     score =
       sum -
-      response.failedIndexes.reduce(
-        (a, _, bIndex) => a + testcases[bIndex].score
-      );
+      data.failedIndexes.reduce((a, _, bIndex) => a + testcases[bIndex].score);
   }
   const result = { ...data, status, score };
   return response.status === 200 ? result : Promise.reject(result);
