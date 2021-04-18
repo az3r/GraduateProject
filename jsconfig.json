@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
     "jsx": "react-jsx",
-    "checkJs": true,
+    "checkJs": false,
     "baseUrl": ".",
     "paths": {
       "@components/*": ["./components/*"],

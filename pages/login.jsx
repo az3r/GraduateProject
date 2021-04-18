@@ -362,7 +362,7 @@ export default function Login() {
     );
   }
 
-  function ProviderSignin({ disabled }) {
+  function ProviderSignin({ disabled = false }) {
     const items = [
       {
         className: styles.google,
@@ -421,11 +421,11 @@ export default function Login() {
 
     async function onSignin({ method }) {
       try {
-        await signInWithProvider({ method });
+        const { credential } = await signInWithProvider({ method });
 
         // save cookies
         const user = {
-          uid: FirebaseAuth().currentUser.uid,
+          uid: credential.user.uid,
           isLogin: true,
         };
         setCookies(['user'], JSON.stringify(user), { path: '/' });
@@ -473,7 +473,7 @@ async function signInWithProvider({ method }) {
     facebook: new FirebaseAuth.FacebookAuthProvider(),
     github: new FirebaseAuth.GithubAuthProvider(),
   };
-  return auth.signin({ provider: providers[method] });
+  return auth.signinWithProvider({ provider: providers[method] });
 }
 
 const useStyles = makeStyles((theme) => ({
