@@ -1,5 +1,5 @@
 import { collections } from '@utils/constants';
-import { getEmailByName } from '@client/users';
+import { getEmailByName, find } from '@client/users';
 import { Firestore, FirebaseAuth } from './firebase';
 
 export async function register({ username, email, password, role }) {
@@ -18,7 +18,10 @@ export async function registerWithProvider({ provider, role }) {
 }
 
 export async function signinWithProvider({ provider }) {
-  return FirebaseAuth().signInWithPopup(provider);
+  const credentials = await FirebaseAuth().signInWithPopup(provider);
+  const user = await find(credentials.user.uid);
+  if (user) return credentials;
+  return setupAccount(credentials, credentials.user.displayName, 'developer');
 }
 
 export async function signin({ username, password }) {
