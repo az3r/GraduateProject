@@ -18,16 +18,18 @@ import { useRouter } from 'next/router';
 import Link from 'next/link';
 import { Alert } from '@material-ui/lab';
 import { FirebaseAuth } from '@libs/client/firebase';
-import { auth } from '@libs/client';
+import { signin, signinWithProvider, signout } from '@libs/client/authenticate';
 import { useCookies } from 'react-cookie';
 import json2mq from 'json2mq';
 import { getBaseUrl } from '@utils/urls';
+import { useAuth } from '@hooks/auth';
 
 export default function Login() {
   const router = useRouter();
   const styles = useStyles();
   const theme = useTheme();
   const smUp = useMediaQuery(theme.breakpoints.up('sm'));
+  const auth = useAuth();
 
   const [snackBarState, setSnackBarState] = React.useState({
     open: false,
@@ -40,6 +42,11 @@ export default function Login() {
   React.useEffect(() => {
     router.prefetch('/');
   }, []);
+
+  // prefetch home page
+  React.useEffect(() => {
+    if (auth) router.replace('/');
+  }, [auth]);
 
   return (
     <Box className={styles.root}>
@@ -228,7 +235,6 @@ export default function Login() {
         setCookies(['user'], JSON.stringify(user), { path: '/' });
         // end save cookies
 
-        router.replace('/');
         setSnackBarState({
           open: true,
           severity: 'success',
@@ -408,7 +414,6 @@ export default function Login() {
         setCookies(['user'], JSON.stringify(user), { path: '/' });
         // end save cookies
 
-        router.replace('/');
         setSnackBarState({
           open: true,
           severity: 'success',
@@ -429,9 +434,9 @@ export default function Login() {
 }
 
 async function signInWithEmail({ username, password }) {
-  const credentials = await auth.signin({ username, password });
+  const credentials = await signin({ username, password });
   if (!credentials.user.emailVerified) {
-    await auth.signout();
+    await signout();
     return Promise.reject({
       code: 'email_not_verified',
       user: credentials.user,
@@ -446,7 +451,7 @@ async function signInWithProvider({ method }) {
     facebook: new FirebaseAuth.FacebookAuthProvider(),
     github: new FirebaseAuth.GithubAuthProvider(),
   };
-  return auth.signinWithProvider({ provider: providers[method] });
+  return signinWithProvider({ provider: providers[method] });
 }
 
 const useStyles = makeStyles((theme) => ({

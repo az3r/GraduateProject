@@ -1,5 +1,5 @@
 import { collections } from '@utils/constants';
-import { getEmailByName, find } from '@client/users';
+import { getEmailByName } from '@client/users';
 import { Firestore, FirebaseAuth } from './firebase';
 
 export async function register({ username, email, password, role }) {
@@ -8,20 +8,19 @@ export async function register({ username, email, password, role }) {
     password
   );
 
-  return setupAccount(credentials, username, role);
+  await setupAccount(credentials.user, username, role);
+  return credentials;
 }
 
 export async function registerWithProvider({ provider, role }) {
   const credentials = await FirebaseAuth().signInWithPopup(provider);
   const { displayName } = credentials.user;
-  return setupAccount(credentials, displayName, role);
+  await setupAccount(credentials.user, displayName, role);
+  return credentials;
 }
 
 export async function signinWithProvider({ provider }) {
-  const credentials = await FirebaseAuth().signInWithPopup(provider);
-  const user = await find(credentials.user.uid);
-  if (user) return credentials;
-  return setupAccount(credentials, credentials.user.displayName, 'developer');
+  return FirebaseAuth().signInWithPopup(provider);
 }
 
 export async function signin({ username, password }) {
@@ -39,17 +38,16 @@ export async function signout() {
   return FirebaseAuth().signOut();
 }
 
-async function setupAccount(credentials, username, role) {
-  const { email } = credentials.user;
+export async function setupAccount(user, username, role) {
+  const { email, uid } = user;
   // update profile
   const avatar = 'https://picsum.photos/200';
-  await credentials.user.updateProfile({
+  await user.updateProfile({
     displayName: username,
     photoURL: avatar,
   });
 
   // create user document
-  const { uid } = credentials.user;
   const collection =
     role === 'developer' ? collections.developers : collections.companies;
   const ref = Firestore().collection(collection).doc(uid);
@@ -66,6 +64,4 @@ async function setupAccount(credentials, username, role) {
     .collection(collections.attributes)
     .doc(collections.attributes)
     .set({ id: uid });
-
-  return credentials;
 }
