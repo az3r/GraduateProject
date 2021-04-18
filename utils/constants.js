@@ -9,7 +9,7 @@ export const collections = {
   comments: 'Comments',
   solvedProblems: 'SolvedProblems',
   joinedExams: 'JoinedExams',
-  developers: 'Developers',
+  developers: 'Users',
   companies: 'Companies',
   participants: 'Participants',
   attributes: 'Attributes',
