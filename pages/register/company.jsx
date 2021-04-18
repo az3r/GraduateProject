@@ -1,4 +1,5 @@
 import React from 'react';
+
 import {
   Avatar,
   Box,
@@ -15,13 +16,13 @@ import {
 } from '@material-ui/core';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
-import Link from 'next/link';
 import { Alert } from '@material-ui/lab';
 import { FirebaseAuth } from '@libs/client/firebase';
 import { auth } from '@libs/client';
 import { useCookies } from 'react-cookie';
 import json2mq from 'json2mq';
 import { getBaseUrl } from '@utils/urls';
+import { register, signout } from '@libs/client/authenticate';
 
 export default function Login() {
   const router = useRouter();
@@ -35,11 +36,6 @@ export default function Login() {
     message: 'No message',
   });
   const [, setCookies] = useCookies(['user']);
-
-  // prefetch home page
-  React.useEffect(() => {
-    router.prefetch('/');
-  }, []);
 
   return (
     <Box className={styles.root}>
@@ -133,20 +129,6 @@ export default function Login() {
             </Box>
           </Box>
         </Box>
-        <Box
-          width="100%"
-          display="flex"
-          justifyContent="center"
-          marginTop={theme.spacing(1)}
-        >
-          <Box width="50%">
-            <Link href="/register">
-              <Button variant="contained" color="secondary" fullWidth>
-                Register
-              </Button>
-            </Link>
-          </Box>
-        </Box>
       </Box>
     );
   }
@@ -163,7 +145,7 @@ export default function Login() {
             <Grid spacing={3} container direction="column">
               <Grid item>
                 <Typography align="center" variant="h4">
-                  Sign into Smart Coder
+                  Create Company Account
                 </Typography>
               </Grid>
               <Grid item>
@@ -171,9 +153,21 @@ export default function Login() {
                   variant="filled"
                   type="text"
                   id="username"
-                  label="Username"
+                  label="Company's name"
                   fullWidth
                   name="username"
+                  required
+                  disabled={submitting}
+                />
+              </Grid>
+              <Grid item>
+                <TextField
+                  variant="filled"
+                  id="email"
+                  type="email"
+                  label="Buiness's email"
+                  fullWidth
+                  name="email"
                   required
                   disabled={submitting}
                 />
@@ -200,7 +194,7 @@ export default function Login() {
                     variant="contained"
                     color="primary"
                   >
-                    Signin
+                    Sign up
                   </Button>
                 </Grid>
               )}
@@ -215,33 +209,20 @@ export default function Login() {
       const data = new FormData(e.target);
       const username = data.get('username');
       const password = data.get('password');
+      const email = data.get('email');
 
       try {
         setSubmitting(true);
-        await signInWithEmail({ username, password });
-
-        // save cookies
-        const user = {
-          uid: FirebaseAuth().currentUser.uid,
-          isLogin: true,
-        };
-        setCookies(['user'], JSON.stringify(user), { path: '/' });
-        // end save cookies
-
-        router.replace('/');
-        setSnackBarState({
-          open: true,
-          severity: 'success',
-          message: 'Login successfully!',
+        const credentials = await register({
+          username,
+          email,
+          password,
+          role: 'company',
         });
+        await signout();
+        setVerification({ user: credentials.user });
       } catch (error) {
         const { code } = error;
-
-        // handle email not verified
-        if (code === 'email_not_verified') {
-          setVerification({ user: error.user });
-          return;
-        }
 
         setSnackBarState({
           open: true,
@@ -254,13 +235,13 @@ export default function Login() {
   }
 
   function EmailVerification({ user }) {
-    const { username, email } = user;
+    const { displayName, email } = user;
     return (
       <Grid container alignContent="center" spacing={2} direction="column">
         <Grid item>
           <Typography>
-            Hello <b>{username}</b>, you must verify your email before using our
-            service
+            Hello <b>{displayName}</b>, you must verify your email before using
+            our service
           </Typography>
         </Grid>
         <Grid item>
@@ -330,7 +311,7 @@ export default function Login() {
     return (
       <Grid item container justify="center" alignItems="center" spacing={2}>
         <Grid item>
-          <Typography align="center">Signing you in, please wait...</Typography>
+          <Typography align="center">Registering, please wait...</Typography>
         </Grid>
         <Grid item>
           <CircularProgress />
@@ -344,7 +325,7 @@ export default function Login() {
       {
         className: styles.google,
         method: 'google',
-        title: 'Sign in with Google',
+        title: 'Sign up with Google',
         alt: "google's logo",
         src: '/logo_google.webp',
         color: undefined,
@@ -353,7 +334,7 @@ export default function Login() {
       {
         className: styles.facebook,
         method: 'facebook',
-        title: 'Sign in with Facebook',
+        title: 'Sign up with Facebook',
         alt: "facebook's logo",
         src: '/logo_facebook.webp',
         color: 'primary',
@@ -362,7 +343,7 @@ export default function Login() {
       {
         className: styles.github,
         method: 'github',
-        title: 'Sign in with Github',
+        title: 'Sign up with Github',
         alt: "github's logo",
         src: '/logo_github.webp',
         color: 'primary',
@@ -383,7 +364,7 @@ export default function Login() {
               variant="contained"
               color={item.color}
               disabled={item.disabled}
-              onClick={() => onSignin({ method: item.method })}
+              onClick={() => onSignUp({ method: item.method })}
               fullWidth
               startIcon={
                 <Avatar className={styles.logo} alt={item.alt} src={item.src} />
@@ -396,9 +377,9 @@ export default function Login() {
       </Grid>
     );
 
-    async function onSignin({ method }) {
+    async function onSignUp({ method }) {
       try {
-        const { credential } = await signInWithProvider({ method });
+        const credential = await signUpWithProvider({ method });
 
         // save cookies
         const user = {
@@ -412,12 +393,11 @@ export default function Login() {
         setSnackBarState({
           open: true,
           severity: 'success',
-          message: 'Login successfully!',
+          message: 'Registered successfully!',
         });
       } catch (error) {
         const { code } = error;
 
-        // only display message if user signs in with username and password
         setSnackBarState({
           open: true,
           severity: 'error',
@@ -428,25 +408,16 @@ export default function Login() {
   }
 }
 
-async function signInWithEmail({ username, password }) {
-  const credentials = await auth.signin({ username, password });
-  if (!credentials.user.emailVerified) {
-    await auth.signout();
-    return Promise.reject({
-      code: 'email_not_verified',
-      user: credentials.user,
-    });
-  }
-  return credentials;
-}
-
-async function signInWithProvider({ method }) {
+async function signUpWithProvider({ method }) {
   const providers = {
     google: new FirebaseAuth.GoogleAuthProvider(),
     facebook: new FirebaseAuth.FacebookAuthProvider(),
     github: new FirebaseAuth.GithubAuthProvider(),
   };
-  return auth.signinWithProvider({ provider: providers[method] });
+  return auth.registerWithProvider({
+    provider: providers[method],
+    role: 'company',
+  });
 }
 
 const useStyles = makeStyles((theme) => ({
