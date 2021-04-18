@@ -1,4 +1,5 @@
-import { Box, Breadcrumbs, Link, Typography } from '@material-ui/core';
+import { Box, Breadcrumbs, Divider, Typography } from '@material-ui/core';
+import Link from 'next/link';
 import React from 'react';
 
 
@@ -11,8 +12,10 @@ export default function GroupMember(){
                 </Link>
                 <Typography color="textPrimary">1</Typography>
 
-                <Typography color="textPrimary">Group member</Typography>
+                <Typography color="textPrimary">Group members</Typography>
             </Breadcrumbs>
+            <Divider/>
+
             <Box>
                 <Typography>Group members</Typography>
             </Box>

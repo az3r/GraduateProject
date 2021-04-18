@@ -1,30 +1,42 @@
-import { Box, Grid } from '@material-ui/core';
+import { Grid } from '@material-ui/core';
 import React from 'react';
 import MenuList from '@material-ui/core/MenuList';
 import MenuItem from '@material-ui/core/MenuItem';
-import Paper from '@material-ui/core/Paper';
 import { makeStyles } from '@material-ui/core/styles';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import Typography from '@material-ui/core/Typography';
-import PriorityHighIcon from '@material-ui/icons/PriorityHigh';
 import InfoIcon from '@material-ui/icons/Info';
 import AssignmentOutlinedIcon from '@material-ui/icons/AssignmentOutlined';
 import AccountBalanceIcon from '@material-ui/icons/AccountBalance';
 import GroupIcon from '@material-ui/icons/Group';
 import { useRouter } from 'next/router';
-
+import clsx from 'clsx';
 
 const useStyles = makeStyles({
     root: {
-      width: 300,
+        backgroundColor: '#38424E',
+        minHeight: '100%',
     },
     background: {
       backgroundColor: "#ffffff",
+    },
+    fontColor: {
+        color: '#ffffff'
+    },
+    spaceMenu:{
+        marginBottom: "15px",
+    },
+    selected: {
+        color: '#1AC573',
+        fontWeight: 'bold'
+    },
+    infoBackground:{
+        minHeight: "100vh"
     }
   });
 
   
-export default function DetailGroup({children})
+export default function DetailGroup({selected,children})
 {
     const router = useRouter();
 
@@ -42,56 +54,81 @@ export default function DetailGroup({children})
         router.replace('/company-groups/1/questions-bank')
     }
 
-    const goToProblemsPage = () => {
-        router.replace('/company-groups/1/problems');
-    }
-
     const goToExaminationsPage = () => {
         router.replace('/company-groups/1/examinations');
     }
     return(
-        <Box p={3}>
-            <Grid container>
-            <Grid item lg={3}>
-                <Paper className={classes.root}>
-                <MenuList>
-                <MenuItem onClick={goToIndexPage}>
-                        <ListItemIcon>
-                            <InfoIcon fontSize="small" />
-                        </ListItemIcon>
-                        <Typography>General</Typography>
-                    </MenuItem>
-                    <MenuItem onClick={goToMembersPage}>
-                        <ListItemIcon>
-                            <GroupIcon fontSize="small" />
-                        </ListItemIcon>
-                        <Typography>Group Members</Typography>
-                    </MenuItem>
-                    <MenuItem onClick={goToQuestionsBankPage}>
-                        <ListItemIcon>
-                            <AccountBalanceIcon fontSize="small" />
-                        </ListItemIcon>
-                        <Typography>Questions Bank</Typography>
-                    </MenuItem>
-                    <MenuItem onClick={goToProblemsPage}>
-                        <ListItemIcon>
-                            <PriorityHighIcon fontSize="small" />
-                        </ListItemIcon>
-                        <Typography>Problems</Typography>
-                    </MenuItem>
-                    <MenuItem onClick={goToExaminationsPage}>
-                        <ListItemIcon>
-                            <AssignmentOutlinedIcon fontSize="small" />
-                        </ListItemIcon>
-                        <Typography>Examinations</Typography>
-                    </MenuItem>
-                </MenuList>
-                </Paper>
+        <Grid container>
+            <Grid item lg={2} md={2} sm={12} xs={12}>
+                <div className={classes.root}>
+                    <MenuList>
+                        <MenuItem onClick={goToIndexPage} className={classes.spaceMenu}>
+                            <ListItemIcon>
+                                <InfoIcon fontSize="small" 
+                                    className={clsx(
+                                        {
+                                            [classes.fontColor] : selected !== 1,
+                                            [classes.selected] : selected === 1
+                                        })} />
+                            </ListItemIcon>
+                            <Typography className={clsx(
+                                {
+                                    [classes.fontColor] : selected !== 1,
+                                    [classes.selected] : selected === 1
+                                })}>
+                                General</Typography>
+                        </MenuItem>
+                        <MenuItem onClick={goToMembersPage} className={classes.spaceMenu}>
+                            <ListItemIcon>
+                                <GroupIcon fontSize="small"  className={clsx(
+                                        {
+                                            [classes.fontColor] : selected !== 2,
+                                            [classes.selected] : selected === 2
+                                        })}/>
+                            </ListItemIcon>
+                            <Typography className={clsx(
+                                        {
+                                            [classes.fontColor] : selected !== 2,
+                                            [classes.selected] : selected === 2
+                                        })}>
+                                Group Members</Typography>
+                        </MenuItem>
+                        <MenuItem onClick={goToQuestionsBankPage} className={classes.spaceMenu}>
+                            <ListItemIcon>
+                                <AccountBalanceIcon fontSize="small"  className={clsx(
+                                        {
+                                            [classes.fontColor] : selected !== 3,
+                                            [classes.selected] : selected === 3
+                                        })}/>
+                            </ListItemIcon>
+                            <Typography className={clsx(
+                                        {
+                                            [classes.fontColor] : selected !== 3,
+                                            [classes.selected] : selected === 3
+                                        })}>
+                                Questions Bank</Typography>
+                        </MenuItem>
+                        <MenuItem onClick={goToExaminationsPage} className={classes.spaceMenu}>
+                            <ListItemIcon>
+                                <AssignmentOutlinedIcon fontSize="small"  className={clsx(
+                                        {
+                                            [classes.fontColor] : selected !== 4,
+                                            [classes.selected] : selected === 4
+                                        })}/>
+                            </ListItemIcon>
+                            <Typography className={clsx(
+                                        {
+                                            [classes.fontColor] : selected !== 4,
+                                            [classes.selected] : selected === 4
+                                        })}>
+                                Examinations</Typography>
+                        </MenuItem>
+                    </MenuList>
+                </div>
             </Grid>
-            <Grid item lg={9} className={classes.background}>
+            <Grid item lg={10} md={10} sm={12} xs={12} className={classes.infoBackground}>
                 {children}
             </Grid>
-            </Grid>
-        </Box>
+        </Grid>
     );
 }

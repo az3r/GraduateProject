@@ -1,7 +1,8 @@
 import React from 'react';
 // import { makeStyles } from '@material-ui/core/styles';
 
-import { Box, Breadcrumbs, Link, Typography } from '@material-ui/core';
+import { Box, Breadcrumbs, Divider, Typography } from '@material-ui/core';
+import Link from 'next/link';
 import EditExamination from './EditExamination';
 
 // const useStyles = makeStyles((theme) => ({}));
@@ -23,6 +24,7 @@ export default function AddExamination() {
         </Link>
         <Typography color="textPrimary">Add</Typography>
       </Breadcrumbs>
+      <Divider/>
       <EditExamination examProp={null}/>
     </Box>
   );

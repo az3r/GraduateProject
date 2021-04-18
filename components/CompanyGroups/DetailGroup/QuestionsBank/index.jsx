@@ -1,5 +1,7 @@
-import { Box, Breadcrumbs, Button, Link, makeStyles, OutlinedInput, Select, Typography } from '@material-ui/core';
+import { Box, Breadcrumbs, Button, Divider, makeStyles, OutlinedInput, Select, Typography } from '@material-ui/core';
 import React, { useState } from 'react';
+import Link from 'next/link';
+
 
 
 const useStyles = makeStyles({
@@ -24,7 +26,7 @@ const useStyles = makeStyles({
     },
     typeStyle: {
         margin: "20px"
-    }
+    },
   });
 
 export default function GroupQuestionsBank(){
@@ -42,8 +44,10 @@ export default function GroupQuestionsBank(){
                 </Link>
                 <Typography color="textPrimary">1</Typography>
 
-                <Typography color="textPrimary">Group member</Typography>
+                <Typography color="textPrimary">Questions bank</Typography>
             </Breadcrumbs>
+            <Divider/>
+
             <Box display="flex" justifyContent="center">
                 <OutlinedInput
                     className={classes.outlinedInput}
@@ -61,7 +65,9 @@ export default function GroupQuestionsBank(){
                 </Select>
             </Box>
             <Box display="flex" justifyContent="flex-end">  
-                <Button color="secondary" variant="contained" href="/company-groups/1/questions-bank/add">Add question</Button>
+                <Link href="/company-groups/1/questions-bank/add">
+                    <Button color="secondary" variant="contained">Add question</Button>
+                </Link>
             </Box>
         </Box>
     );

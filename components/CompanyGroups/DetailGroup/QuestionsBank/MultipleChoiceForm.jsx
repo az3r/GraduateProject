@@ -130,25 +130,11 @@ export default function MultipleChoiceForm({onFormSubmit, propQuestion, displayS
                     <Box p={2} m={3} id="section-3">
                         <Typography variant="h5">Choose level of difficulty: </Typography>
                         <NativeSelect
+                            value={question.value}
                             onChange={handleChangeDifficulty}>
-                                {
-                                    question.difficulty === 0 ?
-                                    <option value={0} selected >Easy</option>
-                                    :
-                                    <option value={0}>Easy</option>
-                                }
-                                {
-                                    question.difficulty === 1 ?
-                                    <option value={1} selected>Medium</option>
-                                    :
-                                    <option value={1}>Medium</option>
-                                }
-                                {
-                                    question.difficulty === 2 ?
-                                    <option value={2} selected>Hard</option>
-                                    :
-                                    <option value={2}>Hard</option>
-                                }
+                                <option value={0}>Easy</option>
+                                <option value={1}>Medium</option>
+                                <option value={2}>Hard</option>
                         </NativeSelect>
                     </Box>
                   </Box>

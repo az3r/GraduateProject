@@ -19,9 +19,10 @@ import Link from 'next/link';
 import { Alert } from '@material-ui/lab';
 import { FirebaseAuth } from '@libs/client/firebase';
 import { auth } from '@libs/client';
-import { useCookies } from 'react-cookie';
 import json2mq from 'json2mq';
 import { getBaseUrl } from '@utils/urls';
+import Cookies from 'universal-cookie';
+
 
 export default function Login() {
   const router = useRouter();
@@ -34,7 +35,6 @@ export default function Login() {
     severity: 'info',
     message: 'No message',
   });
-  const [, setCookies] = useCookies(['user']);
 
   // prefetch home page
   React.useEffect(() => {
@@ -238,13 +238,15 @@ export default function Login() {
         setSubmitting(true);
         await signInWithEmail({ username, password });
 
-        // save cookies
-        const user = {
-          uid: FirebaseAuth().currentUser.uid,
-          isLogin: true,
-        };
-        setCookies(['user'], JSON.stringify(user), { path: '/' });
-        // end save cookies
+        const cookies = new Cookies();
+        cookies.set('user', 
+        {
+            uid: FirebaseAuth().currentUser.uid,
+            isLogin: true,
+        },
+        {
+          path: '/',
+        });
 
         router.replace('/');
         setSnackBarState({
@@ -423,13 +425,15 @@ export default function Login() {
       try {
         await signInWithProvider({ method });
 
-        // save cookies
-        const user = {
-          uid: FirebaseAuth().currentUser.uid,
-          isLogin: true,
-        };
-        setCookies(['user'], JSON.stringify(user), { path: '/' });
-        // end save cookies
+        const cookies = new Cookies();
+        cookies.set('user', 
+        {
+            uid: FirebaseAuth().currentUser.uid,
+            isLogin: true,
+        },
+        {
+          path: '/',
+        });
 
         router.replace('/');
         setSnackBarState({

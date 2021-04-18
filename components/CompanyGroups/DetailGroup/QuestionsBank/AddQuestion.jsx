@@ -1,4 +1,5 @@
-import { Box, Breadcrumbs, Divider, Link, Select, Typography } from '@material-ui/core';
+import { Box, Breadcrumbs, Divider, Select, Typography } from '@material-ui/core';
+import Link from 'next/link';
 import React, { useState } from 'react';
 import CodingQuestionForm from './CodingQuestionForm';
 import MultipleChoiceForm from './MultipleChoiceForm';
@@ -6,7 +7,6 @@ import MultipleChoiceForm from './MultipleChoiceForm';
 export default function AddQuestion()
 {
     const [type,setType] = useState(1)
-
     const handleChangeType = (e)=>{
         setType(Number(e.target.value));
     }
@@ -18,17 +18,19 @@ export default function AddQuestion()
     return(
         <Box m={3}>
             <Breadcrumbs>
-                <Link color="inherit" href="/company-groups">
+                <Link href="/company-groups">
                     Company groups
                 </Link>
-                <Link color="inherit" href="/company-groups/1">
+                <Link href="/company-groups/1">
                     1
                 </Link>
-                <Link color="inherit" href="/company-groups/1/questions-bank">
+                <Link href="/company-groups/1/questions-bank">
                     Questions bank
                 </Link>
                 <Typography color="textPrimary">Add</Typography>
             </Breadcrumbs>
+            <Divider/>
+
             <Box m={3}>
                 <Box p={2} m={1} display="flex" justifyContent="center">
                     <Typography variant="h5">Type of question:&nbsp;</Typography>

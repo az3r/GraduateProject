@@ -1,4 +1,5 @@
-import { Box, Breadcrumbs, Button, Link, makeStyles, OutlinedInput, Typography } from '@material-ui/core';
+import { Box, Breadcrumbs, Button, Divider, makeStyles, OutlinedInput, Typography } from '@material-ui/core';
+import Link from 'next/link';
 import React from 'react';
 
 const useStyles = makeStyles({
@@ -37,8 +38,9 @@ export default function GroupExaminations(){
                 </Link>
                 <Typography color="textPrimary">1</Typography>
 
-                <Typography color="textPrimary">Group member</Typography>
+                <Typography color="textPrimary">Examinations</Typography>
             </Breadcrumbs>
+            <Divider/>
             <Box display="flex" justifyContent="center">
                 <OutlinedInput
                     className={classes.outlinedInput}

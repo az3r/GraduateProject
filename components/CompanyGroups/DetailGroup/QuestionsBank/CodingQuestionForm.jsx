@@ -180,25 +180,12 @@ export default function CodingQuestionForm({onFormSubmit, propQuestion, displayS
                 
                         <Box p={2} m={3} id="section-3">
                             <Typography variant="h5">Choose level of difficulty: </Typography>
-                            <NativeSelect name="difficulty" onChange={handleChangeDifficulty}>
-                                {
-                                    question.difficulty === 0 ?
-                                    <option value={0} selected >Easy</option>
-                                    :
+                            <NativeSelect 
+                                value={question.difficulty}
+                                onChange={handleChangeDifficulty}>                             
                                     <option value={0}>Easy</option>
-                                }
-                                {
-                                    question && question.difficulty === 1 ?
-                                    <option value={1} selected>Medium</option>
-                                    :
                                     <option value={1}>Medium</option>
-                                }
-                                {
-                                    question && question.difficulty === 2 ?
-                                    <option value={2} selected>Hard</option>
-                                    :
                                     <option value={2}>Hard</option>
-                                }
                             </NativeSelect>
                         </Box>
         
@@ -210,25 +197,11 @@ export default function CodingQuestionForm({onFormSubmit, propQuestion, displayS
                         <Box p={2} m={3} id="section-5">
                             <Typography variant="h5">Choose programming language: </Typography>
                             <NativeSelect
-                                onChange={handleChangeLanguague} >
-                                    {
-                                        question?.language === "Csharp" ?
-                                        <option selected value="Csharp">C#</option>
-                                        :
-                                        <option value="Csharp">C#</option>
-                                    }
-                                    {
-                                        question?.language === "Java" ?
-                                        <option selected value="Java">Java</option>
-                                        :
-                                        <option value="Java">Java</option>
-                                    }
-                                    {
-                                        question?.language === "Python" ?
-                                        <option selected value="Python">Python</option>
-                                        :
-                                        <option value="Python">Python</option>
-                                    }
+                                value={question.language}
+                                onChange={handleChangeLanguague} >                                   
+                                    <option value="Csharp">C#</option>                                
+                                    <option value="Java">Java</option>                            
+                                    <option value="Python">Python</option>
                             </NativeSelect>
                         </Box>
                     </Box>

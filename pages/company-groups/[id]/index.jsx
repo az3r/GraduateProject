@@ -21,7 +21,7 @@ export default function Index({ user }) {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <AppLayout>
-        <DetailGroup>
+        <DetailGroup selected={1}>
             <GroupGeneral/>
         </DetailGroup>
       </AppLayout>

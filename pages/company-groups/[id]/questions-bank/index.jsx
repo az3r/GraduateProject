@@ -37,7 +37,7 @@ export default function Index({ user }) {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <AppLayout>
-        <DetailGroup>
+        <DetailGroup selected={3}>
             <GroupQuestionsBank questions={questions}/>
         </DetailGroup>
       </AppLayout>
