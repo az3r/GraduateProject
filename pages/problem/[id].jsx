@@ -41,7 +41,10 @@ export default function Test({ problem, user }) {   // , problemSubmissionHistor
 
   useEffect(async () => {
     const problemAuthor = await users.get(problem.owner);
-    setAuthor(problemAuthor);
+
+    if(problemAuthor !== undefined){
+      setAuthor(problemAuthor);
+    }
   }, []);
 
 
@@ -90,7 +93,7 @@ export default function Test({ problem, user }) {   // , problemSubmissionHistor
               <Box className={classes.root}>
                 <Box className={classes.info}>
                   <Typography style={{color: 'green', fontWeight: 'bolder'}}>Author</Typography>
-                  <Link href={`/profile/${author.id}`} variant="body2">{author.name}</Link>
+                  <Link href={`/profile/${author.uid}`} variant="body2">{author.name}</Link>
                 </Box>
                 <hr />
                 <Box className={classes.info}>
