@@ -1,5 +1,6 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
+import Footer from '@components/Footer';
 import { CompanyAppBar, DeveloperAppBar, GuestAppBar } from '../AppBar';
 import { useAuth } from '../../hooks/auth';
 
@@ -10,7 +11,10 @@ export default function Layout({ children }) {
   return (
     <>
       <AppBar />
-      {children}
+      <main style={{minHeight : "100vh"}}>
+        {children}
+      </main>
+      <Footer/>
     </>
   );
 }

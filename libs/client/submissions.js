@@ -27,8 +27,10 @@ export async function test({ lang, code, testcases }) {
     }),
   });
 
-  const sum = testcases.reduce((a, b) => a.score + b.score);
-
+  const sum =
+    testcases.length > 1
+      ? testcases.reduce((a, b) => a.score + b.score)
+      : testcases[0].score;
   const response = await task;
   const data = await response.json();
   let status = statuses.error;
@@ -37,6 +39,7 @@ export async function test({ lang, code, testcases }) {
   if (response.status === 200) {
     const { failed } = data;
     status = failed > 0 ? statuses.failed : statuses.passed;
+
     score =
       sum -
       data.failedIndexes.reduce((a, _, bIndex) => a + testcases[bIndex].score);

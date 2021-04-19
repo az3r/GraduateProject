@@ -62,9 +62,9 @@ export default function MemberAppBar() {
             <Typography variant="h6">Examinations</Typography>
           </MenuItem>
         </Link>
-        <Link href="/examiner">
+        <Link href="/company-groups">
           <MenuItem>
-            <Typography variant="h6">Examiner</Typography>
+            <Typography variant="h6">Company Groups</Typography>
           </MenuItem>
         </Link>
         <Box flexGrow={1} />
