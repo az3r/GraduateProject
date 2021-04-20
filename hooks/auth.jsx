@@ -14,14 +14,18 @@ export default function AuthProvider({ children }) {
       if (value) {
         // user who logins using provider the first time won't have an account
         const existedUser = await find(value.uid);
+        let current = existedUser;
         if (!existedUser) {
           await setupAccount(value, value.displayName, 'developer');
-          const merged = value && Object.assign(await get(value.uid), value);
-          setUser(merged);
-        } else {
-          const merged = value && Object.assign(existedUser, value);
-          setUser(merged);
+          current = await get(value.uid);
         }
+
+        // delete email and avatar because they are read-only and cannot be overridden
+        delete current.email;
+        delete current.avatar;
+
+        const merged = value && Object.assign(value, current);
+        setUser(merged);
       } else setUser(undefined);
     });
     return unsubscribe;

@@ -4,8 +4,10 @@ import { Firestore } from './firebase';
 
 export async function create(
   companyId,
-  { cases, code, content, difficulty, language, title, published, simpleTest }
+  { cases, code, content, difficulty, language, title, published }
 ) {
+  if (!cases?.length) throw new Error('no testcase provided');
+
   const { id: problemId, parent } = await Firestore()
     .collection(collections.problems)
     .add({
@@ -24,7 +26,7 @@ export async function create(
     .doc(problemId)
     .collection(collections.attributes)
     .doc(collections.attributes)
-    .set({ id: problemId, cases, code, content, simpleTest });
+    .set({ id: problemId, cases, code, content });
   return problemId;
 }
 

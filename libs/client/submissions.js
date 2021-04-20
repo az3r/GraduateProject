@@ -14,6 +14,8 @@ const statuses = {
 };
 
 export async function test({ lang, code, testcases }) {
+  if (!testcases?.length) throw new Error('no testcase provided');
+
   const token = await FirebaseAuth().currentUser.getIdToken(true);
   const task = fetch(`${compiler}${langs[lang.toLowerCase()]}`, {
     method: 'POST',
@@ -27,22 +29,23 @@ export async function test({ lang, code, testcases }) {
     }),
   });
 
-  const sum =
-    testcases.length > 1
-      ? testcases.reduce((a, b) => a.score + b.score)
-      : testcases[0].score;
+  let { score } = testcases.reduce((a, b) => ({ score: a.score + b.score }));
   const response = await task;
   const data = await response.json();
   let status = statuses.error;
-  let score = 0;
 
   if (response.status === 200) {
-    const { failed } = data;
+    const { failed, failedIndexes } = data;
     status = failed > 0 ? statuses.failed : statuses.passed;
 
-    score =
-      sum -
-      data.failedIndexes.reduce((a, _, bIndex) => a + testcases[bIndex].score);
+    // subtract score for every failed testcase
+    if (failed > 0) {
+      const amount =
+        failedIndexes?.reduce((a, b) => ({
+          score: testcases[a].score + testcases[b].score,
+        })).score || 0;
+      score -= amount;
+    }
   }
   const result = { ...data, status, score };
   return response.status === 200 ? result : Promise.reject(result);
