@@ -7,10 +7,10 @@ import { useRouter } from 'next/router';
 import { makeStyles, Box, Snackbar } from '@material-ui/core';
 import { Alert } from '@material-ui/lab';
 import { useAuth } from '@hooks/auth';
-import * as userServices from '@libs/client/users';
 import UserAvatar from '@components/UserProfile/Components/UserAvatar';
 import DevProfileTabs from '@components/UserProfile/Developer';
 import AppLayout from '@components/Layout';
+import * as userServices from '@libs/client/users';
 
 const useStyles = makeStyles({
   introBox: {
@@ -76,7 +76,10 @@ export async function getServerSideProps({ req }) {
 export default function Index(props) {
   const classes = useStyles();
   const router = useRouter();
+
+  // user get from useAuth()
   const auth = useAuth();
+  const [userAuth, setUserAuth] = useState(auth);
 
   // introHeight state
   const [introHeight, setIntroHeight] = useState(0);
@@ -102,10 +105,10 @@ export default function Index(props) {
   useEffect(async () => {
     if (auth) {
       // get info
-      apiUser = await userServices.get();
-      
+      apiUser = await userServices.find(props.user.uid);
+
       // check role is company
-      if(apiUser.role === 'company'){
+      if (apiUser.role === 'company') {
         router.replace('/profile/co');
       }
 
@@ -123,7 +126,9 @@ export default function Index(props) {
           }
         }
       });
+
       setUser(apiUser);
+      setUserAuth(auth);
     }
   }, [auth]);
 
@@ -146,6 +151,7 @@ export default function Index(props) {
         <Box style={{ height: introHeight }} className={classes.introBox}>
           <UserAvatar
             user={user}
+            userAuth={userAuth}
             setUser={setUser}
             setSnackBarState={setSnackBarState}
           />
@@ -153,6 +159,7 @@ export default function Index(props) {
         <Box p={3}>
           <DevProfileTabs
             user={user}
+            userAuth={userAuth}
             setUser={setUser}
             setSnackBarState={setSnackBarState}
           />

@@ -7,7 +7,7 @@ import UserAvatar from '@components/UserProfile/Components/UserAvatar';
 import CompanyProfileTabs from '@components/UserProfile/Company';
 import AppLayout from '@components/Layout';
 import ErrorPage from '@components/CustomErrorPage';
-import * as userServices from '@libs/client/users';
+import * as companyServices from '@libs/client/companies';
 
 const useStyles = makeStyles({
   introBox: {
@@ -48,7 +48,7 @@ const defaultUserProps = [
 
 export async function getServerSideProps(context) {
   const { uid } = context.query;
-  const user = await userServices.getInFirestore(uid);
+  const user = await companyServices.get(uid);
 
   // set default values for undefined field
   defaultUserProps.forEach((prop) => {
