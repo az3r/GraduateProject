@@ -19,10 +19,10 @@ import Link from 'next/link';
 import { Alert } from '@material-ui/lab';
 import { FirebaseAuth } from '@libs/client/firebase';
 import { signin, signinWithProvider, signout } from '@libs/client/authenticate';
-import { useCookies } from 'react-cookie';
 import json2mq from 'json2mq';
 import { getBaseUrl } from '@utils/urls';
 import { useAuth } from '@hooks/auth';
+import Cookies from 'universal-cookie';
 
 export default function Login() {
   const router = useRouter();
@@ -36,7 +36,6 @@ export default function Login() {
     severity: 'info',
     message: 'No message',
   });
-  const [, setCookies] = useCookies(['user']);
 
   // prefetch home page
   React.useEffect(() => {
@@ -49,11 +48,12 @@ export default function Login() {
       router.replace('/');
 
       // save cookies
+      const cookies = new Cookies();
       const user = {
         uid: FirebaseAuth().currentUser.uid,
         isLogin: true,
       };
-      setCookies(['user'], JSON.stringify(user), { path: '/' });
+      cookies.set('user', JSON.stringify(user), { path: '/' });
       // end save cookies
     }
   }, [auth]);

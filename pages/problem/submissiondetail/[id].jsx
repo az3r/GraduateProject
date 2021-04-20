@@ -128,7 +128,7 @@ const useStyles = makeStyles(() => ({
 }));
 
 
-export default function Test({ problemSubmissionDetails }) {  // , user
+export default function SubmissionDetails({ problemSubmissionDetails }) {  // , user
   const classes = useStyles();
 
   const [code, setCode] = useState(problemSubmissionDetails.details.code);

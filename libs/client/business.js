@@ -2,7 +2,7 @@ import emailjs from 'emailjs-com';
 import { getInvitedDevelopers } from './exams';
 import { getAll } from './developers';
 
-export default function getTestCaseFromInputAndOutput(input, output) {
+export default function getTestCaseFromInputAndOutput(input, output, score) {
   let cases = [];
   for (let i = 0; i < input.length; i += 1) {
     cases = [
@@ -10,11 +10,33 @@ export default function getTestCaseFromInputAndOutput(input, output) {
       {
         input: input[i],
         output: output[i],
+        score: score[i],
       },
     ];
   }
 
   return cases;
+}
+
+export function getInitialCode(language) {
+  const code = {
+    Csharp: `using System;
+class HelloWorld {
+    static void Main() {
+        Console.WriteLine("Hello World");
+    }
+}`,
+    Java: `import java.util.Scanner;
+public class Program
+{
+    public static void main(String[] args) {
+        System.out.println("Hello World");
+    }
+}`,
+    Python: `print("Hello World!")`,
+  };
+
+  return code[language];
 }
 
 export function getFormatResultFromFile(text) {
