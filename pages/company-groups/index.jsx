@@ -32,6 +32,7 @@ export async function getServerSideProps({ req }) {
   if (Object.keys(cookies).length !== 0) {
     if (cookies.user) {
       const user = await find(JSON.parse(cookies.user).uid);
+      console.log(user);
       if(user.role === 'company')
       {
         return {
