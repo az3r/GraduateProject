@@ -10,7 +10,7 @@ export default function getTestCaseFromInputAndOutput(input, output, score) {
       {
         input: input[i],
         output: output[i],
-        score: score[i],
+        score: Number(score[i]),
       },
     ];
   }

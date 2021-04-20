@@ -85,7 +85,6 @@ export default function CodingQuestionForm({onFormSubmit, propQuestion, displayS
         simpleTest:{
             input: '',
             output: '',
-            score: ''
         },
         input: [],
         output: [],
@@ -101,7 +100,6 @@ export default function CodingQuestionForm({onFormSubmit, propQuestion, displayS
         code: false,
         simpleInput: false,
         simpleOutput: false,
-        simpleTestScore:false,
         test: '',
         isTesting: false,
         testResult: false,
@@ -196,16 +194,6 @@ export default function CodingQuestionForm({onFormSubmit, propQuestion, displayS
         }
     };
 
-    const handleChangeScoreSimpleTest = (e) => {
-        const {value} = e.target;
-        setMessage({...message, 
-            test: '',
-            simpleTestScore: false});
-        if(Number(value) < 0 || Number(value) > 100) return;
-        setQuestion({...question, 
-            simpleTest: {...question.simpleTest, score: Number(value)}});
-    }
-
     const handleTestCode = async () => {
         if(question.code === '')
         {
@@ -230,13 +218,6 @@ export default function CodingQuestionForm({onFormSubmit, propQuestion, displayS
                 simpleOutput: true});
             return;
         }
-        if(question.simpleTest.score === '')
-        {
-            setMessage({...message, 
-                test: 'Score for simple test case is empty',
-                simpleTestScore: true});
-            return;
-        }
 
         setMessage({...message, 
             simpleInput: false,
@@ -245,18 +226,21 @@ export default function CodingQuestionForm({onFormSubmit, propQuestion, displayS
             isTesting: true});
 
         
-
         const result = await test({
             lang: question.language,
             code: question.code,
-            testcases: [question.simpleTest]
+            testcases: [{
+                input: question.simpleTest.input,
+                output: question.simpleTest.output,
+                score: 0
+            }]
         });
 
         let resultMessage = '';
         let passed = false;
         if(result.failed === 1)
         {
-            resultMessage = `Test failed!\nExpected output: ${result.results[0].expected}\nActual output: ${result.results[0].actual}\nYour score: ${result.results[0].score}`
+            resultMessage = `Test failed!\nExpected output: ${result.results[0].expected}\nActual output: ${result.results[0].actual}`
         }
         else
         {
@@ -472,20 +456,6 @@ export default function CodingQuestionForm({onFormSubmit, propQuestion, displayS
                                     error={message.simpleOutput}
                                     />
                                
-                            </Box>
-                            <Box m={1}>
-                            <TextField 
-                                    type="number"
-                                    variant="outlined"
-                                    style={{width : 409.34}}
-                                    value={question.simpleTest.score}
-                                    InputProps={{ inputProps: { min: 1, max: 100 } }}
-                                    onChange={handleChangeScoreSimpleTest} 
-                                    label="Test case's score"
-                                    error={message.simpleTestScore}/>
-                                     <p style={{fontSize: "0.75rem", color: 'rgba(0, 0, 0, 0.54)'}}>
-                                        <b>ONLY</b> submit <b>ONE</b> test case. And test case&apos;s score must be in range 0 &le; score &le; 100
-                                    </p>
                             </Box>
                             {
                                 message.isTesting ?
