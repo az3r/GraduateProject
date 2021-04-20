@@ -14,7 +14,7 @@ export async function create(
       language,
       title,
       published,
-      score: cases.reduce((a, b) => a.score + b.score),
+      score: cases.reduce((a, b) => ({ score: a.score + b.score })).score,
       createdOn: Firestore.Timestamp.now(),
       deleted: false,
     });
@@ -97,7 +97,7 @@ export async function update(
     .update({
       difficulty,
       language,
-      score: cases.reduce((a, b) => a.score + b.score),
+      score: cases.reduce((a, b) => ({ score: a.score + b.score })).score,
       title,
       modifiedAt: Firestore.Timestamp.now(),
     });

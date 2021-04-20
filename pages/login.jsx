@@ -45,7 +45,17 @@ export default function Login() {
 
   // prefetch home page
   React.useEffect(() => {
-    if (auth) router.replace('/');
+    if (auth) {
+      router.replace('/');
+
+      // save cookies
+      const user = {
+        uid: FirebaseAuth().currentUser.uid,
+        isLogin: true,
+      };
+      setCookies(['user'], JSON.stringify(user), { path: '/' });
+      // end save cookies
+    }
   }, [auth]);
 
   return (
@@ -227,14 +237,6 @@ export default function Login() {
         setSubmitting(true);
         await signInWithEmail({ username, password });
 
-        // save cookies
-        const user = {
-          uid: FirebaseAuth().currentUser.uid,
-          isLogin: true,
-        };
-        setCookies(['user'], JSON.stringify(user), { path: '/' });
-        // end save cookies
-
         setSnackBarState({
           open: true,
           severity: 'success',
@@ -404,15 +406,7 @@ export default function Login() {
 
     async function onSignin({ method }) {
       try {
-        const { credential } = await signInWithProvider({ method });
-
-        // save cookies
-        const user = {
-          uid: credential.user.uid,
-          isLogin: true,
-        };
-        setCookies(['user'], JSON.stringify(user), { path: '/' });
-        // end save cookies
+        await signInWithProvider({ method });
 
         setSnackBarState({
           open: true,
