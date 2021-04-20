@@ -1,21 +1,13 @@
 import React, { useEffect, useState } from 'react';
-import Head from 'next/head';
 import dynamic from 'next/dynamic';
-import { problems, users } from '@libs/client';
-import { parseCookies } from '@libs/client/cookies';
-import {
-  makeStyles,
-  Container,
-  Hidden,
-  Box,
-  Breadcrumbs,
-  Link,
-  Typography,
-  Grid
-} from '@material-ui/core';
-import AppLayout from '../../components/Layout';
+import { users } from '@libs/client';
+import Box from '@material-ui/core/Box';
+import Link from '@material-ui/core/Link';
+import Typography from '@material-ui/core/Typography';
+import { Container, Hidden, makeStyles } from '@material-ui/core';
+import Grid from '@material-ui/core/Grid';
 
-const Problem = dynamic(() => import('../../components/Problems/Problem/index'), {
+const Problem = dynamic(() => import('./Problem'), {
   ssr: false,
 });
 
@@ -38,7 +30,7 @@ const useStyles = makeStyles(() => ({
 }));
 
 
-export default function Test({ problem, user }) {   // , problemSubmissionHistory
+export default function TestProblemCoding({ problem, user }) {   // , problemSubmissionHistory
   const classes = useStyles();
 
   const [author, setAuthor] = useState({uid: "", name: ""});
@@ -54,28 +46,13 @@ export default function Test({ problem, user }) {   // , problemSubmissionHistor
 
   return (
     <>
-      <Head>
-        <title>Problems | Smart Coder</title>
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
-
-      <AppLayout>
         <Container maxWidth disableGutters>
           <Grid container>
             <Hidden smDown>
               <Grid item xs={12} container className={classes.subNavBar} direction="row" justify="space-between" alignItems="center">
-                  <Box style={{marginLeft: 80}}>
-                    <Breadcrumbs aria-label="breadcrumb">
-                      <Link color="inherit" href="/"  >
-                        Home
-                      </Link>
-                      <Link color="inherit" href="/" >
-                        Problem
-                      </Link>
-                      <Typography color="textPrimary">{problem.title}</Typography>
-                    </Breadcrumbs>
-                    <Typography variant="h4" style={{fontWeight: "bolder"}}>{problem.title}</Typography>
-                  </Box>
+                <Box style={{marginLeft: 80}}>
+                  <Typography variant="h4" style={{fontWeight: "bolder"}}>{problem.title}</Typography>
+                </Box>
                 {/* { */}
                 {/*  problem.language === 'Java' && */}
                 {/*  <Avatar style={{marginRight: 80}} alt="Remy Sharp" src="/java.png" /> */}
@@ -130,38 +107,6 @@ export default function Test({ problem, user }) {   // , problemSubmissionHistor
           </Grid>
         </Container>
         <br />
-      </AppLayout>
     </>
   );
-}
-
-export async function getServerSideProps({ params, req }) {
-  const cookies = parseCookies(req);
-  let user = null;
-  // let problemSubmissionHistory = null;
-  let item = null;
-  try {
-    item = await problems.get(params.id);
-    console.log(item);
-
-    if (Object.keys(cookies).length !== 0) {
-      if (cookies.user) {
-        user = JSON.parse(cookies.user);
-        // problemSubmissionHistory = await submissions.getProblemSubmissions(
-        //   user.uid,
-        //   params.id
-        // );
-      }
-    }
-  } catch (e) {
-    console.log(e);
-  }
-
-  return {
-    props: {
-      problem: item,
-      user,
-      // problemSubmissionHistory,
-    },
-  };
 }

@@ -20,10 +20,14 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="73bd1854-2930-493b-bbd0-fb90442d9327" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/components/Examinations/TestProblemCoding/Problem/index.jsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/components/Examinations/TestProblemCoding/index.jsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/components/Examinations/TestProblemMCQ/index.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.eslintrc.json" beforeDir="false" afterPath="$PROJECT_DIR$/.eslintrc.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pages/examination/[id].jsx" beforeDir="false" afterPath="$PROJECT_DIR$/pages/examination/[id].jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pages/examination/start/[id].jsx" beforeDir="false" afterPath="$PROJECT_DIR$/pages/examination/start/[id].jsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pages/problem/[id].jsx" beforeDir="false" afterPath="$PROJECT_DIR$/pages/problem/[id].jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pages/problem/submissiondetail/[id].jsx" beforeDir="false" afterPath="$PROJECT_DIR$/pages/problem/submissiondetail/[id].jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/styles/ckeditor.css" beforeDir="false" afterPath="$PROJECT_DIR$/styles/ckeditor.css" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -167,6 +171,7 @@
       <workItem from="1618628706621" duration="14267000" />
       <workItem from="1618645779914" duration="2762000" />
       <workItem from="1618718847260" duration="835000" />
+      <workItem from="1618892754655" duration="13098000" />
     </task>
     <servers />
   </component>
