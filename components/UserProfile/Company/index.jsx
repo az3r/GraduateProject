@@ -60,7 +60,7 @@ function a11yProps(index) {
 
 export default function UserProfileTabs(props) {
   const classes = useStyles();
-  const { user, setUser, setSnackBarState, isOnlyWatch } = props;
+  const { user, setUser, setSnackBarState, isOnlyWatch, userAuth } = props;
 
   // tab values
   const [value, setValue] = React.useState(0);
@@ -89,6 +89,7 @@ export default function UserProfileTabs(props) {
         <TabPanel value={value} index={0}>
           <BasicInfoTab
             user={user}
+            userAuth={userAuth}
             setUser={setUser}
             setSnackBarState={setSnackBarState}
             isOnlyWatch={isOnlyWatch}
@@ -99,6 +100,7 @@ export default function UserProfileTabs(props) {
           <TabPanel value={value} index={1}>
             <AccountTab
               user={user}
+              userAuth={userAuth}
               setUser={setUser}
               setSnackBarState={setSnackBarState}
             />

@@ -29,7 +29,7 @@ import 'react-vertical-timeline-component/style.min.css';
 import dateFormat from 'dateformat';
 import Popup from '@components/UserProfile/Developer/ExperienceTab/Controls/Popup';
 import ExperienceForm from '@components/UserProfile/Developer/ExperienceTab/Controls/ExperienceForm';
-import * as userServices from '@libs/client/users';
+import * as devServices from '@libs/client/developers';
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -63,7 +63,7 @@ const without = (array, filtered) =>
 
 export default function ExperiencesTab(props) {
   const classes = useStyles();
-  const { user, setUser, setSnackBarState, isOnlyWatch } = props;
+  const { user, setUser, setSnackBarState, isOnlyWatch, userAuth } = props;
   const [openPopup, setOpenPopup] = useState(false);
   const [openAlertDialog, setOpenAlertDialog] = React.useState(false);
 
@@ -107,8 +107,9 @@ export default function ExperiencesTab(props) {
 
     try {
       const newUser = { ...user, experiences: timelineElements };
-      await userServices.update(newUser);
+      await devServices.update(userAuth.uid, newUser);
       setUser(newUser);
+
       setSnackBarState({
         open: true,
         severity: 'success',

@@ -61,7 +61,7 @@ function a11yProps(index) {
 
 export default function UserProfileTabs(props) {
   const classes = useStyles();
-  const { user, setUser, setSnackBarState, isOnlyWatch } = props;
+  const { user, setUser, setSnackBarState, isOnlyWatch, userAuth } = props;
 
   // tab values
   const [value, setValue] = React.useState(0);
@@ -82,8 +82,10 @@ export default function UserProfileTabs(props) {
         >
           <Tab label="Basic Info" {...a11yProps(0)} />
 
+          {/* if only watch */}
           {isOnlyWatch ? <Tab label="Experiences" {...a11yProps(1)} /> : null}
 
+          {/* else  */}
           {isOnlyWatch ? null : <Tab label="Account" {...a11yProps(1)} />}
           {isOnlyWatch ? null : <Tab label="Experiences" {...a11yProps(2)} />}
         </Tabs>
@@ -93,12 +95,14 @@ export default function UserProfileTabs(props) {
         <TabPanel value={value} index={0}>
           <BasicInfoTab
             user={user}
+            userAuth={userAuth}
             setUser={setUser}
             setSnackBarState={setSnackBarState}
             isOnlyWatch={isOnlyWatch}
           />
         </TabPanel>
 
+        {/* if only watch */}
         {isOnlyWatch ? (
           <TabPanel value={value} index={1}>
             <ExperiencesTab
@@ -110,10 +114,12 @@ export default function UserProfileTabs(props) {
           </TabPanel>
         ) : null}
 
+        {/* else */}
         {isOnlyWatch ? null : (
           <TabPanel value={value} index={1}>
             <AccountTab
               user={user}
+              userAuth={userAuth}
               setUser={setUser}
               setSnackBarState={setSnackBarState}
             />
@@ -123,6 +129,7 @@ export default function UserProfileTabs(props) {
           <TabPanel value={value} index={2}>
             <ExperiencesTab
               user={user}
+              userAuth={userAuth}
               setUser={setUser}
               setSnackBarState={setSnackBarState}
             />

@@ -10,6 +10,7 @@ import {
   Tooltip,
 } from '@material-ui/core';
 import EditIcon from '@material-ui/icons/Edit';
+import * as userServices from '@libs/client/users';
 
 const useStyles = makeStyles({
   introTitle: {
@@ -27,11 +28,28 @@ const useStyles = makeStyles({
 
 export default function UserAvatar(props) {
   const classes = useStyles();
-  const { user, setUser, setSnackBarState, isOnlyWatch } = props;
+  const { user, setUser, setSnackBarState, isOnlyWatch, userAuth } = props;
 
-  const handleChangeAvatar = (event) => {
+  const handleChangeAvatar = async (event) => {
     const image = event.target.files[0];
     console.log(image);
+
+    try {
+      await userServices.updateAvatar(userAuth, user.role, image)
+
+      setSnackBarState({
+        open: true,
+        severity: 'success',
+        message: 'Update successfully!',
+      });
+    } catch (err) {
+      console.log(err);
+      setSnackBarState({
+        open: true,
+        severity: 'error',
+        message: 'Internal server error',
+      });
+    }
   };
 
   const handleEditAvatar = () => {
