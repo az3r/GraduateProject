@@ -45,8 +45,6 @@ export default function Login() {
   // prefetch home page
   React.useEffect(() => {
     if (auth) {
-      router.replace('/');
-
       // save cookies
       const cookies = new Cookies();
       const user = {
@@ -55,6 +53,9 @@ export default function Login() {
       };
       cookies.set('user', JSON.stringify(user), { path: '/' });
       // end save cookies
+
+      const destination = auth.role === 'company' ? '/company-groups' : '/';
+      router.replace(destination);
     }
   }, [auth]);
 

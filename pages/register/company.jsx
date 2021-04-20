@@ -389,7 +389,7 @@ export default function Login() {
         setCookies(['user'], JSON.stringify(user), { path: '/' });
         // end save cookies
 
-        router.replace('/');
+        router.replace('/company-groups');
         setSnackBarState({
           open: true,
           severity: 'success',
