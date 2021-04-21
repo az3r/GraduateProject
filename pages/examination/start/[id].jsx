@@ -21,6 +21,8 @@ import {
   Tabs
 } from '@material-ui/core';
 // import PropTypes from 'prop-types';
+import Swal from "sweetalert2";
+import withReactContent from 'sweetalert2-react-content';
 import BackupIcon from '@material-ui/icons/Backup';
 import TimerIcon from '@material-ui/icons/Timer';
 // import dateFormat from 'dateformat';
@@ -123,17 +125,83 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 
-export default function Start({ problems, user }) { // examId
+export default function Start({ examId, problems, user }) {
   const classes = useStyles();
 
   const [value, setValue] = React.useState(0);
   const [windowHeight, setWindowHeight] = useState(0);
   const [windowWidth, setWindowWidth] = useState(0);
+  const [isSolvedProblems, setIsSolvedProblems] = useState(new Array(problems.length).fill(false));
+  const [timeOut, setTimeOut] = useState(1200);
+
+  const MySwal = withReactContent(Swal);
+
+  const handleSubmit = async () => {
+    MySwal.fire({
+      title: 'Please Wait !',
+      html: 'Submitting...',
+      allowEscapeKey: false,
+      allowOutsideClick: false,
+      showConfirmButton: false,
+      onBeforeOpen: () => {
+        MySwal.showLoading();
+      }
+    });
+
+    await setTimeout(() => { MySwal.close()}, 3000);
+
+    MySwal.fire({
+      title: 'Finished!',
+      icon: 'success',
+      allowEscapeKey: false,
+      allowOutsideClick: false,
+      showConfirmButton: true
+    }).then((result) => {
+      if (result.isConfirmed) {
+        // router.push('/login');
+      }
+    });
+
+    // MySwal.fire({
+    //   title: <p>You have not logged in yet, please log into your account!</p>,
+    //   icon: 'info',
+    //   inputOptions: inputOptions,
+    //   showCancelButton: true,
+    //   confirmButtonText: 'Login'
+    // }).then((result) => {
+    //   if (result.isConfirmed) {
+    //     router.push('/login');
+    //   }
+    // });
+  }
+  useEffect(() => {
+    const isSolvedProblemsJson = localStorage.getItem(`${examId}isSolvedProblems`);
+    if(isSolvedProblemsJson !== null){
+      const isSolvedProblemsObject = JSON.parse(isSolvedProblemsJson);
+      setIsSolvedProblems(isSolvedProblemsObject);
+    }
+  }, []);
+
+  const handleIsSolvedProblemsChange = (index) => {
+    const isSolvedProblemsDump = isSolvedProblems;
+    isSolvedProblemsDump[index] = true;
+    setIsSolvedProblems(isSolvedProblemsDump);
+
+    // Save isSolvedProblems to LocalStorage
+    localStorage.setItem(`${examId}isSolvedProblems`, JSON.stringify(isSolvedProblemsDump));
+  }
+
 
   useEffect(() => {
     setWindowHeight(window.innerHeight);
     setWindowWidth(window.innerWidth);
-  }, []);
+
+    setTimeout(() => {
+      console.log(timeOut);
+      setTimeOut(timeOut - 1);
+
+    }, 1000);
+  }, [timeOut]);
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
@@ -141,6 +209,15 @@ export default function Start({ problems, user }) { // examId
 
   const handleQuestionChange = (newValue) => {
     setValue(newValue);
+  }
+
+  const handleNextQuestion = () => {
+    if(value === problems.length){
+      setValue(0);
+    }
+    else{
+      setValue(value + 1);
+    }
   }
   // const router = useRouter();
   // const [index, setIndex] = useState(0);
@@ -273,11 +350,11 @@ export default function Start({ problems, user }) { // examId
           <Box className={classes.minutes}>
             <TimerIcon />
             <Typography variant="h6">
-              12 mins left
+              {Math.ceil(timeOut/60)} mins left
             </Typography>
           </Box>
 
-          <Button color="inherit" size="large" startIcon={<BackupIcon />}>Submit</Button>
+          <Button onClick={() => handleSubmit()} color="inherit" size="large" startIcon={<BackupIcon />}>Submit</Button>
         </Toolbar>
       </AppBar>
 
@@ -307,11 +384,11 @@ export default function Start({ problems, user }) { // examId
                   <Tab style={{backgroundColor: 'white', fontWeight: 'bolder'}} label={index + 1} className={classes.tab} {...a11yProps(index + 1)} />
                 )
               }
-              
+
                 return (
                   <Tab label={index + 1} className={classes.tab} {...a11yProps(index + 1)} />
                 )
-              
+
             })
           }
         </Tabs>
@@ -390,14 +467,21 @@ export default function Start({ problems, user }) { // examId
                           </>
                         }
                         <TableCell>
-                          <Button onClick={() => handleQuestionChange(index + 1)} size="large" variant="contained" color="primary">Solve</Button>
+                          {
+                            isSolvedProblems[index] === false &&
+                            <Button onClick={() => handleQuestionChange(index + 1)} size="large" variant="contained" color="primary">Solve</Button>
+                          }
+                          {
+                            isSolvedProblems[index] === true &&
+                            <Button onClick={() => handleQuestionChange(index + 1)} size="large" variant="outlined" color="primary">Modify</Button>
+                          }
                         </TableCell>
                       </TableRow>
                     ))}
                 </TableBody>
               }
             </Table>
-            <Button size="large" variant="outlined" color="primary" className={classes.submit}>Submit</Button>
+            <Button onClick={() => handleSubmit()} size="large" variant="outlined" color="primary" className={classes.submit}>Submit</Button>
           </Paper>
         </TabPanel>
         {
@@ -406,20 +490,20 @@ export default function Start({ problems, user }) { // examId
               return (
                 <TabPanel value={value} index={index + 1}>
                   <Paper style={{paddingLeft: 50, paddingTop: 20, paddingBottom: 20, paddingRight: 50, maxHeight: windowHeight - 60, height: windowHeight - 60,  minWidth: windowWidth - 80, width: windowWidth - 80, overflow: 'auto'}}>
-                    <TestProblemCoding problem={problem} user={user} />
+                    <TestProblemCoding examId={examId} index={index} problem={problem} user={user} onIsSolvedProblemsChange={handleIsSolvedProblemsChange} onNextQuestion={handleNextQuestion} />
                   </Paper>
                 </TabPanel>
               )
             }
-            
+
               return (
                 <TabPanel value={value} index={index + 1}>
                   <Paper style={{paddingLeft: 50, paddingTop: 20, paddingBottom: 20, paddingRight: 50, maxHeight: windowHeight - 60, height: windowHeight - 60,  minWidth: windowWidth - 80, width: windowWidth - 80, overflow: 'auto'}}>
-                    <TestProblemMCQ problem={problem} user={user} />
+                    <TestProblemMCQ examId={examId} index={index} problem={problem} user={user} onIsSolvedProblemsChange={handleIsSolvedProblemsChange} onNextQuestion={handleNextQuestion} />
                   </Paper>
                 </TabPanel>
               )
-            
+
           })
         }
       </div>

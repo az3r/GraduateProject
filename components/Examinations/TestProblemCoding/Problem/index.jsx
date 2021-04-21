@@ -17,9 +17,9 @@ import AppBar from '@material-ui/core/AppBar';
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import { CKEditor } from '@ckeditor/ckeditor5-react';
 import CodeEditor from '@components/CodeEditor';
-import Swal from "sweetalert2";
-import { useRouter } from 'next/router';
-import withReactContent from 'sweetalert2-react-content';
+// import Swal from "sweetalert2";
+// import { useRouter } from 'next/router';
+// import withReactContent from 'sweetalert2-react-content';
 import CloseIcon from '@material-ui/icons/Close';
 import CheckIcon from '@material-ui/icons/Check';
 
@@ -145,9 +145,9 @@ const editorConfiguration = {
   toolbar: [ ],
 };
 
-export default function Problem({problem, user}) {
+export default function Problem({examId, index, problem, user, onIsSolvedProblemsChange, onNextQuestion}) {
   const classes = useStyles();
-  const router = useRouter();
+  // const router = useRouter();
 
   const [code, setCode] = useState(problem.code);
   const [value, setValue] = React.useState(0);
@@ -168,16 +168,16 @@ export default function Problem({problem, user}) {
     setTheme(event.target.value);
   };
 
-  useEffect(async () => {
+  useEffect(() => {
     // Get code from localStorage
-    const localStorageCode = localStorage.getItem(problem.id);
+    const localStorageCode = localStorage.getItem(`${examId}${index}Temporary`);
     if(localStorageCode != null){
       setCode(localStorageCode);
     }
   }, []);
 
   const handleCodeChange = (newCode) => {
-    localStorage.setItem(problem.id, newCode);
+    localStorage.setItem(`${examId}${index}Temporary`, newCode);
     setCode(newCode);
   };
 
@@ -199,7 +199,6 @@ export default function Problem({problem, user}) {
         testcases: problem.cases,
       });
 
-      console.log(response);
 
       if (response.failed === 0) {
         setRunCodeResult(response.results);
@@ -222,27 +221,14 @@ export default function Problem({problem, user}) {
 
   };
 
-  const MySwal = withReactContent(Swal);
 
   const handleSubmit = async () => {
-    if(user === null){
-      MySwal.fire({
-        title: <p>You have not logged in yet, please log into your account!</p>,
-        icon: 'info',
-        showCancelButton: true,
-        confirmButtonText: 'Login'
-      }).then((result) => {
-        if(result.isConfirmed){
-          router.push('/login');
-        }
-      });
-      return;
-    }
-
-    setDisplayRunCode('none');
     setDisplayWaiting('block');
+
+    let response = null;
+    let status = "";
     try {
-      const response = await submissions.test({
+      response = await submissions.test({
         lang: problem.language,
         code,
         testcases: problem.cases,
@@ -251,9 +237,7 @@ export default function Problem({problem, user}) {
       console.log(response);
 
       if (response.failed === 0) {
-        setRunCodeResult(response.results);
-        setRunCodeStatus("Accepted");
-        setNotification("You have passed the sample test cases. Click the submit button to run your code against all the test cases.");
+        status = "Accepted";
 
         await submissions.createProblemSubmission(
           user.uid,
@@ -267,9 +251,7 @@ export default function Problem({problem, user}) {
           });
         await users.updateScoreProblem(user.uid, problem.id, problem.score);
       } else {
-        setRunCodeResult(response.results);
-        setRunCodeStatus("Wrong Answer");
-        setNotification(`${response.failed}/${response.results.length} test cases failed`);
+        status = "Wrong Answer";
 
         await submissions.createProblemSubmission(
           user.uid,
@@ -283,10 +265,8 @@ export default function Problem({problem, user}) {
           });
       }
     } catch (e) {
-      setRunCodeStatus("Compilation Error");
-      setNotification("Check the compiler output, fix the error and try again.");
-      setRunCodeResult(e);
-
+      status = "Compilation Error";
+      response = e;
       await submissions.createProblemSubmission(
         user.uid,
         {
@@ -300,6 +280,24 @@ export default function Problem({problem, user}) {
     } finally {
       setDisplayWaiting('none');
       setDisplayRunCode('block');
+
+      // set IsSolvedProblems[index] = true;
+      onIsSolvedProblemsChange(index);
+
+      // save to LocalStorage
+      const result = {
+        problemId: problem.id,
+        problemName: problem.title,
+        isMCQ: false,
+        status,
+        details: {
+          code,
+          ...response
+        }
+      }
+      localStorage.setItem(`${examId}${index}`, JSON.stringify(result));
+
+      onNextQuestion();
     }
   };
 
@@ -454,28 +452,28 @@ export default function Problem({problem, user}) {
                     indicatorColor="primary"
                   >
                     {
-                      runCodeResult.map((result, index) => {
-                        if(index === value2){
+                      runCodeResult.map((result, index1) => {
+                        if(index1 === value2){
                           if(result.passed === false){
                             return (
-                              <Tab icon={<CloseIcon />} label={`Sample Test case ${index}`} style={{backgroundColor: 'white', color: 'red'}} />
+                              <Tab icon={<CloseIcon />} label={`Sample Test case ${index1}`} style={{backgroundColor: 'white', color: 'red'}} />
                             )
                           }
 
                           return (
-                            <Tab icon={<CheckIcon />} label={`Sample Test case ${index}`} style={{backgroundColor: 'white', color: 'green'}} />
+                            <Tab icon={<CheckIcon />} label={`Sample Test case ${index1}`} style={{backgroundColor: 'white', color: 'green'}} />
                           )
 
                         }
 
                         if(result.passed === false){
                           return (
-                            <Tab icon={<CloseIcon />} label={`Sample Test case ${index}`} style={{color: 'red'}} />
+                            <Tab icon={<CloseIcon />} label={`Sample Test case ${index1}`} style={{color: 'red'}} />
                           )
                         }
 
                         return (
-                          <Tab icon={<CheckIcon />} label={`Sample Test case ${index}`} style={{color: 'green'}} />
+                          <Tab icon={<CheckIcon />} label={`Sample Test case ${index1}`} style={{color: 'green'}} />
                         )
 
 
@@ -483,8 +481,8 @@ export default function Problem({problem, user}) {
                     }
                   </Tabs>
                   {
-                    runCodeResult.map((result, index) => (
-                      <TabPanel2 value={value2} index={index}>
+                    runCodeResult.map((result, index2) => (
+                      <TabPanel2 value={value2} index={index2}>
                         <Box style={{ paddingLeft: 50, paddingRight: 50, paddingTop: 50, overflow: 'auto', maxHeight: 350, maxWidth: 800 }}>
                           {
                             result.passed === false &&

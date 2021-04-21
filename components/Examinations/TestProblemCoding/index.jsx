@@ -30,7 +30,7 @@ const useStyles = makeStyles(() => ({
 }));
 
 
-export default function TestProblemCoding({ problem, user }) {   // , problemSubmissionHistory
+export default function TestProblemCoding({examId, index, problem, user, onIsSolvedProblemsChange, onNextQuestion }) {   // , problemSubmissionHistory
   const classes = useStyles();
 
   const [author, setAuthor] = useState({uid: "", name: ""});
@@ -68,7 +68,7 @@ export default function TestProblemCoding({ problem, user }) {   // , problemSub
               </Grid>
             </Hidden>
             <Grid item xs={12} md={9}>
-              <Problem problem={problem} user={user} />
+              <Problem examId={examId} index={index} problem={problem} user={user} onIsSolvedProblemsChange={onIsSolvedProblemsChange} onNextQuestion={onNextQuestion} />
             </Grid>
             <Grid item xs={12} md={3}>
               <Box className={classes.root}>

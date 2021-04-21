@@ -29,13 +29,40 @@ const styles = makeStyles({
   },
 });
 
-export default function TestProblemMCQ({problem}) {   // , user
+export default function TestProblemMCQ({examId, index, problem, onIsSolvedProblemsChange, onNextQuestion}) {  // , user
   const classes = styles();
   const [author, setAuthor] = useState({uid: "", name: ""});
   const [answer, setAnswer] = useState('');
 
+  useEffect(() => {
+    // get from LocalStorage
+    const resultJson = localStorage.getItem(`${examId}${index}`);
+
+    if(resultJson !== null){
+      const resultObject = JSON.parse(resultJson);
+      setAnswer(resultObject.details.selectedAnswer);
+    }
+  }, []);
+
   const handleAnswerChange = (event) => {
     setAnswer(event.target.value);
+
+    // set IsSolvedProblems[index] = true;
+    onIsSolvedProblemsChange(index);
+
+
+    // save to LocalStorage
+    const result = {
+      problemId: problem.id,
+      problemName: problem.name,
+      isMCQ: true,
+      status: problem.correct === event.target.value,
+      details: {
+        selectedAnswer: event.target.value,
+        correctAnswer: problem.correct
+    }};
+
+    localStorage.setItem(`${examId}${index}`, JSON.stringify(result));
   }
 
   useEffect(async () => {
@@ -45,6 +72,10 @@ export default function TestProblemMCQ({problem}) {   // , user
       setAuthor(problemAuthor);
     }
   }, []);
+
+  const handleContinue = () => {
+    onNextQuestion();
+  }
 
   return (
     <>
@@ -59,27 +90,39 @@ export default function TestProblemMCQ({problem}) {   // , user
             </Grid>
           </Hidden>
           <Grid item xs={12} md={9}>
-            <Box style={{marginLeft: 80}}>
+            <Box style={{marginLeft: 80}} borderRight={1} borderColor="green">
               <Typography variant="subtitle1">{HTMLReactParser(problem.question)}</Typography>
-              <Box style={{width: '100%'}}>
+              <Box style={{width: '60%'}}>
                 <Typography variant="subtitle1" style={{fontWeight: "bolder"}}>Choose your answer: </Typography>
                 <RadioGroup style={{marginLeft: 20}}  aria-label="gender" name="gender1" value={answer} onChange={handleAnswerChange}>
                   {
-                    problem.a !== '' && <FormControlLabel value="A" control={<Radio />} label={HTMLReactParser(problem.a)} />
+                    problem.a !== '' &&
+                      <Box border={1} pl={1} mt={1} borderRadius={10} borderColor="green">
+                        <FormControlLabel value="A" control={<Radio />} label={HTMLReactParser(problem.a)} />
+                      </Box>
                   }
                   {
-                    problem.b !== '' && <FormControlLabel value="B" control={<Radio />} label={HTMLReactParser(problem.b)} />
+                    problem.b !== '' &&
+                    <Box border={1} pl={1} mt={1} borderRadius={10} borderColor="green">
+                      <FormControlLabel value="B" control={<Radio />} label={HTMLReactParser(problem.b)} />
+                    </Box>
                   }
                   {
-                    problem.c !== '' && <FormControlLabel value="C" control={<Radio />} label={HTMLReactParser(problem.c)} />
+                    problem.c !== '' &&
+                    <Box border={1} pl={1} mt={1} borderRadius={10} borderColor="green">
+                      <FormControlLabel value="C" control={<Radio />} label={HTMLReactParser(problem.c)} />
+                    </Box>
                   }
                   {
-                    problem.d !== '' && <FormControlLabel value="D" control={<Radio />} label={HTMLReactParser(problem.d)} />
+                    problem.d !== '' &&
+                    <Box border={1} pl={1} mt={1} borderRadius={10} borderColor="green">
+                      <FormControlLabel value="D" control={<Radio />} label={HTMLReactParser(problem.d)} />
+                    </Box>
                   }
                 </RadioGroup>
               </Box>
               <br />
-              <Button variant="contained" color="primary">Continue</Button>
+              <Button onClick={() => handleContinue()} variant="contained" color="primary">Continue</Button>
             </Box>
           </Grid>
           <Grid item xs={12} md={3}>
@@ -112,7 +155,7 @@ export default function TestProblemMCQ({problem}) {   // , user
               <hr />
               <Box className={classes.info}>
                 <Typography style={{color: 'green', fontWeight: 'bolder'}}>Programing Language</Typography>
-                <Typography>{problem.language}</Typography>
+                <Typography>#</Typography>
               </Box>
             </Box>
           </Grid>
