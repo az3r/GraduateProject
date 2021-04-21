@@ -1,5 +1,6 @@
 import { Box, Breadcrumbs, Button, Divider, makeStyles, OutlinedInput, Typography } from '@material-ui/core';
 import Link from 'next/link';
+import { useRouter } from 'next/router';
 import React from 'react';
 
 const useStyles = makeStyles({
@@ -29,6 +30,8 @@ const useStyles = makeStyles({
 
 export default function GroupExaminations(){
     const classes = useStyles();
+    const router = useRouter();
+    const {id} = router.query;
 
     return(
         <Box m={3}>
@@ -36,7 +39,7 @@ export default function GroupExaminations(){
                 <Link color="inherit" href="/company-groups">
                     Company groups
                 </Link>
-                <Typography color="textPrimary">1</Typography>
+                <Typography color="textPrimary">Current group</Typography>
 
                 <Typography color="textPrimary">Examinations</Typography>
             </Breadcrumbs>
@@ -49,7 +52,7 @@ export default function GroupExaminations(){
                 
             </Box>
             <Box display="flex" justifyContent="flex-end">  
-                <Button color="secondary" variant="contained" href="/company-groups/1/examinations/add">Add examination</Button>
+                <Button color="secondary" variant="contained" href={`/company-groups/${id}/examinations/add`}>Add examination</Button>
             </Box>
         </Box>
     );

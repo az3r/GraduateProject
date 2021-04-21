@@ -3,7 +3,7 @@ import { CKEditor } from '@ckeditor/ckeditor5-react';
 import CodeEditor from '@components/CodeEditor';
 import getTestCaseFromInputAndOutput, { getFormatResultFromFile, getInitialCode } from '@libs/client/business';
 import { test } from '@libs/client/submissions';
-import { Box, Button, Checkbox, FormControlLabel, Grid, IconButton, LinearProgress, makeStyles, NativeSelect, Slide, TextField, Tooltip, Typography } from '@material-ui/core';
+import { Box, Button, Checkbox, FormControlLabel, IconButton, LinearProgress, makeStyles, NativeSelect, Slide, TextField, Tooltip, Typography } from '@material-ui/core';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
@@ -13,7 +13,6 @@ import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import clsx from 'clsx';
 import React, { useState } from 'react';
-import Scrollspy from 'react-scrollspy';
 import HelpIcon from '@material-ui/icons/Help';
 
 
@@ -68,7 +67,7 @@ const useStyles = makeStyles((theme)=>({
 const Transition = React.forwardRef((props, ref) => <Slide direction="up" ref={ref} {...props} />);
 
 
-export default function CodingQuestionForm({onFormSubmit, propQuestion, displayScrollSpy})
+export default function CodingQuestionForm({onFormSubmit, propQuestion, isSaved})
 {
     const lang = propQuestion !== null ? propQuestion.language : "Csharp";
     const difficulty = propQuestion !== null ? propQuestion.difficulty : 0;
@@ -252,7 +251,8 @@ export default function CodingQuestionForm({onFormSubmit, propQuestion, displayS
             test: resultMessage,
             isTesting: false,
             testResult: result.failed === 1,
-            isTestSuccess: passed
+            isTestSuccess: passed,
+            message: ''
         })
 
     }
@@ -353,11 +353,11 @@ export default function CodingQuestionForm({onFormSubmit, propQuestion, displayS
                 message: 'Score file for test cases must be submitted'});
             return false;
         }
-        // if(!message.isTestSuccess)
-        // {
-        //     setMessage({...message, message: 'Problem must be tested successfully with a simple test case before submitting'});
-        //     return false;
-        // }
+        if(!message.isTestSuccess)
+        {
+            setMessage({...message, message: 'Problem must be tested successfully with a simple test case before submitting'});
+            return false;
+        }
         return true;
     }
 
@@ -376,231 +376,212 @@ export default function CodingQuestionForm({onFormSubmit, propQuestion, displayS
         }
     }
     return(
-        <Grid container direction="row">
-            <Grid item lg={displayScrollSpy ? 9 : 12}>
-                <form onSubmit={handleClickSubmit}>
-                   <Box className={classes.whiteBackground} boxShadow={2} p={2} m={3}>
-                        <Box p={2} m={3} id="section-1"> 
-                            <Typography variant="h5">* Enter title: </Typography>
-                            <TextField
-                                name="title"
-                                value={question.title}
-                                onChange={handleChangeTitle}
-                                fullWidth
-                                error = {message.title}
-                                helperText="Problem title must not be empty"
-                                />
-                        </Box>        
-                        <Box p={2} m={3} id="section-2">
-                            <Typography variant="h5">* Enter content: </Typography>
-                            <CKEditor
-                                editor={ ClassicEditor }
-                                data={question.content}
-                                onChange={handleChangeContent} />
-                            <p style={{fontSize: "0.75rem", color: 'rgba(0, 0, 0, 0.54)'}} className={message.content ? classes.error : null }>Problem content must not be empty</p>
-                        </Box>
-                
-                        <Box p={2} m={3} id="section-3">
-                            <Typography variant="h5">* Choose level of difficulty: </Typography>
-                            <NativeSelect 
-                                value={question.difficulty}
-                                onChange={handleChangeDifficulty}>                             
-                                    <option value={0}>Easy</option>
-                                    <option value={1}>Medium</option>
-                                    <option value={2}>Hard</option>
-                            </NativeSelect>
-                        </Box>
-
-                        <Box p={2} m={3} id="section-5">
-                            <Typography variant="h5">* Choose programming language: </Typography>
-                            <NativeSelect
-                                value={question.language}
-                                onChange={handleChangeLanguague} >                                   
-                                    <option value="Csharp">C#</option>                                
-                                    <option value="Java">Java</option>                            
-                                    <option value="Python">Python</option>
-                            </NativeSelect>
-                        </Box>
-                    </Box>
-
-                    <Box className={classes.whiteBackground} boxShadow={2} p={2} m={3} id="section-6">
-                        <Box p={2} m={3}>
-                            <Typography variant="h5">* Enter code: </Typography>
-                            <ul>
-                                <li><Typography>Step 1: Write full your code in the coding editor</Typography></li>
-                                <li><Typography>Step 2: Enter a simple input and output test case to verify your code</Typography></li>
-                                <li><Typography>Step 3: Click Test code button to test your code and input, output</Typography></li>
-                            </ul>
-                            <CodeEditor language={question.language}  code={question.code} onCodeChange={handleOnChangeCode} width="600" theme="xcode" />
-                            <p style={{fontSize: "0.75rem", color: 'rgba(0, 0, 0, 0.54)'}} className={message.code ? classes.error : null }>Problem code must not be empty</p>
-                        </Box>
-                        <Box p={2} m={3}>
-                            <Typography variant="h5">* Test your code with a simple test case</Typography>
-                            <Box m={1}>
-                                <TextField multiline
-                                    rows={3} 
-                                    value={question.simpleTest.input}
-                                    label="Enter simple input" 
-                                    name="simpleIn" 
-                                    onChange={handleChangeSimpleTest}
-                                    variant="outlined" 
-                                    error={message.simpleInput}
-                                    />
-                                <TextField multiline
-                                    rows={3} 
-                                    value={question.simpleTest.output}
-                                    label="Enter simple output" 
-                                    name="simpleOut" 
-                                    onChange={handleChangeSimpleTest} 
-                                    variant="outlined" 
-                                    error={message.simpleOutput}
-                                    />
-                               
-                            </Box>
-                            {
-                                message.isTesting ?
-                                <Box m={1}>
-                                    <LinearProgress style={{width : 409.34}} />
-                                </Box> : null 
-                            }
-                            <Box m={1}>
-                                <Button color="primary" variant="outlined" onClick={handleTestCode}>Test code</Button>
-                            </Box>
-                            <Box m={1}>
-                                <pre style={{fontSize: "1rem"}} className={clsx({
-                                    [classes.textFail] : message.testResult,
-                                    [classes.textSuccess] : !message.testResult
-                                })}>{message.test}</pre>
-                            </Box>
-                        </Box>
-                    </Box>
-
-                    <Box className={classes.whiteBackground} boxShadow={2} p={2} m={3} id="section-7">
-                        <Box p={2} m={3} >
-                            <Typography variant="h5">Submit input file: </Typography>
-                            <TextField 
-                                type="file" 
-                                accept=".txt" 
-                                name="input" 
-                                onChange={handleChangeTestCaseFiles}
-                                error={message.input}
-                                helperText="Input file for test cases must be submitted"/>
-                        </Box>
-                        <Box p={2} m={3}>
-                            <Typography variant="h5">Submit expected output file: </Typography>
-                            <TextField 
-                                type="file" 
-                                accept=".txt" 
-                                name="output" 
-                                onChange={handleChangeTestCaseFiles}
-                                error={message.output}
-                                helperText="Output file for test cases must be submitted"/>
-
-                        </Box>
-                        <Box p={2} m={3}>
-                            <Typography variant="h5">Submit test cases&apos;s scores file: </Typography>
-                            <TextField 
-                                type="file" 
-                                accept=".txt" 
-                                name="score" 
-                                onChange={handleChangeTestCaseFiles}
-                                error={message.casesScore}
-                                helperText="Score file for test cases must be submitted"/>
-                        </Box>
-
-                        <Box p={2} m={3}>
-                            <Button color="secondary" variant="outlined" onClick={handleClickOpen}>See submitted test cases</Button>
-                            <Dialog
-                                open={open}
-                                TransitionComponent={Transition}
-                                keepMounted
-                                aria-labelledby="alert-dialog-slide-title"
-                                aria-describedby="alert-dialog-slide-description"
-                            >
-                                <DialogTitle id="alert-dialog-slide-title">Current test cases</DialogTitle>
-                                <DialogContent className={classes.testCasesDialog}>
-                                    <DialogContentText id="alert-dialog-slide-description">
-                                    {
-                                        question.cases  ?
-                                            <div className={classes.root}>
-                                                <Tabs
-                                                    orientation="vertical"
-                                                    variant="scrollable"
-                                                    value={valueTab}
-                                                    onChange={handleChangeTab}
-                                                    aria-label="Vertical tabs example"
-                                                    className={classes.tabs}
-                                                >
-                                                    {
-                                                        question.cases.map((_,index)=>(
-                                                            <Tab 
-                                                            label={`Test case ${index+1}`} 
-                                                            {...a11yProps(index)} />
-                                                        ))
-                                                    }
-                                                </Tabs>
-                                                {
-                                                    question.cases.map((item,idx)=>(
-                                                        <TabPanel value={valueTab} index={idx}>
-                                                            <Typography>Test case {idx+1}:</Typography>
-                                                            <pre>{`   {\n     input: ${item.input}\n     output: ${item.output}\n     score: ${item.score}\n   }`}</pre>
-                                                        </TabPanel>
-                                                    ))
-                                                }
-                                            </div>
-                                        : <Typography>There are no records for list of question</Typography>
-                                    }
-                                    </DialogContentText>
-                                </DialogContent>
-                                <DialogActions>
-                                    <Button onClick={handleClose} color="primary">
-                                        Close
-                                    </Button>
-                                </DialogActions>
-                            </Dialog>
-                        </Box>
-                    </Box>
-                    <Box display="flex" justifyContent="center" className={classes.whiteBackground} boxShadow={2} p={2} m={3} id="section-8">
-                        <FormControlLabel
-                            control={<Checkbox checked={question.published} onChange={handleTickPublished} name="checkedA" />}
-                            label="Is published?"
+    <Box>
+        <form onSubmit={handleClickSubmit}>
+            <Box className={classes.whiteBackground} boxShadow={2} p={2} m={3}>
+                <Box p={2} m={3} id="CP-1"> 
+                    <Typography variant="h5">* Enter title: </Typography>
+                    <TextField
+                        name="title"
+                        value={question.title}
+                        onChange={handleChangeTitle}
+                        fullWidth
+                        error = {message.title}
+                        helperText="Problem title must not be empty"
                         />
-                        <Tooltip title="When you publish, this question will be showed showed in Problemsm, and users can access to solve this problem without permission.">
-                            <IconButton aria-label="delete">
-                                <HelpIcon />
-                            </IconButton>
-                        </Tooltip>
+                </Box>        
+                <Box p={2} m={3} id="CP-2">
+                    <Typography variant="h5">* Enter content: </Typography>
+                    <CKEditor
+                        editor={ ClassicEditor }
+                        data={question.content}
+                        onChange={handleChangeContent} />
+                    <p style={{fontSize: "0.75rem", color: 'rgba(0, 0, 0, 0.54)'}} className={message.content ? classes.error : null }>Problem content must not be empty</p>
+                </Box>
+        
+                <Box p={2} m={3} id="CP-3">
+                    <Typography variant="h5">* Choose level of difficulty: </Typography>
+                    <NativeSelect 
+                        value={question.difficulty}
+                        onChange={handleChangeDifficulty}>                             
+                            <option value={0}>Easy</option>
+                            <option value={1}>Medium</option>
+                            <option value={2}>Hard</option>
+                    </NativeSelect>
+                </Box>
+
+                <Box p={2} m={3} id="CP-4">
+                    <Typography variant="h5">* Choose programming language: </Typography>
+                    <NativeSelect
+                        value={question.language}
+                        onChange={handleChangeLanguague} >                                   
+                            <option value="Csharp">C#</option>                                
+                            <option value="Java">Java</option>                            
+                            <option value="Python">Python</option>
+                    </NativeSelect>
+                </Box>
+            </Box>
+
+            <Box className={classes.whiteBackground} boxShadow={2} p={2} m={3} id="CP-5">
+                <Box p={2} m={3}>
+                    <Typography variant="h5">* Enter code: </Typography>
+                    <ul>
+                        <li><Typography>Step 1: Write full your code in the coding editor</Typography></li>
+                        <li><Typography>Step 2: Enter a simple input and output test case to verify your code</Typography></li>
+                        <li><Typography>Step 3: Click Test code button to test your code and input, output</Typography></li>
+                    </ul>
+                    <CodeEditor language={question.language}  code={question.code} onCodeChange={handleOnChangeCode} width="600" theme="xcode" />
+                    <p style={{fontSize: "0.75rem", color: 'rgba(0, 0, 0, 0.54)'}} className={message.code ? classes.error : null }>Problem code must not be empty</p>
+                </Box>
+                <Box p={2} m={3}>
+                    <Typography variant="h5">* Test your code with a simple test case</Typography>
+                    <Box m={1}>
+                        <TextField multiline
+                            rows={3} 
+                            value={question.simpleTest.input}
+                            label="Enter simple input" 
+                            name="simpleIn" 
+                            onChange={handleChangeSimpleTest}
+                            variant="outlined" 
+                            error={message.simpleInput}
+                            />
+                        <TextField multiline
+                            rows={3} 
+                            value={question.simpleTest.output}
+                            label="Enter simple output" 
+                            name="simpleOut" 
+                            onChange={handleChangeSimpleTest} 
+                            variant="outlined" 
+                            error={message.simpleOutput}
+                            />
+                        
                     </Box>
-                    <Box display="flex" justifyContent="center">
-                        <Typography className={classes.error}>{message.message}</Typography>
+                    {
+                        message.isTesting ?
+                        <Box m={1}>
+                            <LinearProgress style={{width : 409.34}} />
+                        </Box> : null 
+                    }
+                    <Box m={1}>
+                        <Button color="primary" variant="outlined" onClick={handleTestCode}>Test code</Button>
                     </Box>
-                    <Box display="flex" justifyContent="center" m={3} id="section-8">
-                        <Button color="primary" variant="contained" type="submit">Submit</Button>
+                    <Box m={1}>
+                        <pre style={{fontSize: "1rem"}} className={clsx({
+                            [classes.textFail] : message.testResult,
+                            [classes.textSuccess] : !message.testResult
+                        })}>{message.test}</pre>
                     </Box>
-                </form>
-            </Grid>
+                </Box>
+            </Box>
+
+            <Box className={classes.whiteBackground} boxShadow={2} p={2} m={3} id="CP-6">
+                <Box p={2} m={3} >
+                    <Typography variant="h5">Submit input file: </Typography>
+                    <TextField 
+                        type="file" 
+                        accept=".txt" 
+                        name="input" 
+                        onChange={handleChangeTestCaseFiles}
+                        error={message.input}
+                        helperText="Input file for test cases must be submitted"/>
+                </Box>
+                <Box p={2} m={3}>
+                    <Typography variant="h5">Submit expected output file: </Typography>
+                    <TextField 
+                        type="file" 
+                        accept=".txt" 
+                        name="output" 
+                        onChange={handleChangeTestCaseFiles}
+                        error={message.output}
+                        helperText="Output file for test cases must be submitted"/>
+
+                </Box>
+                <Box p={2} m={3}>
+                    <Typography variant="h5">Submit test cases&apos;s scores file: </Typography>
+                    <TextField 
+                        type="file" 
+                        accept=".txt" 
+                        name="score" 
+                        onChange={handleChangeTestCaseFiles}
+                        error={message.casesScore}
+                        helperText="Score file for test cases must be submitted"/>
+                </Box>
+
+                <Box p={2} m={3}>
+                    <Button color="secondary" variant="outlined" onClick={handleClickOpen}>See submitted test cases</Button>
+                    <Dialog
+                        open={open}
+                        TransitionComponent={Transition}
+                        keepMounted
+                        aria-labelledby="alert-dialog-slide-title"
+                        aria-describedby="alert-dialog-slide-description"
+                    >
+                        <DialogTitle id="alert-dialog-slide-title">Current test cases</DialogTitle>
+                        <DialogContent className={classes.testCasesDialog}>
+                            <DialogContentText id="alert-dialog-slide-description">
+                            {
+                                question.cases  ?
+                                    <div className={classes.root}>
+                                        <Tabs
+                                            orientation="vertical"
+                                            variant="scrollable"
+                                            value={valueTab}
+                                            onChange={handleChangeTab}
+                                            aria-label="Vertical tabs example"
+                                            className={classes.tabs}
+                                        >
+                                            {
+                                                question.cases.map((_,index)=>(
+                                                    <Tab 
+                                                    label={`Test case ${index+1}`} 
+                                                    {...a11yProps(index)} />
+                                                ))
+                                            }
+                                        </Tabs>
+                                        {
+                                            question.cases.map((item,idx)=>(
+                                                <TabPanel value={valueTab} index={idx}>
+                                                    <Typography>Test case {idx+1}:</Typography>
+                                                    <pre>{`   {\n     input: ${item.input}\n     output: ${item.output}\n     score: ${item.score}\n   }`}</pre>
+                                                </TabPanel>
+                                            ))
+                                        }
+                                    </div>
+                                : <Typography>There are no records for list of question</Typography>
+                            }
+                            </DialogContentText>
+                        </DialogContent>
+                        <DialogActions>
+                            <Button onClick={handleClose} color="primary">
+                                Close
+                            </Button>
+                        </DialogActions>
+                    </Dialog>
+                </Box>
+            </Box>
             {
-                displayScrollSpy ? 
-                <Grid item lg={3}>
-                    <div className={classes.displayScrollSpy}>
-                        <Typography variant="h6">Content:</Typography>
-                        <Scrollspy className={classes.listContentStyle}
-                        items={ ['section-1', 'section-2', 'section-3', 'section-4', 'section-5', 'section-6', 'section-7', 'section-8'] } currentClassName={classes.isCurrent}>
-                            <li className={classes.listItem}><a href="#section-1" className={classes.contentScrollSpy}>Enter title</a></li>
-                            <li className={classes.listItem}><a href="#section-2" className={classes.contentScrollSpy}>Enter content</a></li>
-                            <li className={classes.listItem}><a href="#section-3" className={classes.contentScrollSpy}>Choose level of difficulty</a></li>
-                            <li className={classes.listItem}><a href="#section-4" className={classes.contentScrollSpy}>Enter score</a></li>
-                            <li className={classes.listItem}><a href="#section-5" className={classes.contentScrollSpy}>Choose programming language</a></li>
-                            <li className={classes.listItem}><a href="#section-6" className={classes.contentScrollSpy}>Enter code and test with a simple cases</a></li>
-                            <li className={classes.listItem}><a href="#section-7" className={classes.contentScrollSpy}>Submit input/output files and enter score for each of cases</a></li>
-                            <li className={classes.listItem}><a href="#section-8" className={classes.contentScrollSpy}>Submit problem and finish</a></li>
-                        </Scrollspy>
-                    </div>
-                </Grid>
+                isSaved ? 
+                <Box display="flex" justifyContent="center" className={classes.whiteBackground} boxShadow={2} p={2} m={3} id="CP-7">
+                    <FormControlLabel
+                        control={<Checkbox checked={question.published} onChange={handleTickPublished} name="checkedA" />}
+                        label="Is published?"
+                    />
+                    <Tooltip title="When you publish, this question will be showed in Problems, and users can access to solve this problem without any permission.">
+                        <IconButton aria-label="delete">
+                            <HelpIcon />
+                        </IconButton>
+                    </Tooltip>
+                </Box>
                 : null
             }
-        </Grid>
-    );
+            <Box display="flex" justifyContent="center">
+                <Typography className={classes.error}>{message.message}</Typography>
+            </Box>
+            <Box display="flex" justifyContent="center" m={3} id="CP-8">
+                <Button color="primary" variant="contained" type="submit">Submit</Button>
+            </Box>
+        </form>
+    </Box>);
 }
 
 function TabPanel(props) {

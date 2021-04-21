@@ -1,6 +1,7 @@
 import { Box, Breadcrumbs, Button, Divider, makeStyles, OutlinedInput, Select, Typography } from '@material-ui/core';
 import React, { useState } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/router';
 
 
 
@@ -32,6 +33,8 @@ const useStyles = makeStyles({
 export default function GroupQuestionsBank(){
     const classes = useStyles();
     const [type,setType] = useState(0)
+    const router = useRouter();
+    const {id} = router.query;
 
     const handleChangeType = (e)=>{
         setType(e.target.value);
@@ -42,7 +45,7 @@ export default function GroupQuestionsBank(){
                 <Link color="inherit" href="/company-groups">
                     Company groups
                 </Link>
-                <Typography color="textPrimary">1</Typography>
+                <Typography color="textPrimary">Current group</Typography>
 
                 <Typography color="textPrimary">Questions bank</Typography>
             </Breadcrumbs>
@@ -65,7 +68,7 @@ export default function GroupQuestionsBank(){
                 </Select>
             </Box>
             <Box display="flex" justifyContent="flex-end">  
-                <Link href="/company-groups/1/questions-bank/add">
+                <Link href={`/company-groups/${id}/questions-bank/add`}>
                     <Button color="secondary" variant="contained">Add question</Button>
                 </Link>
             </Box>

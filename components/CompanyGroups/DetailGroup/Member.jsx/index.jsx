@@ -10,7 +10,7 @@ export default function GroupMember(){
                 <Link color="inherit" href="/company-groups">
                     Company groups
                 </Link>
-                <Typography color="textPrimary">1</Typography>
+                <Typography color="textPrimary">Current group</Typography>
 
                 <Typography color="textPrimary">Group members</Typography>
             </Breadcrumbs>

@@ -5,12 +5,13 @@ import { useRouter } from 'next/router';
 import CompanyGroups from '@components/CompanyGroups';
 import AppLayout from '@components/Layout';
 import { find } from '@libs/client/users';
+import { get } from '@libs/client/companies';
 
-export default function Index({ user }) {
+export default function Index({ companyGroups }) {
   const router = useRouter();
   useEffect(() => {
-    if (Object.keys(user).length === 0) {
-      router.replace('/login');
+    if (companyGroups.length === 0) {
+      router.replace('/');
     }
   });
   return (
@@ -20,7 +21,7 @@ export default function Index({ user }) {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <AppLayout>
-        <CompanyGroups />
+        <CompanyGroups companyGroups={companyGroups || companyGroups} />
       </AppLayout>
     </>
   );
@@ -31,21 +32,23 @@ export async function getServerSideProps({ req }) {
 
   if (Object.keys(cookies).length !== 0) {
     if (cookies.user) {
-      const user = await find(JSON.parse(cookies.user).uid);
-      console.log(user);
+      const user = await get(JSON.parse(cookies.user).uid) || await find(JSON.parse(cookies.user).uid);
       if(user.role === 'company')
       {
         return {
           props: {
-            user: JSON.parse(cookies.user),
+            companyGroups: [user],
             },
         };
       }
+        // TODO
+        // get list company of user
+      
     }
   }
   return {
     props: {
-      user: '',
+      companyGroups: [],
     },
   };
 }

@@ -16,6 +16,10 @@ const useStyles = makeStyles({
     root: {
         backgroundColor: '#38424E',
         minHeight: '100%',
+        position: 'fixed',
+        top: 0,
+        zIndex: 0,
+        paddingTop: 64
     },
     background: {
       backgroundColor: "#ffffff",
@@ -25,6 +29,7 @@ const useStyles = makeStyles({
     },
     spaceMenu:{
         marginBottom: "15px",
+        zIndex: 1
     },
     selected: {
         color: '#1AC573',
@@ -39,23 +44,24 @@ const useStyles = makeStyles({
 export default function DetailGroup({selected,children})
 {
     const router = useRouter();
+    const {id} = router.query;
 
     const classes = useStyles();
 
     const goToIndexPage = () => {
-        router.replace('/company-groups/1');
+        router.replace(`/company-groups/${id}`);
     }
 
     const goToMembersPage = () => {
-        router.replace('/company-groups/1/members')
+        router.replace(`/company-groups/${id}/members`);
     }
 
     const goToQuestionsBankPage = () => {
-        router.replace('/company-groups/1/questions-bank')
+        router.replace(`/company-groups/${id}/questions-bank`);
     }
 
     const goToExaminationsPage = () => {
-        router.replace('/company-groups/1/examinations');
+        router.replace(`/company-groups/${id}/examinations`);
     }
     return(
         <Grid container>

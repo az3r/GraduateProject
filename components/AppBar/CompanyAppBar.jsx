@@ -45,23 +45,8 @@ export default function MemberAppBar() {
   const anchorRef = React.useRef(null);
 
   return (
-    <AppBar position="static">
+    <AppBar position="static" style={{position: 'relative',zIndex:1}}>
       <Toolbar className={styles.menu}>
-        <Link href="/">
-          <Typography className={styles.title} variant="h5">
-            Smart Coder
-          </Typography>
-        </Link>
-        <Link href="/">
-          <MenuItem>
-            <Typography variant="h6">Problems</Typography>
-          </MenuItem>
-        </Link>
-        <Link href="/examination">
-          <MenuItem>
-            <Typography variant="h6">Examinations</Typography>
-          </MenuItem>
-        </Link>
         <Link href="/company-groups">
           <MenuItem>
             <Typography variant="h6">Company Groups</Typography>

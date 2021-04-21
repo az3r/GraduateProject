@@ -13,7 +13,7 @@ import Link from 'next/link';
 function GuestAppBar() {
   const styles = useStyles();
   return (
-    <AppBar position="static">
+    <AppBar position="static"  style={{position: 'relative',zIndex:1}}>
       <Toolbar>
         <Link href="/">
           <Typography className={styles.title} variant="h5">

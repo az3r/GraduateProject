@@ -48,7 +48,7 @@ export default function NewQuestionForExamination({onFormSubmit}){
             <Divider/>
             {
                 type === 1 ? 
-                <CodingQuestionForm onFormSubmit={handleSubmitForm} propQuestion={null} displayScrollSpy={false}/>
+                <CodingQuestionForm onFormSubmit={handleSubmitForm} propQuestion={null} isSaved={checked}/>
                 : 
                 <MultipleChoiceForm onFormSubmit={handleSubmitForm} propQuestion={null}/>
             }

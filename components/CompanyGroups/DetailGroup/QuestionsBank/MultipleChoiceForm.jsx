@@ -1,8 +1,7 @@
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import { CKEditor } from '@ckeditor/ckeditor5-react';
-import { Box, Button, FormControlLabel, Grid, makeStyles, NativeSelect, Radio, RadioGroup, TextField, Typography } from '@material-ui/core';
+import { Box, Button, FormControlLabel, makeStyles, NativeSelect, Radio, RadioGroup, TextField, Typography } from '@material-ui/core';
 import React, { useState } from 'react';
-import Scrollspy from 'react-scrollspy'
 
 
 const useStyles = makeStyles({
@@ -44,7 +43,7 @@ const useStyles = makeStyles({
   });
 
 
-export default function MultipleChoiceForm({onFormSubmit, propQuestion, displayScrollSpy})
+export default function MultipleChoiceForm({onFormSubmit, propQuestion})
 {
     const classes = useStyles();
 
@@ -212,121 +211,100 @@ export default function MultipleChoiceForm({onFormSubmit, propQuestion, displayS
             correctIndices: question.correct });
     }
     return(
-        <Grid container direction="row">
-            <Grid item lg={ displayScrollSpy ? 9 : 12}>
-                <form onSubmit={handleClickSubmit}>
-                    <Box boxShadow={2} p={2} m={3} className={classes.whiteBackground}>
-                        <Box p={2} m={3} id="section-1">
-                            <Typography variant="h5">Enter question: </Typography>
-                            <CKEditor
-                                editor={ ClassicEditor }
-                                data={question.question}
-                                onChange={handleChangeQuestion}/>
-                            <p style={{fontSize: "0.75rem", color: 'rgba(0, 0, 0, 0.54)'}} className={message.question ? classes.error : null }>Problem question must not be empty</p>
-                        </Box>
+    <Box>
+        <form onSubmit={handleClickSubmit}>
+            <Box boxShadow={2} p={2} m={3} className={classes.whiteBackground}>
+                <Box p={2} m={3} id="MC-1">
+                    <Typography variant="h5">Enter question: </Typography>
+                    <CKEditor
+                        editor={ ClassicEditor }
+                        data={question.question}
+                        onChange={handleChangeQuestion}/>
+                    <p style={{fontSize: "0.75rem", color: 'rgba(0, 0, 0, 0.54)'}} className={message.question ? classes.error : null }>Problem question must not be empty</p>
+                </Box>
 
-                        <Box p={2} m={3} id="section-2">
-                            <Typography variant="h5">Enter score: </Typography>
-                            <TextField 
-                                onChange={handleChangeScore}
-                                type="number"
-                                value={question.score}
-                                InputProps={{inputProps: {
-                                    min: 0,
-                                    max: 100
-                                }}}
-                                helperText="Problem score must be in range of 0<= score <= 100"
-                                error={message.score} />
-                        </Box>
+                <Box p={2} m={3} id="MC-2">
+                    <Typography variant="h5">Enter score: </Typography>
+                    <TextField 
+                        onChange={handleChangeScore}
+                        type="number"
+                        value={question.score}
+                        InputProps={{inputProps: {
+                            min: 0,
+                            max: 100
+                        }}}
+                        helperText="Problem score must be in range of 0 &le; score &le; 100"
+                        error={message.score} />
+                </Box>
 
-                        <Box p={2} m={3} id="section-3">
-                            <Typography variant="h5">Choose level of difficulty: </Typography>
-                            <NativeSelect
-                                value={question.value}
-                                onChange={handleChangeDifficulty}>
-                                    <option value={0}>Easy</option>
-                                    <option value={1}>Medium</option>
-                                    <option value={2}>Hard</option>
-                            </NativeSelect>
-                        </Box>
-                    </Box>
+                <Box p={2} m={3} id="MC-3">
+                    <Typography variant="h5">Choose level of difficulty: </Typography>
+                    <NativeSelect
+                        value={question.value}
+                        onChange={handleChangeDifficulty}>
+                            <option value={0}>Easy</option>
+                            <option value={1}>Medium</option>
+                            <option value={2}>Hard</option>
+                    </NativeSelect>
+                </Box>
+            </Box>
 
 
-                    <Box boxShadow={2} p={2} m={3} id="section-4" className={classes.whiteBackground}>
-                        <Box p={2} m={3}>
-                            <Typography variant="h5">Enter answer A: </Typography>
-                            <CKEditor
-                                editor={ ClassicEditor }
-                                data={question.a}
-                                onChange={handleChangeAnswerA}/>
-                            <p style={{fontSize: "0.75rem", color: 'rgba(0, 0, 0, 0.54)'}} className={message.a ? classes.error : null }>Answer A content must not be empty</p>
+            <Box boxShadow={2} p={2} m={3} id="MC-4" className={classes.whiteBackground}>
+                <Box p={2} m={3}>
+                    <Typography variant="h5">Enter answer A: </Typography>
+                    <CKEditor
+                        editor={ ClassicEditor }
+                        data={question.a}
+                        onChange={handleChangeAnswerA}/>
+                    <p style={{fontSize: "0.75rem", color: 'rgba(0, 0, 0, 0.54)'}} className={message.a ? classes.error : null }>Answer A content must not be empty</p>
 
-                        </Box>
+                </Box>
 
-                        <Box p={2} m={3}>
-                            <Typography variant="h5">Enter answer B: </Typography>
-                            <CKEditor
-                                editor={ ClassicEditor }
-                                data={question.b}
-                                onChange={handleChangeAnswerB}/>
-                            <p style={{fontSize: "0.75rem", color: 'rgba(0, 0, 0, 0.54)'}} className={message.b ? classes.error : null }>Answer B content must not be empty</p>
-                        </Box>
+                <Box p={2} m={3}>
+                    <Typography variant="h5">Enter answer B: </Typography>
+                    <CKEditor
+                        editor={ ClassicEditor }
+                        data={question.b}
+                        onChange={handleChangeAnswerB}/>
+                    <p style={{fontSize: "0.75rem", color: 'rgba(0, 0, 0, 0.54)'}} className={message.b ? classes.error : null }>Answer B content must not be empty</p>
+                </Box>
 
-                        <Box p={2} m={3}>
-                            <Typography variant="h5">Enter answer C: </Typography>
-                            <CKEditor
-                                editor={ ClassicEditor }
-                                data={question.c}
-                                onChange={handleChangeAnswerC}/>
-                            <p style={{fontSize: "0.75rem", color: 'rgba(0, 0, 0, 0.54)'}} className={message.c ? classes.error : null }>Answer C content must not be empty</p>
-                        </Box>
+                <Box p={2} m={3}>
+                    <Typography variant="h5">Enter answer C: </Typography>
+                    <CKEditor
+                        editor={ ClassicEditor }
+                        data={question.c}
+                        onChange={handleChangeAnswerC}/>
+                    <p style={{fontSize: "0.75rem", color: 'rgba(0, 0, 0, 0.54)'}} className={message.c ? classes.error : null }>Answer C content must not be empty</p>
+                </Box>
 
-                        <Box p={2} m={3}>
-                            <Typography variant="h5">Enter answer D: </Typography>
-                            <CKEditor
-                                editor={ ClassicEditor }
-                                data={question.d}
-                                onChange={handleChangeAnswerD}/>
-                            <p style={{fontSize: "0.75rem", color: 'rgba(0, 0, 0, 0.54)'}} className={message.d ? classes.error : null }>Answer D content must not be empty</p>                
-                        </Box>
+                <Box p={2} m={3}>
+                    <Typography variant="h5">Enter answer D: </Typography>
+                    <CKEditor
+                        editor={ ClassicEditor }
+                        data={question.d}
+                        onChange={handleChangeAnswerD}/>
+                    <p style={{fontSize: "0.75rem", color: 'rgba(0, 0, 0, 0.54)'}} className={message.d ? classes.error : null }>Answer D content must not be empty</p>                
+                </Box>
 
-                        <Box p={2} m={3} id="section-5">
-                            <Typography variant="h5">Choose correct answer: </Typography>
-                            <RadioGroup name="answer" value={question.correct} onChange={handleChangeCorrectAnswer}>
-                                <FormControlLabel value="A" control={<Radio />} label="A" />
-                                <FormControlLabel value="B" control={<Radio />} label="B" />
-                                <FormControlLabel value="C" control={<Radio />} label="C" />
-                                <FormControlLabel value="D" control={<Radio />} label="D" />
-                            </RadioGroup>
-                            <p style={{fontSize: "0.75rem", color: 'rgba(0, 0, 0, 0.54)'}} className={message.correct ? classes.error : null }>Correct answer must be chosen</p>                
-                        </Box>
-                    </Box>
-                    <Box display="flex" justifyContent="center">
-                        <Typography className={classes.error}>{message.message}</Typography>
-                    </Box>
-                    <Box display="flex" justifyContent="center" p={2} m={3} id="section-6">
-                        <Button color="primary" variant="contained" type="submit">Submit</Button>
-                    </Box>
-                </form>
-            </Grid>
-            {
-                displayScrollSpy ? 
-                <Grid item lg={3}>
-                    <div className={classes.displayScrollSpy}>
-                        <Typography variant="h6">Content:</Typography>
-                        <Scrollspy className={classes.listContentStyle}
-                        items={ ['section-1', 'section-2', 'section-3', 'section-4', 'section-4'] } currentClassName={classes.isCurrent}>
-                            <li className={classes.listItem}><a href="#section-1" className={classes.contentScrollSpy}>Enter question</a></li>
-                            <li className={classes.listItem}><a href="#section-2" className={classes.contentScrollSpy}>Enter score</a></li>
-                            <li className={classes.listItem}><a href="#section-3" className={classes.contentScrollSpy}>Choose level of difficulty</a></li>
-                            <li className={classes.listItem}><a href="#section-4" className={classes.contentScrollSpy}>Enter answers for A B C D</a></li>
-                            <li className={classes.listItem}><a href="#section-5" className={classes.contentScrollSpy}>Choose correct answer</a></li>
-                            <li className={classes.listItem}><a href="#section-6" className={classes.contentScrollSpy}>Submit problem and finish</a></li>
-                        </Scrollspy>
-                    </div>    
-                </Grid>
-                : null
-            }   
-        </Grid>
-    );
+                <Box p={2} m={3} id="MC-5">
+                    <Typography variant="h5">Choose correct answer: </Typography>
+                    <RadioGroup name="answer" value={question.correct} onChange={handleChangeCorrectAnswer}>
+                        <FormControlLabel value="A" control={<Radio />} label="A" />
+                        <FormControlLabel value="B" control={<Radio />} label="B" />
+                        <FormControlLabel value="C" control={<Radio />} label="C" />
+                        <FormControlLabel value="D" control={<Radio />} label="D" />
+                    </RadioGroup>
+                    <p style={{fontSize: "0.75rem", color: 'rgba(0, 0, 0, 0.54)'}} className={message.correct ? classes.error : null }>Correct answer must be chosen</p>                
+                </Box>
+            </Box>
+            <Box display="flex" justifyContent="center">
+                <Typography className={classes.error}>{message.message}</Typography>
+            </Box>
+            <Box display="flex" justifyContent="center" p={2} m={3} id="MC-6">
+                <Button color="primary" variant="contained" type="submit">Submit</Button>
+            </Box>
+        </form>
+    </Box>);
 }

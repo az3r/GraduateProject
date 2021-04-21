@@ -6,8 +6,8 @@ import ListItemAvatar from '@material-ui/core/ListItemAvatar';
 import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
 import ListItemText from '@material-ui/core/ListItemText';
 import Avatar from '@material-ui/core/Avatar';
-import GroupIcon from '@material-ui/icons/Group';
 import { Box, Button, Divider, Typography } from '@material-ui/core';
+import Link from 'next/link';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -36,59 +36,34 @@ const useStyles = makeStyles((theme) => ({
 
 
 
-export default function CompanyGroups(){
+export default function CompanyGroups({companyGroups}){
     const classes = useStyles();
     return (
-        <Box m={1} p={2} className={classes.root}>
-            <Typography variant="h5" >Your Company Groups</Typography>
-            <Divider/>
-            <List >
-            <ListItem className={classes.item}>
-                  <ListItemAvatar >
-                    <Avatar className={classes.groupIcon}>
-                      <GroupIcon/>
-                    </Avatar>
-                  </ListItemAvatar>
-                  <ListItemText
-                    primary="Single-line item"
-                  />
-                  <ListItemSecondaryAction>
-                    <Button variant="contained" color="secondary">
-                        Detail group
-                    </Button>
-                  </ListItemSecondaryAction>
-                </ListItem>
-                <ListItem className={classes.item}>
-                  <ListItemAvatar >
-                    <Avatar className={classes.groupIcon2}>
-                      <GroupIcon/>
-                    </Avatar>
-                  </ListItemAvatar>
-                  <ListItemText
-                    primary="Single-line item"
-                  />
-                  <ListItemSecondaryAction>
-                    <Button variant="contained" color="secondary">
-                        Detail group
-                    </Button>
-                  </ListItemSecondaryAction>
-                </ListItem>
-                <ListItem className={classes.item}>
-                  <ListItemAvatar >
-                    <Avatar className={classes.groupIcon}>
-                      <GroupIcon/>
-                    </Avatar>
-                  </ListItemAvatar>
-                  <ListItemText
-                    primary="Single-line item"
-                  />
-                  <ListItemSecondaryAction>
-                    <Button variant="contained" color="secondary">
-                        Detail group
-                    </Button>
-                  </ListItemSecondaryAction>
-                </ListItem>
-            </List>
+        <Box m={3} p={2} className={classes.root}>
+            <Box m={3} p={2}>
+              <Typography variant="h5" >Your company groups</Typography>
+              <Divider/>
+              <List >
+                { companyGroups.map((value)=>(
+                    <ListItem key={value.id} ListItem className={classes.item}>
+                      <ListItemAvatar >
+                        <Avatar src={value.avatar}/>
+                      </ListItemAvatar>
+                      <ListItemText
+                        primary={value.name}
+                      />
+                      <ListItemSecondaryAction>
+                        <Link href={`/company-groups/${value.id}`}>
+                          <Button variant="contained" color="secondary">
+                              Detail group
+                          </Button>
+                        </Link>
+                      </ListItemSecondaryAction>
+                    </ListItem>
+                  ))
+                }
+              </List>
+            </Box>
         </Box>
     );
 }
