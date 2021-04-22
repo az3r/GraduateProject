@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import clsx from 'clsx';
 import { Box, Button, List, ListItem, ListItemText, makeStyles, OutlinedInput, Select, Typography } from '@material-ui/core';
+import { getProblems } from '@libs/client/companies';
 
 const useStyles = makeStyles({
     container: {
@@ -23,34 +24,13 @@ const useStyles = makeStyles({
     }
 })
 
-export default function AddProblemFromLibrary({questionsList,handleAddQuestionFromLibrary}){
-    useEffect(()=>{
+export default function AddProblemFromLibrary({idCompany,questionsList,handleAddQuestionFromLibrary}){
+    const [problemsList,setProblemsList] = useState([]);
+    useEffect(async ()=>{
+        const problemsData = await getProblems(idCompany);
+        setProblemsList(problemsData);
+    },[]);
 
-    },[])
-    const list = [{
-        id: 123,
-        title: "abc"
-    },
-    {   
-        id: 456,
-        title: "xyz"
-    },
-    {   
-        id: 789,
-        title: "xyz"
-    },
-    {   
-        id: 135,
-        title: "xysssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssz"
-    },
-    {   
-        id: 246,
-        title: "xyz"
-    },
-    {   
-        id: 469,
-        title: "xyz"
-    }]
     const classes = useStyles();
     const [type,setType] = useState(0)
 
@@ -80,7 +60,7 @@ export default function AddProblemFromLibrary({questionsList,handleAddQuestionFr
                 </Select>
             </Box>
             <List>
-                {list.map((item) => (
+                {problemsList?.map((item) => (
                 <ListItem key={item.id}>
                     {/* <ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon> */}
                     <ListItemText 

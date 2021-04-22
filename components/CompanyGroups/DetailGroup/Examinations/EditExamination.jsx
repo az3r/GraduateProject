@@ -10,6 +10,9 @@ import CloseIcon from '@material-ui/icons/Close';
 import Slide from '@material-ui/core/Slide';
 import React, { useState } from 'react';
 import DeleteIcon from '@material-ui/icons/Delete';
+import { useRouter } from 'next/router';
+import { create, createMCQ } from '@libs/client/problems';
+import { FirebaseAuth } from '@libs/client/firebase';
 import AddProblemFromLibrary from './AddProblemFromLibrary';
 import NewQuestionForExamination from './NewQuestionForExamination';
 
@@ -102,6 +105,8 @@ export default function EditExamination({examProp}){
     const [openDrawer, setOpenDrawer] = useState(false);
     const [valueTab, setValue] = useState(0);
     const [open, setOpen] = useState(false);
+    const router = useRouter();
+    const {id} = router.query;
 
     const handleChange = (event, newValue) => {
         setValue(newValue);
@@ -180,17 +185,26 @@ export default function EditExamination({examProp}){
         setExam({...exam, questions: [...exam.questions, idProblem]});
     }
 
-    const onAddQuestion = (question, isSaved) => {
+    const onAddQuestion = async (question, isSaved) => {
         if(isSaved)
         {
-            // save to library
-            const idProblem = 1;
+            let idProblem = '';
+            if(!question.isMCQ)
+            {
+                idProblem = await create(FirebaseAuth().currentUser.uid,question);
+            }
+            else
+            {
+                idProblem = await createMCQ(FirebaseAuth().currentUser.uid,question);
+            }
             setExam({...exam, questions: [...exam.questions, idProblem]});
         }
         else
         {
             setExam({...exam, questions: [...exam.questions, question]});
         }
+        setOpen(false);
+
     }
 
     const handleDeleteQuestion = (index) => {
@@ -252,7 +266,7 @@ export default function EditExamination({examProp}){
                         editor={ ClassicEditor }
                         onChange={handleChangeContent}
                     />
-                    <p style={{fontSize: "0.75rem", color: 'rgba(0, 0, 0, 0.54)'}} className={message.content ? classes.error : null }>Examination content must not be empty</p>
+                    <Typography style={{fontSize: "0.75rem", color: 'rgba(0, 0, 0, 0.54)'}} className={message.content ? classes.error : null }>Examination content must not be empty</Typography>
                 </Box>
                 <Box m={3} p={2} id="section-22">
                     <Typography variant="h5">Enter password:</Typography>
@@ -280,7 +294,7 @@ export default function EditExamination({examProp}){
                             onChange={handleChangeSeconds}/>
                         <Typography>&nbsp;second(s)&nbsp;&nbsp;</Typography>
                     </Box>
-                    <p style={{fontSize: "0.75rem", color: 'rgba(0, 0, 0, 0.54)'}} className={message.duration ? classes.error : null }>Examination duration must be &gt; 0 second</p>
+                    <Typography style={{fontSize: "0.75rem", color: 'rgba(0, 0, 0, 0.54)'}} className={message.duration ? classes.error : null }>Examination duration must be &gt; 0 second</Typography>
                 </Box>
             </Box>
             <Box boxShadow={2} m={3} p={2} id="section-24" className={classes.whiteBackground}>
@@ -294,13 +308,13 @@ export default function EditExamination({examProp}){
                         Add new question
                     </Button>
                     <Drawer anchor="right" open={openDrawer} onClose={toggleDrawer(false)}>
-                        <AddProblemFromLibrary questionsList={exam.questions} handleAddQuestionFromLibrary={handleAddQuestionFromLibrary} />
+                        <AddProblemFromLibrary idCompany={id} questionsList={exam.questions} handleAddQuestionFromLibrary={handleAddQuestionFromLibrary} />
                     </Drawer>
                     <Dialog fullScreen open={open} onClose={handleClose} TransitionComponent={Transition}>
                         <AppBar className={classes.appBar} color="secondary">
                             <Toolbar>
                                 <Typography variant="h6" className={classes.title}>
-                                    Add/Edit question for examination
+                                    Add question for examination
                                 </Typography>
                                 <IconButton edge="start" color="inherit" onClick={handleClose} aria-label="close">
                                     <CloseIcon />

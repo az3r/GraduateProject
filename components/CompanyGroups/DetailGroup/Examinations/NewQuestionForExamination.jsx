@@ -1,4 +1,4 @@
-import { Box, Checkbox, Divider, Select, Typography } from '@material-ui/core';
+import { Box, Checkbox, Divider, FormControlLabel, Select, Typography } from '@material-ui/core';
 import React, { useState } from 'react';
 import CodingQuestionForm from '../QuestionsBank/CodingQuestionForm';
 import MultipleChoiceForm from '../QuestionsBank/MultipleChoiceForm';
@@ -35,13 +35,11 @@ export default function NewQuestionForExamination({onFormSubmit}){
                 </Select>
             </Box>
             <Box m={1} display="flex" justifyContent="center">
-                <Typography variant="h5">
-                    Save to library: 
-                </Typography>
-                <Checkbox
-                    checked={checked}
-                    onChange={handleChange}
-                    color="primary"
+                <FormControlLabel
+                        control={<Checkbox checked={checked}
+                                    onChange={handleChange}
+                                    color="primary" />}
+                        label="Save to company's questions library"
                 />
             </Box>
 

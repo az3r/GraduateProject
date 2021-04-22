@@ -214,6 +214,9 @@ export default function MultipleChoiceForm({onFormSubmit, propQuestion})
     <Box>
         <form onSubmit={handleClickSubmit}>
             <Box boxShadow={2} p={2} m={3} className={classes.whiteBackground}>
+                <Box m={3} p={2} display="flex" justifyContent="center">
+                    <Typography color="secondary" variant="h4">GENERAL INFORMATION SECTION</Typography>
+                </Box>
                 <Box p={2} m={3} id="MC-1">
                     <Typography variant="h5">Enter question: </Typography>
                     <CKEditor
@@ -251,6 +254,9 @@ export default function MultipleChoiceForm({onFormSubmit, propQuestion})
 
 
             <Box boxShadow={2} p={2} m={3} id="MC-4" className={classes.whiteBackground}>
+                <Box m={3} p={2} display="flex" justifyContent="center">
+                    <Typography color="secondary" variant="h4">ANSWERS SECTION</Typography>
+                </Box>
                 <Box p={2} m={3}>
                     <Typography variant="h5">Enter answer A: </Typography>
                     <CKEditor

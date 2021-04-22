@@ -373,12 +373,16 @@ export default function CodingQuestionForm({onFormSubmit, propQuestion, isSaved}
             delete formatedQuestion.output;
             delete formatedQuestion.casesScore;
             onFormSubmit(formatedQuestion);
+            setMessage({...message, isTestSuccess: false});
         }
     }
     return(
     <Box>
         <form onSubmit={handleClickSubmit}>
             <Box className={classes.whiteBackground} boxShadow={2} p={2} m={3}>
+                <Box m={3} p={2} display="flex" justifyContent="center">
+                    <Typography color="secondary" variant="h4">GENERAL INFORMATION SECTION</Typography>
+                </Box>
                 <Box p={2} m={3} id="CP-1"> 
                     <Typography variant="h5">* Enter title: </Typography>
                     <TextField
@@ -396,7 +400,7 @@ export default function CodingQuestionForm({onFormSubmit, propQuestion, isSaved}
                         editor={ ClassicEditor }
                         data={question.content}
                         onChange={handleChangeContent} />
-                    <p style={{fontSize: "0.75rem", color: 'rgba(0, 0, 0, 0.54)'}} className={message.content ? classes.error : null }>Problem content must not be empty</p>
+                    <Typography style={{fontSize: "0.75rem", color: 'rgba(0, 0, 0, 0.54)'}} className={message.content ? classes.error : null }>Problem content must not be empty</Typography>
                 </Box>
         
                 <Box p={2} m={3} id="CP-3">
@@ -423,6 +427,9 @@ export default function CodingQuestionForm({onFormSubmit, propQuestion, isSaved}
             </Box>
 
             <Box className={classes.whiteBackground} boxShadow={2} p={2} m={3} id="CP-5">
+                <Box m={3} p={2} display="flex" justifyContent="center">
+                    <Typography color="secondary" variant="h4">CODE SECTION</Typography>
+                </Box>
                 <Box p={2} m={3}>
                     <Typography variant="h5">* Enter code: </Typography>
                     <ul>
@@ -431,7 +438,7 @@ export default function CodingQuestionForm({onFormSubmit, propQuestion, isSaved}
                         <li><Typography>Step 3: Click Test code button to test your code and input, output</Typography></li>
                     </ul>
                     <CodeEditor language={question.language}  code={question.code} onCodeChange={handleOnChangeCode} width="600" theme="xcode" />
-                    <p style={{fontSize: "0.75rem", color: 'rgba(0, 0, 0, 0.54)'}} className={message.code ? classes.error : null }>Problem code must not be empty</p>
+                    <Typography style={{fontSize: "0.75rem", color: 'rgba(0, 0, 0, 0.54)'}} className={message.code ? classes.error : null }>Problem code must not be empty</Typography>
                 </Box>
                 <Box p={2} m={3}>
                     <Typography variant="h5">* Test your code with a simple test case</Typography>
@@ -475,6 +482,9 @@ export default function CodingQuestionForm({onFormSubmit, propQuestion, isSaved}
             </Box>
 
             <Box className={classes.whiteBackground} boxShadow={2} p={2} m={3} id="CP-6">
+                <Box m={3} p={2} display="flex" justifyContent="center">
+                    <Typography color="secondary" variant="h4">TEST CASES SECTION</Typography>
+                </Box>
                 <Box p={2} m={3} >
                     <Typography variant="h5">Submit input file: </Typography>
                     <TextField 
