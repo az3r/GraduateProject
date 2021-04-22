@@ -3,7 +3,7 @@ import Head from 'next/head';
 import {
   makeStyles,
   Grid,
-  Typography,
+  Typography, Box,
 } from '@material-ui/core';
 
 // import { route } from 'next/dist/next-server/server/router';
@@ -12,83 +12,42 @@ import {
 // import { calculateTotalExamTime } from '@libs/client/business';
 // import AppLayout from '../../components/Layout';
 import Paper from '@material-ui/core/Paper';
+import Button from '@material-ui/core/Button';
+import FormControl from '@material-ui/core/FormControl';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import Checkbox from '@material-ui/core/Checkbox';
+import FormGroup from '@material-ui/core/FormGroup';
+import FormHelperText from '@material-ui/core/FormHelperText';
 
 const useStyles = makeStyles({
-  // problemList: {
-  //   width: '100%',
-  //   overflow: 'auto',
-  //   maxHeight: '100vh',
-  // },
-  // problemBox: {
-  //   height: 100,
-  //   backgroundColor: 'white',
-  //   margin: 10,
-  //   borderColor: 'green',
-  //   display: 'flex',
-  //   justifyContent: 'space-between',
-  //   alignItems: 'center',
-  // },
-  // problemName: {
-  //   paddingLeft: 10,
-  //   paddingTop: 0,
-  //   marginTop: 0,
-  //   color: 'green',
-  // },
-  // decorDiv: {
-  //   marginLeft: 10,
-  //   display: 'inline',
-  //   fontWeight: 'bolder',
-  //   color: 'gray',
-  // },
-  // decorSpan: {
-  //   fontWeight: 'normal',
-  //   color: 'black',
-  // },
-  // examinationIntroduction: {
-  //   textAlign: 'center',
-  //   paddingTop: 35,
-  //   paddingBottom: 35,
-  //   // borderRadius: 20,
-  //   alignContent: 'center',
-  //   backgroundColor: '#960955',
-  //   color: 'white',
-  //   fontWeight: 'bolder',
-  //   fontSize: 20,
-  // },
-  // startButtonDiv: {
-  //   display: 'flex',
-  //   justifyContent: 'center',
-  //   alignContent: 'center',
-  // },
-  // duration: {
-  //   marginRight: 25,
-  //   padding: 5,
-  //   color: 'red',
-  //   fontWeight: 'bolder',
-  // },
-  // '@global': {
-  //   '*::-webkit-scrollbar': {
-  //     width: '0.4em'
-  //   },
-  //   '*::-webkit-scrollbar-track': {
-  //     '-webkit-box-shadow': 'inset 0 0 6px rgba(0,0,0,0.00)'
-  //   },
-  //   '*::-webkit-scrollbar-thumb': {
-  //     backgroundColor: 'rgba(0,0,0,.1)',
-  //     outline: '1px solid slategrey'
-  //   }
-  // }
+  welcome: {
+    marginTop: 100,
+  },
+  rules: {
+    marginTop: 100,
+  },
   infoKey: {
     color: 'gray',
   },
   infoValue: {
     color: 'darkgreen',
-  }
+  },
+  '@global': {
+    '*::-webkit-scrollbar': {
+      width: '0.4em'
+    },
+    '*::-webkit-scrollbar-track': {
+      '-webkit-box-shadow': 'inset 0 0 6px rgba(0,0,0,0.00)'
+    },
+    '*::-webkit-scrollbar-thumb': {
+      backgroundColor: 'rgba(0,0,0,.1)',
+      outline: '1px solid slategrey'
+    }
+  },
 });
 
 export default function Introduction() {  // { exam, user }
   const classes = useStyles();
-
   // const router = useRouter();
 
   const [windowHeight, setWindowHeight] = useState(0);
@@ -145,173 +104,90 @@ export default function Introduction() {  // { exam, user }
             <br />
             <Grid container>
               <Grid item xs={6} >
-                <Typography variant="h8" className={classes.infoKey}>Competition Duration</Typography>
+                <Typography variant="inherit" className={classes.infoKey}>Competition Duration</Typography>
                 <Typography variant="h6" className={classes.infoValue}>180 minutes</Typography>
               </Grid>
               <Grid item xs={6} >
-                <Typography variant="h8" className={classes.infoKey}>No. of questions</Typography>
+                <Typography variant="inherit" className={classes.infoKey}>No. of questions</Typography>
                 <Typography variant="h6" className={classes.infoValue}>4 questions</Typography>
               </Grid>
               <Grid item />
               <Grid item xs={6} >
-                <Typography variant="h8" className={classes.infoKey}>Starts at</Typography>
+                <Typography variant="inherit" className={classes.infoKey}>Starts at</Typography>
                 <Typography variant="h6" className={classes.infoValue}>3/8/2021 - 12:00AM</Typography>
               </Grid>
               <Grid item xs={6} >
-                <Typography variant="h8" className={classes.infoKey}>Ends at</Typography>
+                <Typography variant="inherit" className={classes.infoKey}>Ends at</Typography>
                 <Typography variant="h6" className={classes.infoValue}>3/10/2021 - 12:00AM</Typography>
               </Grid>
             </Grid>
-            {/* <Box> */}
-            {/*  <Typography variant="h6" style={{color: 'darkgray'}}>Sponsored By</Typography> */}
-            {/* </Box> */}
+            <br />
+            <br />
+             <Box>
+              <Typography variant="h6" style={{color: 'darkgray'}}>Sponsored By</Typography>
+               <br />
+               <Box style={{textAlign: 'center'}}>
+                 <img src="/coding.png" alt="coding icon" />
+               </Box>
+             </Box>
           </Paper>
         </Grid>
-        <Grid item xs={12} md={5}>
-          <div>Hello</div>
+        <Grid item xs={12} md={7}>
+          <Paper variant="outlined" square  style={{backgroundColor: 'lightgray', paddingLeft: 80, paddingTop: 80, paddingRight: 80, maxHeight: windowHeight, height: windowHeight, overflow: 'auto'}}>
+            <Box className={classes.welcome}>
+              <Typography variant="h5" style={{fontWeight: 'bolder'}}>Welcome!</Typography>
+              <br />
+              <Typography variant="subtitle1">
+                Welcome to HackerRank Black History Month Coding Challenge, a coding contest where your winnings help support a cause in need. Compete against top coders from around the world to give $500 to a U.S. charity that increases educational opportunities for underrepresented and under-resourced groups.
+              </Typography>
+            </Box>
+            <br />
+            <br />
+
+            <Box>
+              <Box style={{color: 'gray'}}>
+                <FormControl required error component="fieldset">
+                  <FormGroup aria-label="position" row>
+                    <FormControlLabel
+                      value="end"
+                      control={<Checkbox color="primary" />}
+                      label="I will not consult/copy code from any source including a website, book, or friend/colleague to complete these tests, though may reference language documentation or use an IDE that has code completion features."
+                      labelPlacement="end"
+                    />
+                  </FormGroup>
+                  <FormHelperText>Please accept the declaration statement to start the test.</FormHelperText>
+                </FormControl>
+              </Box>
+              <br />
+              {/* href or onclick */}
+              <Button variant="contained" color="primary">Let's Begin!</Button>
+            </Box>
+
+            <Box className={classes.rules}>
+              <Typography variant="h5" style={{fontWeight: 'bolder'}}>The Rules</Typography>
+              <br />
+              <Typography variant="subtitle1">
+                1. This contest is for individuals; teams are not allowed.
+              </Typography>
+              <br />
+              <Typography variant="subtitle1">
+                2. Any competitor found cheating will be disqualified and banned from future coding contests.
+              </Typography>
+              <br />
+              <Typography variant="subtitle1">
+                3. By participating and selecting "I'm interested in new job opportunities", you are indicating that you are willing to be considered for employment by companies using HackerRank for recruitment purposes.
+              </Typography>
+              <br />
+
+              <Typography variant="h6">Scoring:</Typography>
+              <Typography variant="subtitle1">
+                Participants are ranked by score. Your score is determined by the number of test cases your code submission successfully passes. If two participants have the same score, the tie is broken by the contestant with the lowest amount of time taken.
+              </Typography>
+              <br />
+            </Box>
+          </Paper>
         </Grid>
       </Grid>
-      {/* <AppLayout> */}
-      {/*  <Container component="dev"> */}
-      {/*    <h1>{exam.title}</h1> */}
-      {/*  </Container> */}
-      {/*  <hr /> */}
-      {/*  <Container component="dev"> */}
-      {/*    <Grid container spacing={3}> */}
-      {/*      <Grid item xs={12} md={8}> */}
-      {/*        <h1>Problems</h1> */}
-      {/*        <List className={classes.problemList}> */}
-      {/*          {exam.problems.map((problem, index) => ( */}
-      {/*            <Box */}
-      {/*              boxShadow={3} */}
-      {/*              tabIndex={index} */}
-      {/*              border={1} */}
-      {/*              className={classes.problemBox} */}
-      {/*            > */}
-      {/*              <Box> */}
-      {/*                {problem.title && ( */}
-      {/*                  <h2 className={classes.problemName}>{problem.title}</h2> */}
-      {/*                )} */}
-      {/*                {problem.question && ( */}
-      {/*                  <h2 className={classes.problemName}> */}
-      {/*                    Multiple Choice Question */}
-      {/*                  </h2> */}
-      {/*                )} */}
-      {/*                <div> */}
-      {/*                  <div className={classes.decorDiv}> */}
-      {/*                    Score:{' '} */}
-      {/*                    <span className={classes.decorSpan}> */}
-      {/*                      {problem.score} */}
-      {/*                    </span> */}
-      {/*                  </div> */}
-      {/*                  <div className={classes.decorDiv}> */}
-      {/*                    Difficulty:{' '} */}
-      {/*                    /!* <span className={classes.decorSpan}>{problem.difficulty}</span> *!/ */}
-      {/*                    {problem.difficulty === 0 && ( */}
-      {/*                      <Box */}
-      {/*                        component="span" */}
-      {/*                        display="inline" */}
-      {/*                        p="4px" */}
-      {/*                        borderRadius={16} */}
-      {/*                        color="white" */}
-      {/*                        pl={1} */}
-      {/*                        pr={1} */}
-      {/*                        bgcolor="green" */}
-      {/*                      > */}
-      {/*                        Easy */}
-      {/*                      </Box> */}
-      {/*                    )} */}
-      {/*                    {problem.difficulty === 1 && ( */}
-      {/*                      <Box */}
-      {/*                        component="span" */}
-      {/*                        display="inline" */}
-      {/*                        p="4px" */}
-      {/*                        borderRadius={16} */}
-      {/*                        color="white" */}
-      {/*                        pl={1} */}
-      {/*                        pr={1} */}
-      {/*                        bgcolor="orange" */}
-      {/*                      > */}
-      {/*                        Medium */}
-      {/*                      </Box> */}
-      {/*                    )} */}
-      {/*                    {problem.difficulty === 2 && ( */}
-      {/*                      <Box */}
-      {/*                        component="span" */}
-      {/*                        display="inline" */}
-      {/*                        p="4px" */}
-      {/*                        borderRadius={16} */}
-      {/*                        color="white" */}
-      {/*                        pl={1} */}
-      {/*                        pr={1} */}
-      {/*                        bgcolor="red" */}
-      {/*                      > */}
-      {/*                        Hard */}
-      {/*                      </Box> */}
-      {/*                    )} */}
-      {/*                  </div> */}
-      {/*                </div> */}
-      {/*              </Box> */}
-      {/*              <Box border={1} className={classes.duration}> */}
-      {/*                {`0${problem.minutes}`.slice(-2)} :{' '} */}
-      {/*                {`0${problem.seconds}`.slice(-2)} */}
-      {/*              </Box> */}
-      {/*            </Box> */}
-      {/*          ))} */}
-      {/*        </List> */}
-      {/*      </Grid> */}
-      {/*      <Grid item xs={12} md={4}> */}
-      {/*        <Box boxShadow={10} className={classes.examinationIntroduction}> */}
-      {/*          Examination Introduction */}
-      {/*        </Box> */}
-      {/*        <hr /> */}
-      {/*        <div style={{ fontWeight: 'bolder', color: 'blue' }}> */}
-      {/*          Time estimated:{' '} */}
-      {/*          <span style={{ fontWeight: 'normal', color: 'black' }}> */}
-      {/*            {calculateTotalExamTime(exam.minutes, exam.seconds)} */}
-      {/*          </span> */}
-      {/*        </div> */}
-      {/*        <div style={{ fontWeight: 'bolder', color: 'blue' }}> */}
-      {/*          Start Date:{' '} */}
-      {/*          <span style={{ fontWeight: 'normal', color: 'black' }}> */}
-      {/*            {exam.startAt} */}
-      {/*          </span> */}
-      {/*        </div> */}
-      {/*        <div style={{ fontWeight: 'bolder', color: 'blue' }}> */}
-      {/*          End Date:{' '} */}
-      {/*          <span style={{ fontWeight: 'normal', color: 'black' }}> */}
-      {/*            {exam.endAt} */}
-      {/*          </span> */}
-      {/*        </div> */}
-      {/*        <div style={{ fontWeight: 'bolder', color: 'blue' }}> */}
-      {/*          Content:{' '} */}
-      {/*          <span style={{ fontWeight: 'normal', color: 'black' }}> */}
-      {/*            {HTMLReactParser(exam.content)} */}
-      {/*          </span> */}
-      {/*        </div> */}
-      {/*        <div style={{ fontWeight: 'bolder', color: 'blue' }}> */}
-      {/*          Note:{' '} */}
-      {/*          <span style={{ fontWeight: 'normal', color: 'black' }}> */}
-      {/*            If you click &quot;Start&quot; button, you will start making */}
-      {/*            the examination. In addition, you won&apos;t pause or return */}
-      {/*            the previous question. */}
-      {/*          </span> */}
-      {/*        </div> */}
-      {/*        <div className={classes.startButtonDiv}> */}
-      {/*          <Button */}
-      {/*            size="large" */}
-      {/*            variant="contained" */}
-      {/*            color="primary" */}
-      {/*            // href={`/examination/start/${exam.id}`} */}
-      {/*            onClick={() => start(exam.id)} */}
-      {/*          > */}
-      {/*            START */}
-      {/*          </Button> */}
-      {/*        </div> */}
-      {/*      </Grid> */}
-      {/*    </Grid> */}
-      {/*  </Container> */}
-      {/* </AppLayout> */}
     </>
   );
 }
