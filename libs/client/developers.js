@@ -131,6 +131,10 @@ export async function getSolvedProblems(uid) {
     .collection(collections.solvedProblems)
     .get();
 
+  if (ids.docs.length === 0) {
+    return [];
+  }
+
   const problems = await Firestore()
     .collection(collections.problems)
     .where(
@@ -188,7 +192,7 @@ export async function getProblemSubmissions(developerId, problemId) {
     .orderBy('createdOn', 'desc')
     .get();
 
-  return snapshot.docs.map((doc) => transform(doc.data()));
+  return snapshot.docs.map((doc) => transform(doc));
 }
 
 export async function getAllExamResults(developerId) {

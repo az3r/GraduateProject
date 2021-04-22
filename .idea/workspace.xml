@@ -20,8 +20,15 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="73bd1854-2930-493b-bbd0-fb90442d9327" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/pages/examination/end/[id].jsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/components/Problems/Comment/index.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/Problems/Comment/index.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/components/Problems/Problem/index.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/Problems/Problem/index.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/components/Problems/Submissions/index.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/Problems/Submissions/index.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/libs/client/comments.js" beforeDir="false" afterPath="$PROJECT_DIR$/libs/client/comments.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/libs/client/developers.js" beforeDir="false" afterPath="$PROJECT_DIR$/libs/client/developers.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/libs/client/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/libs/client/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pages/index.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/pages/index.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pages/problem/[id].jsx" beforeDir="false" afterPath="$PROJECT_DIR$/pages/problem/[id].jsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -218,10 +225,10 @@
       <screen x="1366" y="0" width="1366" height="738" />
     </state>
     <state x="1705" y="165" key="run.anything.popup/0.0.1366.738/1366.0.1366.738@1366.0.1366.738" timestamp="1618225759996" />
-    <state x="1712" y="59" width="672" height="678" key="search.everywhere.popup" timestamp="1618719357293">
+    <state x="1712" y="59" width="672" height="678" key="search.everywhere.popup" timestamp="1619086469628">
       <screen x="1366" y="0" width="1366" height="738" />
     </state>
     <state x="346" y="59" width="672" height="678" key="search.everywhere.popup/0.0.1366.738/1366.0.1366.738@0.0.1366.738" timestamp="1618631681452" />
-    <state x="1712" y="59" width="672" height="678" key="search.everywhere.popup/0.0.1366.738/1366.0.1366.738@1366.0.1366.738" timestamp="1618719357293" />
+    <state x="1712" y="59" width="672" height="678" key="search.everywhere.popup/0.0.1366.738/1366.0.1366.738@1366.0.1366.738" timestamp="1619086469628" />
   </component>
 </project>

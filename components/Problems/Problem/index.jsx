@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { submissions, users } from '@libs/client';
+import { developers, submissions } from '@libs/client';
 import Box from '@material-ui/core/Box';
 import {
   withStyles,
@@ -154,7 +154,7 @@ export default function Problem({problem, user}) {  // { problemSubmissionHistor
   const [code, setCode] = useState(problem.code);
   const [value, setValue] = React.useState(0);
   const [value2, setValue2] = React.useState(0);
-  const [problemSubmissionHistories, setProblemSubmissionHistories] = useState([]);
+  const [problemSubmissions, setProblemSubmissions] = useState([]);
   const [displayWaiting, setDisplayWaiting] = useState("none");
   const [displayRunCode, setDisplayRunCode] = useState("none");
   const [runCodeStatus, setRunCodeStatus] = useState("Accepted");
@@ -173,8 +173,8 @@ export default function Problem({problem, user}) {  // { problemSubmissionHistor
 
   useEffect(async () => {
     if(user){
-      const histories = await submissions.getProblemSubmissions(user.uid, problem.id);
-      setProblemSubmissionHistories(histories);
+      const histories = await developers.getProblemSubmissions(user.uid, problem.id);
+      setProblemSubmissions(histories);
     }
 
     // Get code from localStorage
@@ -263,23 +263,24 @@ export default function Problem({problem, user}) {  // { problemSubmissionHistor
         setRunCodeStatus("Accepted");
         setNotification("You have passed the sample test cases. Click the submit button to run your code against all the test cases.");
 
-        await submissions.createProblemSubmission(
+        await developers.createProblemSubmission(
           user.uid,
           {
             problemId: problem.id,
             problemName: problem.title,
-            language: problem.language,
+            // language: problem.language,
             status: "Accepted",
             code,
             data: response,
           });
-        await users.updateScoreProblem(user.uid, problem.id, problem.score);
+        // await users.updateScoreProblem(user.uid, problem.id, problem.score);
+        await developers.addSolvedProblem(user, {problemId: problem.id, score: response.score});
       } else {
         setRunCodeResult(response.results);
         setRunCodeStatus("Wrong Answer");
         setNotification(`${response.failed}/${response.results.length} test cases failed`);
 
-        await submissions.createProblemSubmission(
+        await developers.createProblemSubmission(
           user.uid,
           {
             problemId: problem.id,
@@ -295,7 +296,7 @@ export default function Problem({problem, user}) {  // { problemSubmissionHistor
       setNotification("Check the compiler output, fix the error and try again.");
       setRunCodeResult(e);
 
-      await submissions.createProblemSubmission(
+      await developers.createProblemSubmission(
         user.uid,
         {
           problemId: problem.id,
@@ -310,8 +311,8 @@ export default function Problem({problem, user}) {  // { problemSubmissionHistor
       setDisplayRunCode('block');
 
       // Update problem submission histories
-      const histories = await submissions.getProblemSubmissions(user.uid, problem.id);
-      setProblemSubmissionHistories(histories);
+      const histories = await developers.getProblemSubmissions(user.uid, problem.id);
+      setProblemSubmissions(histories);
     }
   };
 
@@ -432,7 +433,7 @@ export default function Problem({problem, user}) {  // { problemSubmissionHistor
 
           <br />
           {/* Proccessing... */}
-          <Box style={{display: displayWaiting}}>
+          <Box display={displayWaiting}>
               <Typography variant="h5" style={{paddingLeft: 30, fontWeight: 'bolder'}}>Processing...</Typography>
           </Box>
 
@@ -560,7 +561,7 @@ export default function Problem({problem, user}) {  // { problemSubmissionHistor
           </Box>
         </TabPanel>
         <TabPanel value={value} index={1}>
-          <Submissions problemSubmissionHistories={problemSubmissionHistories} />
+          <Submissions problemSubmissions={problemSubmissions} />
         </TabPanel>
         <TabPanel value={value} index={2}>
           <Comment user={user} problemId={problem.id} />

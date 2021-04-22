@@ -1,5 +1,5 @@
 import React from 'react';
-import { problems as probs, users } from '@libs/client';
+import { problems as probs, developers } from '@libs/client';
 import PropTypes from 'prop-types';
 
 import Head from 'next/head';
@@ -63,16 +63,18 @@ export async function getServerSideProps({req}) {
       if (cookies.user) {
         user = JSON.parse(cookies.user);
 
+
         if(user){
-          userDetail = await users.get(user.uid);
+          userDetail = await developers.get(user.uid);
 
 
           // Get solved problems
-          const solvedProblems = await users.getSolvedProblems(user.uid);
+          const solvedProblems = await developers.getSolvedProblems(user.uid);
           solvedProblemsNumber = solvedProblems.length;
 
-          const problemSubmissions = await users.getProblemSubmissions(user.uid);
-          const unacceptedSubmittedProblems = problemSubmissions.filter(
+
+          const allProblemSubmissions = await developers.getAllProblemSubmissions(user.uid);
+          const unsolvedSubmittedProblems = allProblemSubmissions.filter(
             (problem) => {
               let isAccepted = false;
               for(let i = 0; i < solvedProblems.length; i += 1){
@@ -88,20 +90,20 @@ export async function getServerSideProps({req}) {
               return null;
             });
 
-          const unacceptedSubmittedProblemsDump = [];
-          for(let i = 0; i < unacceptedSubmittedProblems.length; i += 1) {
+          const unsolvedSubmittedProblemsDump = [];
+          for(let i = 0; i < unsolvedSubmittedProblems.length; i += 1) {
             let flag = false;
-            for(let j = 0; j < unacceptedSubmittedProblemsDump.length; j += 1) {
-              if(unacceptedSubmittedProblems[i].problemId === unacceptedSubmittedProblemsDump[j].problemId){
+            for(let j = 0; j < unsolvedSubmittedProblemsDump.length; j += 1) {
+              if(unsolvedSubmittedProblems[i].problemId === unsolvedSubmittedProblemsDump[j].problemId){
                 flag = true;
                 break;
               }
             }
             if(flag === false){
-              unacceptedSubmittedProblemsDump.push(unacceptedSubmittedProblems[i]);
+              unsolvedSubmittedProblemsDump.push(unsolvedSubmittedProblems[i]);
             }
           }
-          unsolvedProblemsNumber = unacceptedSubmittedProblemsDump.length;
+          unsolvedProblemsNumber = unsolvedSubmittedProblemsDump.length;
         }
 
       }
@@ -110,7 +112,8 @@ export async function getServerSideProps({req}) {
     console.log(e);
   }
 
-  const items = await probs.get();
+  const items = await probs.getPublishedProblems();
+
   return {
     props: {
       problems: items,

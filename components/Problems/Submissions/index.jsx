@@ -19,7 +19,7 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-export default function Submissions({problemSubmissionHistories}){
+export default function Submissions({problemSubmissions}){
   const classes = useStyles();
 
   return (
@@ -36,10 +36,10 @@ export default function Submissions({problemSubmissionHistories}){
             </TableRow>
           </TableHead>
           {
-            problemSubmissionHistories &&
+            problemSubmissions &&
             <TableBody>
               {
-                problemSubmissionHistories.map((submission, index) => (
+                problemSubmissions.map((submission, index) => (
                   <TableRow
                     key={submission.id}
                     className={classes.tableRow}
@@ -69,15 +69,7 @@ export default function Submissions({problemSubmissionHistories}){
                     </TableCell>
                     <TableCell>120 ms</TableCell>
                     <TableCell>
-                      {
-                        submission.status === 'Accepted' && 0
-                      }
-                      {
-                        submission.status === 'Wrong Answer' && 0
-                      }
-                      {
-                        submission.status === 'Compilation Error' && 0
-                      }
+                      {submission.score}
                     </TableCell>
                     <TableCell>
                       <Link href={`/problem/submissiondetail/${submission.id}`}>

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import Head from 'next/head';
 import dynamic from 'next/dynamic';
-import { problems, users } from '@libs/client';
+import { problems } from '@libs/client';
 import { parseCookies } from '@libs/client/cookies';
 import {
   makeStyles,
@@ -41,14 +41,21 @@ const useStyles = makeStyles(() => ({
 export default function Test({ problem, user }) {   // , problemSubmissionHistory
   const classes = useStyles();
 
-  const [author, setAuthor] = useState({uid: "", name: ""});
+  const [author] = useState({id: "#", name: "#"});
+  const [company] = useState({name: "#"});
 
   useEffect(async () => {
-    const problemAuthor = await users.get(problem.owner);
+    // const developer = await developers.get(problem.developerId);
+    //
+    // if(developer !== undefined){
+    //   setAuthor(developer);
+    // }
 
-    if(problemAuthor !== undefined){
-      setAuthor(problemAuthor);
-    }
+    // const company = await developers.get(problem.companyId);
+    //
+    // if(company !== undefined){
+    //   setCompany(company);
+    // }
   }, []);
 
 
@@ -97,7 +104,12 @@ export default function Test({ problem, user }) {   // , problemSubmissionHistor
               <Box className={classes.root}>
                 <Box className={classes.info}>
                   <Typography style={{color: 'green', fontWeight: 'bolder'}}>Author</Typography>
-                  <Link href={`/profile/${author.uid}`} variant="body2">{author.name}</Link>
+                  <Link href={`/profile/${author.id}`} variant="body2">{author.name}</Link>
+                </Box>
+                <hr />
+                <Box className={classes.info}>
+                  <Typography style={{color: 'green', fontWeight: 'bolder'}}>Company</Typography>
+                  <Typography>{company.name}</Typography>
                 </Box>
                 <hr />
                 <Box className={classes.info}>
@@ -139,10 +151,10 @@ export async function getServerSideProps({ params, req }) {
   const cookies = parseCookies(req);
   let user = null;
   // let problemSubmissionHistory = null;
-  let item = null;
+  let item = [];
   try {
-    item = await problems.get(params.id);
-    console.log(item);
+    item = await problems.get({problem: undefined, problemId: params.id});
+    console.dir(item);
 
     if (Object.keys(cookies).length !== 0) {
       if (cookies.user) {

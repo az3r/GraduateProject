@@ -15,7 +15,7 @@ import IconButton from '@material-ui/core/IconButton';
 import DeleteIcon from '@material-ui/icons/Delete';
 import EditIcon from '@material-ui/icons/Edit';
 import HelpOutlineRoundedIcon from '@material-ui/icons/HelpOutlineRounded';
-import { comments, users, } from '@libs/client';
+import { comments, developers, } from '@libs/client';
 import dateFormat from 'dateformat';
 import withReactContent from 'sweetalert2-react-content';
 import Swal from "sweetalert2";
@@ -61,6 +61,7 @@ export default function Comment({user, problemId}){
 
   useEffect(async () => {
     const cmt = await comments.getProblemComments(problemId);
+    // console.log(cmt);
     setCommentArray(cmt);
   }, []);
 
@@ -85,7 +86,8 @@ export default function Comment({user, problemId}){
       return;
     }
 
-    const usr = await users.get();
+    const usr = await developers.get(user.uid);
+
 
     if(usr !== null){
       const newlyCreatedCommentId = await comments.createProblemComment(problemId,
@@ -141,7 +143,7 @@ export default function Comment({user, problemId}){
 
   const handleUpdate = async () => {
     setEditOpen(false);
-    const usr = await users.get();
+    const usr = await developers.get(user.uid);
 
     if(usr !== null) {
       await comments.updateComment(problemId, editedCommentId,
