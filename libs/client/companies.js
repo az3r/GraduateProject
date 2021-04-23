@@ -44,3 +44,50 @@ export async function getProblems(companyId) {
     .get();
   return snapshot.docs.map((doc) => transform(doc));
 }
+
+/** add an array of developers to group */
+export async function addDevelopers(companyId, developerIds) {
+  if (developerIds?.length) {
+    await getAttributeReference(collections.companies, companyId).update({
+      members: Firestore.FieldValue.arrayUnion(developerIds),
+    });
+
+    // add company to each developer
+    developerIds.forEach(async (id) => {
+      await getAttributeReference(collections.developers, id).update({
+        companies: Firestore.FieldValue.arrayUnion([companyId]),
+      });
+    });
+  }
+}
+
+/** remove developers from group */
+export async function removeDevelopers(companyId, developerIds) {
+  if (developerIds?.length) {
+    await getAttributeReference(collections.companies, companyId).update({
+      members: Firestore.FieldValue.arrayRemove(developerIds),
+    });
+
+    // remove company from each developer
+    developerIds.forEach(async (id) => {
+      await getAttributeReference(collections.developers, id).update({
+        companies: Firestore.FieldValue.arrayRemove([companyId]),
+      });
+    });
+  }
+}
+
+/**
+ * return basic info of company's members
+ * @param {*} company object retrieved from get function
+ */
+export async function getMembers(company) {
+  if (company?.participants?.length) {
+    const members = await Firestore()
+      .collection(collections.developers)
+      .where(Firestore.FieldPath.documentId(), 'in', company.participants())
+      .get();
+    return members.docs.map((item) => transform(item));
+  }
+  return [];
+}
