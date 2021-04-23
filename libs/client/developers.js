@@ -148,7 +148,7 @@ export async function getSolvedProblems(uid) {
 
 export async function createProblemSubmission(
   developerId,
-  { problemId, problemName, status, code, data }
+  { problemId, problemName, language, status, code, data }
 ) {
   const { id } = await Firestore()
     .collection(collections.developers)
@@ -158,6 +158,7 @@ export async function createProblemSubmission(
       ...data,
       problemId,
       problemName,
+      language,
       code,
       status,
       createdOn: Firestore.Timestamp.now(),
@@ -193,6 +194,20 @@ export async function getProblemSubmissions(developerId, problemId) {
     .get();
 
   return snapshot.docs.map((doc) => transform(doc));
+}
+
+export async function getProblemSubmissionDetails(
+  developerId,
+  problemSubmissionId
+) {
+  const snapshot = await Firestore()
+    .collection(collections.developers)
+    .doc(developerId)
+    .collection(collections.problemSubmissions)
+    .doc(problemSubmissionId)
+    .get();
+
+  return transform(snapshot);
 }
 
 export async function getAllExamResults(developerId) {

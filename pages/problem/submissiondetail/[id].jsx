@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import Head from 'next/head';
 import dynamic from 'next/dynamic';
-import { submissions } from '@libs/client';
+import { developers } from '@libs/client';
 import { parseCookies } from '@libs/client/cookies';
 import Box from '@material-ui/core/Box';
 import Breadcrumbs from '@material-ui/core/Breadcrumbs';
@@ -131,7 +131,7 @@ const useStyles = makeStyles(() => ({
 export default function SubmissionDetails({ problemSubmissionDetails }) {  // , user
   const classes = useStyles();
 
-  const [code, setCode] = useState(problemSubmissionDetails.details.code);
+  const [code, setCode] = useState(problemSubmissionDetails.code);
   const [theme, setTheme] = useState('xcode');
   const [size, setSize] = useState(20);
   const [value, setValue] = useState(0);
@@ -200,7 +200,7 @@ export default function SubmissionDetails({ problemSubmissionDetails }) {  // , 
                 </Typography>
                 <Box style={{display: 'flex'}}>
                   <Typography variant="h6" style={{marginRight: 30}}>
-                    Score: <span style={{fontWeight: 'normal', color: 'gray'}}>100</span>
+                    Score: <span style={{fontWeight: 'normal', color: 'gray'}}>{problemSubmissionDetails.score}</span>
                   </Typography>
                   <Typography variant="h6" style={{marginRight: 30}}>
                     Status:
@@ -223,7 +223,7 @@ export default function SubmissionDetails({ problemSubmissionDetails }) {  // , 
                   <Typography variant="h6" style={{marginRight: 30}}>
                     {(problemSubmissionDetails.status === 'Accepted' || problemSubmissionDetails.status === 'Wrong Answer') &&
                       <>
-                      {problemSubmissionDetails.details.passed} / {problemSubmissionDetails.details.total}
+                      {problemSubmissionDetails.passed} / {problemSubmissionDetails.total}
                         <span style={{fontWeight: 'normal', color: 'gray'}}>{" test cases passed."}</span>
                       </>
                     }
@@ -307,7 +307,7 @@ export default function SubmissionDetails({ problemSubmissionDetails }) {  // , 
                   indicatorColor="primary"
                 >
                   {
-                    problemSubmissionDetails.details.results.map((result, index) => {
+                    problemSubmissionDetails.results.map((result, index) => {
                       if(index === value){
                         if(result.passed === false){
                           return (
@@ -336,7 +336,7 @@ export default function SubmissionDetails({ problemSubmissionDetails }) {  // , 
                   }
                 </Tabs>
                 {
-                  problemSubmissionDetails.details.results.map((result, index) => (
+                  problemSubmissionDetails.results.map((result, index) => (
                     <TabPanel value={value} index={index}>
                       <Box style={{ paddingLeft: 50, paddingRight: 50, paddingTop: 50, overflow: 'auto', maxHeight: 350, maxWidth: 800 }}>
                         {
@@ -386,9 +386,9 @@ export default function SubmissionDetails({ problemSubmissionDetails }) {  // , 
               problemSubmissionDetails.status === "Compilation Error" &&
               <Box style={{marginLeft: 20, marginRight: 20, marginTop: 20}}>
                 <Typography variant="h6" style={{color: 'gray'}}>Compiler Messages</Typography>
-                <Typography style={{marginLeft: 20, fontWeight: 'bolder'}}>{problemSubmissionDetails.details.status}</Typography>
-                <Typography style={{marginLeft: 20, fontWeight: 'bolder'}}>{problemSubmissionDetails.details.stderr}</Typography>
-                <Typography style={{marginLeft: 20, fontWeight: 'bolder'}}>{problemSubmissionDetails.details.stdout}</Typography>
+                <Typography style={{marginLeft: 20, fontWeight: 'bolder'}}>{problemSubmissionDetails.status}</Typography>
+                <Typography style={{marginLeft: 20, fontWeight: 'bolder'}}>{problemSubmissionDetails.stderr}</Typography>
+                <Typography style={{marginLeft: 20, fontWeight: 'bolder'}}>{problemSubmissionDetails.stdout}</Typography>
                 <br />
                 <Typography variant="h6" style={{color: 'gray'}}>Exit Status</Typography>
                 <Typography style={{marginLeft: 20, fontWeight: 'bolder'}} >1</Typography>
@@ -422,12 +422,11 @@ export async function getServerSideProps({ params, req }) {
     if (Object.keys(cookies).length !== 0) {
       if (cookies.user) {
         user = JSON.parse(cookies.user);
-        problemSubmissionDetails = await submissions.getProblemSubmissionDetails(
+
+        problemSubmissionDetails = await developers.getProblemSubmissionDetails(
           user.uid,
           params.id
         );
-
-        console.dir(problemSubmissionDetails);
       }
     }
   } catch (e) {
