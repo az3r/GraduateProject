@@ -54,7 +54,8 @@ export default function Login() {
       cookies.set('user', JSON.stringify(user), { path: '/' });
       // end save cookies
 
-      const destination = auth.role === 'company' ? '/company-groups' : '/';
+      const destination =
+        auth.role === 'company' ? `/company-groups/${auth.uid}` : '/';
       router.replace(destination);
     }
   }, [auth]);
@@ -187,11 +188,11 @@ export default function Login() {
               <Grid item>
                 <TextField
                   variant="filled"
-                  type="text"
-                  id="username"
-                  label="Username"
+                  type="email"
+                  id="email"
+                  label="Email"
                   fullWidth
-                  name="username"
+                  name="email"
                   required
                   disabled={submitting}
                 />
@@ -231,12 +232,12 @@ export default function Login() {
     async function submit(e) {
       e.preventDefault();
       const data = new FormData(e.target);
-      const username = data.get('username');
+      const email = data.get('email');
       const password = data.get('password');
 
       try {
         setSubmitting(true);
-        await signInWithEmail({ username, password });
+        await signInWithEmail({ email, password });
 
         setSnackBarState({
           open: true,
@@ -428,8 +429,8 @@ export default function Login() {
   }
 }
 
-async function signInWithEmail({ username, password }) {
-  const credentials = await signin({ username, password });
+async function signInWithEmail({ email, password }) {
+  const credentials = await signin({ email, password });
   if (!credentials.user.emailVerified) {
     await signout();
     return Promise.reject({

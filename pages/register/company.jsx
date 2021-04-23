@@ -285,7 +285,7 @@ export default function Login() {
               variant="contained"
               onClick={onVerifyEmail}
             >
-              Verify email
+              Send email verification
             </Button>
           )}
         </>
@@ -389,7 +389,7 @@ export default function Login() {
         setCookies(['user'], JSON.stringify(user), { path: '/' });
         // end save cookies
 
-        router.replace('/company-groups');
+        router.replace(`/company-groups/${credential.user.uid}`);
         setSnackBarState({
           open: true,
           severity: 'success',

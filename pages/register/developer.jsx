@@ -285,7 +285,7 @@ export default function Login() {
               variant="contained"
               onClick={onVerifyEmail}
             >
-              Verify email
+              Send email verification
             </Button>
           )}
         </>
