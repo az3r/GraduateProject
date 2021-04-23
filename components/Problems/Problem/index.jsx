@@ -273,7 +273,7 @@ export default function Problem({problem, user}) {  // { problemSubmissionHistor
           {
             problemId: problem.id,
             problemName: problem.title,
-            // language: problem.language,
+            language: problem.language,
             status: "Accepted",
             code,
             data: response,
