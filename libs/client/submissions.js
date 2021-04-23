@@ -29,19 +29,22 @@ export async function test({ lang, code, testcases }) {
     }),
   });
 
-  let { score } = testcases.reduce((a, b) => ({ score: a.score + b.score }));
+  const total = testcases.reduce((a, b) => ({
+    score: a.score + b.score,
+  })).score;
   const response = await task;
   const data = await response.json();
   let status = statuses.error;
 
+  let score = response.status === 200 ? total : 0;
   if (response.status === 200) {
     const { failed, failedIndexes } = data;
     status = failed > 0 ? statuses.failed : statuses.passed;
 
     // subtract score for every failed testcase
-    if (failed > 0) {
+    if (failedIndexes?.length) {
       const amount =
-        failedIndexes?.reduce((a, b) => ({
+        failedIndexes.reduce((a, b) => ({
           score: testcases[a].score + testcases[b].score,
         })).score || 0;
       score -= amount;
