@@ -2,21 +2,23 @@ import { collections } from '@utils/constants';
 import { getAttributeReference, transform } from '@utils/firestore';
 import { Firestore } from './firebase';
 
+/** nếu company tạo problem có thể bỏ field developerId */
 export async function create(
   companyId,
-  { cases, code, content, difficulty, language, title, published }
+  { cases, code, content, difficulty, language, title, published, developerId }
 ) {
   if (!cases?.length) throw new Error('no testcase provided');
 
   const { id: problemId, parent } = await Firestore()
     .collection(collections.problems)
     .add({
-      owner: companyId,
+      companyId,
+      owner: developerId || companyId,
       difficulty,
       language,
       title,
       published,
-      score: cases.reduce((a, b) => ({ score: a.score + b.score })).score,
+      score: cases.reduce((a, b) => a.score + b.score),
       createdOn: Firestore.Timestamp.now(),
       deleted: false,
     });
@@ -30,14 +32,16 @@ export async function create(
   return problemId;
 }
 
+/** nếu company tạo problem có thể bỏ field developerId */
 export async function createMCQ(
   companyId,
-  { title, score, difficulty, answers, correctIndices }
+  { title, score, difficulty, answers, correctIndices, developerId }
 ) {
   const { id: problemId, parent } = await Firestore()
     .collection(collections.problems)
     .add({
-      owner: companyId,
+      companyId,
+      owner: developerId || companyId,
       difficulty,
       title,
       score,
@@ -89,22 +93,30 @@ export async function getPublishedProblems() {
   return problems.docs.map((problem) => transform(problem));
 }
 
+/**
+ * update a problem, require developerId to be companyId or owner of this problem
+ * @param {*} problem problem object
+ * @param {*} developerId
+ * @param {*} properties problem's properties
+ */
 export async function update(
-  problemId,
+  { id, owner },
+  developerId,
   { cases, code, content, difficulty, language, title }
 ) {
+  if (owner !== developerId) throw new Error('problem: not an owner');
   await Firestore()
     .collection(collections.problems)
-    .doc(problemId)
+    .doc(id)
     .update({
       difficulty,
       language,
-      score: cases.reduce((a, b) => ({ score: a.score + b.score })).score,
+      score: cases.reduce((a, b) => a.score + b.score),
       title,
       modifiedAt: Firestore.Timestamp.now(),
     });
 
-  await getAttributeReference(collections.problems, problemId).update({
+  await getAttributeReference(collections.problems, id).update({
     cases,
     code,
     content,

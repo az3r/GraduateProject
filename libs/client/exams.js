@@ -3,32 +3,42 @@ import { getAttributeReference, transform } from '@utils/firestore';
 import { Firestore } from './firebase';
 import { get as getProblem } from './problems';
 
+/** nếu company tạo exam có thể bỏ field developerId */
 export async function create(
   companyId,
-  { title, content, duration, password, problems }
+  { title, content, duration, password, problems, developerId }
 ) {
   const { id } = await Firestore()
     .collection(collections.exams)
     .add({
+      companyId,
+      owner: developerId || companyId,
       title,
       content,
       password,
       duration,
       score: problems.reduce((a, b) => a.score + b.score),
-      owner: companyId,
       createdOn: Firestore.Timestamp.now(),
     });
   await getAttributeReference(collections.exams, id).set({ id, problems });
   return id;
 }
 
+/**
+ * update an exam, require developerId to be companyId or owner of this exam
+ * @param {*} problem exma object
+ * @param {*} developerId
+ * @param {*} properties exma's properties
+ */
 export async function update(
-  examId,
+  { id, owner },
+  developerId,
   { title, content, password, duration, problems }
 ) {
+  if (owner !== developerId) throw new Error('exam: not an owner');
   await Firestore()
     .collection(collections.exams)
-    .doc(examId)
+    .doc(id)
     .update({
       title,
       content,
@@ -37,7 +47,7 @@ export async function update(
       score: problems.reduce((a, b) => a.score + b.score),
       modifiedAt: Firestore.Timestamp.now(),
     });
-  await getAttributeReference(collections.exams, examId).update({ problems });
+  await getAttributeReference(collections.exams, id).update({ problems });
 }
 
 /** get exam and its private attributes using either examId or exam itself */

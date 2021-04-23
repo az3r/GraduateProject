@@ -35,11 +35,22 @@ export async function update(
 }
 
 /** get all problems basic info without their private attributes */
+export async function getExams(companyId) {
+  const snapshot = await Firestore()
+    .collection(collections.problems)
+    .where('deleted', '==', false)
+    .where('companyId', '==', companyId)
+    .orderBy('createdOn', 'desc')
+    .get();
+  return snapshot.docs.map((doc) => transform(doc));
+}
+
+/** get all problems basic info without their private attributes */
 export async function getProblems(companyId) {
   const snapshot = await Firestore()
     .collection(collections.problems)
-    .where('owner', '==', companyId)
     .where('deleted', '==', false)
+    .where('companyId', '==', companyId)
     .orderBy('createdOn', 'desc')
     .get();
   return snapshot.docs.map((doc) => transform(doc));
