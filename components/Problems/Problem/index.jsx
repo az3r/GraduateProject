@@ -249,6 +249,8 @@ export default function Problem({problem, user}) {  // { problemSubmissionHistor
 
     setDisplayRunCode('none');
     setDisplayWaiting('block');
+    let status = "";
+    let score = 0;
     try {
       const response = await submissions.test({
         lang: problem.language,
@@ -259,6 +261,9 @@ export default function Problem({problem, user}) {  // { problemSubmissionHistor
       console.log(response);
 
       if (response.failed === 0) {
+        status = "Accepted";
+        score = response.score;
+
         setRunCodeResult(response.results);
         setRunCodeStatus("Accepted");
         setNotification("You have passed the sample test cases. Click the submit button to run your code against all the test cases.");
@@ -273,9 +278,14 @@ export default function Problem({problem, user}) {  // { problemSubmissionHistor
             code,
             data: response,
           });
-        // await users.updateScoreProblem(user.uid, problem.id, problem.score);
-        await developers.addSolvedProblem(user, {problemId: problem.id, score: response.score});
+
+
+        // Add solved problem
+        const usr = await developers.get(user.uid);
+        await developers.addSolvedProblem(usr, {problemId: problem.id, score: response.score});
       } else {
+        status = "Wrong Answer";
+        score = response.score;
         setRunCodeResult(response.results);
         setRunCodeStatus("Wrong Answer");
         setNotification(`${response.failed}/${response.results.length} test cases failed`);
@@ -292,6 +302,9 @@ export default function Problem({problem, user}) {  // { problemSubmissionHistor
           });
       }
     } catch (e) {
+      status = "Compilation Error";
+      score = 0;
+
       setRunCodeStatus("Compilation Error");
       setNotification("Check the compiler output, fix the error and try again.");
       setRunCodeResult(e);
@@ -313,6 +326,27 @@ export default function Problem({problem, user}) {  // { problemSubmissionHistor
       // Update problem submission histories
       const histories = await developers.getProblemSubmissions(user.uid, problem.id);
       setProblemSubmissions(histories);
+
+      // Display submission info
+      let icon = 'success';
+      if(status === 'Wrong Answer'){
+        icon = 'warning';
+      }else if(status === 'Compilation Error'){
+        icon = 'error';
+      }
+      MySwal.fire({
+        title: status,
+        icon,
+        html: `<p>You got ${score} coins</p>`,
+        allowEscapeKey: false,
+        allowOutsideClick: false,
+        showCancelButton:  true,
+        confirmButtonText: 'Try Another'
+      }).then((result) => {
+        if (result.isConfirmed) {
+          router.push('/');
+        }
+      });
     }
   };
 

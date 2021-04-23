@@ -67,7 +67,7 @@ export default function Test({ problem, user }) {   // , problemSubmissionHistor
       </Head>
 
       <AppLayout>
-        <Container maxWidth disableGutters>
+        <Container maxWidth="xl" disableGutters>
           <Grid container>
             <Hidden smDown>
               <Grid item xs={12} container className={classes.subNavBar} direction="row" justify="space-between" alignItems="center">
