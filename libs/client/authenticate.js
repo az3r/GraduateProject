@@ -1,5 +1,4 @@
 import { collections } from '@utils/constants';
-import { getEmailByName } from '@client/users';
 import { Firestore, FirebaseAuth } from './firebase';
 
 export async function register({ username, email, password, role }) {
@@ -23,8 +22,7 @@ export async function signinWithProvider({ provider }) {
   return FirebaseAuth().signInWithPopup(provider);
 }
 
-export async function signin({ username, password }) {
-  const email = await getEmailByName(username);
+export async function signin({ email, password }) {
   return FirebaseAuth().signInWithEmailAndPassword(email, password);
 }
 
