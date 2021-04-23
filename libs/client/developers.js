@@ -166,7 +166,7 @@ export async function createProblemSubmission(
   // add user to problem's participants
   const ref = getAttributeReference(collections.problems, problemId);
   const attributes = await ref.get();
-  if (attributes.get('participants')?.include(developerId)) return id;
+  if (attributes.get('participants')?.includes(developerId)) return id;
   await ref.update({
     participants: Firestore.FieldValue.arrayUnion(developerId),
   });
