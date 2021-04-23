@@ -23,27 +23,6 @@ export async function find(uid) {
   return undefined;
 }
 
-export async function getEmailByName(username) {
-  if (!username) return undefined;
-
-  // search in Developers then Companies collection
-  let results = await Firestore()
-    .collection(collections.developers)
-    .where('name', '==', username)
-    .limit(1)
-    .get();
-  if (results.size > 0) return results.docs[0].get('email');
-
-  results = await Firestore()
-    .collection(collections.companies)
-    .where('name', '==', username)
-    .limit(1)
-    .get();
-  if (results.size > 0) return results.docs[0].get('email');
-
-  return undefined;
-}
-
 /**
  * update user's name
  * @param {*} user object returned fron useAuth()
