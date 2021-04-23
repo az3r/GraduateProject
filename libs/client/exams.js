@@ -95,6 +95,20 @@ export async function getProblems(exam) {
   return [];
 }
 
+export async function addParticipants(examiD, developerIds) {
+  if (developerIds?.length > 0)
+    await getAttributeReference(collections.exams, examiD).update({
+      participants: Firestore.FieldValue.arrayUnion(developerIds),
+    });
+}
+
+export async function removeParticipants(examiD, developerIds) {
+  if (developerIds?.length > 0)
+    await getAttributeReference(collections.exams, examiD).update({
+      participants: Firestore.FieldValue.arrayRemove(developerIds),
+    });
+}
+
 export async function getParticipants(examId) {
   const attributes = await getAttributeReference(
     collections.exams,
