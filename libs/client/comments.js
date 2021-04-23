@@ -117,7 +117,6 @@ export async function deleteExamComment(examId, commentId) {
     .delete();
 }
 export async function getProblemComments(problemId) {
-  console.log(problemId);
   const snapshot = await Firestore()
     .collection(problems)
     .doc(problemId)
@@ -125,7 +124,6 @@ export async function getProblemComments(problemId) {
     .orderBy('createdOn', 'desc')
     .get();
 
-  // return snapshot.docs.map((doc) => transform({ id: doc.id, ...doc.data() }));
   return snapshot.docs.map((doc) => transform(doc));
 }
 
@@ -134,10 +132,10 @@ export async function getExamComments(examId) {
     .collection(exams)
     .doc(examId)
     .collection(comments)
-    .orderBy('createdOn', 'asc')
+    .orderBy('createdOn', 'desc')
     .get();
 
-  return snapshot.docs.map((doc) => transform({ id: doc.id, ...doc.data() }));
+  return snapshot.docs.map((doc) => transform(doc));
 }
 
 /**
