@@ -172,11 +172,14 @@ export async function removeFromInvitation(examId, developersIds) {
  * @param {Date} startAt
  * @param {Date} endAt
  */
-export async function publishExam(examId, startAt, endAt) {
-  await Firestore().collection(collections.exams).doc(examId).update({
-    published: true,
-    startAt,
-    endAt,
-    modifiedAt: Firestore.Timestamp.now(),
-  });
+export async function publishExam(examId, startAt, endAt, show) {
+  await Firestore()
+    .collection(collections.exams)
+    .doc(examId)
+    .update({
+      published: show || true,
+      startAt,
+      endAt,
+      modifiedAt: Firestore.Timestamp.now(),
+    });
 }
