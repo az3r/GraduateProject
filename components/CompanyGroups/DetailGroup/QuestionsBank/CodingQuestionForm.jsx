@@ -56,11 +56,14 @@ const useStyles = makeStyles((theme)=>({
         width: 500,
         height: 300
     },
+    tabs: {
+        borderRight: `1px solid ${theme.palette.divider}`,
+    },
     root: {
         flexGrow: 1,
         backgroundColor: theme.palette.background.paper,
         display: 'flex',
-        height: 500,
+        height: 270,
     },
 }));
 
@@ -332,21 +335,21 @@ export default function CodingQuestionForm({onFormSubmit, propQuestion, isSaved}
                 message: 'Problem code must not be empty'});
             return false;
         }
-        if(question.input.length === 0)
+        if(question.input.length === 0 && question.cases.length === 0)
         {
             setMessage({...message, 
                 input: true,
                 message: 'Input file for test cases must be submitted'});
             return false;
         }
-        if(question.output.length === 0)
+        if(question.output.length === 0 && question.cases.length === 0)
         {
             setMessage({...message, 
                 output: true,
                 message: 'Output file for test cases must be submitted'});
             return false;
         }
-        if(question.casesScore.length === 0)
+        if(question.casesScore.length === 0 && question.cases.length === 0)
         {
             setMessage({...message, 
                 casesScore: true,

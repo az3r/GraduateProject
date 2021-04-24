@@ -1,4 +1,5 @@
 import emailjs from 'emailjs-com';
+// eslint-disable-next-line import/no-cycle
 import { getInvitedDevelopers } from './exams';
 import { getAll } from './developers';
 
@@ -14,7 +15,6 @@ export default function getTestCaseFromInputAndOutput(input, output, score) {
       },
     ];
   }
-
   return cases;
 }
 
@@ -58,43 +58,17 @@ export function getFormatResultFromFile(text) {
   return result;
 }
 
-export function formatQuestionsArray(questions, isUpdateExam) {
-  const newQuestionList = questions.map((question) => {
-    if (!question.isMCQ) {
-      const newQuestion = { ...question };
-      if (!isUpdateExam) {
-        newQuestion.cases = getTestCaseFromInputAndOutput(
-          question.input,
-          question.output
-        );
-      } else {
-        // eslint-disable-next-line no-lonely-if
-        if (newQuestion.input.length !== 0 && newQuestion.output.length !== 0) {
-          newQuestion.cases = getTestCaseFromInputAndOutput(
-            newQuestion.input,
-            newQuestion.output
-          );
-        }
-      }
-      // const newQuestion = {
-      //   ...question,
-      //   cases: getTestCaseFromInputAndOutput(question.input, question.output),
-      // };
-      delete newQuestion.input;
-      delete newQuestion.simpleInput;
-      delete newQuestion.output;
-      delete newQuestion.simpleOutput;
-      delete newQuestion.messageTestCode;
-      delete newQuestion.testCodeSuccess;
-      delete newQuestion.isLoadingTestCode;
-      delete newQuestion.message;
-      return newQuestion;
-    }
-    const newQuestion = { ...question };
-    delete newQuestion.message;
-    return newQuestion;
-  });
-  return newQuestionList;
+export function getDifficultyString(id) {
+  switch (id) {
+    case 0:
+      return 'Easy';
+    case 1:
+      return 'Medium';
+    case 2:
+      return 'Hard';
+    default:
+      return '';
+  }
 }
 
 export function formatDuration(time) {
@@ -144,4 +118,12 @@ export function sendInvitation(
     },
     'user_vdAvQzs8a2nH9TdfDiLcK'
   );
+}
+
+export function getScoreOfCases(cases) {
+  let score = 0;
+  for (let i = 0; i < cases.length; i += 1) {
+    score += cases[i].score;
+  }
+  return score;
 }

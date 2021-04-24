@@ -46,18 +46,17 @@ const useStyles = makeStyles({
 export default function MultipleChoiceForm({onFormSubmit, propQuestion})
 {
     const classes = useStyles();
-
     const difficulty = propQuestion !== null ? propQuestion.difficulty : 0;
     const [question,setQuestion] = useState({
       isMCQ: true,
-      question: propQuestion?.question,
+      question: propQuestion?.title,
       difficulty,
       score: propQuestion?.score,
-      a: propQuestion?.a,
-      b: propQuestion?.b,
-      c: propQuestion?.c,
-      d: propQuestion?.d,
-      correct: propQuestion?.correct,
+      a: propQuestion?.answers.A,
+      b: propQuestion?.answers.B,
+      c: propQuestion?.answers.C,
+      d: propQuestion?.answers.D,
+      correct: propQuestion?.correctIndices,
     });
 
     const [message,setMessage] = useState({
@@ -243,7 +242,7 @@ export default function MultipleChoiceForm({onFormSubmit, propQuestion})
                 <Box p={2} m={3} id="MC-3">
                     <Typography variant="h5">Choose level of difficulty: </Typography>
                     <NativeSelect
-                        value={question.value}
+                        value={question.difficulty}
                         onChange={handleChangeDifficulty}>
                             <option value={0}>Easy</option>
                             <option value={1}>Medium</option>

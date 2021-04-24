@@ -1,4 +1,3 @@
-import { FirebaseAuth } from '@libs/client/firebase';
 import { create, createMCQ } from '@libs/client/problems';
 import { Box, Breadcrumbs, Button, Divider, Grid, makeStyles, Select, Slide, Typography } from '@material-ui/core';
 import Dialog from '@material-ui/core/Dialog';
@@ -46,7 +45,7 @@ const useStyles = makeStyles({
 
 const Transition = React.forwardRef((props, ref) => <Slide direction="up" ref={ref} {...props} />);
 
-export default function AddQuestion()
+export default function AddQuestion({user})
 {
     const [type,setType] = useState(1);
     const [open, setOpen] = useState(false);
@@ -64,13 +63,15 @@ export default function AddQuestion()
 
     const onFormSubmit = async (question) => {
         let idQuestion = '';
+        question.developerId = user.role === "developer" ? user.id : undefined;
+
         if(!question.isMCQ)
         {
-            idQuestion = await create(FirebaseAuth().currentUser.uid,question);
+            idQuestion = await create(id,question);
         }
         else
         {
-            idQuestion = await createMCQ(FirebaseAuth().currentUser.uid,question);
+            idQuestion = await createMCQ(id,question);
         }
 
         if(idQuestion !== '') setOpen(true);

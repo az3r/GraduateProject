@@ -1,7 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import clsx from 'clsx';
-import { Box, Button, List, ListItem, ListItemText, makeStyles, OutlinedInput, Select, Typography } from '@material-ui/core';
+import AddIcon from '@material-ui/icons/Add';
+import { Box, Divider, IconButton, Link, List, ListItem, ListItemIcon, ListItemText, makeStyles, OutlinedInput, Select, Typography } from '@material-ui/core';
 import { getProblems } from '@libs/client/companies';
+import HTMLReactParser from 'html-react-parser';
+
 
 const useStyles = makeStyles({
     container: {
@@ -28,6 +31,7 @@ export default function AddProblemFromLibrary({idCompany,questionsList,handleAdd
     const [problemsList,setProblemsList] = useState([]);
     useEffect(async ()=>{
         const problemsData = await getProblems(idCompany);
+        console.log(problemsData);
         setProblemsList(problemsData);
     },[]);
 
@@ -62,20 +66,45 @@ export default function AddProblemFromLibrary({idCompany,questionsList,handleAdd
             <List>
                 {problemsList?.map((item) => (
                 <ListItem key={item.id}>
-                    {/* <ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon> */}
+                    <ListItemIcon>
+                        {
+                            questionsList.find(question => question.id === item.id) ?
+                            <IconButton variant="contained" color="primary" disabled>
+                                <AddIcon />
+                            </IconButton>
+                            :
+                            <IconButton variant="contained" color="primary" onClick={() => handleAddQuestionFromLibrary({id: item.id, score: item.score})}>
+                                <AddIcon />
+                            </IconButton>
+                        }
+                    </ListItemIcon>
                     <ListItemText 
                         primary={
-                            <Box boxShadow={2} p={2} className={classes.listItem}>
-                                <Typography className={classes.titleStyle}>{item.title}</Typography>
+                            <>
                                 {
-                                    questionsList.find(question => question.id === item.id) ?
-                                    <Button disabled color="secondary" variant="contained">Added</Button>
+                                    item.isMCQ ? 
+                                    <>
+                                        <div className={classes.titleStyle}>
+                                        {
+                                            HTMLReactParser(item.title)
+                                        }
+                                        </div>
+                                        <Typography>Multiple choice question</Typography>
+                                    </>
                                     :
-                                    <Button color="secondary" variant="contained" onClick={() => handleAddQuestionFromLibrary(item)}>Add</Button>
-
+                                    <>
+                                        <Typography className={classes.titleStyle}>{item.title}</Typography> 
+                                        <Typography>Coding question</Typography>            
+                                    </>
                                 }
-                            </Box>
+                            </>
                         } 
+                        secondary={
+                            <>
+                                <Link href={`/company-groups/${idCompany}/questions-bank/${item.id}`} target="_blank">Go to detail question</Link>
+                                <Divider/>
+                            </>
+                        }
                     />
                 </ListItem>
                 ))}

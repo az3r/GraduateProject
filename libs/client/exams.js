@@ -1,12 +1,13 @@
 import { collections } from '@utils/constants';
 import { getAttributeReference, transform } from '@utils/firestore';
 import { Firestore } from './firebase';
+// eslint-disable-next-line import/no-cycle
 import { get as getProblem } from './problems';
 
 /** nếu company tạo exam có thể bỏ field developerId */
 export async function create(
   companyId,
-  { title, content, duration, password, problems, developerId }
+  { title, content, duration, isPrivate, problems, developerId }
 ) {
   const { id } = await Firestore()
     .collection(collections.exams)
@@ -15,8 +16,8 @@ export async function create(
       owner: developerId || companyId,
       title,
       content,
-      password,
       duration,
+      isPrivate,
       score: problems.reduce((a, b) => a.score + b.score),
       createdOn: Firestore.Timestamp.now(),
     });

@@ -26,10 +26,10 @@ export default function Index({ user }) {
   ]
 
   useEffect(() => {
-    if (Object.keys(user).length === 0) {
+    if (!user) {
       router.replace('/login');
     }
-  });
+  },[]);
   return (
     <>
       <Head>
@@ -38,32 +38,37 @@ export default function Index({ user }) {
       </Head>
       <AppLayout>
         <DetailGroup selected={3}>
-            <GroupQuestionsBank questions={questions}/>
+            <GroupQuestionsBank user={user || user} questions={questions}/>
         </DetailGroup>
       </AppLayout>
     </>
   );
 }
 
-export async function getServerSideProps({ req }) {
+export async function getServerSideProps({ req, query }) {
   const cookies = parseCookies(req);
 
   if (Object.keys(cookies).length !== 0) {
     if (cookies.user) {
       const user = await find(JSON.parse(cookies.user).uid);
+      const { id } = query;
+
       if(user.role === 'company')
       {
-        return {
-          props: {
-            user: JSON.parse(cookies.user),
-            },
-        };
+        if(id === user.id) 
+        {
+          return {
+            props: {
+              user,
+              },
+          };
+        }
       }
     }
   }
   return {
     props: {
-      user: '',
+      user: null,
     },
   };
 }

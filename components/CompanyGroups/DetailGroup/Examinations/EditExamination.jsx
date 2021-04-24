@@ -1,6 +1,6 @@
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import { CKEditor } from '@ckeditor/ckeditor5-react';
-import { Box, Button, Drawer, IconButton, makeStyles, TextField, Typography } from '@material-ui/core';
+import { Box, Button, Checkbox, Drawer, FormControlLabel, IconButton, makeStyles, TextField, Tooltip, Typography } from '@material-ui/core';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import Dialog from '@material-ui/core/Dialog';
@@ -11,11 +11,14 @@ import Slide from '@material-ui/core/Slide';
 import React, { useState } from 'react';
 import DeleteIcon from '@material-ui/icons/Delete';
 import { useRouter } from 'next/router';
-import { create, createMCQ } from '@libs/client/problems';
+import { create, createMCQ, get } from '@libs/client/problems';
 import { FirebaseAuth } from '@libs/client/firebase';
+import HelpIcon from '@material-ui/icons/Help';
+import { getScoreOfCases } from '@libs/client/business';
 import AddProblemFromLibrary from './AddProblemFromLibrary';
 import NewQuestionForExamination from './NewQuestionForExamination';
-
+import QuestionInfo from './QuestionInfo';
+import EditQuestionForExamination from './EditQuestionForExamination';
 
 
 const useStyles = makeStyles((theme) => ({
@@ -28,42 +31,12 @@ const useStyles = makeStyles((theme) => ({
     textFail: {
       color: '#F74B4D',
     },
-    displayScrollSpy: {
-        position: "fixed",
-        marginRight: "15px"
-    },
-    isCurrent: {
-        fontWeight: 'bold',
-        "& :nth-child(1)": {
-            color: "#088247",
-            fontSize: "14px"
-          }
-    },
-    contentScrollSpy: {
-        color: "#000000",
-        fontSize: "13px",
-        wordWrap: "break-word",
-        textDecoration: 'none'
-    },
-    listContentStyle : {
-        listStyle: "none",
-    },
-    listItem: {
-        marginBottom: "10px"
-    },
-
     appBar: {
         position: 'relative',
     },
     title: {
         marginLeft: theme.spacing(2),
-    flex: 1,
-    },
-    list: {
-        width: 500,
-    },
-    fullList: {
-        width: 'auto',
+        flex: 1,
     },
     root: {
         flexGrow: 1,
@@ -76,16 +49,25 @@ const useStyles = makeStyles((theme) => ({
     },
     error:{
         color: 'red !important'
+    },
+    tabPane: {
+        width: "100%",
+        paddingLeft: "16px"
+    },
+    deleteBtn:{
+        color: 'red',
+        float: 'right'
     }
   }));
 
 const Transition = React.forwardRef((props, ref) => <Slide direction="up" ref={ref} {...props} />);
 
 
-export default function EditExamination({examProp}){
+export default function EditExamination({user,examProp,onSubmitExam}){
     const classes= useStyles();
     const published =  examProp?.published || false;
     const duration = examProp?.duration || 0;
+    const isPrivate = examProp?.isPrivate || false;
     const questions = examProp?.problems || [];
     const [exam,setExam] = useState({
         title: examProp?.title,
@@ -93,6 +75,7 @@ export default function EditExamination({examProp}){
         password: examProp?.password,
         published,
         duration,
+        isPrivate,
         start: examProp?.start,
         end: examProp?.end,
         questions
@@ -105,6 +88,8 @@ export default function EditExamination({examProp}){
     const [openDrawer, setOpenDrawer] = useState(false);
     const [valueTab, setValue] = useState(0);
     const [open, setOpen] = useState(false);
+    const [openEdit,setOpenEdit] = useState(false);
+    const [questionEdit, setQuestionEdit] = useState({});
     const router = useRouter();
     const {id} = router.query;
 
@@ -126,6 +111,10 @@ export default function EditExamination({examProp}){
     const handleClose = () => {
         setOpen(false);
     };
+
+    const handleCloseEdit = () => {
+        setOpenEdit(false);
+    }
 
     const handleChangeTitle = (e) => {
         const {value} = e.target;
@@ -179,10 +168,14 @@ export default function EditExamination({examProp}){
             message: ''
         });
     }
+
+    const handleTickPublished = (event) => {
+        setExam({...exam, isPrivate: event.target.checked});
+    };
     
 
-    const handleAddQuestionFromLibrary = (idProblem) =>{
-        setExam({...exam, questions: [...exam.questions, idProblem]});
+    const handleAddQuestionFromLibrary = (problem) =>{
+        setExam({...exam, questions: [...exam.questions, problem]});
     }
 
     const onAddQuestion = async (question, isSaved) => {
@@ -197,20 +190,41 @@ export default function EditExamination({examProp}){
             {
                 idProblem = await createMCQ(FirebaseAuth().currentUser.uid,question);
             }
-            setExam({...exam, questions: [...exam.questions, idProblem]});
+            const problem = await get({problemId: idProblem});
+            setExam({...exam, questions: [...exam.questions, {id: idProblem, score: problem.score}]});
         }
         else
         {
+            if(!question.isMCQ)
+            {
+                question.score = getScoreOfCases(question.cases);
+            }
             setExam({...exam, questions: [...exam.questions, question]});
         }
         setOpen(false);
 
     }
 
+    const handleEditQuestion = (idx,item) => {
+        setQuestionEdit({
+            index: idx,
+            question: item
+        });
+        setOpenEdit(true);
+    }
+
+    const onEditQuestion = (question) => {
+        const newQuestions = [...exam.questions];
+        newQuestions[questionEdit.index] = question;
+        setExam({...exam, questions: newQuestions});
+        setOpenEdit(false);
+    }
+
     const handleDeleteQuestion = (index) => {
         const newListQuestion = [...exam.questions];
         newListQuestion.splice(index,1);
         setExam({...exam, questions: newListQuestion});
+        setValue(index-1);
     }
 
     function validate(){
@@ -234,15 +248,23 @@ export default function EditExamination({examProp}){
             setMessage({...message, message: "List of questions must not be empty"});
             return false;
         }
-        return false;
+        return true;
     }
 
     const handleSubmitForm = () => {
         const valid = validate();
         if(valid)
         {
-            // TODO
-            // return exam obj
+            const developerId = user.role === 'developer' ? user.id : undefined;
+            const formatedExam = {
+                title: exam.title,
+                content: exam.content,
+                duration: exam.duration,
+                isPrivate: exam.isPrivate,
+                problems: exam.questions,
+                developerId
+            }
+            onSubmitExam(formatedExam);
         }
     }
 
@@ -268,10 +290,10 @@ export default function EditExamination({examProp}){
                     />
                     <Typography style={{fontSize: "0.75rem", color: 'rgba(0, 0, 0, 0.54)'}} className={message.content ? classes.error : null }>Examination content must not be empty</Typography>
                 </Box>
-                <Box m={3} p={2} id="section-22">
+                {/* <Box m={3} p={2} id="section-22">
                     <Typography variant="h5">Enter password:</Typography>
                     <TextField type="password" fullWidth/>
-                </Box>
+                </Box> */}
                 <Box m={3} p={2} id="section-23">
                     <Typography variant="h5">* Enter duration:</Typography>
                     <Box display="flex">
@@ -295,6 +317,12 @@ export default function EditExamination({examProp}){
                         <Typography>&nbsp;second(s)&nbsp;&nbsp;</Typography>
                     </Box>
                     <Typography style={{fontSize: "0.75rem", color: 'rgba(0, 0, 0, 0.54)'}} className={message.duration ? classes.error : null }>Examination duration must be &gt; 0 second</Typography>
+                </Box>
+                 <Box m={3} p={2} id="section-22">
+                    <FormControlLabel
+                        control={<Checkbox checked={exam.isPrivate} onChange={handleTickPublished} name="checkedA" />}
+                        label="Is private examination?"
+                    />
                 </Box>
             </Box>
             <Box boxShadow={2} m={3} p={2} id="section-24" className={classes.whiteBackground}>
@@ -338,7 +366,7 @@ export default function EditExamination({examProp}){
                                 {
                                     exam.questions.map((item,index)=>(
                                         <Tab 
-                                        label={item.isMCQ ? `${index+1}. Multiple choice` : `${index+1}. Coding question`} 
+                                        label={`Question ${index+1}`} 
                                         {...a11yProps(index)} />
                                     ))
                                 }
@@ -346,9 +374,30 @@ export default function EditExamination({examProp}){
 
                             {
                                 exam.questions.map((item,idx)=>(
-                                    <TabPanel value={valueTab} index={idx}>
-                                        <Button className={classes.danger} onClick={() => handleDeleteQuestion(idx)} startIcon={<DeleteIcon />}>Delete question</Button>
-                                        {item.title}
+                                    <TabPanel className={classes.tabPane} value={valueTab} index={idx}>
+                                        <div style={{display: 'float', float: 'right'}}>
+                                            <Tooltip title="You cannot edit question in company's questions bank">
+                                                <IconButton aria-label="delete" size="small">
+                                                    <HelpIcon />
+                                                </IconButton>
+                                            </Tooltip>
+                                            <Button color="primary" onClick={() => handleEditQuestion(idx,item)} disabled={!!item.id}>Edit question</Button>
+                                            <Dialog fullScreen open={openEdit} onClose={handleCloseEdit} TransitionComponent={Transition}>
+                                                <AppBar className={classes.appBar} color="secondary">
+                                                    <Toolbar>
+                                                        <Typography variant="h6" className={classes.title}>
+                                                            Edit question for examination
+                                                        </Typography>
+                                                        <IconButton edge="start" color="inherit" onClick={handleCloseEdit} aria-label="close">
+                                                            <CloseIcon />
+                                                        </IconButton>
+                                                    </Toolbar>
+                                                </AppBar>
+                                                <EditQuestionForExamination question={questionEdit.question} onFormSubmitEdit={onEditQuestion} />
+                                            </Dialog> 
+                                        </div>
+                                        <QuestionInfo question={item}/>
+                                        <Button variant="outlined" className={classes.deleteBtn} onClick={() => handleDeleteQuestion(idx)} startIcon={<DeleteIcon />}>Delete question</Button>
                                     </TabPanel>
                                 ))
                             }

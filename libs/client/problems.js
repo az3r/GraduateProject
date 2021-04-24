@@ -1,5 +1,7 @@
 import { collections } from '@utils/constants';
 import { getAttributeReference, transform } from '@utils/firestore';
+// eslint-disable-next-line import/no-cycle
+import { getScoreOfCases } from './business';
 import { Firestore } from './firebase';
 
 /** nếu company tạo problem có thể bỏ field developerId */
@@ -8,7 +10,6 @@ export async function create(
   { cases, code, content, difficulty, language, title, published, developerId }
 ) {
   if (!cases?.length) throw new Error('no testcase provided');
-
   const { id: problemId, parent } = await Firestore()
     .collection(collections.problems)
     .add({
@@ -18,7 +19,7 @@ export async function create(
       language,
       title,
       published,
-      score: cases.reduce((a, b) => a.score + b.score),
+      score: getScoreOfCases(cases),
       createdOn: Firestore.Timestamp.now(),
       deleted: false,
     });

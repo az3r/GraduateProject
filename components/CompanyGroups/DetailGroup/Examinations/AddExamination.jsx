@@ -1,9 +1,14 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-
-import { Box, Breadcrumbs, Divider, Grid, Typography } from '@material-ui/core';
+import { Box, Breadcrumbs, Button, Divider, Grid, Slide, Typography } from '@material-ui/core';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
+import { create } from '@libs/client/exams';
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 import EditExamination from './EditExamination';
 
 const useStyles = makeStyles({
@@ -37,10 +42,27 @@ const useStyles = makeStyles({
   },
 });
 
-export default function AddExamination() {
+const Transition = React.forwardRef((props, ref) => <Slide direction="up" ref={ref} {...props} />);
+
+
+export default function AddExamination({user}) {
+  const [open, setOpen] = useState(false);
   const classes = useStyles();
   const router = useRouter();
   const {id} = router.query;
+
+  
+  const handleClose = () => {
+    setOpen(false);
+  };
+
+  const onSubmitExam = async (exam) => {
+    const examId = await create(id,exam);
+    if(examId !== '')
+    {
+      setOpen(true);
+    } 
+  }
   return (
     <Box m={3}>
       <Grid container>
@@ -58,7 +80,31 @@ export default function AddExamination() {
             <Typography color="textPrimary">Add</Typography>
           </Breadcrumbs>
           <Divider/>
-          <EditExamination examProp={null}/>
+          <EditExamination user={user} onSubmitExam={onSubmitExam} examProp={null}/>
+          <Dialog
+            open={open}
+            TransitionComponent={Transition}
+            keepMounted
+            aria-labelledby="alert-dialog-slide-title"
+            aria-describedby="alert-dialog-slide-description"
+        >
+            <DialogContent>
+                <DialogContentText id="alert-dialog-slide-description">
+                    <Box display="flex" m={3} p={2}>
+                        <CheckCircleIcon color="primary"/>
+                        <Typography variant="h5" color="primary" style={{marginLeft: 10}}>
+                            Add question completed
+                        </Typography>
+                    </Box>
+                    <Link href={`/company-groups/${id}/questions-bank`}>Back to questions bank</Link>
+                </DialogContentText>
+            </DialogContent>
+            <DialogActions>
+                <Button onClick={handleClose} color="primary">
+                    Close
+                </Button>
+            </DialogActions>
+        </Dialog>
         </Grid>
         <Grid item lg={2} md={2}>
           <div className={classes.displayScrollSpy}>
@@ -76,3 +122,4 @@ export default function AddExamination() {
     </Box>
   );
 }
+

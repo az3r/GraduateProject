@@ -11,7 +11,7 @@ export default function Index({ companyGroups }) {
   const router = useRouter();
   useEffect(() => {
     if (companyGroups.length === 0) {
-      router.replace('/');
+      router.replace('/login');
     }
   });
   return (
@@ -41,9 +41,6 @@ export async function getServerSideProps({ req }) {
             },
         };
       }
-        // TODO
-        // get list company of user
-      
     }
   }
   return {
