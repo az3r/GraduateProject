@@ -56,21 +56,31 @@ export async function get({ exam = undefined, examId = undefined }) {
   if (!exam && !examId) return undefined;
   if (exam) value = exam;
   else {
-    value = await Firestore().collection(collections.exams).doc(examId).get();
+    // get public fields
+    const snapshot = await Firestore()
+      .collection(collections.exams)
+      .doc(examId)
+      .get();
+    value = transform(snapshot);
   }
-  const attributes = await getAttributeReference(
+
+  // get private fields
+  const snapshot = await getAttributeReference(
     collections.exams,
     value.id
   ).get();
-  const items = attributes.get('problems');
-  const problemTasks = items.map(async (item) => {
-    if (item.score) return item;
+
+  const attributes = transform(snapshot);
+  const problemTasks = attributes.problems.map(async (item) => {
+    if (item.title) return item;
     return getProblem({ problemId: item });
   });
-  return Object.assign(value, {
-    ...attributes.data(),
+
+  return {
+    ...value,
+    ...attributes,
     problems: await problemTasks,
-  });
+  };
 }
 
 /** get all exams' basic info */
