@@ -20,10 +20,20 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="73bd1854-2930-493b-bbd0-fb90442d9327" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/pages/examination/reject/participated_forbidden.jsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/pages/examination/reject/uninvited_forbidden.jsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/components/Examinations/Challenge/index.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/Examinations/Challenge/index.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/components/Examinations/TestProblemCoding/Problem/index.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/Examinations/TestProblemCoding/Problem/index.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/components/Examinations/TestProblemCoding/index.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/Examinations/TestProblemCoding/index.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/components/Examinations/TestProblemMCQ/index.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/Examinations/TestProblemMCQ/index.jsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/components/Problems/Problem/index.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/Problems/Problem/index.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/libs/client/developers.js" beforeDir="false" afterPath="$PROJECT_DIR$/libs/client/developers.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pages/problem/submissiondetail/[id].jsx" beforeDir="false" afterPath="$PROJECT_DIR$/pages/problem/submissiondetail/[id].jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/libs/client/business.js" beforeDir="false" afterPath="$PROJECT_DIR$/libs/client/business.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/libs/client/exams.js" beforeDir="false" afterPath="$PROJECT_DIR$/libs/client/exams.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pages/examination/[id].jsx" beforeDir="false" afterPath="$PROJECT_DIR$/pages/examination/[id].jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pages/examination/end/[id].jsx" beforeDir="false" afterPath="$PROJECT_DIR$/pages/examination/end/[id].jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pages/examination/index.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/pages/examination/index.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pages/examination/start/[id].jsx" beforeDir="false" afterPath="$PROJECT_DIR$/pages/examination/start/[id].jsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -172,6 +182,7 @@
       <workItem from="1618978890949" duration="15583000" />
       <workItem from="1619066121077" duration="4951000" />
       <workItem from="1619151581405" duration="4012000" />
+      <workItem from="1619238048173" duration="29654000" />
     </task>
     <servers />
   </component>
@@ -195,10 +206,10 @@
       <screen x="1366" y="0" width="1366" height="738" />
     </state>
     <state x="1503" y="0" width="1092" height="738" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.0.1366.738/1366.0.1366.738@1366.0.1366.738" timestamp="1613881740621" />
-    <state x="1786" y="171" key="#com.intellij.fileTypes.FileTypeChooser" timestamp="1614507422683">
+    <state x="1786" y="171" key="#com.intellij.fileTypes.FileTypeChooser" timestamp="1619262361642">
       <screen x="1366" y="0" width="1366" height="738" />
     </state>
-    <state x="1786" y="171" key="#com.intellij.fileTypes.FileTypeChooser/0.0.1366.738/1366.0.1366.738@1366.0.1366.738" timestamp="1614507422683" />
+    <state x="1786" y="171" key="#com.intellij.fileTypes.FileTypeChooser/0.0.1366.738/1366.0.1366.738@1366.0.1366.738" timestamp="1619262361642" />
     <state x="1829" y="124" key="FileChooserDialogImpl" timestamp="1618542731697">
       <screen x="1366" y="0" width="1366" height="738" />
     </state>
@@ -221,10 +232,10 @@
       <screen x="1366" y="0" width="1366" height="738" />
     </state>
     <state x="1705" y="165" key="run.anything.popup/0.0.1366.738/1366.0.1366.738@1366.0.1366.738" timestamp="1618225759996" />
-    <state x="1712" y="59" width="672" height="678" key="search.everywhere.popup" timestamp="1619155553898">
+    <state x="1712" y="59" width="672" height="678" key="search.everywhere.popup" timestamp="1619253264149">
       <screen x="1366" y="0" width="1366" height="738" />
     </state>
     <state x="346" y="59" width="672" height="678" key="search.everywhere.popup/0.0.1366.738/1366.0.1366.738@0.0.1366.738" timestamp="1618631681452" />
-    <state x="1712" y="59" width="672" height="678" key="search.everywhere.popup/0.0.1366.738/1366.0.1366.738@1366.0.1366.738" timestamp="1619155553898" />
+    <state x="1712" y="59" width="672" height="678" key="search.everywhere.popup/0.0.1366.738/1366.0.1366.738@1366.0.1366.738" timestamp="1619253264149" />
   </component>
 </project>

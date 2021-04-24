@@ -3,21 +3,28 @@ import Head from 'next/head';
 import {
   makeStyles,
   Grid,
-  Typography, Box,
+  Typography,
+  Box,
+  Paper,
+  Button,
+  FormControl,
+  FormControlLabel,
+  Checkbox,
+  FormGroup,
+  FormHelperText
 } from '@material-ui/core';
 
 // import { route } from 'next/dist/next-server/server/router';
-// import { useRouter  } from 'next/router';
 // import HTMLReactParser from 'html-react-parser';
 // import { calculateTotalExamTime } from '@libs/client/business';
 // import AppLayout from '../../components/Layout';
-import Paper from '@material-ui/core/Paper';
-import Button from '@material-ui/core/Button';
-import FormControl from '@material-ui/core/FormControl';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Checkbox from '@material-ui/core/Checkbox';
-import FormGroup from '@material-ui/core/FormGroup';
-import FormHelperText from '@material-ui/core/FormHelperText';
+import { parseCookies } from '@client/cookies';
+import { exams, developers } from '@libs/client';
+import { useRouter  } from 'next/router';
+import {formatDuration} from '@client/business';
+import dateFormat from 'dateformat';
+import withReactContent from 'sweetalert2-react-content';
+import Swal from "sweetalert2";
 
 const useStyles = makeStyles({
   welcome: {
@@ -46,45 +53,43 @@ const useStyles = makeStyles({
   },
 });
 
-export default function Introduction() {  // { exam, user }
+export default function Introduction({examId, examination, isInvited, isParticipated}) {  // user,
   const classes = useStyles();
-  // const router = useRouter();
+  const router = useRouter();
 
   const [windowHeight, setWindowHeight] = useState(0);
+  const [value, setValue] = useState(false);
+
+  const handleValueChange = () => {
+    setValue(!value);
+  }
 
   useEffect(() => {
     setWindowHeight(window.innerHeight);
   }, []);
 
-  // useEffect(async () => {
-  //   await users.updateScoreExam(user.uid, exam.id, 0);
-  // }, []);
+  const MySwal = withReactContent(Swal);
 
-  // const beforeunload = async (event) => {
-  //   event.preventDefault();
-  //   event.returnValue = "Are you sure you want to leave this page?";
-  //   return event.returnValue;
-  // }
-  //
-  // // const unload = async () => {
-  // //   await users.updateScoreExam(user.uid, exam.id, 0);
-  // // }
-  //
-  // useEffect(() => {
-  //   window.addEventListener('beforeunload', beforeunload);
-  //   // window.addEventListener('unload', unload);
-  //   return () => {
-  //     window.removeEventListener('beforeunload', beforeunload);
-  //     // window.removeEventListener('unload', unload);
-  //   }
-  // });
-  //
-  // const start = (examId) => {
-  //   // window.onbeforeunload = null;
-  //   // window.onunload = null;
-  //
-  //   router.push(`/examination/start/${examId}`);
-  // }
+  const handleBegin = async () => {
+    if(value === false) {
+      return;
+    }
+
+    MySwal.fire({
+      // title: <p>Confirm</p>,
+      html: "<p>If you click OK button, you cannot take the contest again!</p>",
+      icon: 'warning',
+      allowEscapeKey: false,
+      allowOutsideClick: false,
+      showCancelButton: true,
+      confirmButtonText: 'Ok'
+    }).then( async (result) => {
+      if(result.isConfirmed){
+        // await developers.joinExam(user.id, examId);
+        router.push(`/examination/start/${examId}`);
+      }
+    });
+  }
 
   return (
     <>
@@ -99,26 +104,36 @@ export default function Introduction() {  // { exam, user }
             <Typography variant="h4" style={{fontWeight: 'bolder'}}>Smart Coder</Typography>
             <br />
             <br />
-            <Typography variant="h4" style={{fontWeight: 'bold'}}>International Women Day Coding Contest 2021</Typography>
+            <Typography variant="h4" style={{fontWeight: 'bold'}}>{examination.title}</Typography>
             <br />
             <br />
             <Grid container>
               <Grid item xs={6} >
                 <Typography variant="inherit" className={classes.infoKey}>Competition Duration</Typography>
-                <Typography variant="h6" className={classes.infoValue}>180 minutes</Typography>
+                <Typography variant="h6" className={classes.infoValue}>{formatDuration(examination.duration)}</Typography>
               </Grid>
               <Grid item xs={6} >
                 <Typography variant="inherit" className={classes.infoKey}>No. of questions</Typography>
-                <Typography variant="h6" className={classes.infoValue}>4 questions</Typography>
+                <Typography variant="h6" className={classes.infoValue}>{`${examination.problems.length} questions`}</Typography>
               </Grid>
               <Grid item />
               <Grid item xs={6} >
                 <Typography variant="inherit" className={classes.infoKey}>Starts at</Typography>
-                <Typography variant="h6" className={classes.infoValue}>3/8/2021 - 12:00AM</Typography>
+                <Typography variant="h6" className={classes.infoValue}>
+                  {dateFormat(
+                    new Date(examination.startAt),
+                    'dd/mm/yyyy "-" HH:MM TT'
+                  )}
+                </Typography>
               </Grid>
               <Grid item xs={6} >
                 <Typography variant="inherit" className={classes.infoKey}>Ends at</Typography>
-                <Typography variant="h6" className={classes.infoValue}>3/10/2021 - 12:00AM</Typography>
+                <Typography variant="h6" className={classes.infoValue}>
+                  {dateFormat(
+                    new Date(examination.endAt),
+                    'dd/mm/yyyy "-" HH:MM TT'
+                  )}
+                </Typography>
               </Grid>
             </Grid>
             <br />
@@ -145,22 +160,67 @@ export default function Introduction() {  // { exam, user }
             <br />
 
             <Box>
-              <Box style={{color: 'gray'}}>
-                <FormControl required error component="fieldset">
-                  <FormGroup aria-label="position" row>
-                    <FormControlLabel
-                      value="end"
-                      control={<Checkbox color="primary" />}
-                      label="I will not consult/copy code from any source including a website, book, or friend/colleague to complete these tests, though may reference language documentation or use an IDE that has code completion features."
-                      labelPlacement="end"
-                    />
-                  </FormGroup>
-                  <FormHelperText>Please accept the declaration statement to start the test.</FormHelperText>
-                </FormControl>
-              </Box>
-              <br />
-              {/* href or onclick */}
-              <Button variant="contained" color="primary">Let's Begin!</Button>
+              {
+                (isParticipated === false && examination.startAt <= Date.now() && examination.endAt >= Date.now()) &&
+                  <>
+                    <Box style={{color: 'gray'}}>
+                      <FormControl required error component="fieldset">
+                        <FormGroup aria-label="position" row>
+                          <FormControlLabel
+                            value="end"
+                            control={<Checkbox onChange={() => handleValueChange()} checked={value} color="primary" />}
+                            label="I will not consult/copy code from any source including a website, book, or friend/colleague to complete these tests, though may reference language documentation or use an IDE that has code completion features."
+                            labelPlacement="end"
+                          />
+                        </FormGroup>
+                        <FormHelperText>Please accept the declaration statement to start the test.</FormHelperText>
+                      </FormControl>
+                    </Box>
+                    <br />
+                    {/* href or onclick */}
+                    <Button onClick={() => handleBegin()} style={{marginLeft: 10}} variant="contained" color="primary">Let's Begin!</Button>
+                    {
+                      isInvited === false &&
+                      <Button style={{marginLeft: 10}} variant="contained" color="default">Leader Board</Button>
+                    }
+                  </>
+              }
+              {
+                (isParticipated === true && examination.startAt <= Date.now() && examination.endAt >= Date.now()) &&
+                <>
+                  <Typography variant="h5" style={{color: 'red', fontWeight: 'bolder'}}>You have already joined this contest!</Typography>
+                  <br />
+                  <Button style={{marginLeft: 10}} variant="contained" color="primary" disabled>Let's Begin!</Button>
+                  {
+                    isInvited === false &&
+                    <Button style={{marginLeft: 10}} variant="contained" color="default">Leader Board</Button>
+                  }
+                </>
+              }
+              {
+                examination.startAt > Date.now() &&
+                <>
+                  <Typography variant="h5" style={{color: 'red', fontWeight: 'bolder'}}>The contest has not yet started!</Typography>
+                  <br />
+                  <Button style={{marginLeft: 10}} variant="contained" color="primary" disabled>Let's Begin!</Button>
+                  {
+                    isInvited === false &&
+                    <Button style={{marginLeft: 10}} variant="contained" color="default">Leader Board</Button>
+                  }
+                </>
+              }
+              {
+                examination.endAt < Date.now() &&
+                <>
+                  <Typography variant="h5" style={{color: 'red', fontWeight: 'bolder'}}>The contest has already ended!</Typography>
+                  <br />
+                  <Button style={{marginLeft: 10}} variant="contained" color="primary" disabled>Let's Begin!</Button>
+                  {
+                    isInvited === false &&
+                    <Button style={{marginLeft: 10}} variant="contained" color="default">Leader Board</Button>
+                  }
+                </>
+              }
             </Box>
 
             <Box className={classes.rules}>
@@ -192,24 +252,71 @@ export default function Introduction() {  // { exam, user }
   );
 }
 
-// export async function getServerSideProps({ params, req }) {
-//   const cookies = parseCookies(req);
-//   let user = null;
-//
-//   try {
-//     if (Object.keys(cookies).length !== 0) {
-//       if (cookies.user) {
-//         user = JSON.parse(cookies.user);
-//       }
-//     }
-//   }
-//   catch (e){
-//     console.log(e);
-//   }
-//
-//   const item = await exams.get(params.id, { withProblems: true });
-//   return {
-//     props: {
-//     },
-//   };
-// }
+export async function getServerSideProps({ params, req }) {
+  const cookies = parseCookies(req);
+  let user = null;
+  let isInvited = false;
+  let isParticipated = false;
+
+  const examination = await exams.get({examId: params.id });
+
+  try {
+    if (Object.keys(cookies).length !== 0) {
+      if (cookies.user) {
+        user = JSON.parse(cookies.user);
+        user = await developers.get(user.uid);
+
+        if(examination.password !== ''){
+
+          const invitedDevelopers = await exams.getInvitedDevelopers(params.id);
+
+          for(let i = 0; i < invitedDevelopers.length; i+=1){
+            if(invitedDevelopers[i].id === user.id){
+              isInvited = true;
+              break;
+            }
+          }
+
+          if(isInvited === false){
+            return {
+              redirect: {
+                permanent: false,
+                destination: "/examination/reject/uninvited_forbidden"
+              }
+            }
+          }
+        }
+      }
+      else{
+        return {
+          redirect: {
+            permanent: false,
+            destination: "/login"
+          }
+        }
+      }
+    }
+  }
+  catch (e){
+    console.log(e);
+  }
+
+  const joinedExams = await developers.getJoinedExams(user);
+  for(let i = 0; i < joinedExams.length; i+=1){
+    if(joinedExams[i].id === params.id){
+      isParticipated = true;
+    }
+  }
+
+  console.log(user);
+
+  return {
+    props: {
+      // user,
+      examId: params.id,
+      examination,
+      isInvited,
+      isParticipated
+    },
+  };
+}

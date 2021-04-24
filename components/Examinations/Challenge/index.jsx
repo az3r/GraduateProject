@@ -14,16 +14,15 @@ import {
 
 import Pagination from '@material-ui/lab/Pagination';
 import dateFormat from 'dateformat';
-import { users } from '@libs/client';
 import { useRouter  } from 'next/router';
 import Swal from 'sweetalert2'
 import withReactContent from 'sweetalert2-react-content'
-import { calculateTotalExamTime } from '@libs/client/business';
+import { formatDuration } from '@libs/client/business';
 
 const useStyles = makeStyles(() => ({
   tableContainer: {
     borderRadius: 20,
-    marginTop: 20,
+    margin: 30,
   },
   table: {
     // minWidth: 650,
@@ -71,7 +70,7 @@ export default function Challenge({user, exams}) {
 
   const handleJoinExam = async (examId) => {
     if(user){
-      await users.joinExam(user.uid, examId);
+      // await users.joinExam(user.uid, examId);
       router.push(`/examination/${examId}`);
     }
     else{
@@ -100,7 +99,7 @@ export default function Challenge({user, exams}) {
 
   return (
     <TableContainer
-      boxShadow={10}
+      boxShadow={3}
       component={Box}
       className={classes.tableContainer}
     >
@@ -132,12 +131,14 @@ export default function Challenge({user, exams}) {
           <TableRow>
             <TableCell style={{ fontWeight: 'bolder' }}>Examination</TableCell>
             <TableCell style={{ fontWeight: 'bolder' }}>Duration</TableCell>
+            <TableCell style={{ fontWeight: 'bolder' }}>Start At</TableCell>
+            <TableCell style={{ fontWeight: 'bolder' }}>End At</TableCell>
             <TableCell style={{ fontWeight: 'bolder' }}>Status</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
           {examinations.map((examination, index) => {
-              if (examination.isPrivate === false && Date.parse(examination.startAt) <= Date.now() && Date.parse(examination.endAt) >= Date.now()) {
+              if (examination.password === '') {
                 return (
                   <TableRow
                     key={examination.id}
@@ -162,10 +163,40 @@ export default function Challenge({user, exams}) {
                         </Box>
                       </Link>
                     </TableCell>
-                    <TableCell>{calculateTotalExamTime(examination.minutes, examination.seconds)}</TableCell>
+                    <TableCell>{formatDuration(examination.duration)}</TableCell>
                     <TableCell>
-                      <Button size="small" variant="contained" color="primary"
-                              onClick={() => handleJoinExam(examination.id)}>JOIN</Button>
+                      {dateFormat(
+                      new Date(examination.startAt),
+                      'mmmm dd, yyyy "at" HH:MM TT'
+                    )}
+                    </TableCell>
+                    <TableCell>
+                      {dateFormat(
+                        new Date(examination.endAt),
+                        'mmmm dd, yyyy "at" HH:MM TT'
+                      )}
+                    </TableCell>
+                    <TableCell>
+                      {
+                        (examination.isJoined === false && examination.startAt <= Date.now() && examination.endAt >= Date.now()) &&
+                        <Button size="small" variant="contained" color="primary"
+                                onClick={() => handleJoinExam(examination.id)}>JOIN</Button>
+                      }
+                      {
+                        examination.startAt > Date.now() &&
+                        <Button size="small" variant="contained" color="primary"
+                                onClick={() => handleJoinExam(examination.id)} disabled>NO START</Button>
+                      }
+                      {
+                        examination.endAt < Date.now() &&
+                        <Button size="small" variant="contained" color="secondary"
+                                onClick={() => handleJoinExam(examination.id)}>ENDED</Button>
+                      }
+                      {
+                        examination.isJoined === true &&
+                        <Button size="small" variant="contained" color="secondary"
+                                onClick={() => handleJoinExam(examination.id)}>JOINED</Button>
+                      }
                     </TableCell>
                   </TableRow>
                 );

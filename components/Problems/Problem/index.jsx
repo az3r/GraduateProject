@@ -237,6 +237,8 @@ export default function Problem({problem, user}) {  // { problemSubmissionHistor
       MySwal.fire({
         title: <p>You have not logged in yet, please log into your account!</p>,
         icon: 'info',
+        allowEscapeKey: false,
+        allowOutsideClick: false,
         showCancelButton: true,
         confirmButtonText: 'Login'
       }).then((result) => {

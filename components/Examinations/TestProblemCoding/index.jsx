@@ -1,11 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import dynamic from 'next/dynamic';
-import { users } from '@libs/client';
-import Box from '@material-ui/core/Box';
-import Link from '@material-ui/core/Link';
-import Typography from '@material-ui/core/Typography';
-import { Container, Hidden, makeStyles } from '@material-ui/core';
-import Grid from '@material-ui/core/Grid';
+import {
+  makeStyles,
+  Container,
+  Hidden,
+  Box,
+  Link,
+  Typography,
+  Grid
+} from '@material-ui/core';
 
 const Problem = dynamic(() => import('./Problem'), {
   ssr: false,
@@ -30,17 +33,25 @@ const useStyles = makeStyles(() => ({
 }));
 
 
-export default function TestProblemCoding({examId, index, problem, user, onIsSolvedProblemsChange, onNextQuestion }) {   // , problemSubmissionHistory
+export default function TestProblemCoding({index, problem, user, onIsSolvedProblemsChange, onNextQuestion }) {   // , problemSubmissionHistory
   const classes = useStyles();
 
-  const [author, setAuthor] = useState({uid: "", name: ""});
+
+  const [author] = useState({id: "#", name: "#"});
+  const [company] = useState({name: "#"});
 
   useEffect(async () => {
-    const problemAuthor = await users.get(problem.owner);
+    // const developer = await developers.get(problem.developerId);
+    //
+    // if(developer !== undefined){
+    //   setAuthor(developer);
+    // }
 
-    if(problemAuthor !== undefined){
-      setAuthor(problemAuthor);
-    }
+    // const company = await developers.get(problem.companyId);
+    //
+    // if(company !== undefined){
+    //   setCompany(company);
+    // }
   }, []);
 
 
@@ -68,13 +79,18 @@ export default function TestProblemCoding({examId, index, problem, user, onIsSol
               </Grid>
             </Hidden>
             <Grid item xs={12} md={9}>
-              <Problem examId={examId} index={index} problem={problem} user={user} onIsSolvedProblemsChange={onIsSolvedProblemsChange} onNextQuestion={onNextQuestion} />
+              <Problem index={index} problem={problem} user={user} onIsSolvedProblemsChange={onIsSolvedProblemsChange} onNextQuestion={onNextQuestion} />
             </Grid>
             <Grid item xs={12} md={3}>
               <Box className={classes.root}>
                 <Box className={classes.info}>
                   <Typography style={{color: 'green', fontWeight: 'bolder'}}>Author</Typography>
-                  <Link href={`/profile/${author.uid}`} variant="body2">{author.name}</Link>
+                  <Link href={`/profile/${author.id}`} variant="body2">{author.name}</Link>
+                </Box>
+                <hr />
+                <Box className={classes.info}>
+                  <Typography style={{color: 'green', fontWeight: 'bolder'}}>Company</Typography>
+                  <Typography>{company.name}</Typography>
                 </Box>
                 <hr />
                 <Box className={classes.info}>

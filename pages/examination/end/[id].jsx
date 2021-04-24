@@ -10,8 +10,9 @@ import {
 import TextareaAutosize from '@material-ui/core/TextareaAutosize';
 import Grid from '@material-ui/core/Grid';
 import Hidden from '@material-ui/core/Hidden';
-// import { parseCookies } from '@client/cookies';
-// import { exams } from '@libs/client';
+import { comments, developers } from '@libs/client';
+import { useRouter } from 'next/router';
+import { parseCookies } from '@client/cookies';
 
 const useStyles = makeStyles({
   root: {
@@ -31,8 +32,9 @@ const useStyles = makeStyles({
   },
 });
 
-export default function Feedback() { // {examId}
+export default function Feedback({examId, user}) {
   const classes = useStyles();
+  const router = useRouter();
 
   const [note, setNote] = useState("none");
   const [comment, setComment] = useState("");
@@ -41,10 +43,20 @@ export default function Feedback() { // {examId}
     setComment(event.target.value);
   }
 
-  const handlePostComment = () => {
+  const handlePostComment = async () => {
     if(comment === ""){
       setNote("block");
-      
+
+    }
+    else {
+      await comments.createExamComment(examId,
+        { userId: user.id,
+          username: user.name,
+          avatar: user.avatar,
+          content: comment
+        });
+
+      router.push('/examination/end');
     }
 
   }
@@ -104,11 +116,24 @@ export default function Feedback() { // {examId}
   );
 }
 
-export async function getServerSideProps({ params}) {
+export async function getServerSideProps({ params, req}) {
+  const cookies = parseCookies(req);
+  let user = null;
+  try {
+    if (Object.keys(cookies).length !== 0) {
+      if (cookies.user) {
+        user = JSON.parse(cookies.user);
+        user = await developers.get(user.uid);
+      }
+    }
+  } catch (e) {
+    console.log(e);
+  }
 
   return {
     props: {
       examId: params.id,
+      user
     },
   };
 }

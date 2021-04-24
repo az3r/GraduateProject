@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { submissions, users } from '@libs/client';
+import { submissions } from '@libs/client';
 import Box from '@material-ui/core/Box';
 import {
   withStyles,
@@ -11,15 +11,12 @@ import {
   Typography,
   Select,
   MenuItem,
-  InputBase
+  InputBase,
+  AppBar
 } from '@material-ui/core';
-import AppBar from '@material-ui/core/AppBar';
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import { CKEditor } from '@ckeditor/ckeditor5-react';
 import CodeEditor from '@components/CodeEditor';
-// import Swal from "sweetalert2";
-// import { useRouter } from 'next/router';
-// import withReactContent from 'sweetalert2-react-content';
 import CloseIcon from '@material-ui/icons/Close';
 import CheckIcon from '@material-ui/icons/Check';
 
@@ -145,7 +142,7 @@ const editorConfiguration = {
   toolbar: [ ],
 };
 
-export default function Problem({examId, index, problem, user, onIsSolvedProblemsChange, onNextQuestion}) {
+export default function Problem({index, problem, user, onIsSolvedProblemsChange, onNextQuestion}) {
   const classes = useStyles();
   // const router = useRouter();
 
@@ -170,14 +167,14 @@ export default function Problem({examId, index, problem, user, onIsSolvedProblem
 
   useEffect(() => {
     // Get code from localStorage
-    const localStorageCode = localStorage.getItem(`${examId}${index}Temporary`);
+    const localStorageCode = localStorage.getItem(`${user.id}${index}Temporary`);
     if(localStorageCode != null){
       setCode(localStorageCode);
     }
   }, []);
 
   const handleCodeChange = (newCode) => {
-    localStorage.setItem(`${examId}${index}Temporary`, newCode);
+    localStorage.setItem(`${user.id}${index}Temporary`, newCode);
     setCode(newCode);
   };
 
@@ -238,45 +235,12 @@ export default function Problem({examId, index, problem, user, onIsSolvedProblem
 
       if (response.failed === 0) {
         status = "Accepted";
-
-        await submissions.createProblemSubmission(
-          user.uid,
-          {
-            problemId: problem.id,
-            problemName: problem.title,
-            language: problem.language,
-            status: "Accepted",
-            code,
-            data: response,
-          });
-        await users.updateScoreProblem(user.uid, problem.id, problem.score);
       } else {
         status = "Wrong Answer";
-
-        await submissions.createProblemSubmission(
-          user.uid,
-          {
-            problemId: problem.id,
-            problemName: problem.title,
-            language: problem.language,
-            status: "Wrong Answer",
-            code,
-            data: response,
-          });
       }
     } catch (e) {
       status = "Compilation Error";
       response = e;
-      await submissions.createProblemSubmission(
-        user.uid,
-        {
-          problemId: problem.id,
-          problemName: problem.title,
-          language: problem.language,
-          status: "Compilation Error",
-          code,
-          data: e,
-        });
     } finally {
       setDisplayWaiting('none');
       setDisplayRunCode('block');
@@ -286,8 +250,8 @@ export default function Problem({examId, index, problem, user, onIsSolvedProblem
 
       // save to LocalStorage
       const result = {
-        problemId: problem.id,
-        problemName: problem.title,
+        // problemId: problem.id,
+        // title: problem.title,
         isMCQ: false,
         status,
         details: {
@@ -295,7 +259,7 @@ export default function Problem({examId, index, problem, user, onIsSolvedProblem
           ...response
         }
       }
-      localStorage.setItem(`${examId}${index}`, JSON.stringify(result));
+      localStorage.setItem(`${user.id}${index}`, JSON.stringify(result));
 
       onNextQuestion();
     }

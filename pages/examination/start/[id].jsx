@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import Head from 'next/head';
 import dynamic from 'next/dynamic';
-import { exams } from '@libs/client';
-// import { useRouter } from 'next/router';
+import { exams, developers } from '@libs/client';
+import { useRouter } from 'next/router';
 import { parseCookies } from '@libs/client/cookies';
 import {
   makeStyles,
@@ -43,23 +43,11 @@ function TabPanel(props) {
   const { children, value, index } = props; // , ...other
 
   return (
-    // <div
-    //   role="tabpanel"
-    //   hidden={value !== index}
-    //   id={`vertical-tabpanel-${index}`}
-    //   aria-labelledby={`vertical-tab-${index}`}
-    //   {...other}
-    // >
     <>
       {value === index && (
-        // <Paper style={{paddingLeft: 20, paddingRight: 20, maxHeight: 800, height: 800,  minWidth: 800, maxWidth: 800, overflow: 'auto'}}>
-        //   <Typography>{children}</Typography>
-        // </Paper>
         children
       )}
     </>
-
-    // </div>
   );
 }
 
@@ -125,18 +113,35 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 
-export default function Start({ examId, problems, user }) {
+export default function Start({ user, examId, exam }) {
   const classes = useStyles();
+  const router = useRouter();
 
   const [value, setValue] = React.useState(0);
   const [windowHeight, setWindowHeight] = useState(0);
   const [windowWidth, setWindowWidth] = useState(0);
-  const [isSolvedProblems, setIsSolvedProblems] = useState(new Array(problems.length).fill(false));
-  const [timeOut, setTimeOut] = useState(1200);
+  const [isSolvedProblems, setIsSolvedProblems] = useState(new Array(exam.problems.length).fill(false));
+  const [timeOut, setTimeOut] = useState(exam.duration);
 
   const MySwal = withReactContent(Swal);
 
-  const handleSubmit = async () => {
+  const handleSubmit = () => {
+    MySwal.fire({
+      title: 'Are you sure?',
+      icon: 'question',
+      allowEscapeKey: false,
+      allowOutsideClick: false,
+      showCancelButton: true,
+      showConfirmButton: true
+    }).then((result) => {
+      if (result.isConfirmed) {
+        // router.push(`/examination/end/${examId}`);
+        submit();
+      }
+    });
+  }
+
+  const submit = async () => {
     MySwal.fire({
       title: 'Please Wait !',
       html: 'Submitting...',
@@ -148,7 +153,60 @@ export default function Start({ examId, problems, user }) {
       }
     });
 
-    await setTimeout(() => { MySwal.close()}, 3000);
+    const results = [];
+    let correct = 0;
+    // Important! save results into firebase database
+    for (let i = 0; i < isSolvedProblems.length; i += 1) {
+      if (isSolvedProblems[i] === false) {
+        results.push(null);
+      } else {
+        // get from LocalStorage
+        const resultJson = localStorage.getItem(`${user.id}${i}`);
+
+        if (resultJson !== null) {
+          const resultObject = JSON.parse(resultJson);
+
+          if (resultObject.isMCQ === true) {
+            results.push({
+              isMCQ: true,
+              status: exam.problems[i].correctIndices === resultObject.selectedAnswer,
+              details: {
+                selectedAnswer: resultObject.selectedAnswer,
+                correctAnswer: exam.problems[i].correctIndices
+              }
+            });
+
+            // Check status
+            if (exam.problems[i].correctIndices === resultObject.selectedAnswer) {
+              correct += 1;
+            }
+          } else {
+            results.push(resultObject);
+
+            // Check status
+            if (results.status === "Accepted") {
+              correct += 1;
+            }
+          }
+
+          // remove item from localstorage
+          localStorage.removeItem(`${user.id}${i}`);
+        }
+      }
+    }
+
+    localStorage.removeItem(`${user.id}isSolvedProblems`);
+
+    console.log(results);
+
+    await developers.createExamSubmission(user.id, {
+      examId,
+      total: exam.problems.length,
+      correct,
+      results,
+    });
+    // await users.updateScoreExam(user.uid, id, totalScoreTemp);
+    MySwal.close();
 
     MySwal.fire({
       title: 'Finished!',
@@ -158,24 +216,12 @@ export default function Start({ examId, problems, user }) {
       showConfirmButton: true
     }).then((result) => {
       if (result.isConfirmed) {
-        // router.push('/login');
+        router.push(`/examination/end/${examId}`);
       }
     });
-
-    // MySwal.fire({
-    //   title: <p>You have not logged in yet, please log into your account!</p>,
-    //   icon: 'info',
-    //   inputOptions: inputOptions,
-    //   showCancelButton: true,
-    //   confirmButtonText: 'Login'
-    // }).then((result) => {
-    //   if (result.isConfirmed) {
-    //     router.push('/login');
-    //   }
-    // });
   }
   useEffect(() => {
-    const isSolvedProblemsJson = localStorage.getItem(`${examId}isSolvedProblems`);
+    const isSolvedProblemsJson = localStorage.getItem(`${user.id}isSolvedProblems`);
     if(isSolvedProblemsJson !== null){
       const isSolvedProblemsObject = JSON.parse(isSolvedProblemsJson);
       setIsSolvedProblems(isSolvedProblemsObject);
@@ -188,7 +234,7 @@ export default function Start({ examId, problems, user }) {
     setIsSolvedProblems(isSolvedProblemsDump);
 
     // Save isSolvedProblems to LocalStorage
-    localStorage.setItem(`${examId}isSolvedProblems`, JSON.stringify(isSolvedProblemsDump));
+    localStorage.setItem(`${user.id}isSolvedProblems`, JSON.stringify(isSolvedProblemsDump));
   }
 
 
@@ -197,7 +243,9 @@ export default function Start({ examId, problems, user }) {
     setWindowWidth(window.innerWidth);
 
     setTimeout(() => {
-      console.log(timeOut);
+      if(timeOut === 0){
+        submit();
+      }
       setTimeOut(timeOut - 1);
 
     }, 1000);
@@ -212,21 +260,13 @@ export default function Start({ examId, problems, user }) {
   }
 
   const handleNextQuestion = () => {
-    if(value === problems.length){
+    if(value === exam.problems.length){
       setValue(0);
     }
     else{
       setValue(value + 1);
     }
   }
-  // const router = useRouter();
-  // const [index, setIndex] = useState(0);
-  // const [problem, setProblem] = useState(problems[0]);
-  // const [results, setResults] = useState([]);
-  // const [numberOfCorrect, setNumberOfCorrect] = useState(0);
-  // const [commentOpen, setCommentOpen] = useState(false);
-  // const [commentContent, setCommentContent] = useState('');
-  // const [totalScore, setTotalScore] = useState(0);
 
   // useEffect(async () => {
   //   if (user === null) {
@@ -271,66 +311,6 @@ export default function Start({ examId, problems, user }) {
   //     });
   //     await users.updateScoreExam(user.uid, id, totalScoreTemp);
   //     handleCommentClickOpen();
-  //   }
-  // };
-  //
-  // const beforeunload = async (event) => {
-  //   event.preventDefault();
-  //   event.returnValue = "Are you sure you want to leave this page?";
-  //   return event.returnValue;
-  // }
-
-
-  // const unload = async () => {
-  //   await users.updateScoreExam(user.uid, id, 0);
-  // }
-
-  // useEffect(() => {
-  //   window.addEventListener('beforeunload', beforeunload);
-  //   // window.addEventListener('unload', unload);
-  //   return () => {
-  //     window.removeEventListener('beforeunload', beforeunload);
-  //     // window.removeEventListener('unload', unload);
-  //   }
-  // });
-
-
-  // const handleCommentContentChange = (e) => {
-  //   e.preventDefault();
-  //   setCommentContent(e.target.value);
-  // };
-  //
-  // const handleCommentClickOpen = () => {
-  //   setCommentOpen(true);
-  // };
-  //
-  // const handleCommentClose = async () => {
-  //   const usr = await users.get();
-  //
-  //   if (usr !== null) {
-  //     await comments.createExamComment(id, {
-  //       userId: usr.id,
-  //       username: usr.name,
-  //       avatar: usr.avatar,
-  //       content: 'No comment!',
-  //     });
-  //     setCommentOpen(false);
-  //     router.push('/examination/end');
-  //   }
-  // };
-  //
-  // const handleComment = async () => {
-  //   const usr = await users.get();
-  //
-  //   if (usr !== null) {
-  //     await comments.createExamComment(id, {
-  //       userId: usr.id,
-  //       username: usr.name,
-  //       avatar: usr.avatar,
-  //       content: commentContent,
-  //     });
-  //     setCommentOpen(false);
-  //     router.push('/examination/end');
   //   }
   // };
 
@@ -378,7 +358,7 @@ export default function Start({ examId, problems, user }) {
             <Tab label="All" className={classes.tab} {...a11yProps(0)} />
           }
           {
-            problems.map((problem, index) => {
+            exam.problems.map((problem, index) => {
               if((index + 1) === value){
                 return (
                   <Tab style={{backgroundColor: 'white', fontWeight: 'bolder'}} label={index + 1} className={classes.tab} {...a11yProps(index + 1)} />
@@ -421,10 +401,10 @@ export default function Start({ examId, problems, user }) {
                 </TableRow>
               </TableHead>
               {
-                problems &&
+                exam.problems &&
                 <TableBody>
                   {
-                    problems.map((problem, index) => (
+                    exam.problems.map((problem, index) => (
                       <TableRow
                         key={problem.id}
                         hover
@@ -435,7 +415,7 @@ export default function Start({ examId, problems, user }) {
                         }
                       >
                         {
-                          problem.isMCQ === false &&
+                          (problem.isMCQ === undefined || problem.isMCQ === false) &&
                             <>
                               <TableCell>
                                   {index + 1}
@@ -458,7 +438,7 @@ export default function Start({ examId, problems, user }) {
                             </TableCell>
                             <TableCell>
                               <Typography variant="h6">
-                                {HTMLReactParser(problem.question)}
+                                {HTMLReactParser(problem.title)}
                               </Typography>
                             </TableCell>
                             <TableCell>
@@ -485,21 +465,20 @@ export default function Start({ examId, problems, user }) {
           </Paper>
         </TabPanel>
         {
-          problems.map((problem, index) => {
-            if(problem.isMCQ === false){
+          exam.problems.map((problem, index) => {
+            if(problem.isMCQ === undefined ||problem.isMCQ === false){
               return (
                 <TabPanel value={value} index={index + 1}>
                   <Paper style={{paddingLeft: 50, paddingTop: 20, paddingBottom: 20, paddingRight: 50, maxHeight: windowHeight - 60, height: windowHeight - 60,  minWidth: windowWidth - 80, width: windowWidth - 80, overflow: 'auto'}}>
-                    <TestProblemCoding examId={examId} index={index} problem={problem} user={user} onIsSolvedProblemsChange={handleIsSolvedProblemsChange} onNextQuestion={handleNextQuestion} />
+                    <TestProblemCoding index={index.toString()} problem={problem} user={user} onIsSolvedProblemsChange={handleIsSolvedProblemsChange} onNextQuestion={handleNextQuestion} />
                   </Paper>
                 </TabPanel>
               )
             }
-
               return (
                 <TabPanel value={value} index={index + 1}>
                   <Paper style={{paddingLeft: 50, paddingTop: 20, paddingBottom: 20, paddingRight: 50, maxHeight: windowHeight - 60, height: windowHeight - 60,  minWidth: windowWidth - 80, width: windowWidth - 80, overflow: 'auto'}}>
-                    <TestProblemMCQ examId={examId} index={index} problem={problem} user={user} onIsSolvedProblemsChange={handleIsSolvedProblemsChange} onNextQuestion={handleNextQuestion} />
+                    <TestProblemMCQ index={index.toString()} problem={problem} user={user} onIsSolvedProblemsChange={handleIsSolvedProblemsChange} onNextQuestion={handleNextQuestion} />
                   </Paper>
                 </TabPanel>
               )
@@ -507,45 +486,6 @@ export default function Start({ examId, problems, user }) {
           })
         }
       </div>
-
-      {/* Comment */}
-      {/* <Dialog */}
-      {/*  open={commentOpen} */}
-      {/*  onClose={handleCommentClose} */}
-      {/*  aria-labelledby="form-dialog-title" */}
-      {/*  maxWidth="sm" */}
-      {/*  fullWidth */}
-      {/* > */}
-      {/*  <DialogTitle id="form-dialog-title" style={{ color: 'green' }}> */}
-      {/*    <EditIcon fontSize="medium" /> */}
-      {/*    Your comments! */}
-      {/*  </DialogTitle> */}
-      {/*  <DialogContent> */}
-      {/*    <DialogContentText> */}
-      {/*      Please type your comments here...! */}
-      {/*    </DialogContentText> */}
-      {/*    <TextareaAutosize */}
-      {/*      rowsMax={10} */}
-      {/*      rowsMin={10} */}
-      {/*      style={{ width: '100%' }} */}
-      {/*      value={commentContent} */}
-      {/*      onChange={handleCommentContentChange} */}
-      {/*      placeholder="Type your comments here!" */}
-      {/*    /> */}
-      {/*  </DialogContent> */}
-      {/*  <DialogActions> */}
-      {/*    <Button */}
-      {/*      onClick={handleCommentClose} */}
-      {/*      color="secondary" */}
-      {/*      variant="outlined" */}
-      {/*    > */}
-      {/*      Cancel */}
-      {/*    </Button> */}
-      {/*    <Button onClick={handleComment} color="primary" variant="outlined"> */}
-      {/*      Post */}
-      {/*    </Button> */}
-      {/*  </DialogActions> */}
-      {/* </Dialog> */}
     </>
   );
 }
@@ -553,26 +493,76 @@ export default function Start({ examId, problems, user }) {
 export async function getServerSideProps({ params, req }) {
   const cookies = parseCookies(req);
   let user = null;
-  let items = null;
+  let isInvited = false;
+  let isParticipated = false;
 
+  const items = await exams.get({examId: params.id});
   try {
-    items = await exams.getProblems(params.id);
-    console.log(items);
-
     if (Object.keys(cookies).length !== 0) {
       if (cookies.user) {
         user = JSON.parse(cookies.user);
+        user = await developers.get(user.uid);
+
+        if(items.password !== ''){
+
+          const invitedDevelopers = await exams.getInvitedDevelopers(params.id);
+
+          for(let i = 0; i < invitedDevelopers.length; i+=1){
+            if(invitedDevelopers[i].id === user.id){
+              isInvited = true;
+              break;
+            }
+          }
+
+          if(isInvited === false){
+            return {
+              redirect: {
+                permanent: false,
+                destination: "/examination/uninvited_forbidden"
+              }
+            }
+          }
+        }
+      }
+      else{
+        return {
+          redirect: {
+            permanent: false,
+            destination: "/login"
+          }
+        }
       }
     }
   } catch (e) {
     console.log(e);
   }
 
+  const joinedExams = await developers.getJoinedExams(user);
+  for(let i = 0; i < joinedExams.length; i+=1){
+    if(joinedExams[i].id === params.id){
+      isParticipated = true;
+    }
+  }
+
+  if(isParticipated === true){
+    return {
+      redirect: {
+        permanent: false,
+        destination: "/examination/participated_forbidden"
+      }
+    }
+  }
+
+  // Join Exam
+  await developers.joinExam(user.id, params.id);
+
+  console.log(items);
+
   return {
     props: {
-      examId: params.id,
-      problems: items,
       user,
+      examId: params.id,
+      exam: items,
     },
   };
 }

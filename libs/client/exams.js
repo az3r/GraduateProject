@@ -71,15 +71,27 @@ export async function get({ exam = undefined, examId = undefined }) {
   ).get();
 
   const attributes = transform(snapshot);
-  const problemTasks = attributes.problems.map(async (item) => {
-    if (item.title) return item;
-    return getProblem({ problemId: item });
-  });
+  // const problemTasks = await attributes.problems.map(async (item) => {
+  //   if (item.title) return item;
+  //   return await getProblem({ problemId: item.problemId });
+  // });
+
+  const problemTasks = [];
+  for (let i = 0; i < attributes.problems.length; i += 1) {
+    if (attributes.problems[i].title) {
+      problemTasks.push(attributes.problems[i]);
+    } else {
+      // const item = await getProblem({ problemId: attributes.problems[i].problemId });
+      problemTasks.push(
+        getProblem({ problemId: attributes.problems[i].problemId })
+      );
+    }
+  }
 
   return {
     ...value,
     ...attributes,
-    problems: await problemTasks,
+    problems: await Promise.all(problemTasks),
   };
 }
 
@@ -94,6 +106,7 @@ export async function getAll(companyId) {
 }
 
 export async function getPublishedExams() {
+  publishExam;
   const exams = await Firestore()
     .collection(collections.exams)
     .where('published', '==', true)
@@ -154,9 +167,10 @@ export async function addToInvitation(examId, developerId) {
 
 export async function getInvitedDevelopers(examId) {
   const attributes = await getAttributeReference(
-    collections.exam,
+    collections.exams,
     examId
   ).get();
+
   const developerIds = attributes.get('invited');
   if (developerIds?.length > 0) {
     const developers = await Firestore()

@@ -97,18 +97,14 @@ export function formatQuestionsArray(questions, isUpdateExam) {
   return newQuestionList;
 }
 
-export function calculateTotalExamTime(minutes, seconds) {
-  let totalHours = 0;
-  let totalMinutes = 0;
-  let totalSeconds = 0;
+export function formatDuration(time) {
+  // Hours, minutes and seconds
+  // let hrs = ~~(time / 3600);
+  const mins = (time % 3600) / 60;
+  // let secs = ~~time % 60;
 
-  totalMinutes += Math.floor(seconds / 60);
-  totalSeconds = seconds % 60;
-
-  totalHours += Math.floor(minutes / 60);
-  totalMinutes = minutes % 60;
-
-  return `${totalHours}h ${totalMinutes}m ${totalSeconds}s`;
+  // return `${hrs}h ${mins}m ${secs}s`;
+  return `${mins} minutes`;
 }
 
 export async function getUsersForInvitation(examId) {

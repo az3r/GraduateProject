@@ -4,29 +4,11 @@ import {
   makeStyles,
   Box,
   Typography,
-  Button,
-  TextField,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogContentText,
-  DialogTitle,
   Grid,
-  InputLabel,
-  FormControl,
-  Input,
-  InputAdornment,
-  IconButton,
 } from '@material-ui/core';
-import { exams, users } from '@libs/client';
+import { exams, developers } from '@libs/client';
 import { parseCookies } from '@libs/client/cookies';
 
-import { Visibility, VisibilityOff } from '@material-ui/icons';
-import clsx from 'clsx';
-import withReactContent from 'sweetalert2-react-content';
-import Swal from "sweetalert2";
-import { useRouter } from 'next/router';
-import TopScore from '../../components/Examinations/TopScore';
 import Challenge from '../../components/Examinations/Challenge';
 import Layout from '../../components/Layout';
 
@@ -42,151 +24,17 @@ const useStyles = makeStyles({
     color: 'white',
     marginTop: 5,
   },
-  participateBox: {
-    display: 'flex',
-    justifyContent: 'center',
-    position: 'relative',
-  },
-  participateBtn: {
-    position: 'absolute',
-    top: -50,
-  },
-  margin: {
-    margin: 1,
-  },
-  textField: {
-    width: '100%',
-  },
 });
 
-export default function Index({user, examinations, usersExamScore}) {
+export default function Index({user, examinations}) { // usersExamScore
   const classes = useStyles();
-  const router = useRouter();
 
   const [introHeight, setIntroHeight] = useState(0);
-  const [open, setOpen] = useState(false);
-  const [values, setValues] = React.useState({
-    examId: '',
-    password: '',
-    showPassword: false,
-    note: '',
-  });
-
-  const MySwal = withReactContent(Swal);
-
-  const handleClickOpen = () => {
-    setOpen(true);
-  };
-
-  const handleClose = () => {
-    setOpen(false);
-  };
-
-  const handleJoin = async () => {
-    if(user) {
-      // If examId empty
-      if (values.examId === '') {
-        setValues({ ...values, note: "Exam ID is not valid!" });
-        return;
-      }
-
-      // Get exam by examId
-      const participatedExam = await exams.get(values.examId, { withProblems: false });
-
-      // Check whether exam exist?
-      if (participatedExam.createdOn === null) {
-        setValues({ ...values, note: "This exam don't exist!" });
-
-      }
-      else{
-        // Check whether user have been invited yet?
-        // Get invited users by examId
-        const invitedUsers = await exams.getInvitedUsers(values.examId);
-
-
-        // Get user info by uid
-        const userInfo = await users.get(user.uid);
-        console.log(userInfo);
-
-        let isInvited = false;
-
-        for(let i = 0; i < invitedUsers.length; i += 1){
-          if(userInfo.email === invitedUsers[i]){
-            isInvited = true;
-            break;
-          }
-        }
-
-        if(isInvited === false){
-          setValues({ ...values, note: "You have not been invited yet!" });
-        }
-        else{
-          // Check whether user have participated?
-          // Get all joined exams by user
-          const joinedExam = await users.getJoinedExams(user.uid);
-
-          let isJoined = false;
-
-          for (let i = 0; i < joinedExam.length; i += 1) {
-            if (joinedExam[i].id === values.examId) {
-              isJoined = true;
-              break;
-            }
-          }
-
-          if (isJoined) {
-            setValues({ ...values, note: "You have participated this exam!" });
-          }             // Check whether exam have expired?
-                        // Get exam by examId
-          else if (Date.parse(participatedExam.startAt) <= Date.now() && Date.parse(participatedExam.endAt) >= Date.now()) {
-              // If participated exam is not private
-              if (participatedExam.isPrivate === false) {
-                await users.joinExam(user.uid, participatedExam.id);
-                router.push(`/examination/${participatedExam.id}`);
-              } else if (participatedExam.password === values.password) {
-                await users.joinExam(user.uid, participatedExam.id);
-                router.push(`/examination/${participatedExam.id}`);
-              } else {
-                setValues({ ...values, note: "Password is not valid!" });
-              }
-            } else {
-              setValues({ ...values, note: "This exam have expired or have not started yet!" });
-            }
-        }
-      }
-
-    }
-    else{
-      setOpen(false);
-      MySwal.fire({
-        title: <p>You have not logged in yet, please log into your account!</p>,
-        icon: 'info',
-        showCancelButton: true,
-        confirmButtonText: 'Login'
-      }).then((result) => {
-        if(result.isConfirmed){
-          router.push('/login');
-        }
-      });
-    }
-  };
 
   useEffect(() => {
     setIntroHeight(window.innerWidth / (7/2));
   }, []);
 
-
-  const handleChange = (prop) => (event) => {
-    setValues({ ...values, [prop]: event.target.value });
-  };
-
-  const handleClickShowPassword = () => {
-    setValues({ ...values, showPassword: !values.showPassword });
-  };
-
-  const handleMouseDownPassword = (event) => {
-    event.preventDefault();
-  };
 
   return (
     <>
@@ -205,85 +53,13 @@ export default function Index({user, examinations, usersExamScore}) {
             </Typography>
           </Box>
         </Box>
-        <Box className={classes.participateBox}>
-          <Button
-            color="primary"
-            variant="contained"
-            className={classes.participateBtn}
-            onClick={handleClickOpen}
-          >
-            Participate
-          </Button>
-          <Dialog
-            open={open}
-            onClose={handleClose}
-            aria-labelledby="form-dialog-title"
-            maxWidth="xs"
-          >
-            <DialogTitle id="form-dialog-title">
-              Participate Examination
-            </DialogTitle>
-            <DialogContent>
-              <DialogContentText>
-                To participate in the examination, please enter your EXAM ID and EXAM CODE
-                which we sent it to your email.
-              </DialogContentText>
-              {
-                values.note !== '' &&
-                  <h3 style={{color: 'red'}}>Note: {values.note}</h3>
-              }
-              <TextField
-                autoFocus
-                margin="dense"
-                id="examCode"
-                label="Exam ID"
-                type="text"
-                value={values.examId}
-                onChange={handleChange('examId')}
-                fullWidth
-              />
-              <FormControl className={clsx(classes.margin, classes.textField)}>
-                <InputLabel htmlFor="standard-adornment-password">Password</InputLabel>
-                <Input
-                  id="standard-adornment-password"
-                  type={values.showPassword ? 'text' : 'password'}
-                  value={values.password}
-                  onChange={handleChange('password')}
-                  endAdornment={
-                    <InputAdornment position="end">
-                      <IconButton
-                        aria-label="toggle password visibility"
-                        onClick={handleClickShowPassword}
-                        onMouseDown={handleMouseDownPassword}
-                      >
-                        {values.showPassword ? <Visibility /> : <VisibilityOff />}
-                      </IconButton>
-                    </InputAdornment>
-                  }
-                />
-              </FormControl>
-            </DialogContent>
-            <DialogActions>
-              <Button
-                onClick={handleClose}
-                color="secondary"
-                variant="contained"
-              >
-                Cancel
-              </Button>
-              <Button onClick={handleJoin} color="primary" variant="contained">
-                Join
-              </Button>
-            </DialogActions>
-          </Dialog>
-        </Box>
         <Box>
           <Grid container direction="row" justify="center" spacing={3}>
-            <Grid item sm={5}>
+            <Grid item sm={12} md={8}>
               <Challenge user={user} exams={examinations} />
             </Grid>
-            <Grid item sm={4}>
-              <TopScore usersExamScore={usersExamScore} />
+            <Grid item sm={12} md={4}>
+              {/* <TopScore usersExamScore={usersExamScore} /> */}
             </Grid>
           </Grid>
         </Box>
@@ -295,15 +71,31 @@ export default function Index({user, examinations, usersExamScore}) {
 export async function getServerSideProps({req}) {
   const cookies = parseCookies(req);
   let user = null;
-  let joinedExams = null;
+  let joinedExams = [];
+  let items = [];
 
   try {
     if (Object.keys(cookies).length !== 0) {
       if (cookies.user) {
         user = JSON.parse(cookies.user);
 
-        joinedExams = await users.getJoinedExams(user.uid);
-        // console.log(joinedExams);
+        // //Mock data
+        // const problem1 = await problems.get({problem: undefined, problemId: "npZVtiYgmbTCmNTXHzEK"});
+        // const problem2 = await problems.get({problem: undefined, problemId: "QyLDueAaJQTBeEAEzftJ"});
+        // await exams.create(user.uid,
+        //   { title: "Exam 2",
+        //     content: "Exam 2",
+        //     duration: 1200,
+        //     password: "12345678",
+        //     problems: [
+        //       problem1,
+        //       problem2
+        //     ]
+        //   });
+        // await exams.publishExam("Q9ZOTat7Se3XPQAlQwi5", Date.now(), Date.now());
+
+        user = await developers.get(user.uid);
+        joinedExams = await developers.getJoinedExams(user);
       }
     }
   }
@@ -311,38 +103,29 @@ export async function getServerSideProps({req}) {
     console.log(e);
   }
 
-  let items = await exams.get(undefined, {withProblems: true});
-
-  // console.log(items);
+  items = await exams.getPublishedExams();
 
   if(joinedExams !== null){
-    const itemsTemp = [];
-
     for(let i = 0; i < items.length; i += 1){
-      let flag = false;
+      items[i].isJoined = false;
       for(let j = 0; j < joinedExams.length; j += 1){
         if(items[i].id === joinedExams[j].id){
-          flag = true;
+          items[i].isJoined = true;
           break;
         }
       }
-
-      if(flag !== true){
-        itemsTemp.push(items[i]);
-      }
     }
-    items = itemsTemp;
   }
 
+
   // Get users score for TOP SCORE
-  const usersExamScore = await users.getUsersByExamScore();
-  // console.log(usersExamScore);
+  // const usersExamScore = await developers.getUserByExamScore();
 
   return {
     props: {
       user,
       examinations: items,
-      usersExamScore
+      // usersExamScore
     },
   };
 }
