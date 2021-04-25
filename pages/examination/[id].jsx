@@ -266,7 +266,7 @@ export async function getServerSideProps({ params, req }) {
         user = JSON.parse(cookies.user);
         user = await developers.get(user.uid);
 
-        if(examination.password !== ''){
+        if(examination.isPrivate === true){
 
           const invitedDevelopers = await exams.getInvitedDevelopers(params.id);
 

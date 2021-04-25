@@ -503,7 +503,7 @@ export async function getServerSideProps({ params, req }) {
         user = JSON.parse(cookies.user);
         user = await developers.get(user.uid);
 
-        if(items.password !== ''){
+        if(items.isPrivate === true){
 
           const invitedDevelopers = await exams.getInvitedDevelopers(params.id);
 

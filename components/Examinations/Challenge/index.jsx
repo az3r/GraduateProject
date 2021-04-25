@@ -138,7 +138,7 @@ export default function Challenge({user, exams}) {
         </TableHead>
         <TableBody>
           {examinations.map((examination, index) => {
-              if (examination.password === '') {
+              if (examination.isPrivate === false) {
                 return (
                   <TableRow
                     key={examination.id}
