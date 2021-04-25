@@ -30,7 +30,7 @@ const useStyles = makeStyles({
     },
   });
 
-export default function GroupQuestionsBank(){
+export default function GroupQuestionsBank({questions}){
     const classes = useStyles();
     const [type,setType] = useState(0)
     const router = useRouter();
@@ -51,7 +51,7 @@ export default function GroupQuestionsBank(){
             </Breadcrumbs>
             <Divider/>
 
-            <Box display="flex" justifyContent="center">
+            <Box m={3} p={2} display="flex" justifyContent="center">
                 <OutlinedInput
                     className={classes.outlinedInput}
                     placeholder="Search..."
@@ -67,10 +67,17 @@ export default function GroupQuestionsBank(){
                     <option value={2}>Multiple choice questions</option>
                 </Select>
             </Box>
-            <Box display="flex" justifyContent="flex-end">  
+            <Box m={3} display="flex" justifyContent="flex-end">  
                 <Link href={`/company-groups/${id}/questions-bank/add`}>
                     <Button color="secondary" variant="contained">Add question</Button>
                 </Link>
+            </Box>
+            <Box m={3}>
+                {
+                    questions.map((item)=>(
+                        <Typography>{item.title}</Typography>
+                    ))
+                }
             </Box>
         </Box>
     );

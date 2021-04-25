@@ -75,6 +75,10 @@ export default function CodingQuestionForm({onFormSubmit, propQuestion, isSaved}
     const lang = propQuestion !== null ? propQuestion.language : "Csharp";
     const difficulty = propQuestion !== null ? propQuestion.difficulty : 0;
     const published = propQuestion?.published || false;
+    const cases = propQuestion?.cases || [];
+    const input = cases.map(item => item.input);
+    const output = cases.map(item => item.output);
+    const casesScore = cases.map(item => item.score);
 
     const classes = useStyles();
     const [question,setQuestion] = useState({
@@ -88,10 +92,10 @@ export default function CodingQuestionForm({onFormSubmit, propQuestion, isSaved}
             input: '',
             output: '',
         },
-        input: [],
-        output: [],
-        casesScore: [],
-        cases: propQuestion?.cases,
+        input,
+        output,
+        casesScore,
+        cases,
         published
     });
 
@@ -335,21 +339,21 @@ export default function CodingQuestionForm({onFormSubmit, propQuestion, isSaved}
                 message: 'Problem code must not be empty'});
             return false;
         }
-        if(question.input.length === 0 && question.cases.length === 0)
+        if(question.input.length === 0)
         {
             setMessage({...message, 
                 input: true,
                 message: 'Input file for test cases must be submitted'});
             return false;
         }
-        if(question.output.length === 0 && question.cases.length === 0)
+        if(question.output.length === 0)
         {
             setMessage({...message, 
                 output: true,
                 message: 'Output file for test cases must be submitted'});
             return false;
         }
-        if(question.casesScore.length === 0 && question.cases.length === 0)
+        if(question.casesScore.length === 0)
         {
             setMessage({...message, 
                 casesScore: true,
@@ -375,6 +379,7 @@ export default function CodingQuestionForm({onFormSubmit, propQuestion, isSaved}
             delete formatedQuestion.input;
             delete formatedQuestion.output;
             delete formatedQuestion.casesScore;
+            delete formatedQuestion.simpleTest;
             onFormSubmit(formatedQuestion);
             setMessage({...message, isTestSuccess: false});
         }

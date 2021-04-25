@@ -37,8 +37,7 @@ export async function update(
 /** get all problems basic info without their private attributes */
 export async function getExams(companyId) {
   const snapshot = await Firestore()
-    .collection(collections.problems)
-    .where('deleted', '==', false)
+    .collection(collections.exams)
     .where('companyId', '==', companyId)
     .orderBy('createdOn', 'desc')
     .get();

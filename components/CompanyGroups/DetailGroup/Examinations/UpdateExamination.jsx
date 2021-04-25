@@ -3,7 +3,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import { Box, Breadcrumbs, Button, Divider, Grid, Slide, Typography } from '@material-ui/core';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { create } from '@libs/client/exams';
+import { update } from '@libs/client/exams';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
@@ -45,23 +45,20 @@ const useStyles = makeStyles({
 const Transition = React.forwardRef((props, ref) => <Slide direction="up" ref={ref} {...props} />);
 
 
-export default function AddExamination({user}) {
+export default function UpdateExamination({user, examProp}) {
   const [open, setOpen] = useState(false);
   const classes = useStyles();
   const router = useRouter();
-  const {id} = router.query;
+  const {id, exam} = router.query;
 
   
   const handleClose = () => {
     setOpen(false);
   };
 
-  const onSubmitExam = async (exam) => {
-    const examId = await create(id,exam);
-    if(examId !== '')
-    {
-      setOpen(true);
-    } 
+  const onSubmitExam = async (examObj) => {
+    await update(exam,examObj);
+    setOpen(true);
   }
   return (
     <Box m={3}>
@@ -77,10 +74,13 @@ export default function AddExamination({user}) {
             <Link color="inherit" href={`/company-groups/${id}/examinations`}>
                 Examinations
             </Link>
-            <Typography color="textPrimary">Add</Typography>
+            <Link color="inherit" href={`/company-groups/${id}/examinations/detail?exam=${exam}`}>
+                Detail
+            </Link>
+            <Typography color="textPrimary">Update</Typography>
           </Breadcrumbs>
           <Divider/>
-          <EditExamination user={user} onSubmitExam={onSubmitExam} examProp={null}/>
+          <EditExamination user={user} onSubmitExam={onSubmitExam} examProp={examProp}/>
           <Dialog
             open={open}
             TransitionComponent={Transition}
@@ -93,10 +93,10 @@ export default function AddExamination({user}) {
                     <Box display="flex" m={3} p={2}>
                         <CheckCircleIcon color="primary"/>
                         <Typography variant="h5" color="primary" style={{marginLeft: 10}}>
-                            Add question completed
+                            Update examination completed
                         </Typography>
                     </Box>
-                    <Link href={`/company-groups/${id}/questions-bank`}>Back to questions bank</Link>
+                    <Link href={`/company-groups/${id}/examinations/detail?exam=${exam}`}>Back to examination</Link>
                 </DialogContentText>
             </DialogContent>
             <DialogActions>

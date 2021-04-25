@@ -3,18 +3,25 @@ import Head from 'next/head';
 import { parseCookies } from '@libs/client/cookies';
 import { useRouter } from 'next/router';
 import AppLayout from '@components/Layout';
-import DetailGroup from '@components/CompanyGroups/DetailGroup';
-import GroupExaminations from '@components/CompanyGroups/DetailGroup/Examinations';
 import { find } from '@libs/client/users';
-import { getExams } from '@libs/client/companies';
+import { get } from '@libs/client/exams';
+import dynamic from 'next/dynamic';
 
-export default function Index({ user, exams }) {
+const DetailExamination = dynamic(
+  () => import('@components/CompanyGroups/DetailGroup/Examinations/DetailExamination'),
+  { ssr: false }
+);
+
+
+export default function Index({ user, examination }) {
   const router = useRouter();
+
   useEffect(() => {
     if (!user) {
       router.replace('/login');
     }
   });
+
   return (
     <>
       <Head>
@@ -22,9 +29,7 @@ export default function Index({ user, exams }) {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <AppLayout>
-        <DetailGroup selected={4}>
-            <GroupExaminations user={user||user} exams={exams||exams}/>
-        </DetailGroup>
+        <DetailExamination user={user||user} examProp={examination||examination}/>
       </AppLayout>
     </>
   );
@@ -36,20 +41,20 @@ export async function getServerSideProps({ req, query }) {
   if (Object.keys(cookies).length !== 0) {
     if (cookies.user) {
       const user = await find(JSON.parse(cookies.user).uid);
-      const { id } = query;
+      const { id, exam } = query;
 
       if(user.role === 'company')
       {
         if(id === user.id) 
         {
-          const exams = await getExams(user.id);
-          console.log(exams);
-          return {
-            props: {
-              user,
-              exams
-              },
-          };
+          const examination = await get({examId: exam});
+          if(examination.companyId === id)
+            return {
+              props: {
+                user,
+                examination
+                },
+            };
         }
       }
     }

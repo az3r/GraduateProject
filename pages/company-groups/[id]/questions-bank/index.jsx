@@ -6,24 +6,10 @@ import AppLayout from '@components/Layout';
 import DetailGroup from '@components/CompanyGroups/DetailGroup';
 import GroupQuestionsBank from '@components/CompanyGroups/DetailGroup/QuestionsBank';
 import { find } from '@libs/client/users';
+import { getProblems } from '@libs/client/companies';
 
-export default function Index({ user }) {
+export default function Index({ user,questions }) {
   const router = useRouter();
-
-  const questions = [
-    {
-      id: 1,
-      name: "Question 1"
-    },
-    {
-      id: 2,
-      name: "Question 2"
-    },
-    {
-      id: 3,
-      name: "Question 3"
-    },
-  ]
 
   useEffect(() => {
     if (!user) {
@@ -38,7 +24,7 @@ export default function Index({ user }) {
       </Head>
       <AppLayout>
         <DetailGroup selected={3}>
-            <GroupQuestionsBank user={user || user} questions={questions}/>
+            <GroupQuestionsBank user={user || user} questions={questions || questions}/>
         </DetailGroup>
       </AppLayout>
     </>
@@ -57,9 +43,11 @@ export async function getServerSideProps({ req, query }) {
       {
         if(id === user.id) 
         {
+          const questions = await getProblems(user.id);
           return {
             props: {
               user,
+              questions
               },
           };
         }

@@ -287,6 +287,7 @@ export default function EditExamination({user,examProp,onSubmitExam}){
                     <CKEditor
                         editor={ ClassicEditor }
                         onChange={handleChangeContent}
+                        data={exam.content}
                     />
                     <Typography style={{fontSize: "0.75rem", color: 'rgba(0, 0, 0, 0.54)'}} className={message.content ? classes.error : null }>Examination content must not be empty</Typography>
                 </Box>

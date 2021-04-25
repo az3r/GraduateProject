@@ -32,18 +32,16 @@ export async function create(
  * @param {*} properties exma's properties
  */
 export async function update(
-  { id, owner },
-  developerId,
-  { title, content, password, duration, problems }
+  id,
+  { title, content, isPrivate, duration, problems }
 ) {
-  if (owner !== developerId) throw new Error('exam: not an owner');
   await Firestore()
     .collection(collections.exams)
     .doc(id)
     .update({
       title,
       content,
-      password,
+      isPrivate,
       duration,
       score: problems.reduce((a, b) => a.score + b.score),
       modifiedAt: Firestore.Timestamp.now(),
@@ -83,9 +81,7 @@ export async function get({ exam = undefined, examId = undefined }) {
       problemTasks.push(attributes.problems[i]);
     } else {
       // const item = await getProblem({ problemId: attributes.problems[i].problemId });
-      problemTasks.push(
-        getProblem({ problemId: attributes.problems[i].problemId })
-      );
+      problemTasks.push(getProblem({ problemId: attributes.problems[i].id }));
     }
   }
 
