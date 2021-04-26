@@ -1,6 +1,7 @@
 import { collections } from '@utils/constants';
 import { getAttributeReference, transform } from '@utils/firestore';
 import { Firestore } from './firebase';
+// eslint-disable-next-line import/no-cycle
 import { get as getProblem } from './problems';
 
 /** nếu company tạo exam có thể bỏ field developerId */
@@ -17,13 +18,10 @@ export async function create(
       content,
       duration,
       isPrivate,
-      score: problems.reduce((current, { score }) => current + score),
+      score: problems.reduce((a, b) => a.score + b.score),
       createdOn: Firestore.Timestamp.now(),
     });
-  await getAttributeReference(collections.exams, id).set({
-    parent: id,
-    problems,
-  });
+  await getAttributeReference(collections.exams, id).set({ id, problems });
   return id;
 }
 
@@ -45,7 +43,7 @@ export async function update(
       content,
       isPrivate,
       duration,
-      score: problems.reduce((current, { score }) => current + score),
+      score: problems.reduce((a, b) => a.score + b.score),
       modifiedAt: Firestore.Timestamp.now(),
     });
   await getAttributeReference(collections.exams, id).update({ problems });
@@ -82,15 +80,18 @@ export async function get({ exam = undefined, examId = undefined }) {
     if (attributes.problems[i].title) {
       problemTasks.push(attributes.problems[i]);
     } else {
-      // const item = await getProblem({ problemId: attributes.problems[i].problemId });
-      problemTasks.push(getProblem({ problemId: attributes.problems[i].id }));
+      const item = await getProblem({
+        problemId: attributes.problems[i].problemId,
+      });
+      problemTasks.push(item);
+      // problemTasks.push(getProblem({ problemId: attributes.problems[i].id }));
     }
   }
 
   return {
-    ...attributes,
     ...value,
-    problems: await Promise.all(problemTasks),
+    ...attributes,
+    problems: problemTasks,
   };
 }
 

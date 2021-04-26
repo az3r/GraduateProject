@@ -72,38 +72,12 @@ export async function getServerSideProps({req}) {
           const solvedProblems = await developers.getSolvedProblems(user.uid);
           solvedProblemsNumber = solvedProblems.length;
 
+          // Get unsolved problems
+          const unsolvedProblems = await developers.getUnsolvedProblems(user.uid);
+          unsolvedProblemsNumber = unsolvedProblems.length;
 
-          const allProblemSubmissions = await developers.getAllProblemSubmissions(user.uid);
-          const unsolvedSubmittedProblems = allProblemSubmissions.filter(
-            (problem) => {
-              let isAccepted = false;
-              for(let i = 0; i < solvedProblems.length; i += 1){
-                if (solvedProblems[i].id === problem.problemId) {
-                  isAccepted = true;
-                  break;
-                }
-              }
-
-              if(isAccepted === false && problem.status !== "Accepted"){
-                return problem;
-              }
-              return null;
-            });
-
-          const unsolvedSubmittedProblemsDump = [];
-          for(let i = 0; i < unsolvedSubmittedProblems.length; i += 1) {
-            let flag = false;
-            for(let j = 0; j < unsolvedSubmittedProblemsDump.length; j += 1) {
-              if(unsolvedSubmittedProblems[i].problemId === unsolvedSubmittedProblemsDump[j].problemId){
-                flag = true;
-                break;
-              }
-            }
-            if(flag === false){
-              unsolvedSubmittedProblemsDump.push(unsolvedSubmittedProblems[i]);
-            }
-          }
-          unsolvedProblemsNumber = unsolvedSubmittedProblemsDump.length;
+          console.log(solvedProblemsNumber);
+          console.log(unsolvedProblemsNumber);
         }
 
       }

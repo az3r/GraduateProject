@@ -12,7 +12,7 @@ import Box from '@material-ui/core/Box';
 import Breadcrumbs from '@material-ui/core/Breadcrumbs';
 import Pagination from '@material-ui/lab/Pagination';
 
-import { users } from '@libs/client';
+import { developers } from '@libs/client';
 
 const useStyles = makeStyles({
   userBox: {
@@ -100,7 +100,7 @@ export default function Ranking({usersExamScore}) {
                   <Box style={{marginLeft: 30, marginRight: 30}}>
                     {(currentPage - 1)*10 + index + 1}
                   </Box>
-                  <Avatar variant="circle" src={userScore.avatar} />
+                  <Avatar variant="circular" src={userScore.avatar} />
                   <Box style={{marginRight: 'auto'}}>
                     <h3 style={{display: 'inline-block', marginLeft: 20, marginRight: 0, marginTop: 0, marginBottom: 0}}>
                       <a href={`/profile/${userScore.id}`} style={{color: 'green', textDecoration: 'none'}}>{userScore.name}</a>
@@ -139,7 +139,7 @@ export default function Ranking({usersExamScore}) {
 }
 
 export async function getServerSideProps() {
-  const usersExamScore = await users.getUsersByExamScore();
+  const usersExamScore = await developers.getUserByExamScore();
 
   return {
     props: {
