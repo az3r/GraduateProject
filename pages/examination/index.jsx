@@ -9,6 +9,7 @@ import {
 import { exams, developers } from '@libs/client';
 import { parseCookies } from '@libs/client/cookies';
 
+import TopScore from '@components/Examinations/TopScore';
 import Challenge from '../../components/Examinations/Challenge';
 import Layout from '../../components/Layout';
 
@@ -26,7 +27,7 @@ const useStyles = makeStyles({
   },
 });
 
-export default function Index({user, examinations}) { // usersExamScore
+export default function Index({user, examinations, usersExamScore}) {
   const classes = useStyles();
 
   const [introHeight, setIntroHeight] = useState(0);
@@ -45,7 +46,7 @@ export default function Index({user, examinations}) { // usersExamScore
       </Head>
 
       <Layout>
-        <Box style={{ height: introHeight }} className={classes.introBox}>
+        <Box style={{ height: introHeight}} className={classes.introBox}>
           <Box style={{ textAlign: 'center' }}>
             <img src="/trophy.png" alt="trophy icon" />
             <Typography variant="h4" className={classes.introTitle}>
@@ -53,13 +54,13 @@ export default function Index({user, examinations}) { // usersExamScore
             </Typography>
           </Box>
         </Box>
-        <Box>
-          <Grid container direction="row" justify="center" spacing={3}>
-            <Grid item sm={12} md={8}>
+        <Box m={3}>
+          <Grid container spacing={3}>
+            <Grid item xs={12} md={8}>
               <Challenge user={user} exams={examinations} />
             </Grid>
-            <Grid item sm={12} md={4}>
-              {/* <TopScore usersExamScore={usersExamScore} /> */}
+            <Grid item xs={12} md={4}>
+               <TopScore usersExamScore={usersExamScore} />
             </Grid>
           </Grid>
         </Box>
@@ -119,13 +120,14 @@ export async function getServerSideProps({req}) {
 
 
   // Get users score for TOP SCORE
-  // const usersExamScore = await developers.getUserByExamScore();
+  const usersExamScore = await developers.getUserByExamScore();
+  console.log(usersExamScore);
 
   return {
     props: {
       user,
       examinations: items,
-      // usersExamScore
+      usersExamScore
     },
   };
 }

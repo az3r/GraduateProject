@@ -73,7 +73,10 @@ export async function leaveExam(uid, examId) {
   });
 }
 
-export async function addSolvedProblem(developer, { problemId, score }) {
+export async function addSolvedProblem(
+  developer,
+  { problemId, score, status }
+) {
   const ref = Firestore().collection(collections.developers).doc(developer.id);
 
   // add or update problem in user's solveProblems collection
@@ -82,14 +85,33 @@ export async function addSolvedProblem(developer, { problemId, score }) {
     .doc(problemId)
     .get();
   if (problem.exists) {
-    await problem.ref.update({ modifiedAt: Firestore.Timestamp.now(), score });
+    if (status === 'Solved') {
+      await problem.ref.update({
+        modifiedAt: Firestore.Timestamp.now(),
+        score,
+        status,
+      });
+    } else if (problem.get('score') < score) {
+        await problem.ref.update({
+          modifiedAt: Firestore.Timestamp.now(),
+          score,
+          status,
+        });
+      } else {
+        return;
+      }
   } else {
-    await problem.ref.set({ createdOn: Firestore.Timestamp.now(), score });
+    await problem.ref.set({
+      createdOn: Firestore.Timestamp.now(),
+      score,
+      status,
+    });
   }
+
   // update total problem score
   await ref.update({
     problemScore:
-      developer.problemScore -
+      (developer.problemScore === undefined ? 0 : developer.problemScore) -
       (problem.exists ? problem.get('score') : 0) +
       score,
   });
@@ -98,10 +120,12 @@ export async function addSolvedProblem(developer, { problemId, score }) {
 export async function getUserByExamScore() {
   const result = await Firestore()
     .collection(collections.developers)
-    .orderBy('examScore:', 'desc')
+    .orderBy('examScore', 'desc')
     .orderBy('name', 'asc')
     .orderBy(Firestore.FieldPath.documentId(), 'asc')
     .get();
+
+  console.log(result.docs);
   return result.docs.map((doc) => doc.data());
 }
 
@@ -110,6 +134,30 @@ export async function getSolvedProblems(uid) {
     .collection(collections.developers)
     .doc(uid)
     .collection(collections.solvedProblems)
+    .where('status', '==', 'Solved')
+    .get();
+
+  if (ids.docs.length === 0) {
+    return [];
+  }
+
+  const problems = await Firestore()
+    .collection(collections.problems)
+    .where(
+      Firestore.FieldPath.documentId(),
+      'in',
+      ids.docs.map((item) => item.id)
+    )
+    .get();
+  return problems.docs.map((doc) => transform(doc));
+}
+
+export async function getUnsolvedProblems(uid) {
+  const ids = await Firestore()
+    .collection(collections.developers)
+    .doc(uid)
+    .collection(collections.solvedProblems)
+    .where('status', '==', 'Unsolved')
     .get();
 
   if (ids.docs.length === 0) {
@@ -214,12 +262,12 @@ export async function getExamResults(developerId, examId) {
 }
 
 export async function createExamSubmission(
-  developerId,
-  { examId, total, correct, results }
+  developer,
+  { examId, total, correct, results, score }
 ) {
   const { id } = await Firestore()
     .collection(collections.developers)
-    .doc(developerId)
+    .doc(developer.id)
     .collection(collections.examSubmissions)
     .add({
       examId,
@@ -227,7 +275,16 @@ export async function createExamSubmission(
       correct,
       createdOn: Firestore.Timestamp.now(),
       results,
+      score,
     });
+
+  const ref = Firestore().collection(collections.developers).doc(developer.id);
+
+  // update total score
+  await ref.update({
+    examScore:
+      (developer.examScore === undefined ? 0 : developer.examScore) + score,
+  });
   return id;
 }
 

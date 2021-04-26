@@ -12,9 +12,9 @@ import {useRouter} from 'next/router';
 
 const useStyles = makeStyles({
   root: {
-    marginTop: 20,
     paddingTop: 20,
     paddingBottom: 20,
+    width: '100%'
   },
   top1: {
     display: 'flex',
@@ -75,7 +75,7 @@ export default function TopScore({usersExamScore}) {
   }
   return (
     <>
-      <Paper className={classes.root} elevation={20}>
+      <Paper className={classes.root} elevation={3}>
         <Box className={classes.topScore}>
           <img src="/ranking.png" alt="ranking icon" />
           <Typography
@@ -89,69 +89,75 @@ export default function TopScore({usersExamScore}) {
             TOP SCORE
           </Typography>
         </Box>
-        <Box className={classes.top1}>
-          <Link href={`/profile/${usersExamScore[0].id}`} underline="none">
-            <Avatar
-              style={{
-                display: 'block',
-                marginLeft: 'auto',
-                marginRight: 'auto',
-              }}
-              className={classes.large}
-              alt="avatar"
-              src={usersExamScore[0].avatar}
-            />
-            <Typography>{usersExamScore[0].name} ({usersExamScore[0].examScore})</Typography>
-          </Link>
-        </Box>
-        <Box className={classes.top23}>
-          <Link href={`/profile/${usersExamScore[1].id}`} underline="none">
-            <Avatar
-              style={{
-                display: 'block',
-                marginLeft: 'auto',
-                marginRight: 'auto',
-              }}
-              className={classes.large}
-              alt="avatar"
-              src={usersExamScore[1].avatar}
-            />
-            <Typography>{usersExamScore[1].name} ({usersExamScore[1].examScore})</Typography>
-          </Link>
-          <Link href={`/profile/${usersExamScore[2].id}`} underline="none">
-            <Avatar
-              style={{
-                display: 'block',
-                marginLeft: 'auto',
-                marginRight: 'auto',
-              }}
-              className={classes.large}
-              alt="avatar"
-              src={usersExamScore[2].avatar}
-            />
-            <Typography>{usersExamScore[2].name} ({usersExamScore[2].examScore})</Typography>
-          </Link>
-        </Box>
+        {
+          usersExamScore[0] !== undefined &&
+          <Box className={classes.top1}>
+            <Link href={`/profile/${usersExamScore[0].id}`} underline="none">
+              <Avatar
+                style={{
+                  display: 'block',
+                  marginLeft: 'auto',
+                  marginRight: 'auto',
+                }}
+                className={classes.large}
+                alt="avatar"
+                src={usersExamScore[0].avatar}
+              />
+              <Typography>{usersExamScore[0].name} ({usersExamScore[0].examScore})</Typography>
+            </Link>
+          </Box>
+        }
+        {
+          (usersExamScore[1] !== undefined && usersExamScore[2] !== undefined) &&
+          <Box className={classes.top23}>
+            <Link href={`/profile/${usersExamScore[1].id}`} underline="none">
+              <Avatar
+                style={{
+                  display: 'block',
+                  marginLeft: 'auto',
+                  marginRight: 'auto',
+                }}
+                className={classes.large}
+                alt="avatar"
+                src={usersExamScore[1].avatar}
+              />
+              <Typography>{usersExamScore[1].name} ({usersExamScore[1].examScore})</Typography>
+            </Link>
+            <Link href={`/profile/${usersExamScore[2].id}`} underline="none">
+              <Avatar
+                style={{
+                  display: 'block',
+                  marginLeft: 'auto',
+                  marginRight: 'auto',
+                }}
+                className={classes.large}
+                alt="avatar"
+                src={usersExamScore[2].avatar}
+              />
+              <Typography>{usersExamScore[2].name} ({usersExamScore[2].examScore})</Typography>
+            </Link>
+          </Box>
+        }
 
         <Box m={1} border={1} className={classes.topScoreList}>
           {
-            usersExamScore.map((usersexamscore, index) => {
+            usersExamScore.map((userexamscore, index) => {
               if(index >= 3 && index <= 14){
                 return (
-                  <Box key={usersexamscore.id} borderBottom={1} className={classes.topScoreItem}>
+                  <Box key={userexamscore.id} borderBottom={1} className={classes.topScoreItem}>
                     <Typography variant="h6" style={{ margin: 10 }}>
                       {index + 1}
                     </Typography>
                     <Avatar
                       className={classes.small}
                       alt="avatar"
-                      src={usersexamscore.avatar}
+                      src={userexamscore.avatar}
                     />
                     <Typography color="primary" variant="h6" style={{ margin: 10 }}>
-                      {usersexamscore.name}
+                      {userexamscore.name}
                     </Typography>
                     <Box className={classes.score}>
-                      {usersexamscore.examScore}
+                      {userexamscore.examScore}
                       <img alt="Score" src="/coins_28px.png" />
                     </Box>
                   </Box>

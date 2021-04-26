@@ -22,7 +22,7 @@ import { formatDuration } from '@libs/client/business';
 const useStyles = makeStyles(() => ({
   tableContainer: {
     borderRadius: 20,
-    margin: 30,
+    width: '100%'
   },
   table: {
     // minWidth: 650,
@@ -165,10 +165,12 @@ export default function Challenge({user, exams}) {
                     </TableCell>
                     <TableCell>{formatDuration(examination.duration)}</TableCell>
                     <TableCell>
-                      {dateFormat(
-                      new Date(examination.startAt),
-                      'mmmm dd, yyyy "at" HH:MM TT'
-                    )}
+                      <Box>
+                          {dateFormat(
+                            new Date(examination.startAt),
+                            'mmmm dd, yyyy "at" HH:MM TT'
+                          )}
+                      </Box>
                     </TableCell>
                     <TableCell>
                       {dateFormat(

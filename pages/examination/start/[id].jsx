@@ -155,6 +155,7 @@ export default function Start({ user, examId, exam }) {
 
     const results = [];
     let correct = 0;
+    let score = 0;
     // Important! save results into firebase database
     for (let i = 0; i < isSolvedProblems.length; i += 1) {
       if (isSolvedProblems[i] === false) {
@@ -179,13 +180,15 @@ export default function Start({ user, examId, exam }) {
             // Check status
             if (exam.problems[i].correctIndices === resultObject.selectedAnswer) {
               correct += 1;
+              score += exam.problems[i].score;
             }
           } else {
             results.push(resultObject);
 
             // Check status
-            if (results.status === "Accepted") {
+            if (resultObject.status === "Accepted") {
               correct += 1;
+              score += exam.problems[i].score;
             }
           }
 
@@ -199,13 +202,14 @@ export default function Start({ user, examId, exam }) {
 
     console.log(results);
 
-    await developers.createExamSubmission(user.id, {
+    await developers.createExamSubmission(user, {
       examId,
       total: exam.problems.length,
       correct,
       results,
+      score,
     });
-    // await users.updateScoreExam(user.uid, id, totalScoreTemp);
+
     MySwal.close();
 
     MySwal.fire({

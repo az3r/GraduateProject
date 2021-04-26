@@ -284,7 +284,7 @@ export default function Problem({problem, user}) {  // { problemSubmissionHistor
 
         // Add solved problem
         const usr = await developers.get(user.uid);
-        await developers.addSolvedProblem(usr, {problemId: problem.id, score: response.score});
+        await developers.addSolvedProblem(usr, {problemId: problem.id, score: response.score, status: 'Solved'});
       } else {
         status = "Wrong Answer";
         score = response.score;
@@ -303,6 +303,10 @@ export default function Problem({problem, user}) {  // { problemSubmissionHistor
             data: response,
           });
       }
+
+      // Add solved problem
+      const usr = await developers.get(user.uid);
+      await developers.addSolvedProblem(usr, {problemId: problem.id, score: response.score, status: 'Unsolved'});
     } catch (e) {
       status = "Compilation Error";
       score = 0;
