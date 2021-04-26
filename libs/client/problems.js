@@ -1,7 +1,5 @@
 import { collections } from '@utils/constants';
 import { getAttributeReference, transform } from '@utils/firestore';
-// eslint-disable-next-line import/no-cycle
-import { getScoreOfCases } from './business';
 import { Firestore } from './firebase';
 
 /** nếu company tạo problem có thể bỏ field developerId */
@@ -19,7 +17,7 @@ export async function create(
       language,
       title,
       published,
-      score: getScoreOfCases(cases),
+      score: cases.reduce((total, { score }) => total + score),
       createdOn: Firestore.Timestamp.now(),
       deleted: false,
     });
@@ -112,7 +110,7 @@ export async function update(
     .update({
       difficulty,
       language,
-      score: cases.reduce((a, b) => a.score + b.score),
+      score: cases.reduce((total, { score }) => total + score),
       title,
       modifiedAt: Firestore.Timestamp.now(),
     });

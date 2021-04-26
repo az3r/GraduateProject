@@ -18,7 +18,10 @@ export async function registerWithProvider({ provider, role }) {
 
   // check if user has been registered before
   const user = await find(credentials.user.uid);
-  if (user) return Promise.reject({ code: 'auth/account-already-existed' });
+  if (user) {
+    await signout();
+    return Promise.reject({ code: 'auth/account-already-existed' });
+  }
 
   // setup new account
   const { displayName } = credentials.user;

@@ -1,7 +1,6 @@
 import { collections } from '@utils/constants';
 import { getAttributeReference, transform } from '@utils/firestore';
 import { Firestore } from './firebase';
-// eslint-disable-next-line import/no-cycle
 import { get as getProblem } from './problems';
 
 /** nếu company tạo exam có thể bỏ field developerId */
@@ -18,7 +17,7 @@ export async function create(
       content,
       duration,
       isPrivate,
-      score: problems.reduce((a, b) => a.score + b.score),
+      score: problems.reduce((current, { score }) => current + score),
       createdOn: Firestore.Timestamp.now(),
     });
   await getAttributeReference(collections.exams, id).set({
@@ -46,7 +45,7 @@ export async function update(
       content,
       isPrivate,
       duration,
-      score: problems.reduce((a, b) => a.score + b.score),
+      score: problems.reduce((current, { score }) => current + score),
       modifiedAt: Firestore.Timestamp.now(),
     });
   await getAttributeReference(collections.exams, id).update({ problems });
