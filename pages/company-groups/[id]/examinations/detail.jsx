@@ -8,7 +8,7 @@ import { get } from '@libs/client/exams';
 import dynamic from 'next/dynamic';
 
 const DetailExamination = dynamic(
-  () => import('@components/CompanyGroups/DetailGroup/Examinations/DetailExamination'),
+  () => import('@components/CompanyGroups/DetailGroup/Examinations/Detail/DetailExamination'),
   { ssr: false }
 );
 

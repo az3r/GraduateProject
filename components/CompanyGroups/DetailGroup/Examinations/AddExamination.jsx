@@ -93,10 +93,10 @@ export default function AddExamination({user}) {
                     <Box display="flex" m={3} p={2}>
                         <CheckCircleIcon color="primary"/>
                         <Typography variant="h5" color="primary" style={{marginLeft: 10}}>
-                            Add question completed
+                            Add examination completed
                         </Typography>
                     </Box>
-                    <Link href={`/company-groups/${id}/questions-bank`}>Back to questions bank</Link>
+                    <Link href={`/company-groups/${id}/examinations`}>Back to examinations page</Link>
                 </DialogContentText>
             </DialogContent>
             <DialogActions>

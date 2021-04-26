@@ -79,11 +79,11 @@ function ShowInfoQuestionMCQ({problem})
 
     return(
         <div>
-            <Typography>Difficulty: {getDifficultyString(problem.difficulty)}</Typography>
-            <Typography>Score: {problem.score}</Typography>
+            <Typography><b>Difficulty:</b> {getDifficultyString(problem.difficulty)}</Typography>
+            <Typography><b>Score:</b> {problem.score}</Typography>
             {
                 !problem.isMCQ ?
-                <Typography>Language: {problem.language}</Typography> : null
+                <Typography><b>Language:</b> {problem.language}</Typography> : null
             }
             <Divider/>
             {
