@@ -1,5 +1,6 @@
 import { collections } from '@utils/constants';
 import { Firestore, FirebaseAuth } from './firebase';
+import { find } from './users';
 
 export async function register({ username, email, password, role }) {
   const credentials = await FirebaseAuth().createUserWithEmailAndPassword(
@@ -12,7 +13,14 @@ export async function register({ username, email, password, role }) {
 }
 
 export async function registerWithProvider({ provider, role }) {
+  // sign user in
   const credentials = await FirebaseAuth().signInWithPopup(provider);
+
+  // check if user has been registered before
+  const user = await find(credentials.user.uid);
+  if (user) return Promise.reject({ code: 'auth/account-already-existed' });
+
+  // setup new account
   const { displayName } = credentials.user;
   await setupAccount(credentials.user, displayName, role);
   return credentials;
@@ -55,11 +63,12 @@ export async function setupAccount(user, username, role) {
     email,
     role,
     avatar,
+    createdOn: Firestore.Timestamp.now(),
   });
 
   // user's private attributes
   await ref
     .collection(collections.attributes)
     .doc(collections.attributes)
-    .set({ id: uid });
+    .set({ parent: uid });
 }

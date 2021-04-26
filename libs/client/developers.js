@@ -95,25 +95,6 @@ export async function addSolvedProblem(developer, { problemId, score }) {
   });
 }
 
-export async function addExamResult(developer, { examId, score }) {
-  const ref = Firestore().collection(collections.developers).doc(developer.id);
-
-  // add or update exam in user's examResults collection
-  const exam = await ref
-    .collection(collections.examSubmissions)
-    .doc(examId)
-    .get();
-  if (exam.exists)
-    await exam.ref.update({ modifiedAt: Firestore.Timestamp.now(), score });
-  else await exam.ref.set({ createdOn: Firestore.Timestamp.now(), score });
-
-  // update total score
-  await ref.update({
-    examScore:
-      developer.examScore - (exam.exists ? exam.get('score') : 0) + score,
-  });
-}
-
 export async function getUserByExamScore() {
   const result = await Firestore()
     .collection(collections.developers)

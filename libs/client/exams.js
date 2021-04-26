@@ -21,7 +21,10 @@ export async function create(
       score: problems.reduce((a, b) => a.score + b.score),
       createdOn: Firestore.Timestamp.now(),
     });
-  await getAttributeReference(collections.exams, id).set({ id, problems });
+  await getAttributeReference(collections.exams, id).set({
+    parent: id,
+    problems,
+  });
   return id;
 }
 
@@ -86,8 +89,8 @@ export async function get({ exam = undefined, examId = undefined }) {
   }
 
   return {
-    ...value,
     ...attributes,
+    ...value,
     problems: await Promise.all(problemTasks),
   };
 }

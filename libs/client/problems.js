@@ -29,7 +29,7 @@ export async function create(
     .doc(problemId)
     .collection(collections.attributes)
     .doc(collections.attributes)
-    .set({ id: problemId, cases, code, content });
+    .set({ parent: problemId, cases, code, content });
   return problemId;
 }
 
