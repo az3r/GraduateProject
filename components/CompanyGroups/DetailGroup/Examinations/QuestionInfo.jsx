@@ -26,14 +26,19 @@ const useStyles = makeStyles((theme)=>({
         display: 'flex',
         height: 270,
     },
+    tabContent: {
+        width: '65%', 
+        overflow: 'scroll',
+        overflowX: 'hidden'
+      }
 }));
 
-export default function QuestionInfo({question})
+export default function QuestionInfo({question, noLoadFromDB})
 {
     const [problem,setProblem] = useState({});
     const [loading,setLoading] = useState(true);
     useEffect(async ()=>{
-        if(question.id)
+        if(question.id && !noLoadFromDB)
         {
             const problemData = await get({
                 problemId: question.id,
@@ -111,12 +116,13 @@ function ShowInfoQuestionMCQ({problem})
                 :
                 <>
                     <Typography>{problem.title}</Typography>
-                    {HTMLReactParser(problem.content)}
-                    <code>
-                        <pre>
-                            {problem.code}
-                        </pre>
-                    </code>
+                    <div style={{wordWrap: 'break-word'}}>
+                        {HTMLReactParser(problem.content)}
+                    </div>
+                    <Divider/>
+                    <pre>
+                        {problem.code}
+                    </pre>
                     <Button color="secondary" variant="outlined" onClick={handleClickOpen}>See submitted test cases</Button>
                     <Dialog
                         open={open}
@@ -147,9 +153,15 @@ function ShowInfoQuestionMCQ({problem})
                                     </Tabs>
                                     {
                                         problem.cases.map((item,idx)=>(
-                                            <TabPanel value={valueTab} index={idx}>
+                                            <TabPanel value={valueTab} index={idx} >
                                                 <Typography>Test case {idx+1}:</Typography>
-                                                <pre>{`   {\n     input: ${item.input}\n     output: ${item.output}\n     score: ${item.score}\n   }`}</pre>
+                                                <div style={{wordWrap: 'break-word'}}>
+                                                     <Typography>{`{`}</Typography>
+                                                     <Typography>&nbsp;&nbsp;&nbsp;&nbsp;<b>input:</b> {item.input},</Typography>
+                                                     <Typography>&nbsp;&nbsp;&nbsp;&nbsp;<b>output:</b> {item.output},</Typography>
+                                                     <Typography>&nbsp;&nbsp;&nbsp;&nbsp;<b>score:</b> {item.score}</Typography>
+                                                     <Typography>{`}`}</Typography>
+                                                </div>
                                             </TabPanel>
                                         ))
                                     }
@@ -170,7 +182,7 @@ function ShowInfoQuestionMCQ({problem})
 
 function TabPanel(props) {
     const { children, value, index, ...other } = props;
-  
+    const classes = useStyles();
     return (
       <div
         role="tabpanel"
@@ -178,10 +190,11 @@ function TabPanel(props) {
         id={`vertical-tabpanel-${index}`}
         aria-labelledby={`vertical-tab-${index}`}
         {...other}
+        className={classes.tabContent}
       >
         {value === index && (
           <Box p={3}>
-            <Typography>{children}</Typography>
+            {children}
           </Box>
         )}
       </div>

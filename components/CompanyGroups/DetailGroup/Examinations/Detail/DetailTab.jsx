@@ -23,12 +23,19 @@ const useStyles = makeStyles((theme)=> ({
   tabs: {
     borderRight: `1px solid ${theme.palette.divider}`,
   },
+  tabContent: {
+    width: '80%', 
+    overflow: 'scroll',
+    overflowX: 'hidden'
+  }
+
 }));
 
 const Transition = React.forwardRef((props, ref) => <Slide direction="up" ref={ref} {...props} />);
 
 function TabPanel2(props) {
     const { children, value, index, ...other } = props;
+    const classes = useStyles();
   
     return (
       <div
@@ -37,10 +44,11 @@ function TabPanel2(props) {
         id={`vertical-tabpanel-${index}`}
         aria-labelledby={`vertical-tab-${index}`}
         {...other}
+        className={classes.tabContent}
       >
         {value === index && (
           <Box p={3}>
-            <Typography>{children}</Typography>
+            {children}
           </Box>
         )}
       </div>
@@ -202,7 +210,7 @@ export default function DetailTab({examination,handlePublish})
           {
             examination.problems.map((item,idx)=>(
                 <TabPanel2 className={classes.tabPane} value={valueTab} index={idx}>
-                    <QuestionInfo question={item}/>
+                    <QuestionInfo question={item} noLoadFromDB/>
                 </TabPanel2>
             ))
           }

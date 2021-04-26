@@ -26,29 +26,6 @@ const useStyles = makeStyles((theme)=>({
     textFail: {
       color: '#F74B4D',
     },
-    displayScrollSpy: {
-        position: "fixed",
-        marginRight: "15px"
-    },
-    isCurrent: {
-        fontWeight: 'bold',
-        "& :nth-child(1)": {
-            color: "#088247",
-            fontSize: "14px"
-          }
-    },
-    contentScrollSpy: {
-        color: "#000000",
-        fontSize: "13px",
-        wordWrap: "break-word",
-        textDecoration: 'none'
-    },
-    listContentStyle : {
-        listStyle: "none",
-    },
-    listItem: {
-        marginBottom: "10px"
-    },
     error: {
         color: 'red !important'
     },
@@ -65,6 +42,11 @@ const useStyles = makeStyles((theme)=>({
         display: 'flex',
         height: 270,
     },
+    tabContent: {
+        width: '65%', 
+        overflow: 'scroll',
+        overflowX: 'hidden'
+      }
 }));
 
 const Transition = React.forwardRef((props, ref) => <Slide direction="up" ref={ref} {...props} />);
@@ -538,7 +520,7 @@ export default function CodingQuestionForm({onFormSubmit, propQuestion, isSaved}
                         <DialogContent className={classes.testCasesDialog}>
                             <DialogContentText id="alert-dialog-slide-description">
                             {
-                                question.cases  ?
+                                question.cases.length !== 0  ?
                                     <div className={classes.root}>
                                         <Tabs
                                             orientation="vertical"
@@ -560,7 +542,13 @@ export default function CodingQuestionForm({onFormSubmit, propQuestion, isSaved}
                                             question.cases.map((item,idx)=>(
                                                 <TabPanel value={valueTab} index={idx}>
                                                     <Typography>Test case {idx+1}:</Typography>
-                                                    <pre>{`   {\n     input: ${item.input}\n     output: ${item.output}\n     score: ${item.score}\n   }`}</pre>
+                                                    <div style={{wordWrap: 'break-word'}}>
+                                                        <Typography>{`{`}</Typography>
+                                                        <Typography>&nbsp;&nbsp;&nbsp;&nbsp;<b>input:</b> {item.input},</Typography>
+                                                        <Typography>&nbsp;&nbsp;&nbsp;&nbsp;<b>output:</b> {item.output},</Typography>
+                                                        <Typography>&nbsp;&nbsp;&nbsp;&nbsp;<b>score:</b> {item.score}</Typography>
+                                                        <Typography>{`}`}</Typography>
+                                                </div>
                                                 </TabPanel>
                                             ))
                                         }
@@ -604,7 +592,8 @@ export default function CodingQuestionForm({onFormSubmit, propQuestion, isSaved}
 
 function TabPanel(props) {
     const { children, value, index, ...other } = props;
-  
+    const classes = useStyles();
+
     return (
       <div
         role="tabpanel"
@@ -612,10 +601,11 @@ function TabPanel(props) {
         id={`vertical-tabpanel-${index}`}
         aria-labelledby={`vertical-tab-${index}`}
         {...other}
+        className={classes.tabContent}
       >
         {value === index && (
           <Box p={3}>
-            <Typography>{children}</Typography>
+            {children}
           </Box>
         )}
       </div>
