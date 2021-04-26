@@ -21,8 +21,7 @@ import { FirebaseAuth } from '@libs/client/firebase';
 import { auth } from '@libs/client';
 import { useCookies } from 'react-cookie';
 import json2mq from 'json2mq';
-import { getBaseUrl } from '@utils/urls';
-import { register, signout } from '@libs/client/authenticate';
+import { register } from '@libs/client/authenticate';
 
 export default function Login() {
   const router = useRouter();
@@ -134,74 +133,67 @@ export default function Login() {
   }
 
   function EmailForm() {
-    const [verification, setVerification] = React.useState(undefined);
     const [submitting, setSubmitting] = React.useState(false);
     return (
-      <>
-        {verification ? (
-          <EmailVerification user={verification.user} />
-        ) : (
-          <form onSubmit={submit}>
-            <Grid spacing={3} container direction="column">
-              <Grid item>
-                <Typography align="center" variant="h4">
-                  Create Developer Account
-                </Typography>
-              </Grid>
-              <Grid item>
-                <TextField
-                  variant="filled"
-                  type="text"
-                  id="username"
-                  label="Username"
-                  fullWidth
-                  name="username"
-                  required
-                  disabled={submitting}
-                />
-              </Grid>
-              <Grid item>
-                <TextField
-                  variant="filled"
-                  id="email"
-                  type="email"
-                  label="Email"
-                  fullWidth
-                  name="email"
-                  required
-                  disabled={submitting}
-                />
-              </Grid>
-              <Grid item>
-                <TextField
-                  variant="filled"
-                  id="password"
-                  type="password"
-                  label="Password"
-                  fullWidth
-                  name="password"
-                  required
-                  disabled={submitting}
-                />
-              </Grid>
-              {submitting ? (
-                <SubmittingProgress />
-              ) : (
-                <Grid item>
-                  <Button
-                    type="submit"
-                    fullWidth
-                    variant="contained"
-                    color="primary"
-                  >
-                    Sign up
-                  </Button>
-                </Grid>
-              )}
+      <form onSubmit={submit}>
+        <Grid spacing={3} container direction="column">
+          <Grid item>
+            <Typography align="center" variant="h4">
+              Create Developer Account
+            </Typography>
+          </Grid>
+          <Grid item>
+            <TextField
+              variant="filled"
+              type="text"
+              id="username"
+              label="Username"
+              fullWidth
+              name="username"
+              required
+              disabled={submitting}
+            />
+          </Grid>
+          <Grid item>
+            <TextField
+              variant="filled"
+              id="email"
+              type="email"
+              label="Email"
+              fullWidth
+              name="email"
+              required
+              disabled={submitting}
+            />
+          </Grid>
+          <Grid item>
+            <TextField
+              variant="filled"
+              id="password"
+              type="password"
+              label="Password"
+              fullWidth
+              name="password"
+              required
+              disabled={submitting}
+            />
+          </Grid>
+          {submitting ? (
+            <SubmittingProgress />
+          ) : (
+            <Grid item>
+              <Button
+                type="submit"
+                fullWidth
+                variant="contained"
+                color="primary"
+              >
+                Sign up
+              </Button>
             </Grid>
-          </form>
-        )}
-      </>
+          )}
+        </Grid>
+      </form>
     );
 
     async function submit(e) {
@@ -213,14 +205,12 @@ export default function Login() {
 
       try {
         setSubmitting(true);
-        const credentials = await register({
+        await register({
           username,
           email,
           password,
           role: 'developer',
         });
-        await signout();
-        setVerification({ user: credentials.user });
       } catch (error) {
         const { code } = error;
 
@@ -230,79 +220,6 @@ export default function Login() {
           message: code,
         });
         setSubmitting(false);
-      }
-    }
-  }
-
-  function EmailVerification({ user }) {
-    const { displayName, email } = user;
-    return (
-      <Grid container alignContent="center" spacing={2} direction="column">
-        <Grid item>
-          <Typography>
-            Hello <b>{displayName}</b>, you must verify your email before using
-            our service
-          </Typography>
-        </Grid>
-        <Grid item>
-          <TextField
-            type="email"
-            variant="outlined"
-            label="Email"
-            fullWidth
-            contentEditable={false}
-            value={email}
-          />
-        </Grid>
-        <Grid item>
-          <VerifyButton />
-        </Grid>
-      </Grid>
-    );
-    function VerifyButton() {
-      const [cooldown, setCooldown] = React.useState(0);
-      const [waiting, setWaiting] = React.useState(false);
-
-      React.useEffect(() => {
-        const timer = setInterval(() => {
-          setCooldown((prev) => {
-            if (prev <= 0) setWaiting(false);
-            return prev - 1;
-          });
-        }, 1000);
-        return () => clearInterval(timer);
-      }, []);
-      return (
-        <>
-          {waiting ? (
-            <Button disabled variant="contained" color="default" fullWidth>
-              Please wait for {cooldown} seconds...
-            </Button>
-          ) : (
-            <Button
-              fullWidth
-              color="primary"
-              variant="contained"
-              onClick={onVerifyEmail}
-            >
-              Send email verification
-            </Button>
-          )}
-        </>
-      );
-
-      async function onVerifyEmail() {
-        // update ui
-        setCooldown(60);
-        setWaiting(true);
-
-        try {
-          const url = `${getBaseUrl()}login`;
-          auth.sendVerifyEmail(user, url);
-        } catch (error) {
-          // TODO: handler this error
-          console.error(error);
-        }
       }
     }
   }
