@@ -104,7 +104,7 @@ export default function BasicInfoTab(props) {
 
     try {
       await userServices.updateName(auth, 'company', tabUser.name);
-      await companyServices.update(user.uid, tabUser);
+      await companyServices.update(user.id, tabUser);
       setUser(tabUser);
 
       setSnackBarState({
