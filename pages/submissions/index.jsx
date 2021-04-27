@@ -97,7 +97,7 @@ export default function Submissions({problemSubmissions}) {
                           : { background: 'white' }
                       }
                     >
-                      <TableCell>{index + 1}</TableCell>
+                      <TableCell>{(currentPage - 1)*10 + index + 1}</TableCell>
                       <TableCell component="th" scope="row">
                         <Link underline="none" href={`/problem/${submission.problemId}`}>
                           <Typography className={classes.link} style={{color: 'blue'}}>

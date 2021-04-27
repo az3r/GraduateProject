@@ -20,16 +20,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="73bd1854-2930-493b-bbd0-fb90442d9327" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/pages/problem/index.jsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/home.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/logo.png" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/components/Examinations/LeaderBoard/index.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/Examinations/LeaderBoard/index.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/components/Examinations/TestProblemCoding/index.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/Examinations/TestProblemCoding/index.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pages/examination/[id].jsx" beforeDir="false" afterPath="$PROJECT_DIR$/pages/examination/[id].jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pages/examination/start/[id].jsx" beforeDir="false" afterPath="$PROJECT_DIR$/pages/examination/start/[id].jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pages/index.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/pages/index.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pages/problem/[id].jsx" beforeDir="false" afterPath="$PROJECT_DIR$/pages/problem/[id].jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pages/submissions/index.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/pages/submissions/index.jsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
