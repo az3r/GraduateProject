@@ -108,8 +108,11 @@ function ActionList() {
       <Link href="/profile/dev">
         <MenuItem>Profile</MenuItem>
       </Link>
-      <Link href="/setting">
-        <MenuItem>Setting</MenuItem>
+      <Link href="/progress">
+        <MenuItem>Your Progress</MenuItem>
+      </Link>
+      <Link href="/submissions">
+        <MenuItem>Submissions</MenuItem>
       </Link>
       <MenuItem onClick={logout}>Sign out</MenuItem>
     </MenuList>

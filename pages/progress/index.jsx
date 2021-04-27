@@ -44,13 +44,13 @@ const renderCustomizedLabel = ({ cx, cy, midAngle, innerRadius, outerRadius, per
       </text>
     );
   }
-  
+
     return (
       <text x={x} y={y} fill="white" textAnchor={x > cx ? 'start' : 'end'} dominantBaseline="central">
         {`Attempted ${(percent * 100).toFixed(0)}%`}
       </text>
     );
-  
+
 };
 
 const useStyles = makeStyles({
@@ -252,7 +252,6 @@ export async function getServerSideProps({req}) {
           unsolvedProblemsNumber = unsolvedProblems.length;
 
         }
-
       }
       else{
         return {
@@ -260,6 +259,14 @@ export async function getServerSideProps({req}) {
             permanent: false,
             destination: "/login"
           }
+        }
+      }
+    }
+    else{
+      return {
+        redirect: {
+          permanent: false,
+          destination: "/login"
         }
       }
     }
