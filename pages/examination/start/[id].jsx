@@ -20,13 +20,10 @@ import {
   Tab,
   Tabs
 } from '@material-ui/core';
-// import PropTypes from 'prop-types';
 import Swal from "sweetalert2";
 import withReactContent from 'sweetalert2-react-content';
 import BackupIcon from '@material-ui/icons/Backup';
 import TimerIcon from '@material-ui/icons/Timer';
-// import dateFormat from 'dateformat';
-// import Link from 'next/link';
 import HTMLReactParser from 'html-react-parser';
 
 
@@ -289,7 +286,7 @@ export default function Start({ user, examId, exam }) {
       <AppBar position="static" style={{height: 60}}>
         <Toolbar>
           <Typography variant="h6" className={classes.title}>
-            Examination Name
+            {exam.title}
           </Typography>
 
           <Box className={classes.minutes}>

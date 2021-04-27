@@ -347,6 +347,7 @@ export async function getServerSideProps({ params, req }) {
 
   const examSubmissions = await exams.getAllExamSubmissions(params.id);
 
+
   return {
     props: {
       // user,

@@ -1,61 +1,95 @@
 import React from 'react';
-import { problems as probs, developers } from '@libs/client';
-import PropTypes from 'prop-types';
-
 import Head from 'next/head';
-import { Grid, Hidden, Container } from '@material-ui/core';
+import {
+  makeStyles,
+  Container,
+  Button,
+  Typography,
+  Grid,
+  Box,
+  Hidden
+} from '@material-ui/core';
+import { developers } from '@libs/client';
+import { parseCookies } from '@client/cookies';
 
-import Problems from '@components/Problems/index';
-import YourProgress from '@components/Problems/YourProgress';
-import AppLayout from '@components/Layout';
-import { parseCookies } from '@libs/client/cookies';
+const useStyles = makeStyles({
+  logo: {
+    display: 'flex',
+    marginTop: 20,
+    alignItems: 'center'
+  },
+  authen: {
+    display: 'flex',
+    justifyContent: 'flex-end',
+    marginTop: 20
+  }
+});
 
-export default function Home({ problems, user, solvedProblemsNumber, unsolvedProblemsNumber }) {
+export default function Home() {
+  const classes = useStyles();
+
   return (
     <>
       <Head>
-        <title>Problems | Smart Coder</title>
+        <title>Smart Code</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <AppLayout>
-        <Container>
-          <Grid container spacing={3}>
-            <Grid
-              item
-              xs={12}
-              container
-              spacing={0}
-              direction="column"
-              alignItems="center"
-              justify="center"
-            />
-            <Grid item xs={12} md={8} lg={8}>
-              <Problems problems={problems} />
-            </Grid>
-            <Hidden smDown>
-              <Grid item xs={false} md={4} lg={4}>
-                <YourProgress user={user} problemsNumber={problems.length} solvedProblemsNumber={solvedProblemsNumber} unsolvedProblemsNumber={unsolvedProblemsNumber} />
-              </Grid>
-            </Hidden>
+      <Container maxWidth="lg">
+        <Grid container direction='row' spacing={10}>
+          <Grid item xs={12} md={6}>
+            <Box className={classes.logo}>
+              <img src="/logo.png" alt="Logo" />
+              <Typography variant="h3" style={{ fontWeight: 'bolder' }}>Smart Code</Typography>
+            </Box>
           </Grid>
-        </Container>
-      </AppLayout>
+          <Grid item xs={12} md={6}>
+            <Box className={classes.authen}>
+              <Button href="/login" style={{marginRight: 15}} variant="outlined" color='primary'>Login</Button>
+              <Button href="/register" style={{marginRight: 15}} variant="outlined" color='secondary'>Sign Up</Button>
+            </Box>
+          </Grid>
+          <Grid item xs={12} md={6}>
+            <Box>
+              <Typography variant="h4" style={{ color: 'gray' }}>"Make it work, make it right, make it fast"</Typography>
+              <Typography variant="subtitle1" style={{ color: 'gray' }}>~~ Kent Beck ~~</Typography>
+            </Box>
+            <br />
+            <br />
+            <Grid container direction='row' spacing={5}>
+              <Grid  item xs={12} md={6}>
+                <Typography variant="h4">For Companies</Typography>
+                <br />
+                <Typography variant='subtitle1' style={{ color: 'gray' }}>Providing the complex and good problems is a urgent mission of leading companies.</Typography>
+                <br />
+                <Button href="/register/company" variant="contained" color='primary'>Sign Up & Create</Button>
+              </Grid>
+              <Grid  item xs={12} md={6}>
+                <Typography variant="h4">For Developers</Typography>
+                <br />
+                <Typography variant='subtitle1' style={{ color: 'gray' }}>Experience is a crucial thing for our own developers. So don't hesitate... Let's do it right now!</Typography>
+                <br />
+                <Button href="/register/developer" variant="contained" color='primary'>Sign Up & Code</Button>
+              </Grid>
+            </Grid>
+          </Grid>
+          <Hidden smDown>
+            <Grid item xs={12} md={6}>
+              <img src="/home.png" alt="Logo" />
+            </Grid>
+          </Hidden>
+          <Grid item xs={12}>
+            <Typography variant='subtitle1' style={{ color: 'gray' }}>Copyright@ 2021 Smart Code |</Typography>
+          </Grid>
+        </Grid>
+      </Container>
     </>
   );
 }
 
-Home.propTypes = {
-  // eslint-disable-next-line react/forbid-prop-types
-  problems: PropTypes.array.isRequired,
-};
-
 export async function getServerSideProps({req}) {
   const cookies = parseCookies(req);
   let user = null;
-  let userDetail = null;
-  let solvedProblemsNumber = 0;
-  let unsolvedProblemsNumber = 0;
 
   try {
 
@@ -65,35 +99,35 @@ export async function getServerSideProps({req}) {
 
 
         if(user){
-          userDetail = await developers.get(user.uid);
+          user = await developers.get(user.uid);
 
+          console.log(user);
 
-          // Get solved problems
-          const solvedProblems = await developers.getSolvedProblems(user.uid);
-          solvedProblemsNumber = solvedProblems.length;
-
-          // Get unsolved problems
-          const unsolvedProblems = await developers.getUnsolvedProblems(user.uid);
-          unsolvedProblemsNumber = unsolvedProblems.length;
-
-          console.log(solvedProblemsNumber);
-          console.log(unsolvedProblemsNumber);
+          if(user.role === "developer"){
+            return {
+              redirect: {
+                permanent: false,
+                destination: "/problem"
+              }
+            }
+          }
+          if(user.role === "company"){
+            return {
+              redirect: {
+                permanent: false,
+                destination: "/company-groups"
+              }
+            }
+          }
         }
-
       }
     }
   } catch (e) {
     console.log(e);
   }
 
-  const items = await probs.getPublishedProblems();
-
   return {
     props: {
-      problems: items,
-      user: userDetail,
-      solvedProblemsNumber,
-      unsolvedProblemsNumber
     },
   };
 }

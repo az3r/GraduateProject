@@ -93,7 +93,7 @@ export default function LeaderBoard({examSubmissions}) {
                   )}
                   </TableCell>
                   <TableCell>{formatTime(submission.time)}</TableCell>
-                  <TableCell>{submission.examScore}</TableCell>
+                  <TableCell>{submission.score}</TableCell>
                 </TableRow>
               ))
             }

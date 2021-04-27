@@ -9,6 +9,7 @@ import {
   Typography,
   Grid
 } from '@material-ui/core';
+import { companies, developers } from '@libs/client';
 
 const Problem = dynamic(() => import('./Problem'), {
   ssr: false,
@@ -37,21 +38,28 @@ export default function TestProblemCoding({index, problem, user, onIsSolvedProbl
   const classes = useStyles();
 
 
-  const [author] = useState({id: "#", name: "#"});
-  const [company] = useState({name: "#"});
+  const [author, setAuthor] = useState({id: "#", name: "#"});
+  const [company, setCompany] = useState({name: "#"});
 
   useEffect(async () => {
-    // const developer = await developers.get(problem.developerId);
-    //
-    // if(developer !== undefined){
-    //   setAuthor(developer);
-    // }
+    let developer = await developers.get(problem.owner);
 
-    // const company = await developers.get(problem.companyId);
-    //
-    // if(company !== undefined){
-    //   setCompany(company);
-    // }
+    if(developer !== undefined){
+      setAuthor(developer);
+    }
+    else{
+      developer = await companies.get(problem.owner);
+      if(developer !== undefined){
+        setAuthor(developer);
+      }
+    }
+
+
+    const comp = await companies.get(problem.companyId);
+
+    if(comp !== undefined){
+      setCompany(comp);
+    }
   }, []);
 
 

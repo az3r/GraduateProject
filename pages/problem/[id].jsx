@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import Head from 'next/head';
 import dynamic from 'next/dynamic';
-import { problems } from '@libs/client';
+import { companies, developers, problems } from '@libs/client';
 import { parseCookies } from '@libs/client/cookies';
 import {
   makeStyles,
@@ -41,21 +41,28 @@ const useStyles = makeStyles(() => ({
 export default function Test({ problem, user }) {   // , problemSubmissionHistory
   const classes = useStyles();
 
-  const [author] = useState({id: "#", name: "#"});
-  const [company] = useState({name: "#"});
+  const [author, setAuthor] = useState({id: "#", name: "#"});
+  const [company, setCompany] = useState({name: "#"});
 
   useEffect(async () => {
-    // const developer = await developers.get(problem.developerId);
-    //
-    // if(developer !== undefined){
-    //   setAuthor(developer);
-    // }
+    let developer = await developers.get(problem.owner);
 
-    // const company = await developers.get(problem.companyId);
-    //
-    // if(company !== undefined){
-    //   setCompany(company);
-    // }
+    if(developer !== undefined){
+      setAuthor(developer);
+    }
+    else{
+      developer = await companies.get(problem.owner);
+      if(developer !== undefined){
+        setAuthor(developer);
+      }
+    }
+
+
+    const comp = await companies.get(problem.companyId);
+
+    if(comp !== undefined){
+      setCompany(comp);
+    }
   }, []);
 
 
