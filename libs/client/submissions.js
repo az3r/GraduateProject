@@ -29,23 +29,24 @@ export async function test({ lang, code, testcases }) {
     }),
   });
 
-  const total = testcases.reduce((current, { score }) => current + score);
+  const total = testcases.reduce((a, b) => ({
+    score: a.score + b.score,
+  })).score;
   const response = await task;
   const data = await response.json();
   let status = statuses.error;
 
-  let correctScore = response.status === 200 ? total : 0;
+  let score = response.status === 200 ? total : 0;
   if (response.status === 200) {
     const { failed, failedIndexes } = data;
     status = failed > 0 ? statuses.failed : statuses.passed;
 
     // subtract score for every failed testcase
     if (failedIndexes?.length) {
-      const amount =
-        failedIndexes.reduce((current, { score }) => current + score) || 0;
-      correctScore -= amount;
+      const amount = failedIndexes.reduce((a, b) => a.score + b.score) || 0;
+      score -= amount;
     }
   }
-  const result = { ...data, status, score: correctScore };
+  const result = { ...data, status, score };
   return response.status === 200 ? result : Promise.reject(result);
 }
