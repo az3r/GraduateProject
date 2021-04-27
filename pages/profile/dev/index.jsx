@@ -79,7 +79,6 @@ export default function Index(props) {
 
   // user get from useAuth()
   const auth = useAuth();
-  const [userAuth, setUserAuth] = useState(auth);
 
   // introHeight state
   const [introHeight, setIntroHeight] = useState(0);
@@ -128,7 +127,6 @@ export default function Index(props) {
       });
 
       setUser(apiUser);
-      setUserAuth(auth);
     }
   }, [auth]);
 
@@ -151,7 +149,6 @@ export default function Index(props) {
         <Box style={{ height: introHeight }} className={classes.introBox}>
           <UserAvatar
             user={user}
-            userAuth={userAuth}
             setUser={setUser}
             setSnackBarState={setSnackBarState}
           />
@@ -159,7 +156,6 @@ export default function Index(props) {
         <Box p={3}>
           <DevProfileTabs
             user={user}
-            userAuth={userAuth}
             setUser={setUser}
             setSnackBarState={setSnackBarState}
           />

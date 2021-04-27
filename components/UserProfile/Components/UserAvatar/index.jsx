@@ -10,6 +10,7 @@ import {
   Tooltip,
 } from '@material-ui/core';
 import EditIcon from '@material-ui/icons/Edit';
+import { useAuth } from '@hooks/auth';
 import * as userServices from '@libs/client/users';
 
 const useStyles = makeStyles({
@@ -28,14 +29,30 @@ const useStyles = makeStyles({
 
 export default function UserAvatar(props) {
   const classes = useStyles();
-  const { user, setUser, setSnackBarState, isOnlyWatch, userAuth } = props;
+  const { user, setUser, setSnackBarState, isOnlyWatch } = props;
+
+  // user get from useAuth()
+  const auth = useAuth();
 
   const handleChangeAvatar = async (event) => {
     const image = event.target.files[0];
-    console.log(image);
+    const {type} = image;
+    const isImageType = type.includes('image/');
 
+    // is not image
+    if(!isImageType){
+      setSnackBarState({
+        open: true,
+        severity: 'error',
+        message: 'Cannot upload your avatar',
+      });
+      return;
+    }
+
+    // is image
     try {
-      await userServices.updateAvatar(userAuth, user.role, image)
+      await userServices.updateAvatar(auth, user.role, image)
+      setUser({...user, avatar: auth.photoURL});
 
       setSnackBarState({
         open: true,
@@ -66,6 +83,7 @@ export default function UserAvatar(props) {
           id="imageInput"
           hidden="hidden"
           onChange={handleChangeAvatar}
+          accept="image/*"
         />
 
         {/* is in only watch mode */}

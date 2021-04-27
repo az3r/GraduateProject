@@ -16,6 +16,7 @@ import {
 } from '@material-ui/core';
 import SaveOutlinedIcon from '@material-ui/icons/SaveOutlined';
 import ChipInput from 'material-ui-chip-input';
+import { useAuth } from '@hooks/auth';
 import * as companyServices from '@libs/client/companies';
 import * as userServices from '@libs/client/users';
 
@@ -53,7 +54,7 @@ const without = (array, filtered) =>
 
 export default function BasicInfoTab(props) {
   const classes = useStyles();
-  const { user, setUser, setSnackBarState, isOnlyWatch, userAuth } = props;
+  const { user, setUser, setSnackBarState, isOnlyWatch } = props;
 
   const [openAlertDialog, setOpenAlertDialog] = React.useState(false);
   const handleOpenAlertDialog = () => {
@@ -62,6 +63,9 @@ export default function BasicInfoTab(props) {
   const handleCloseAlertDialog = () => {
     setOpenAlertDialog(false);
   };
+
+  // user get from useAuth()
+  const auth = useAuth();
 
   // user state in this tab
   const [tabUser, setTabUser] = useState(user);
@@ -99,8 +103,8 @@ export default function BasicInfoTab(props) {
     handleCloseAlertDialog();
 
     try {
-      await userServices.updateName(userAuth, 'developer', tabUser.name);
-      await companyServices.update(tabUser);
+      await userServices.updateName(auth, 'company', tabUser.name);
+      await companyServices.update(user.uid, tabUser);
       setUser(tabUser);
 
       setSnackBarState({
