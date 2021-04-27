@@ -92,14 +92,14 @@ export async function addSolvedProblem(
         status,
       });
     } else if (problem.get('score') < score) {
-        await problem.ref.update({
-          modifiedAt: Firestore.Timestamp.now(),
-          score,
-          status,
-        });
-      } else {
-        return;
-      }
+      await problem.ref.update({
+        modifiedAt: Firestore.Timestamp.now(),
+        score,
+        status,
+      });
+    } else {
+      return;
+    }
   } else {
     await problem.ref.set({
       createdOn: Firestore.Timestamp.now(),
@@ -125,8 +125,18 @@ export async function getUserByExamScore() {
     .orderBy(Firestore.FieldPath.documentId(), 'asc')
     .get();
 
-  console.log(result.docs);
-  return result.docs.map((doc) => doc.data());
+  const users = [];
+
+  for (let i = 0; i < result.docs.length; i += 1) {
+    const doc = transform(result.docs[i]);
+    const attributes = await getAttributeReference(
+      collections.developers,
+      doc.id
+    ).get();
+    users.push(transform(result.docs[i], attributes));
+  }
+
+  return users;
 }
 
 export async function getSolvedProblems(uid) {
@@ -203,13 +213,25 @@ export async function createProblemSubmission(
   return id;
 }
 
-export async function getAllProblemSubmissions(developerId) {
-  const submissions = await Firestore()
-    .collection(collections.developers)
-    .doc(developerId)
-    .collection(collections.problemSubmissions)
-    .orderBy('createdOn', 'desc')
-    .get();
+export async function getAllProblemSubmissions(developerId, isAccepted) {
+  let submissions;
+  if (isAccepted === false) {
+    submissions = await Firestore()
+      .collection(collections.developers)
+      .doc(developerId)
+      .collection(collections.problemSubmissions)
+      .orderBy('createdOn', 'desc')
+      .get();
+  } else {
+    submissions = await Firestore()
+      .collection(collections.developers)
+      .doc(developerId)
+      .collection(collections.problemSubmissions)
+      .where('status', '==', 'Accepted')
+      .orderBy('createdOn', 'desc')
+      .get();
+  }
+
   return submissions.docs.map((submit) => transform(submit));
 }
 
@@ -263,7 +285,7 @@ export async function getExamResults(developerId, examId) {
 
 export async function createExamSubmission(
   developer,
-  { examId, total, correct, results, score }
+  { examId, total, correct, results, score, time }
 ) {
   const { id } = await Firestore()
     .collection(collections.developers)
@@ -276,6 +298,7 @@ export async function createExamSubmission(
       createdOn: Firestore.Timestamp.now(),
       results,
       score,
+      time,
     });
 
   const ref = Firestore().collection(collections.developers).doc(developer.id);

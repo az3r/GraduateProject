@@ -14,12 +14,7 @@ import {
 } from '@material-ui/core';
 
 import SettingsIcon from '@material-ui/icons/Settings';
-
-// const data = [
-//   { name: 'ToDo', value: 400 },
-//   { name: 'Solved', value: 300 },
-//   { name: 'Attempted', value: 300 },
-// ];
+import { useRouter } from 'next/router';
 
 const renderActiveShape = (props) => {
   const RADIAN = Math.PI / 180;
@@ -122,6 +117,7 @@ const COLORS = ['#0088FE', '#00C49F', '#FFBB28'];
 
 export default function YourProgress({user, problemsNumber, solvedProblemsNumber, unsolvedProblemsNumber}) {
   const classes = useStyles();
+  const router = useRouter();
 
   // const jsfiddleUrl = 'https://jsfiddle.net/alidingling/hqnrgxpj/';
   const [activeIndex, setActiveIndex] = React.useState(0);
@@ -131,14 +127,6 @@ export default function YourProgress({user, problemsNumber, solvedProblemsNumber
     { name: 'Attempted', value: unsolvedProblemsNumber },
   ]);
 
-  // state = {
-  //   activeIndex: 0,
-  // };
-  //
-  // nPieEnter = (data, index) => {
-  //   this.setActiveIndex(index);
-  // };
-
   return (
     <Paper>
       <div className={classes.root}>
@@ -146,12 +134,7 @@ export default function YourProgress({user, problemsNumber, solvedProblemsNumber
         <Typography className={classes.progress} variant="h5" gutterBottom>
           Your Progress
         </Typography>
-        {/* <Avatar */}
-        {/*  alt="Settings" */}
-        {/*  className={classes.settings} */}
-        {/*  src={'/settings_24px.png'} */}
-        {/* /> */}
-        <SettingsIcon className={classes.settings} fontSize="large" />
+        <SettingsIcon onClick={() => router.push('/progress')} className={classes.settings} fontSize="large" />
       </div>
 
       <hr />

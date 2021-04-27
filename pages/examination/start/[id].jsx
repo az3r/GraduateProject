@@ -208,6 +208,7 @@ export default function Start({ user, examId, exam }) {
       correct,
       results,
       score,
+      time: exam.duration - timeOut
     });
 
     MySwal.close();
@@ -272,51 +273,11 @@ export default function Start({ user, examId, exam }) {
     }
   }
 
-  // useEffect(async () => {
-  //   if (user === null) {
-  //     router.replace('/login');
-  //   }
-  //   else{
-  //       await users.updateScoreExam(user.uid, id, 0);
-  //   }
-  // }, []);
-  //
-  //
-  // const nextProblem = async (result, correct) => {
-  //   const resultsTemp = results;
-  //   let numberOfCorrectTemp = numberOfCorrect;
-  //   let totalScoreTemp = totalScore;
-  //
-  //   if (result) {
-  //     resultsTemp.push(result);
-  //     numberOfCorrectTemp += parseInt(correct, 10);
-  //
+
   //     setResults(resultsTemp);
   //     // setResults(prevState => [...prevState, result]);
   //     setNumberOfCorrect(numberOfCorrect + parseInt(correct, 10));
-  //
-  //     if(correct === 1){
-  //       totalScoreTemp += problem.score;
-  //       setTotalScore(totalScoreTemp);
-  //     }
-  //   }
-  //
-  //   const indexNext = index + 1;
-  //   setIndex(indexNext);
-  //
-  //   if (indexNext < problems.length) {
-  //     setProblem(problems[indexNext]);
-  //   } else {
-  //     await submissions.createExamSubmission(user.uid, {
-  //       examId: id,
-  //       total: problems.length,
-  //       correct: numberOfCorrectTemp,
-  //       results: resultsTemp,
-  //     });
-  //     await users.updateScoreExam(user.uid, id, totalScoreTemp);
-  //     handleCommentClickOpen();
-  //   }
-  // };
+
 
   return (
     <>

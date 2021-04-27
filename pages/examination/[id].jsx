@@ -25,10 +25,15 @@ import {formatDuration} from '@client/business';
 import dateFormat from 'dateformat';
 import withReactContent from 'sweetalert2-react-content';
 import Swal from "sweetalert2";
+import LeaderBoard from '@components/Examinations/LeaderBoard';
+import HTMLReactParser from 'html-react-parser';
 
 const useStyles = makeStyles({
   welcome: {
     marginTop: 100,
+  },
+  leaderBoard: {
+    marginTop: 30,
   },
   rules: {
     marginTop: 100,
@@ -53,13 +58,18 @@ const useStyles = makeStyles({
   },
 });
 
-export default function Introduction({examId, examination, isInvited, isParticipated}) {  // user,
+export default function Introduction({examId, examination, isInvited, isParticipated, examSubmissions}) {  // user,
   const classes = useStyles();
   const router = useRouter();
 
   const [windowHeight, setWindowHeight] = useState(0);
   const [value, setValue] = useState(false);
+  const [leaderBoard, setLeaderBoard] = useState(false);
 
+
+  const handleLeaderBoardChange = () => {
+    setLeaderBoard(!leaderBoard);
+  }
   const handleValueChange = () => {
     setValue(!value);
   }
@@ -94,7 +104,7 @@ export default function Introduction({examId, examination, isInvited, isParticip
   return (
     <>
       <Head>
-        <title>Examination - Smart Coder</title>
+        <title>Examination | Smart Coder</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
@@ -147,21 +157,25 @@ export default function Introduction({examId, examination, isInvited, isParticip
              </Box>
           </Paper>
         </Grid>
-        <Grid item xs={12} md={7}>
-          <Paper variant="outlined" square  style={{backgroundColor: 'lightgray', paddingLeft: 80, paddingTop: 80, paddingRight: 80, maxHeight: windowHeight, height: windowHeight, overflow: 'auto'}}>
-            <Box className={classes.welcome}>
-              <Typography variant="h5" style={{fontWeight: 'bolder'}}>Welcome!</Typography>
+        {
+          leaderBoard === false &&
+          <Grid item xs={12} md={7}>
+            <Paper variant="outlined" square  style={{backgroundColor: 'lightgray', paddingLeft: 80, paddingTop: 80, paddingRight: 80, maxHeight: windowHeight, height: windowHeight, overflow: 'auto'}}>
+              <Box className={classes.welcome}>
+                <Typography variant="h5" style={{fontWeight: 'bolder'}}>Welcome!</Typography>
+                <br />
+                <Typography variant="subtitle1">
+                  {
+                    HTMLReactParser(examination.content)
+                  }
+                </Typography>
+              </Box>
               <br />
-              <Typography variant="subtitle1">
-                Welcome to HackerRank Black History Month Coding Challenge, a coding contest where your winnings help support a cause in need. Compete against top coders from around the world to give $500 to a U.S. charity that increases educational opportunities for underrepresented and under-resourced groups.
-              </Typography>
-            </Box>
-            <br />
-            <br />
+              <br />
 
-            <Box>
-              {
-                (isParticipated === false && examination.startAt <= Date.now() && examination.endAt >= Date.now()) &&
+              <Box>
+                {
+                  (isParticipated === false && examination.startAt <= Date.now() && examination.endAt >= Date.now()) &&
                   <>
                     <Box style={{color: 'gray'}}>
                       <FormControl required error component="fieldset">
@@ -181,72 +195,86 @@ export default function Introduction({examId, examination, isInvited, isParticip
                     <Button onClick={() => handleBegin()} style={{marginLeft: 10}} variant="contained" color="primary">Let's Begin!</Button>
                     {
                       isInvited === false &&
-                      <Button style={{marginLeft: 10}} variant="contained" color="default">Leader Board</Button>
+                      <Button onClick={() => handleLeaderBoardChange()} style={{marginLeft: 10}} variant="contained" color="default">Leader Board</Button>
                     }
                   </>
-              }
-              {
-                (isParticipated === true && examination.startAt <= Date.now() && examination.endAt >= Date.now()) &&
-                <>
-                  <Typography variant="h5" style={{color: 'red', fontWeight: 'bolder'}}>You have already joined this contest!</Typography>
-                  <br />
-                  <Button style={{marginLeft: 10}} variant="contained" color="primary" disabled>Let's Begin!</Button>
-                  {
-                    isInvited === false &&
-                    <Button style={{marginLeft: 10}} variant="contained" color="default">Leader Board</Button>
-                  }
-                </>
-              }
-              {
-                examination.startAt > Date.now() &&
-                <>
-                  <Typography variant="h5" style={{color: 'red', fontWeight: 'bolder'}}>The contest has not yet started!</Typography>
-                  <br />
-                  <Button style={{marginLeft: 10}} variant="contained" color="primary" disabled>Let's Begin!</Button>
-                  {
-                    isInvited === false &&
-                    <Button style={{marginLeft: 10}} variant="contained" color="default">Leader Board</Button>
-                  }
-                </>
-              }
-              {
-                examination.endAt < Date.now() &&
-                <>
-                  <Typography variant="h5" style={{color: 'red', fontWeight: 'bolder'}}>The contest has already ended!</Typography>
-                  <br />
-                  <Button style={{marginLeft: 10}} variant="contained" color="primary" disabled>Let's Begin!</Button>
-                  {
-                    isInvited === false &&
-                    <Button style={{marginLeft: 10}} variant="contained" color="default">Leader Board</Button>
-                  }
-                </>
-              }
-            </Box>
+                }
+                {
+                  (isParticipated === true && examination.startAt <= Date.now() && examination.endAt >= Date.now()) &&
+                  <>
+                    <Typography variant="h5" style={{color: 'red', fontWeight: 'bolder'}}>You have already joined this contest!</Typography>
+                    <br />
+                    <Button style={{marginLeft: 10}} variant="contained" color="primary" disabled>Let's Begin!</Button>
+                    {
+                      isInvited === false &&
+                      <Button onClick={() => handleLeaderBoardChange()} style={{marginLeft: 10}} variant="contained" color="default">Leader Board</Button>
+                    }
+                  </>
+                }
+                {
+                  examination.startAt > Date.now() &&
+                  <>
+                    <Typography variant="h5" style={{color: 'red', fontWeight: 'bolder'}}>The contest has not yet started!</Typography>
+                    <br />
+                    <Button style={{marginLeft: 10}} variant="contained" color="primary" disabled>Let's Begin!</Button>
+                    {
+                      isInvited === false &&
+                      <Button onClick={() => handleLeaderBoardChange()} style={{marginLeft: 10}} variant="contained" color="default">Leader Board</Button>
+                    }
+                  </>
+                }
+                {
+                  examination.endAt < Date.now() &&
+                  <>
+                    <Typography variant="h5" style={{color: 'red', fontWeight: 'bolder'}}>The contest has already ended!</Typography>
+                    <br />
+                    <Button style={{marginLeft: 10}} variant="contained" color="primary" disabled>Let's Begin!</Button>
+                    {
+                      isInvited === false &&
+                      <Button onClick={() => handleLeaderBoardChange()} style={{marginLeft: 10}} variant="contained" color="default">Leader Board</Button>
+                    }
+                  </>
+                }
+              </Box>
 
-            <Box className={classes.rules}>
-              <Typography variant="h5" style={{fontWeight: 'bolder'}}>The Rules</Typography>
-              <br />
-              <Typography variant="subtitle1">
-                1. This contest is for individuals; teams are not allowed.
-              </Typography>
-              <br />
-              <Typography variant="subtitle1">
-                2. Any competitor found cheating will be disqualified and banned from future coding contests.
-              </Typography>
-              <br />
-              <Typography variant="subtitle1">
-                3. By participating and selecting "I'm interested in new job opportunities", you are indicating that you are willing to be considered for employment by companies using HackerRank for recruitment purposes.
-              </Typography>
-              <br />
+              <Box className={classes.rules}>
+                <Typography variant="h5" style={{fontWeight: 'bolder'}}>The Rules</Typography>
+                <br />
+                <Typography variant="subtitle1">
+                  1. This contest is for individuals; teams are not allowed.
+                </Typography>
+                <br />
+                <Typography variant="subtitle1">
+                  2. Any competitor found cheating will be disqualified and banned from future coding contests.
+                </Typography>
+                <br />
+                <Typography variant="subtitle1">
+                  3. By participating and selecting "I'm interested in new job opportunities", you are indicating that you are willing to be considered for employment by companies using HackerRank for recruitment purposes.
+                </Typography>
+                <br />
 
-              <Typography variant="h6">Scoring:</Typography>
-              <Typography variant="subtitle1">
-                Participants are ranked by score. Your score is determined by the number of test cases your code submission successfully passes. If two participants have the same score, the tie is broken by the contestant with the lowest amount of time taken.
-              </Typography>
-              <br />
-            </Box>
-          </Paper>
-        </Grid>
+                <Typography variant="h6">Scoring:</Typography>
+                <Typography variant="subtitle1">
+                  Participants are ranked by score. Your score is determined by the number of test cases your code submission successfully passes. If two participants have the same score, the tie is broken by the contestant with the lowest amount of time taken.
+                </Typography>
+                <br />
+              </Box>
+            </Paper>
+          </Grid>
+        }
+        {
+          leaderBoard === true &&
+          <Grid item xs={12} md={7}>
+            <Paper variant="outlined" square  style={{backgroundColor: 'lightgray', paddingLeft: 80, paddingTop: 80, paddingRight: 80, maxHeight: windowHeight, height: windowHeight, overflow: 'auto'}}>
+              <Box className={classes.leaderBoard}>
+                <Button onClick={() => handleLeaderBoardChange()} variant='contained' color='primary'>Back to Welcome!</Button>
+                <Typography style={{marginTop: 10}} variant="h4">Leader Board</Typography>
+                <br />
+              </Box>
+              <LeaderBoard examSubmissions={examSubmissions} />
+            </Paper>
+          </Grid>
+        }
       </Grid>
     </>
   );
@@ -308,7 +336,8 @@ export async function getServerSideProps({ params, req }) {
     }
   }
 
-  console.log(user);
+
+  const examSubmissions = await exams.getAllExamSubmissions(params.id);
 
   return {
     props: {
@@ -316,7 +345,8 @@ export async function getServerSideProps({ params, req }) {
       examId: params.id,
       examination,
       isInvited,
-      isParticipated
+      isParticipated,
+      examSubmissions
     },
   };
 }

@@ -265,7 +265,6 @@ export default function Problem({problem, user}) {  // { problemSubmissionHistor
       if (response.failed === 0) {
         status = "Accepted";
         score = response.score;
-
         setRunCodeResult(response.results);
         setRunCodeStatus("Accepted");
         setNotification("You have passed the sample test cases. Click the submit button to run your code against all the test cases.");

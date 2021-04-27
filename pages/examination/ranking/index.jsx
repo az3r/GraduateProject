@@ -4,7 +4,7 @@ import Head from 'next/head';
 import {
   makeStyles,
   Container,
-  Link, Avatar,
+  Link, Avatar, Grid,
 } from '@material-ui/core';
 
 import AppLayout from '@components/Layout';
@@ -70,7 +70,7 @@ export default function Ranking({usersExamScore}) {
   return (
     <>
       <Head>
-        <title>Ranking - Smart Code</title>
+        <title>Ranking | Smart Code</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
@@ -92,46 +92,50 @@ export default function Ranking({usersExamScore}) {
               Ranking
             </Link>
           </Breadcrumbs>
-          <h1 style={{marginLeft: 20, color: 'green'}}>Examination Ranking</h1>
-          <Box style={{marginLeft: 20, color: 'gray'}}>Total Participants: {usersExamScore.length}</Box>
-          {
-            pagedUsersExamScore.map((userScore, index) => (
-                <Box key={userScore.id} className={classes.userBox} borderBottom={1}>
-                  <Box style={{marginLeft: 30, marginRight: 30}}>
-                    {(currentPage - 1)*10 + index + 1}
-                  </Box>
-                  <Avatar variant="circular" src={userScore.avatar} />
-                  <Box style={{marginRight: 'auto'}}>
-                    <h3 style={{display: 'inline-block', marginLeft: 20, marginRight: 0, marginTop: 0, marginBottom: 0}}>
-                      <a href={`/profile/${userScore.id}`} style={{color: 'green', textDecoration: 'none'}}>{userScore.name}</a>
-                    </h3>
-                    {
-                      userScore.joinedExams === undefined &&
-                      <Box style={{color: 'gray', marginLeft: 20}}>0 examinations attended</Box>
-                    }
-                    {
-                      userScore.joinedExams !== undefined &&
-                      <Box style={{color: 'gray', marginLeft: 20}}>{userScore.joinedExams.length} examinations attended</Box>
-                    }
-                  </Box>
-                  <Box className={classes.scoreBox}>
-                    <Box p="4px">
-                      {userScore.examScore}
+          <Grid container justify='center'>
+            <Grid item xm={12} md={8} >
+              <h1 style={{marginLeft: 20, color: 'green'}}>Examination Ranking</h1>
+              <Box style={{marginLeft: 20, color: 'gray'}}>Total Participants: {usersExamScore.length}</Box>
+              {
+                pagedUsersExamScore.map((userScore, index) => (
+                  <Box key={userScore.id} className={classes.userBox} borderBottom={1}>
+                    <Box style={{marginLeft: 30, marginRight: 30}}>
+                      {(currentPage - 1)*10 + index + 1}
                     </Box>
-                    <Avatar className={classes.scoreAvatar} alt="Score" src="/coins_48px.png" />
+                    <Avatar variant="circular" src={userScore.avatar} />
+                    <Box style={{marginRight: 'auto'}}>
+                      <h3 style={{display: 'inline-block', marginLeft: 20, marginRight: 0, marginTop: 0, marginBottom: 0}}>
+                        <a href={`/profile/${userScore.id}`} style={{color: 'green', textDecoration: 'none'}}>{userScore.name}</a>
+                      </h3>
+                      {
+                        userScore.joinedExams === undefined &&
+                        <Box style={{color: 'gray', marginLeft: 20}}>0 examinations attended</Box>
+                      }
+                      {
+                        userScore.joinedExams !== undefined &&
+                        <Box style={{color: 'gray', marginLeft: 20}}>{userScore.joinedExams.length} examinations attended</Box>
+                      }
+                    </Box>
+                    <Box className={classes.scoreBox}>
+                      <Box p="4px">
+                        {userScore.examScore}
+                      </Box>
+                      <Avatar className={classes.scoreAvatar} alt="Score" src="/coins_48px.png" />
+                    </Box>
                   </Box>
-                </Box>
-              ))
-          }
-          <Box className={classes.pagination}>
-            <Pagination
-              onChange={handlePagination}
-              count={totalPage}
-              page={currentPage}
-              variant="outlined"
-              color="primary"
-            />
-          </Box>
+                ))
+              }
+              <Box className={classes.pagination}>
+                <Pagination
+                  onChange={handlePagination}
+                  count={totalPage}
+                  page={currentPage}
+                  variant="outlined"
+                  color="primary"
+                />
+              </Box>
+            </Grid>
+          </Grid>
         </Container>
       </AppLayout>
     </>
@@ -140,6 +144,7 @@ export default function Ranking({usersExamScore}) {
 
 export async function getServerSideProps() {
   const usersExamScore = await developers.getUserByExamScore();
+
 
   return {
     props: {

@@ -81,6 +81,15 @@ export function formatDuration(time) {
   return `${mins} minutes`;
 }
 
+export function formatTime(time) {
+  // Hours, minutes and seconds
+  const hrs = Math.floor(time / 3600, 10);
+  const mins = Math.floor((time % 3600) / 60, 10);
+  const secs = time % 60;
+
+  return `${hrs}:${mins}:${secs}`;
+}
+
 export async function getUsersForInvitation(examId) {
   const invitedUsers = await getInvitedDevelopers(examId);
   const usersDB = await getAll();

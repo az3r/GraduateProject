@@ -29,3 +29,17 @@ export function getAttributeReference(collection, docId) {
     .collection(collections.attributes)
     .doc(collections.attributes);
 }
+
+/**
+ * retrieve a document's private attribute
+ * @param {*} collection the name of collection
+ * @param {*} docId document's id
+ * @returns document's private attributes
+ */
+export function getExamSubmissionReference(collection, docId, examId) {
+  return Firestore()
+    .collection(collection)
+    .doc(docId)
+    .collection(collections.examSubmissions)
+    .where('examId', '==', examId);
+}
