@@ -31,7 +31,6 @@ export default function AddProblemFromLibrary({idCompany,questionsList,handleAdd
     const [problemsList,setProblemsList] = useState([]);
     useEffect(async ()=>{
         const problemsData = await getProblems(idCompany);
-        console.log(problemsData);
         setProblemsList(problemsData);
     },[]);
 

@@ -59,13 +59,13 @@ export async function getProblems(companyId) {
 export async function addDevelopers(companyId, developerIds) {
   if (developerIds?.length) {
     await getAttributeReference(collections.companies, companyId).update({
-      members: Firestore.FieldValue.arrayUnion(developerIds),
+      members: Firestore.FieldValue.arrayUnion(...developerIds),
     });
 
     // add company to each developer
     developerIds.forEach(async (id) => {
       await getAttributeReference(collections.developers, id).update({
-        companies: Firestore.FieldValue.arrayUnion([companyId]),
+        companies: Firestore.FieldValue.arrayUnion(companyId),
       });
     });
   }
@@ -75,13 +75,13 @@ export async function addDevelopers(companyId, developerIds) {
 export async function removeDevelopers(companyId, developerIds) {
   if (developerIds?.length) {
     await getAttributeReference(collections.companies, companyId).update({
-      members: Firestore.FieldValue.arrayRemove(developerIds),
+      members: Firestore.FieldValue.arrayRemove(...developerIds),
     });
 
     // remove company from each developer
     developerIds.forEach(async (id) => {
       await getAttributeReference(collections.developers, id).update({
-        companies: Firestore.FieldValue.arrayRemove([companyId]),
+        companies: Firestore.FieldValue.arrayRemove(companyId),
       });
     });
   }
@@ -100,4 +100,16 @@ export async function getMembers(company) {
     return members.docs.map((item) => transform(item));
   }
   return [];
+}
+
+export async function isMember(companyId, developerId) {
+  const comapany = await getAttributeReference(
+    collections.companies,
+    companyId
+  ).get();
+  const { members } = comapany.data();
+  if (members !== undefined) {
+    return members.includes(developerId);
+  }
+  return false;
 }

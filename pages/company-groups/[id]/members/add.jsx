@@ -3,12 +3,11 @@ import Head from 'next/head';
 import { parseCookies } from '@libs/client/cookies';
 import { useRouter } from 'next/router';
 import AppLayout from '@components/Layout';
-import DetailGroup from '@components/CompanyGroups/DetailGroup';
-import GroupMember from '@components/CompanyGroups/DetailGroup/Member';
+import AddMember from '@components/CompanyGroups/DetailGroup/Member/AddMember';
 import { find } from '@libs/client/users';
-import { get } from '@libs/client/developers';
+import { get, getAll } from '@libs/client/developers';
 
-export default function Index({ user }) {
+export default function Index({ user, developers }) {
   const router = useRouter();
   useEffect(() => {
     if (!user) {
@@ -22,9 +21,7 @@ export default function Index({ user }) {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <AppLayout>
-        <DetailGroup selected={2}>
-            <GroupMember/>
-        </DetailGroup>
+        <AddMember user={user || user} developers={developers||developers}/>
       </AppLayout>
     </>
   );
@@ -42,11 +39,13 @@ export async function getServerSideProps({ req, query }) {
       {
         if(id === user.id) 
         {
-          return {
-            props: {
-              user,
-              },
-          };
+            const developers = await getAll();
+            return {
+                props: {
+                user,
+                developers
+                },
+            };
         }
       }
       const detailUser = await get(user.id);

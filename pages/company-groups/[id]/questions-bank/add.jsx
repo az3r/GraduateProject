@@ -5,6 +5,7 @@ import { useRouter } from 'next/router';
 import AppLayout from '@components/Layout';
 import dynamic from 'next/dynamic';
 import { find } from '@libs/client/users';
+import { get } from '@libs/client/developers';
 
 const AddQuestion = dynamic(
   () => import('@components/CompanyGroups/DetailGroup/QuestionsBank/AddQuestion'),
@@ -50,6 +51,15 @@ export async function getServerSideProps({ req, query }) {
               },
           };
         }
+      }
+      const detailUser = await get(user.id);
+      if(detailUser.companies.includes(id))
+      {
+        return {
+          props: {
+            user,
+            },
+        };
       }
     }
   }

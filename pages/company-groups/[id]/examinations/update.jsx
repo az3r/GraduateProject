@@ -64,6 +64,16 @@ export async function getServerSideProps({ req, query }) {
                     },
             }
         }
+        const detailUser = await get(user.id);
+        if(detailUser.companies.includes(id))
+        {
+          return {
+            props: {
+              user,
+              examination: null
+            },
+          };
+        }
       }
     }
   }

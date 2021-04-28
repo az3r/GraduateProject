@@ -5,6 +5,8 @@ import { useRouter } from 'next/router';
 import AppLayout from '@components/Layout';
 import { find } from '@libs/client/users';
 import { get } from '@libs/client/exams';
+import { get as getDev } from '@libs/client/developers';
+
 import dynamic from 'next/dynamic';
 
 const DetailExamination = dynamic(
@@ -18,6 +20,10 @@ export default function Index({ user, examination }) {
 
   useEffect(() => {
     if (!user) {
+      router.replace('/login');
+    }
+    if(!examination)
+    {
       router.replace('/login');
     }
   });
@@ -56,6 +62,17 @@ export async function getServerSideProps({ req, query }) {
                 },
             };
         }
+      }
+      const detailUser = await getDev(user.id);
+      if(detailUser.companies.includes(id))
+      {
+        const examination = await get({examId: exam});
+        return {
+          props: {
+            user,
+            examination
+          },
+        };
       }
     }
   }

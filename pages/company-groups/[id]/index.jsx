@@ -6,6 +6,7 @@ import AppLayout from '@components/Layout';
 import DetailGroup from '@components/CompanyGroups/DetailGroup';
 import GroupGeneral from '@components/CompanyGroups/DetailGroup/general';
 import { find } from '@libs/client/users';
+import { get } from '@libs/client/developers';
 
 export default function Index({ user }) {
   const router = useRouter();
@@ -37,7 +38,6 @@ export async function getServerSideProps({ req, query }) {
     if (cookies.user) {
       const user = await find(JSON.parse(cookies.user).uid);
       const { id } = query;
-      console.log(user);
       if(user.role === 'company')
       {
         if(id === user.id) 
@@ -48,6 +48,15 @@ export async function getServerSideProps({ req, query }) {
               },
           };
         }
+      }
+      const detailUser = await get(user.id);
+      if(detailUser.companies.includes(id))
+      {
+        return {
+          props: {
+            user,
+            },
+        };
       }
     }
   }

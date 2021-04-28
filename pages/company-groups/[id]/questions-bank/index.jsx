@@ -7,6 +7,7 @@ import DetailGroup from '@components/CompanyGroups/DetailGroup';
 import GroupQuestionsBank from '@components/CompanyGroups/DetailGroup/QuestionsBank';
 import { find } from '@libs/client/users';
 import { getProblems } from '@libs/client/companies';
+import { get } from '@libs/client/developers';
 
 export default function Index({ user,questions }) {
   const router = useRouter();
@@ -38,7 +39,6 @@ export async function getServerSideProps({ req, query }) {
     if (cookies.user) {
       const user = await find(JSON.parse(cookies.user).uid);
       const { id } = query;
-
       if(user.role === 'company')
       {
         if(id === user.id) 
@@ -51,6 +51,17 @@ export async function getServerSideProps({ req, query }) {
               },
           };
         }
+      }
+      const detailUser = await get(user.id);
+      if(detailUser.companies.includes(id))
+      {
+        const questions = await getProblems(user.id);
+        return {
+          props: {
+            user,
+            questions
+            },
+        };
       }
     }
   }

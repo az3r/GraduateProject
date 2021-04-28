@@ -7,6 +7,7 @@ import DetailGroup from '@components/CompanyGroups/DetailGroup';
 import GroupExaminations from '@components/CompanyGroups/DetailGroup/Examinations';
 import { find } from '@libs/client/users';
 import { getExams } from '@libs/client/companies';
+import { get } from '@libs/client/developers';
 
 export default function Index({ user, exams }) {
   const router = useRouter();
@@ -43,7 +44,6 @@ export async function getServerSideProps({ req, query }) {
         if(id === user.id) 
         {
           const exams = await getExams(user.id);
-          console.log(exams);
           return {
             props: {
               user,
@@ -51,6 +51,17 @@ export async function getServerSideProps({ req, query }) {
               },
           };
         }
+      }
+      const detailUser = await get(user.id);
+      if(detailUser.companies.includes(id))
+      {
+        const exams = await getExams(id);
+        return {
+          props: {
+            user,
+            exams  
+          },
+        };
       }
     }
   }
