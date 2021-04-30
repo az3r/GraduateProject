@@ -54,7 +54,7 @@ function TabPanel(props) {
 }
 
 
-export default function DetailExamination({examProp}) {
+export default function DetailExamination({user, examProp}) {
   const [value, setValue] = useState(0);
   const [examination,setExamination] = useState(examProp);
   const router = useRouter();
@@ -100,7 +100,7 @@ export default function DetailExamination({examProp}) {
                 <Tab label="Participants" />
               </Tabs>
               <TabPanel value={value} index={0}>
-                <DetailTab examination={examination} handlePublish={handlePublish} />
+                <DetailTab user={user} examination={examination} handlePublish={handlePublish} />
               </TabPanel>
               <TabPanel value={value} index={1}>
                 Item Two

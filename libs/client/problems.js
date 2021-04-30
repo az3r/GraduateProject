@@ -99,11 +99,9 @@ export async function getPublishedProblems() {
  * @param {*} properties problem's properties
  */
 export async function update(
-  { id, owner },
-  developerId,
+  id,
   { cases, code, content, difficulty, language, title }
 ) {
-  if (owner !== developerId) throw new Error('problem: not an owner');
   await Firestore()
     .collection(collections.problems)
     .doc(id)

@@ -55,7 +55,7 @@ function TabPanel2(props) {
     );
   }
 
-export default function DetailTab({examination,handlePublish})
+export default function DetailTab({user, examination,handlePublish})
 {  
   const [open, setOpen] = useState(false);
   const [publish,setPublish] = useState({
@@ -117,7 +117,7 @@ export default function DetailTab({examination,handlePublish})
   return(
     <Box m={3} p={2}>
       <Box mb={1} display="flex" justifyContent="flex-end">
-        <Button style={{marginRight: 10}} variant="contained" color="primary" onClick={()=> setOpen(true)} disabled={Date.now() >= examination.startAt}>Publish examination</Button>
+        <Button style={{marginRight: 10}} variant="contained" color="primary" onClick={()=> setOpen(true)} disabled={Date.now() >= examination.startAt || examination.owner !== user.id}>Publish examination</Button>
         <Dialog
             open={open}
             TransitionComponent={Transition}
@@ -163,7 +163,7 @@ export default function DetailTab({examination,handlePublish})
                 </Button>
             </DialogActions>
         </Dialog>
-        <Link href={`/company-groups/${id}/examinations/update?exam=${exam}`}><Button variant="contained" color="secondary" disabled={Date.now() >= examination.startAt}>Update examination</Button></Link>
+        <Link href={`/company-groups/${id}/examinations/update?exam=${exam}`}><Button variant="contained" color="secondary" disabled={Date.now() >= examination.startAt || examination.owner !== user.id}>Update examination</Button></Link>
       </Box> 
       <Typography style={{fontSize: "0.75rem", color: 'rgba(0, 0, 0, 0.54)'}}><ScheduleIcon fontSize="small"/>&nbsp;Created on {dateFormat(new Date(examination.createdOn),'mmmm dd, yyyy "at" HH:MM TT')}</Typography>
       {

@@ -54,7 +54,7 @@ export async function getServerSideProps({ req, query }) {
       {
         return {
           props: {
-            user,
+            user : detailUser,
             },
         };
       }

@@ -25,7 +25,7 @@ export default function Index({ user,questions }) {
       </Head>
       <AppLayout>
         <DetailGroup selected={3}>
-            <GroupQuestionsBank user={user || user} questions={questions || questions}/>
+            <GroupQuestionsBank user={user} questions={questions}/>
         </DetailGroup>
       </AppLayout>
     </>
@@ -55,7 +55,7 @@ export async function getServerSideProps({ req, query }) {
       const detailUser = await get(user.id);
       if(detailUser.companies.includes(id))
       {
-        const questions = await getProblems(user.id);
+        const questions = await getProblems(id);
         return {
           props: {
             user,

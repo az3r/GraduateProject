@@ -4,27 +4,30 @@ import { parseCookies } from '@libs/client/cookies';
 import { useRouter } from 'next/router';
 import AppLayout from '@components/Layout';
 import { find } from '@libs/client/users';
-import { get } from '@libs/client/exams';
 import { get as getDev } from '@libs/client/developers';
 
 import dynamic from 'next/dynamic';
+import { get } from '@libs/client/problems';
 
-const UpdateExamination = dynamic(
-  () => import('@components/CompanyGroups/DetailGroup/Examinations/UpdateExamination'),
+const UpdateQuestion = dynamic(
+  () => import('@components/CompanyGroups/DetailGroup/QuestionsBank/UpdateQuestion'),
   { ssr: false }
 );
 
 
-export default function Index({ user, examination }) {
+export default function Index({ user, problem }) {
   const router = useRouter();
-  const {id, exam} = router.query;
+  const {id, question} = router.query;
 
   useEffect(() => {
     if (!user) {
       router.replace('/login');
     }
-    if (!examination) router.replace(`/company-groups/${id}/examinations/detail?exam=${exam}`)
-  });
+    if(!problem)
+    {
+      router.replace(`/company-groups/${id}/questions-bank/detail?question=${question}`);
+    }
+  },[]);
 
   return (
     <>
@@ -34,8 +37,8 @@ export default function Index({ user, examination }) {
       </Head>
       <AppLayout>
         {
-         examination ?         
-         <UpdateExamination user={user} examProp={examination}/> : null
+            problem ?
+            <UpdateQuestion user={user} problemProp={problem}/> : null
         }
       </AppLayout>
     </>
@@ -48,48 +51,45 @@ export async function getServerSideProps({ req, query }) {
   if (Object.keys(cookies).length !== 0) {
     if (cookies.user) {
       const user = await find(JSON.parse(cookies.user).uid);
-      const { id, exam } = query;
+      const { id, question } = query;
 
       if(user.role === 'company')
       {
         if(id === user.id) 
         {
-            const examination = await get({examId: exam});
-            if(examination.owner === user.id && Date.now() < examination.startAt)
-            {
-              return {
+            const problem = await get({problemId: question});
+            if(problem.owner === user.id)
+                return {
                 props: {
                     user,
-                    examination
+                    problem
                     },
-              };
-            }
-            return {
-              props: {
-                  user,
-                  examination: null
-                  },
-            }
+                };
+            return{
+                    props: {
+                        user,
+                        problem: null
+                        },
+                }
+
         }
       }
       const detailUser = await getDev(user.id);
       if(detailUser.companies.includes(id))
       {
-        const examination = await get({examId: exam});
-        if(examination.owner === detailUser.id && Date.now() < examination.startAt)
-        {
-          return {
+        const problem = await get({problemId: question});
+        if(problem.owner === detailUser.id)
+            return {
+              props: {
+                user,
+                problem
+                },
+            };
+        return {
             props: {
                 user,
-                examination
+                problem: null
                 },
-          };
-        }
-        return {
-          props: {
-              user,
-              examination: null
-              },
         }
       }
     }

@@ -1,26 +1,19 @@
-import { Box, Breadcrumbs, Button, Divider, makeStyles, OutlinedInput, Select, Typography } from '@material-ui/core';
+import { Box, Breadcrumbs, Button, Divider, makeStyles, OutlinedInput, Select, Table, TableBody, TableCell, TableHead, TableRow, Typography } from '@material-ui/core';
 import React, { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
+// import dateFormat from 'dateformat';
+import HTMLReactParser from 'html-react-parser';
 
 
 
 const useStyles = makeStyles({
-    root: {
-      width: 300,
-    },
+
     outlinedInput: {
       height: 30,
       margin: 20,
       width: 350,
       borderRadius: 16,
-    },
-    addBtn:{
-        float: "right",
-        marginBottom: "10px"
-    },
-    itemsContainer:{
-        clear: "right",
     },
     createdDate:{
       color: "black",
@@ -28,6 +21,11 @@ const useStyles = makeStyles({
     typeStyle: {
         margin: "20px"
     },
+    linkStyle: {
+      '&:hover': {
+        cursor: "pointer",
+     },
+    }
   });
 
 export default function GroupQuestionsBank({questions}){
@@ -73,11 +71,47 @@ export default function GroupQuestionsBank({questions}){
                 </Link>
             </Box>
             <Box m={3}>
-                {
-                    questions.map((item)=>(
-                        <Typography>{item.title}</Typography>
-                    ))
-                }
+            <Table className={classes.table} size="small" aria-label="a dense table">
+               <TableHead>
+                 <TableRow>
+                   <TableCell style={{ fontWeight: 'bolder' }}>Questions</TableCell>
+                   <TableCell style={{ fontWeight: 'bolder' }}>Type</TableCell>
+                 </TableRow>
+               </TableHead>
+               <TableBody>
+                 {questions.map((item, index) => (
+                   <TableRow
+                     key={item.id}
+                     className={classes.tableRow}
+                     hover
+                     style={
+                       index % 2
+                         ? { background: 'rgb(250, 250, 250)' }
+                         : { background: 'white' }
+                     }
+                   >
+                     <TableCell component="th" scope="row" className={classes.linkStyle}>
+                       <Link href={`/company-groups/${id}/questions-bank/detail?question=${item.id}`}>
+                       {
+                            item.isMCQ ? 
+                            HTMLReactParser(item.title)
+                            :
+                            <Typography>{item.title}</Typography>
+                        }
+                       </Link>
+                     </TableCell>
+                     <TableCell component="th" scope="row">
+                        {
+                            item.isMCQ ? 
+                            <Typography>Multiple choice</Typography>
+                            :
+                            <Typography>Coding</Typography>
+                        }
+                     </TableCell>
+                   </TableRow>
+                 ))}
+               </TableBody>
+             </Table>
             </Box>
         </Box>
     );
