@@ -62,6 +62,11 @@ export default function MemberAppBar() {
             <Typography variant="h6">Examinations</Typography>
           </MenuItem>
         </Link>
+        <Link href="/company-groups">
+          <MenuItem>
+            <Typography variant="h6">Company groups</Typography>
+          </MenuItem>
+        </Link>
         <Box flexGrow={1} />
         <IconButton onClick={() => setOpen(!open)} ref={anchorRef}>
           <Avatar alt="user's profile" src={user.avatar} />

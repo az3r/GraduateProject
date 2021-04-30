@@ -113,3 +113,14 @@ export async function isMember(companyId, developerId) {
   }
   return false;
 }
+
+export async function getGroupsDetail(companies) {
+  if (companies.length > 0) {
+    const result = await Firestore()
+      .collection(collections.companies)
+      .where(Firestore.FieldPath.documentId(), 'in', companies)
+      .get();
+    return result.docs.map((item) => transform(item));
+  }
+  return [];
+}

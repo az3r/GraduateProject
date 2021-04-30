@@ -43,26 +43,31 @@ export default function CompanyGroups({companyGroups}){
             <Box m={3} p={2}>
               <Typography variant="h5" >Your company groups</Typography>
               <Divider/>
-              <List >
-                { companyGroups.map((value)=>(
-                    <ListItem key={value.id} ListItem className={classes.item}>
-                      <ListItemAvatar >
-                        <Avatar src={value.avatar}/>
-                      </ListItemAvatar>
-                      <ListItemText
-                        primary={value.name}
-                      />
-                      <ListItemSecondaryAction>
-                        <Link href={`/company-groups/${value.id}`}>
-                          <Button variant="contained" color="secondary">
-                              Detail group
-                          </Button>
-                        </Link>
-                      </ListItemSecondaryAction>
-                    </ListItem>
-                  ))
-                }
-              </List>
+              {
+                companyGroups.length > 0 ? 
+                  <List >
+                  { companyGroups.map((value)=>(
+                      <ListItem key={value.id} ListItem className={classes.item}>
+                        <ListItemAvatar >
+                          <Avatar src={value.avatar}/>
+                        </ListItemAvatar>
+                        <ListItemText
+                          primary={value.name}
+                        />
+                        <ListItemSecondaryAction>
+                          <Link href={`/company-groups/${value.id}`}>
+                            <Button variant="contained" color="secondary">
+                                Detail group
+                            </Button>
+                          </Link>
+                        </ListItemSecondaryAction>
+                      </ListItem>
+                    ))
+                  }
+                  </List> 
+                  : 
+                  <Typography>You are not in any groups at the moment</Typography>
+              }
             </Box>
         </Box>
     );
