@@ -100,7 +100,7 @@ export async function getPublishedProblems() {
  */
 export async function update(
   id,
-  { cases, code, content, difficulty, language, title }
+  { cases, code, content, difficulty, language, title, published }
 ) {
   await Firestore()
     .collection(collections.problems)
@@ -110,6 +110,7 @@ export async function update(
       language,
       score: cases.reduce((total, { score }) => total + score),
       title,
+      published,
       modifiedAt: Firestore.Timestamp.now(),
     });
 
@@ -117,6 +118,24 @@ export async function update(
     cases,
     code,
     content,
+  });
+  return true;
+}
+
+export async function updateMCQ(
+  id,
+  { title, difficulty, score, answers, correctIndices }
+) {
+  await Firestore().collection(collections.problems).doc(id).update({
+    difficulty,
+    title,
+    score,
+    modifiedAt: Firestore.Timestamp.now(),
+  });
+
+  await getAttributeReference(collections.problems, id).update({
+    answers,
+    correctIndices,
   });
   return true;
 }

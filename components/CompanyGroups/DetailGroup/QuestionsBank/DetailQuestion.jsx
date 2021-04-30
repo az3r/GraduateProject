@@ -132,7 +132,7 @@ export default function DetailQuestion({user, problemProp})
             </Breadcrumbs>
             <Divider/>
             <Grid container>
-                <Grid item lg={6} md={6} sm={12} xs={12} style={{wordWrap: 'break-word'}}>
+                <Grid item lg={6} md={6} sm={12} xs={12} style={{wordWrap: 'break-word'}} className={classes.tabs}>
                     <Box display="flex" justifyContent="flex-end" m={1}>
                         <Link href={`/company-groups/${id}/questions-bank/update?question=${question}`}><Button variant="outlined" disabled={problemProp.owner !== user.id}>Edit question</Button></Link>
                     </Box>
@@ -215,15 +215,15 @@ export default function DetailQuestion({user, problemProp})
                 <Grid item lg={6} md={6} sm={12} xs={12} style={{wordWrap: 'break-word'}}>
                     {
                         problemProp.isMCQ ?
-                        <>
+                        <Box m={3} p={2}>
                             <ol type="A">
                                 <li>{HTMLReactParser(problemProp.answers.A)}</li>
                                 <li>{HTMLReactParser(problemProp.answers.B)}</li>
                                 <li>{HTMLReactParser(problemProp.answers.C)}</li>
                                 <li>{HTMLReactParser(problemProp.answers.D)}</li>
                             </ol>
-                            <Typography>Correct: {HTMLReactParser(problemProp.correctIndices)}</Typography>
-                        </>
+                            <Typography><b>Correct:</b> {HTMLReactParser(problemProp.correctIndices)}</Typography>
+                        </Box>
                         :
                         <>
                             <Box display="flex" justifyContent="flex-end" m={1}>

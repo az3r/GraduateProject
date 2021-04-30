@@ -1,4 +1,4 @@
-import { update } from '@libs/client/problems';
+import { update, updateMCQ } from '@libs/client/problems';
 import { Box, Breadcrumbs, Button, Divider, Grid, makeStyles, Slide, Typography } from '@material-ui/core';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
@@ -63,8 +63,17 @@ export default function UpdateQuestion({problemProp})
                 content: question.content,
                 difficulty: question.difficulty,
                 language: question.language,
-                title: question.title
+                title: question.title,
+                published: question.published
             });
+        else
+            await updateMCQ(problemProp.id,{
+                title: question.title,
+                difficulty: question.difficulty,
+                score: question.score,
+                answers: question.answers,
+                correctIndices: question.correctIndices
+            })
         
         setOpen(true);
     }
@@ -94,7 +103,7 @@ export default function UpdateQuestion({problemProp})
                         {
                             problemProp.isMCQ ? 
                             <MultipleChoiceForm onFormSubmit={onFormSubmit} propQuestion={problemProp}/>:
-                            <CodingQuestionForm onFormSubmit={onFormSubmit} propQuestion={problemProp}/>
+                            <CodingQuestionForm onFormSubmit={onFormSubmit} propQuestion={problemProp} isSaved/>
                         }
                     </Box>
                     <Dialog
