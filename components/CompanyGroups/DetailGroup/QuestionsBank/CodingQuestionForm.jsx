@@ -72,9 +72,11 @@ export default function CodingQuestionForm({
   propQuestion,
   isSaved,
 }) {
+  console.log(propQuestion);
   const lang = propQuestion !== null ? propQuestion.language : 'Csharp';
   const difficulty = propQuestion !== null ? propQuestion.difficulty : 0;
   const published = propQuestion?.published || false;
+  const code = propQuestion?.code || getInitialCode(lang);
   const cases = propQuestion?.cases || [];
   const input = cases.map((item) => item.input);
   const output = cases.map((item) => item.output);
@@ -87,7 +89,7 @@ export default function CodingQuestionForm({
     content: propQuestion?.content,
     difficulty,
     language: lang,
-    code: getInitialCode(lang),
+    code,
     simpleTest: {
       input: '',
       output: '',

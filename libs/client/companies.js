@@ -115,7 +115,7 @@ export async function isMember(companyId, developerId) {
 }
 
 export async function getGroupsDetail(companies) {
-  if (companies.length > 0) {
+  if (companies && companies.length > 0) {
     const result = await Firestore()
       .collection(collections.companies)
       .where(Firestore.FieldPath.documentId(), 'in', companies)
