@@ -44,17 +44,19 @@ export async function update(
   id,
   { title, content, isPrivate, duration, problems }
 ) {
-  await Firestore()
-    .collection(collections.exams)
-    .doc(id)
-    .update({
-      title,
-      content,
-      isPrivate,
-      duration,
-      score: problems.reduce((current, { score }) => current + score),
-      modifiedAt: Firestore.Timestamp.now(),
-    });
+  // calculate score
+  let score = 0;
+  problems.forEach((problem) => {
+    score += problem.score;
+  });
+  await Firestore().collection(collections.exams).doc(id).update({
+    title,
+    content,
+    isPrivate,
+    duration,
+    score,
+    modifiedAt: Firestore.Timestamp.now(),
+  });
   await getAttributeReference(collections.exams, id).update({ problems });
 }
 

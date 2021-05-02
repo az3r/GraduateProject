@@ -107,17 +107,19 @@ export async function update(
   id,
   { cases, code, content, difficulty, language, title, published }
 ) {
-  await Firestore()
-    .collection(collections.problems)
-    .doc(id)
-    .update({
-      difficulty,
-      language,
-      score: cases.reduce((total, { score }) => total + score),
-      title,
-      published,
-      modifiedAt: Firestore.Timestamp.now(),
-    });
+  // calculate score
+  let score = 0;
+  cases.forEach((testCase) => {
+    score += testCase.score;
+  });
+  await Firestore().collection(collections.problems).doc(id).update({
+    difficulty,
+    language,
+    score,
+    title,
+    published,
+    modifiedAt: Firestore.Timestamp.now(),
+  });
 
   await getAttributeReference(collections.problems, id).update({
     cases,
