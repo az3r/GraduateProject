@@ -129,10 +129,10 @@ export function sendInvitation(
   );
 }
 
-export function getScoreOfCases(cases) {
+export function getScoreOfCases(objects) {
   let score = 0;
-  for (let i = 0; i < cases.length; i += 1) {
-    score += cases[i].score;
+  for (let i = 0; i < objects.length; i += 1) {
+    score += objects[i].score;
   }
   return score;
 }

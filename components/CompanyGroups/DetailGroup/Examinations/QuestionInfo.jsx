@@ -83,14 +83,16 @@ function ShowInfoQuestionMCQ({problem})
     };
 
     return(
-        <div>
+        <div style={{clear: 'right'}}>
             <Typography><b>Difficulty:</b> {getDifficultyString(problem.difficulty)}</Typography>
             <Typography><b>Score:</b> {problem.score}</Typography>
             {
                 !problem.isMCQ ?
                 <Typography><b>Language:</b> {problem.language}</Typography> : null
             }
+            <br/>
             <Divider/>
+            <br/>
             {
                 problem.isMCQ ?
                 <>
@@ -155,13 +157,7 @@ function ShowInfoQuestionMCQ({problem})
                                         problem.cases.map((item,idx)=>(
                                             <TabPanel value={valueTab} index={idx} >
                                                 <Typography>Test case {idx+1}:</Typography>
-                                                <div style={{wordWrap: 'break-word'}}>
-                                                     <Typography>{`{`}</Typography>
-                                                     <Typography>&nbsp;&nbsp;&nbsp;&nbsp;<b>input:</b> {item.input},</Typography>
-                                                     <Typography>&nbsp;&nbsp;&nbsp;&nbsp;<b>output:</b> {item.output},</Typography>
-                                                     <Typography>&nbsp;&nbsp;&nbsp;&nbsp;<b>score:</b> {item.score}</Typography>
-                                                     <Typography>{`}`}</Typography>
-                                                </div>
+                                                <pre>{`   {\n     input: ${item.input}\n     output: ${item.output}\n     score: ${item.score}\n   }`}</pre>
                                             </TabPanel>
                                         ))
                                     }

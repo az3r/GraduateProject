@@ -51,9 +51,11 @@ export async function getServerSideProps({ req, query }) {
       const detailUser = await get(user.id);
       if(detailUser.companies.includes(id))
       {
+        const developers = await getAll();
         return {
           props: {
             user,
+            developers
           },
         };
       }

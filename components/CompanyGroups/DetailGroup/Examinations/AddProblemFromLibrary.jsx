@@ -100,7 +100,7 @@ export default function AddProblemFromLibrary({idCompany,questionsList,handleAdd
                         } 
                         secondary={
                             <>
-                                <Link href={`/company-groups/${idCompany}/questions-bank/${item.id}`} target="_blank">Go to detail question</Link>
+                                <Link href={`/company-groups/${idCompany}/questions-bank/detail?question=${item.id}`} target="_blank">Go to detail question</Link>
                                 <Divider/>
                             </>
                         }

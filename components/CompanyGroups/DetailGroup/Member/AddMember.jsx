@@ -40,7 +40,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 
- const ITEMS_PER_PAGE = 3;
+ const ITEMS_PER_PAGE = 10;
 
  const Transition = React.forwardRef((props, ref) => <Slide direction="up" ref={ref} {...props} />);
 
@@ -58,9 +58,6 @@ export default function AddMember({ developers }) {
   const {id} = route.query;
 
   React.useEffect(async () => {
-    // const examOwner = await get(exam.owner);
-    // setExaminer(examOwner);
-    // const modifiedUsers = await getUsersForInvitation(exam.id);
     setUsers(developers);
     const filtered = getDisplayListForPagination(developers,0,ITEMS_PER_PAGE,searchKey);
     setFilterUsers(filtered);

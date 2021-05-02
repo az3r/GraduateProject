@@ -23,8 +23,12 @@ export default function Index({ user, examination }) {
     if (!user) {
       router.replace('/login');
     }
-    if (!examination) router.replace(`/company-groups/${id}/examinations/detail?exam=${exam}`)
-  });
+    if(examination)
+    {
+      if(Date.now() >= examination.startAt) router.replace(`/company-groups/${id}/examinations/detail?exam=${exam}`);
+    }
+    else router.replace(`/company-groups/${id}/examinations/detail?exam=${exam}`);
+  }, []);
 
   return (
     <>
@@ -55,7 +59,7 @@ export async function getServerSideProps({ req, query }) {
         if(id === user.id) 
         {
             const examination = await get({examId: exam});
-            if(examination.owner === user.id && Date.now() < examination.startAt)
+            if(examination.owner === user.id)
             {
               return {
                 props: {
@@ -76,7 +80,7 @@ export async function getServerSideProps({ req, query }) {
       if(detailUser.companies.includes(id))
       {
         const examination = await get({examId: exam});
-        if(examination.owner === detailUser.id && Date.now() < examination.startAt)
+        if(examination.owner === detailUser.id)
         {
           return {
             props: {

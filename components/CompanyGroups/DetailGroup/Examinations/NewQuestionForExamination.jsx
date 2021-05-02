@@ -1,3 +1,4 @@
+import { FirebaseAuth } from '@libs/client/firebase';
 import { Box, Checkbox, Divider, FormControlLabel, Select, Typography } from '@material-ui/core';
 import React, { useState } from 'react';
 import CodingQuestionForm from '../QuestionsBank/CodingQuestionForm';
@@ -18,6 +19,7 @@ export default function NewQuestionForExamination({onFormSubmit}){
     }
 
     const handleSubmitForm = (question) => {
+        question.developerId = FirebaseAuth().currentUser.uid;
         onFormSubmit(question, checked);
     }
 
