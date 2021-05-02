@@ -61,13 +61,18 @@ const useStyles = makeStyles((theme) => ({
     color: 'red !important',
   },
   tabPane: {
-    width: '80%', 
+    width: '80%',
     overflow: 'scroll',
-    overflowX: 'hidden'
+    overflowX: 'hidden',
   },
   deleteBtn: {
     color: 'red',
     float: 'right',
+  },
+  input: {
+    '& input::-webkit-clear-button, & input::-webkit-outer-spin-button, & input::-webkit-inner-spin-button': {
+      display: 'none',
+    },
   },
 }));
 
@@ -312,6 +317,7 @@ export default function EditExamination({ user, examProp, onSubmitExam }) {
           <Typography variant="h5">* Enter duration:</Typography>
           <Box display="flex">
             <TextField
+              className={classes.input}
               type="number"
               value={Math.floor(exam.duration / 60)}
               InputProps={{
@@ -326,6 +332,7 @@ export default function EditExamination({ user, examProp, onSubmitExam }) {
               &nbsp;minute(s)&nbsp;&nbsp;&nbsp;:&nbsp;&nbsp;&nbsp;
             </Typography>
             <TextField
+              className={classes.input}
               type="number"
               value={exam.duration % 60}
               InputProps={{
@@ -485,9 +492,9 @@ export default function EditExamination({ user, examProp, onSubmitExam }) {
                   </Dialog>
                 </div>
                 <QuestionInfo question={item} />
-                <br/>
-                <Divider/>
-                <br/>
+                <br />
+                <Divider />
+                <br />
                 <Button
                   variant="outlined"
                   className={classes.deleteBtn}

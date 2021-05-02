@@ -12,7 +12,7 @@ import {
   Select,
   MenuItem,
   InputBase,
-  AppBar
+  AppBar,
 } from '@material-ui/core';
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import { CKEditor } from '@ckeditor/ckeditor5-react';
@@ -20,35 +20,17 @@ import CodeEditor from '@components/CodeEditor';
 import CloseIcon from '@material-ui/icons/Close';
 import CheckIcon from '@material-ui/icons/Check';
 
-
 function TabPanel(props) {
   const { children, value, index } = props;
 
-  return (
-    <div>
-      {value === index && (
-        <Box>
-          {children}
-        </Box>
-      )}
-    </div>
-  );
+  return <div>{value === index && <Box>{children}</Box>}</div>;
 }
 
 function TabPanel2(props) {
-  const { children, value, index} = props;
+  const { children, value, index } = props;
 
-  return (
-    <div>
-      {value === index && (
-        <Box>
-          {children}
-        </Box>
-      )}
-    </div>
-  );
+  return <div>{value === index && <Box>{children}</Box>}</div>;
 }
-
 
 const BootstrapInput = withStyles((theme) => ({
   root: {
@@ -85,7 +67,6 @@ const BootstrapInput = withStyles((theme) => ({
   },
 }))(InputBase);
 
-
 const useStyles = makeStyles(() => ({
   root: {
     marginLeft: 30,
@@ -99,7 +80,7 @@ const useStyles = makeStyles(() => ({
     justifyContent: 'flex-end',
     height: 50,
     marginLeft: 20,
-    marginRight: 20
+    marginRight: 20,
   },
   root2: {
     flexGrow: 1,
@@ -114,7 +95,6 @@ const useStyles = makeStyles(() => ({
   compilerBox: {
     display: 'flex',
     justifyContent: 'flex-end',
-
   },
   submitCodeButton: {
     marginRight: 10,
@@ -126,33 +106,39 @@ const useStyles = makeStyles(() => ({
   },
   '@global': {
     '*::-webkit-scrollbar': {
-      width: '0.1em'
+      width: '0.1em',
     },
     '*::-webkit-scrollbar-track': {
-      '-webkit-box-shadow': 'inset 0 0 6px rgba(0,0,0,0.00)'
+      '-webkit-box-shadow': 'inset 0 0 6px rgba(0,0,0,0.00)',
     },
     '*::-webkit-scrollbar-thumb': {
       backgroundColor: 'rgba(0,0,0,.1)',
-      outline: '1px solid slategrey'
-    }
-  }
+      outline: '1px solid slategrey',
+    },
+  },
 }));
 
 const editorConfiguration = {
-  toolbar: [ ],
+  toolbar: [],
 };
 
-export default function Problem({index, problem, user, onIsSolvedProblemsChange, onNextQuestion}) {
+export default function Problem({
+  index,
+  problem,
+  user,
+  onIsSolvedProblemsChange,
+  onNextQuestion,
+}) {
   const classes = useStyles();
   // const router = useRouter();
 
   const [code, setCode] = useState(problem.code);
   const [value, setValue] = React.useState(0);
   const [value2, setValue2] = React.useState(0);
-  const [displayWaiting, setDisplayWaiting] = useState("none");
-  const [displayRunCode, setDisplayRunCode] = useState("none");
-  const [runCodeStatus, setRunCodeStatus] = useState("Accepted");
-  const [notification, setNotification] = useState("");
+  const [displayWaiting, setDisplayWaiting] = useState('none');
+  const [displayRunCode, setDisplayRunCode] = useState('none');
+  const [runCodeStatus, setRunCodeStatus] = useState('Accepted');
+  const [notification, setNotification] = useState('');
   const [runCodeResult, setRunCodeResult] = useState([]);
   const [theme, setTheme] = useState('xcode');
   const [size, setSize] = useState(14);
@@ -167,8 +153,10 @@ export default function Problem({index, problem, user, onIsSolvedProblemsChange,
 
   useEffect(() => {
     // Get code from localStorage
-    const localStorageCode = localStorage.getItem(`${user.id}${index}Temporary`);
-    if(localStorageCode != null){
+    const localStorageCode = localStorage.getItem(
+      `${user.id}${index}Temporary`
+    );
+    if (localStorageCode != null) {
       setCode(localStorageCode);
     }
   }, []);
@@ -184,7 +172,7 @@ export default function Problem({index, problem, user, onIsSolvedProblemsChange,
 
   const handleChange2 = (event, newValue) => {
     setValue2(newValue);
-  }
+  };
 
   const handleRunCode = async () => {
     setDisplayRunCode('none');
@@ -196,34 +184,37 @@ export default function Problem({index, problem, user, onIsSolvedProblemsChange,
         testcases: problem.cases,
       });
 
-
       if (response.failed === 0) {
         setRunCodeResult(response.results);
-        setRunCodeStatus("Accepted");
-        setNotification("You have passed the sample test cases. Click the submit button to run your code against all the test cases.");
+        setRunCodeStatus('Accepted');
+        setNotification(
+          'You have passed the sample test cases. Click the submit button to run your code against all the test cases.'
+        );
       } else {
         setRunCodeResult(response.results);
-        setRunCodeStatus("Wrong Answer");
-        setNotification(`${response.failed}/${response.results.length} test cases failed`);
+        setRunCodeStatus('Wrong Answer');
+        setNotification(
+          `${response.failed}/${response.results.length} test cases failed`
+        );
       }
     } catch (e) {
       console.log(e);
-      setRunCodeStatus("Compilation Error");
-      setNotification("Check the compiler output, fix the error and try again.");
+      setRunCodeStatus('Compilation Error');
+      setNotification(
+        'Check the compiler output, fix the error and try again.'
+      );
       setRunCodeResult(e);
     } finally {
       setDisplayWaiting('none');
       setDisplayRunCode('block');
     }
-
   };
-
 
   const handleSubmit = async () => {
     setDisplayWaiting('block');
 
     let response = null;
-    let status = "";
+    let status = '';
     try {
       response = await submissions.test({
         lang: problem.language,
@@ -234,12 +225,12 @@ export default function Problem({index, problem, user, onIsSolvedProblemsChange,
       console.log(response);
 
       if (response.failed === 0) {
-        status = "Accepted";
+        status = 'Accepted';
       } else {
-        status = "Wrong Answer";
+        status = 'Wrong Answer';
       }
     } catch (e) {
-      status = "Compilation Error";
+      status = 'Compilation Error';
       response = e;
     } finally {
       setDisplayWaiting('none');
@@ -256,9 +247,9 @@ export default function Problem({index, problem, user, onIsSolvedProblemsChange,
         status,
         details: {
           code,
-          ...response
-        }
-      }
+          ...response,
+        },
+      };
       localStorage.setItem(`${user.id}${index}`, JSON.stringify(result));
 
       onNextQuestion();
@@ -269,28 +260,33 @@ export default function Problem({index, problem, user, onIsSolvedProblemsChange,
     <>
       <div className={classes.root}>
         <AppBar position="static" color="transparent">
-          <Tabs value={value} onChange={handleChange} aria-label="simple tabs example">
+          <Tabs
+            value={value}
+            onChange={handleChange}
+            aria-label="simple tabs example"
+          >
             <Tab label="Problem" />
           </Tabs>
         </AppBar>
         <TabPanel value={value} index={0}>
-          <Paper style={{paddingLeft: 20, paddingRight: 20}}>
+          <Paper style={{ paddingLeft: 20, paddingRight: 20 }}>
             <CKEditor
               editor={ClassicEditor}
               disabled
               config={editorConfiguration}
-              onReady={editor => {
+              onReady={(editor) => {
                 // You can store the "editor" and use when it is needed.
                 // console.log("Editor is ready to use!", editor);
-                editor.editing.view.change(writer => {
+                editor.editing.view.change((writer) => {
                   writer.setStyle(
-                    "border",
-                    "0px",
+                    'border',
+                    '0px',
                     editor.editing.view.document.getRoot()
                   );
                 });
               }}
-              data={problem.content} />
+              data={problem.content}
+            />
           </Paper>
           <br />
           <br />
@@ -310,7 +306,7 @@ export default function Problem({index, problem, user, onIsSolvedProblemsChange,
               {/* </Box> */}
               <Box>
                 <Select
-                  style={{minWidth: 50, marginRight: 20}}
+                  style={{ minWidth: 50, marginRight: 20 }}
                   value={size}
                   onChange={handleSizeChange}
                   input={<BootstrapInput />}
@@ -325,7 +321,7 @@ export default function Problem({index, problem, user, onIsSolvedProblemsChange,
                   <MenuItem value={40}>40</MenuItem>
                 </Select>
                 <Select
-                  style={{minWidth: 150}}
+                  style={{ minWidth: 150 }}
                   labelId="demo-customized-select-label"
                   id="demo-customized-select"
                   value={theme}
@@ -380,31 +376,50 @@ export default function Problem({index, problem, user, onIsSolvedProblemsChange,
 
           <br />
           {/* Proccessing... */}
-          <Box style={{display: displayWaiting}}>
-            <Typography variant="h5" style={{paddingLeft: 30, fontWeight: 'bolder'}}>Processing...</Typography>
+          <Box style={{ display: displayWaiting }}>
+            <Typography
+              variant="h5"
+              style={{ paddingLeft: 30, fontWeight: 'bolder' }}
+            >
+              Processing...
+            </Typography>
           </Box>
 
           {/* Run Code */}
-          <Box style={{display: displayRunCode}}>
-            <Paper style={{paddingLeft: 30, paddingTop: 10, paddingBottom: 10}}>
-              {
-                runCodeStatus === "Accepted" &&
-                <Typography variant="h4" style={{fontWeight: 'bolder', color: 'green'}}>Congratulation!</Typography>
-              }
-              {
-                runCodeStatus === "Wrong Answer" &&
-                <Typography variant="h4" style={{fontWeight: 'bolder', color: 'red'}}>Wrong Answer :(</Typography>
-              }
-              {
-                runCodeStatus === "Compilation Error" &&
-                <Typography variant="h4" style={{fontWeight: 'bolder', color: 'red'}}>Compilation Error :(</Typography>
-              }
+          <Box style={{ display: displayRunCode }}>
+            <Paper
+              style={{ paddingLeft: 30, paddingTop: 10, paddingBottom: 10 }}
+            >
+              {runCodeStatus === 'Accepted' && (
+                <Typography
+                  variant="h4"
+                  style={{ fontWeight: 'bolder', color: 'green' }}
+                >
+                  Congratulation!
+                </Typography>
+              )}
+              {runCodeStatus === 'Wrong Answer' && (
+                <Typography
+                  variant="h4"
+                  style={{ fontWeight: 'bolder', color: 'red' }}
+                >
+                  Wrong Answer :(
+                </Typography>
+              )}
+              {runCodeStatus === 'Compilation Error' && (
+                <Typography
+                  variant="h4"
+                  style={{ fontWeight: 'bolder', color: 'red' }}
+                >
+                  Compilation Error :(
+                </Typography>
+              )}
             </Paper>
-            <Box style={{marginTop: 10, color: 'gray'}}>{notification}</Box>
+            <Box style={{ marginTop: 10, color: 'gray' }}>{notification}</Box>
             <br />
-            <Box boxShadow={3} className={classes.root2} >
-              {
-                (runCodeStatus === "Accepted" || runCodeStatus === "Wrong Answer") &&
+            <Box boxShadow={3} className={classes.root2}>
+              {(runCodeStatus === 'Accepted' ||
+                runCodeStatus === 'Wrong Answer') && (
                 <>
                   <Tabs
                     orientation="vertical"
@@ -415,95 +430,158 @@ export default function Problem({index, problem, user, onIsSolvedProblemsChange,
                     className={classes.tabs}
                     indicatorColor="primary"
                   >
-                    {
-                      runCodeResult.map((result, index1) => {
-                        if(index1 === value2){
-                          if(result.passed === false){
-                            return (
-                              <Tab icon={<CloseIcon />} label={`Sample Test case ${index1}`} style={{backgroundColor: 'white', color: 'red'}} />
-                            )
-                          }
-
+                    {runCodeResult.map((result, index1) => {
+                      if (index1 === value2) {
+                        if (result.passed === false) {
                           return (
-                            <Tab icon={<CheckIcon />} label={`Sample Test case ${index1}`} style={{backgroundColor: 'white', color: 'green'}} />
-                          )
-
-                        }
-
-                        if(result.passed === false){
-                          return (
-                            <Tab icon={<CloseIcon />} label={`Sample Test case ${index1}`} style={{color: 'red'}} />
-                          )
+                            <Tab
+                              icon={<CloseIcon />}
+                              label={`Sample Test case ${index1}`}
+                              style={{ backgroundColor: 'white', color: 'red' }}
+                            />
+                          );
                         }
 
                         return (
-                          <Tab icon={<CheckIcon />} label={`Sample Test case ${index1}`} style={{color: 'green'}} />
-                        )
+                          <Tab
+                            icon={<CheckIcon />}
+                            label={`Sample Test case ${index1}`}
+                            style={{ backgroundColor: 'white', color: 'green' }}
+                          />
+                        );
+                      }
 
+                      if (result.passed === false) {
+                        return (
+                          <Tab
+                            icon={<CloseIcon />}
+                            label={`Sample Test case ${index1}`}
+                            style={{ color: 'red' }}
+                          />
+                        );
+                      }
 
-                      })
-                    }
+                      return (
+                        <Tab
+                          icon={<CheckIcon />}
+                          label={`Sample Test case ${index1}`}
+                          style={{ color: 'green' }}
+                        />
+                      );
+                    })}
                   </Tabs>
-                  {
-                    runCodeResult.map((result, index2) => (
-                      <TabPanel2 value={value2} index={index2}>
-                        <Box style={{ paddingLeft: 50, paddingRight: 50, paddingTop: 50, overflow: 'auto', maxHeight: 350, maxWidth: 800 }}>
-                          {
-                            result.passed === false &&
-                            <>
-                              <Typography variant="h6" style={{ color: 'gray' }}>Compiler Message</Typography>
-                              <Typography style={{ marginLeft: 20, fontWeight: 'bolder' }}>Wrong Answer</Typography>
-                              <br />
-                              <Typography variant="h6" style={{ color: 'gray' }}>Input (stdin)</Typography>
-                              <Typography
-                                style={{ marginLeft: 20, fontWeight: 'bolder' }}>{result.input}</Typography>
-                              <br />
-                              <Typography variant="h6" style={{ color: 'gray' }}>Your Output (stdout)</Typography>
-                              <Typography
-                                style={{ marginLeft: 20, fontWeight: 'bolder' }}>{result.actual}</Typography>
-                              <br />
-                              <Typography variant="h6" style={{ color: 'gray' }}>Expected Output</Typography>
-                              <Typography
-                                style={{ marginLeft: 20, fontWeight: 'bolder' }}>{result.expected}</Typography>
-                              <br />
-                            </>
-                          }
-                          {
-                            result.passed === true &&
-                            <>
-                              <Typography variant="h6" style={{ color: 'gray' }}>Input (stdin)</Typography>
-                              <Typography
-                                style={{ marginLeft: 20, fontWeight: 'bolder' }}>{result.input}</Typography>
-                              <br />
-                              <Typography variant="h6" style={{ color: 'gray' }}>Your Output (stdout)</Typography>
-                              <Typography
-                                style={{ marginLeft: 20, fontWeight: 'bolder' }}>{result.input}</Typography>
-                              <br />
-                              <Typography variant="h6" style={{ color: 'gray' }}>Expected Output</Typography>
-                              <Typography
-                                style={{ marginLeft: 20, fontWeight: 'bolder' }}>{result.expected}</Typography>
-                              <br />
-                            </>
-                          }
-                        </Box>
-                      </TabPanel2>
-                    ))
-                  }
+                  {runCodeResult.map((result, index2) => (
+                    <TabPanel2 value={value2} index={index2}>
+                      <Box
+                        style={{
+                          paddingLeft: 50,
+                          paddingRight: 50,
+                          paddingTop: 50,
+                          overflow: 'auto',
+                          maxHeight: 350,
+                          maxWidth: 800,
+                        }}
+                      >
+                        {result.passed === false && (
+                          <>
+                            <Typography variant="h6" style={{ color: 'gray' }}>
+                              Compiler Message
+                            </Typography>
+                            <Typography
+                              style={{ marginLeft: 20, fontWeight: 'bolder' }}
+                            >
+                              Wrong Answer
+                            </Typography>
+                            <br />
+                            <Typography variant="h6" style={{ color: 'gray' }}>
+                              Input (stdin)
+                            </Typography>
+                            <Typography
+                              style={{ marginLeft: 20, fontWeight: 'bolder' }}
+                            >
+                              {result.input}
+                            </Typography>
+                            <br />
+                            <Typography variant="h6" style={{ color: 'gray' }}>
+                              Your Output (stdout)
+                            </Typography>
+                            <Typography
+                              style={{ marginLeft: 20, fontWeight: 'bolder' }}
+                            >
+                              {result.actual}
+                            </Typography>
+                            <br />
+                            <Typography variant="h6" style={{ color: 'gray' }}>
+                              Expected Output
+                            </Typography>
+                            <Typography
+                              style={{ marginLeft: 20, fontWeight: 'bolder' }}
+                            >
+                              {result.expected}
+                            </Typography>
+                            <br />
+                          </>
+                        )}
+                        {result.passed === true && (
+                          <>
+                            <Typography variant="h6" style={{ color: 'gray' }}>
+                              Input (stdin)
+                            </Typography>
+                            <Typography
+                              style={{ marginLeft: 20, fontWeight: 'bolder' }}
+                            >
+                              {result.input}
+                            </Typography>
+                            <br />
+                            <Typography variant="h6" style={{ color: 'gray' }}>
+                              Your Output (stdout)
+                            </Typography>
+                            <Typography
+                              style={{ marginLeft: 20, fontWeight: 'bolder' }}
+                            >
+                              {result.input}
+                            </Typography>
+                            <br />
+                            <Typography variant="h6" style={{ color: 'gray' }}>
+                              Expected Output
+                            </Typography>
+                            <Typography
+                              style={{ marginLeft: 20, fontWeight: 'bolder' }}
+                            >
+                              {result.expected}
+                            </Typography>
+                            <br />
+                          </>
+                        )}
+                      </Box>
+                    </TabPanel2>
+                  ))}
                 </>
-              }
-              {
-                runCodeStatus === "Compilation Error" &&
-                <Box style={{marginLeft: 20, marginRight: 20, marginTop: 20}}>
-                  <Typography variant="h6" style={{color: 'gray'}}>Compiler Messages</Typography>
-                  <Typography style={{marginLeft: 20, fontWeight: 'bolder'}}>{runCodeResult.status}</Typography>
-                  <Typography style={{marginLeft: 20, fontWeight: 'bolder'}}>{runCodeResult.stderr}</Typography>
-                  <Typography style={{marginLeft: 20, fontWeight: 'bolder'}}>{runCodeResult.stdout}</Typography>
+              )}
+              {runCodeStatus === 'Compilation Error' && (
+                <Box style={{ marginLeft: 20, marginRight: 20, marginTop: 20 }}>
+                  <Typography variant="h6" style={{ color: 'gray' }}>
+                    Compiler Messages
+                  </Typography>
+                  <Typography style={{ marginLeft: 20, fontWeight: 'bolder' }}>
+                    {runCodeResult.status}
+                  </Typography>
+                  <Typography style={{ marginLeft: 20, fontWeight: 'bolder' }}>
+                    {runCodeResult.stderr}
+                  </Typography>
+                  <Typography style={{ marginLeft: 20, fontWeight: 'bolder' }}>
+                    {runCodeResult.stdout}
+                  </Typography>
                   <br />
-                  <Typography variant="h6" style={{color: 'gray'}}>Exit Status</Typography>
-                  <Typography style={{marginLeft: 20, fontWeight: 'bolder'}} >1</Typography>
+                  <Typography variant="h6" style={{ color: 'gray' }}>
+                    Exit Status
+                  </Typography>
+                  <Typography style={{ marginLeft: 20, fontWeight: 'bolder' }}>
+                    1
+                  </Typography>
                   <br />
                 </Box>
-              }
+              )}
             </Box>
           </Box>
         </TabPanel>
