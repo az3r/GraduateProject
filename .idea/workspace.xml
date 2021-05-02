@@ -21,7 +21,11 @@
   <component name="ChangeListManager">
     <list default="true" id="73bd1854-2930-493b-bbd0-fb90442d9327" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pages/submissions/index.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/pages/submissions/index.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/components/CompanyGroups/DetailGroup/QuestionsBank/CodingQuestionForm.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/CompanyGroups/DetailGroup/QuestionsBank/CodingQuestionForm.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/components/CompanyGroups/DetailGroup/QuestionsBank/UpdateQuestion.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/CompanyGroups/DetailGroup/QuestionsBank/UpdateQuestion.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/libs/client/companies.js" beforeDir="false" afterPath="$PROJECT_DIR$/libs/client/companies.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/libs/client/exams.js" beforeDir="false" afterPath="$PROJECT_DIR$/libs/client/exams.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/libs/client/problems.js" beforeDir="false" afterPath="$PROJECT_DIR$/libs/client/problems.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

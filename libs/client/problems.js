@@ -7,6 +7,11 @@ export async function create(
   companyId,
   { cases, code, content, difficulty, language, title, published, developerId }
 ) {
+  // calculate score
+  let score = 0;
+  cases.forEach((testCase) => {
+    score += testCase.score;
+  });
   if (!cases?.length) throw new Error('no testcase provided');
   const { id: problemId, parent } = await Firestore()
     .collection(collections.problems)
@@ -17,7 +22,7 @@ export async function create(
       language,
       title,
       published,
-      score: cases.reduce((total, { score }) => total + score),
+      score,
       createdOn: Firestore.Timestamp.now(),
       deleted: false,
     });

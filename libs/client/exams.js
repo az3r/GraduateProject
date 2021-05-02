@@ -13,6 +13,11 @@ export async function create(
   companyId,
   { title, content, duration, isPrivate, problems, developerId }
 ) {
+  // calculate score
+  let score = 0;
+  problems.forEach((problem) => {
+    score += problem.score;
+  });
   const { id } = await Firestore()
     .collection(collections.exams)
     .add({
@@ -22,7 +27,7 @@ export async function create(
       content,
       duration,
       isPrivate,
-      score: problems.reduce((current, { score }) => current + score),
+      score,
       createdOn: Firestore.Timestamp.now(),
     });
   await getAttributeReference(collections.exams, id).set({ id, problems });
