@@ -19,7 +19,7 @@ import { useRouter } from 'next/router';
 import { Alert } from '@material-ui/lab';
 import { FirebaseAuth } from '@libs/client/firebase';
 import { auth } from '@libs/client';
-import { useCookies } from 'react-cookie';
+import { Cookies } from 'react-cookie';
 import json2mq from 'json2mq';
 import { register } from '@libs/client/authenticate';
 
@@ -34,7 +34,6 @@ export default function Login() {
     severity: 'info',
     message: 'No message',
   });
-  const [, setCookies] = useCookies(['user']);
 
   return (
     <Box className={styles.root}>
@@ -205,12 +204,26 @@ export default function Login() {
 
       try {
         setSubmitting(true);
-        await register({
+        const { user } = await register({
           username,
           email,
           password,
           role: 'company',
         });
+
+        setSnackBarState({
+          open: true,
+          severity: 'success',
+          message: 'Register successfully!',
+        });
+
+        // save cookies
+        const cookies = new Cookies();
+        cookies.set('user', JSON.stringify({ uid: user.uid, isLogin: true }), {
+          path: '/',
+        });
+        // end save cookies
+        router.push(`/company-groups/${user.uid}`);
       } catch (error) {
         const { code } = error;
 
@@ -296,22 +309,21 @@ export default function Login() {
 
     async function onSignUp({ method }) {
       try {
-        const credential = await signUpWithProvider({ method });
+        const { user } = await signUpWithProvider({ method });
 
-        // save cookies
-        const user = {
-          uid: credential.user.uid,
-          isLogin: true,
-        };
-        setCookies(['user'], JSON.stringify(user), { path: '/' });
-        // end save cookies
-
-        router.replace(`/company-groups/${credential.user.uid}`);
         setSnackBarState({
           open: true,
           severity: 'success',
           message: 'Registered successfully!',
         });
+
+        // save cookies
+        const cookies = new Cookies();
+        cookies.set('user', JSON.stringify({ uid: user.uid, isLogin: true }), {
+          path: '/',
+        });
+        // end save cookies
+        router.push(`/company-groups/${user.uid}`);
       } catch (error) {
         const { code } = error;
 

@@ -134,5 +134,3 @@ export async function getDeveloperNotInGroup(company) {
 
   return result.docs.map((item) => transform(item));
 }
-// 1. lấy tất cả user chưa có trong company đó
-// 2. lấy tất cả submissions của problem

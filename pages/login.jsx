@@ -46,16 +46,23 @@ export default function Login() {
     if (auth) {
       // save cookies
       const cookies = new Cookies();
-      const user = {
-        uid: FirebaseAuth().currentUser.uid,
-        isLogin: true,
-      };
-      cookies.set('user', JSON.stringify(user), { path: '/' });
+      cookies.set('user', JSON.stringify({ uid: auth.uid, isLogin: true }), {
+        path: '/',
+      });
       // end save cookies
 
-      const destination =
-        auth.role === 'company' ? `/company-groups/${auth.uid}` : '/';
-      router.replace(destination);
+      if (auth.role === undefined) {
+        signout();
+        setSnackBarState({
+          open: true,
+          message: 'Account does not exist',
+          severity: 'error',
+        });
+      } else {
+        const destination =
+          auth.role === 'company' ? `/company-groups/${auth.uid}` : '/';
+        router.push(destination);
+      }
     }
   }, [auth]);
 
@@ -343,15 +350,7 @@ export default function Login() {
 }
 
 async function signInWithEmail({ email, password }) {
-  const credentials = await signin({ email, password });
-  if (!credentials.user.emailVerified) {
-    await signout();
-    return Promise.reject({
-      code: 'email_not_verified',
-      user: credentials.user,
-    });
-  }
-  return credentials;
+  return signin({ email, password });
 }
 
 async function signInWithProvider({ method }) {

@@ -165,3 +165,15 @@ export async function getParticipants(problem) {
   }
   return [];
 }
+
+// 1. lấy tất cả user chưa có trong company đó
+// 2. lấy tất cả submissions của problem
+export async function getSubmission(problemId) {
+  const snapshot = await Firestore()
+    .collectionGroup(collections.problemSubmissions)
+    .where('problemId', '==', problemId)
+    .orderBy('createdOn', 'desc')
+    .get();
+
+  return snapshot.docs.map((doc) => transform(doc));
+}
