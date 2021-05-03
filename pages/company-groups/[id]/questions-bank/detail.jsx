@@ -10,7 +10,7 @@ import dynamic from 'next/dynamic';
 import { get } from '@libs/client/problems';
 
 const DetailQuestion = dynamic(
-  () => import('@components/CompanyGroups/DetailGroup/QuestionsBank/DetailQuestion'),
+  () => import('@components/CompanyGroups/DetailGroup/QuestionsBank/Detail/DetailQuestion'),
   { ssr: false }
 );
 

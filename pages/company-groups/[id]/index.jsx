@@ -7,8 +7,10 @@ import DetailGroup from '@components/CompanyGroups/DetailGroup';
 import GroupGeneral from '@components/CompanyGroups/DetailGroup/general';
 import { find } from '@libs/client/users';
 import { get } from '@libs/client/developers';
+import { get as getCompany } from '@libs/client/companies';
 
-export default function Index({ user }) {
+
+export default function Index({ user, company}) {
   const router = useRouter();
   useEffect(() => {
     if(!user)
@@ -24,7 +26,7 @@ export default function Index({ user }) {
       </Head>
       <AppLayout>
         <DetailGroup selected={1}>
-            <GroupGeneral/>
+            <GroupGeneral company={company}/>
         </DetailGroup>
       </AppLayout>
     </>
@@ -42,9 +44,11 @@ export async function getServerSideProps({ req, query }) {
       {
         if(id === user.id) 
         {
+          const company = await getCompany(id);
           return {
             props: {
               user,
+              company,
               },
           };
         }
@@ -52,9 +56,11 @@ export async function getServerSideProps({ req, query }) {
       const detailUser = await get(user.id);
       if(detailUser.companies.includes(id))
       {
+        const company = await getCompany(id);
         return {
           props: {
             user : detailUser,
+            company
             },
         };
       }

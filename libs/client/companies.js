@@ -8,6 +8,7 @@ export async function get(companyId) {
     .collection(collections.companies)
     .doc(companyId)
     .get();
+
   const attributes = await getAttributeReference(
     collections.companies,
     companyId
@@ -92,10 +93,10 @@ export async function removeDevelopers(companyId, developerIds) {
  * @param {*} company object retrieved from get function
  */
 export async function getMembers(company) {
-  if (company?.participants?.length) {
+  if (company?.members?.length) {
     const members = await Firestore()
       .collection(collections.developers)
-      .where(Firestore.FieldPath.documentId(), 'in', company.participants())
+      .where(Firestore.FieldPath.documentId(), 'in', company.members)
       .get();
     return members.docs.map((item) => transform(item));
   }

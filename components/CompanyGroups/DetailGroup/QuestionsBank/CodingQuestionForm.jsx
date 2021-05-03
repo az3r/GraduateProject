@@ -72,7 +72,6 @@ export default function CodingQuestionForm({
   propQuestion,
   isSaved,
 }) {
-  console.log(propQuestion);
   const lang = propQuestion !== null ? propQuestion.language : 'Csharp';
   const difficulty = propQuestion !== null ? propQuestion.difficulty : 0;
   const published = propQuestion?.published || false;

@@ -57,10 +57,12 @@ function TabPanel2(props) {
 
 export default function DetailTab({user, examination,handlePublish})
 {  
+  const {startAt} = examination;
+  const {endAt} = examination
   const [open, setOpen] = useState(false);
   const [publish,setPublish] = useState({
-    startAt: examination.startAt,
-    endAt: examination.endAt,
+    startAt,
+    endAt,
   })
   const [message,setMessage] = useState({
     startAt: false,
@@ -133,7 +135,7 @@ export default function DetailTab({user, examination,handlePublish})
                     <Box m={2} p={1}>
                       <Typography>Select start time</Typography>
                        <TextField 
-                        	value={examination.startAt ? dateFormat(new Date(examination.startAt),'yyyy-mm-ddXHH:MM').replace('X','T') : null}
+                        	value={publish.startAt ? dateFormat(new Date(publish.startAt),'yyyy-mm-ddXHH:MM').replace('X','T') : null }
                           onChange={handleChangeStartTime} type="datetime-local"
                           helperText="Start time must be after current time"
                           error={message.startAt}/>
@@ -141,7 +143,7 @@ export default function DetailTab({user, examination,handlePublish})
                     <Box m={2} p={1}>
                       <Typography>Select end time</Typography>
                        <TextField 
-                          value={examination.endAt ? dateFormat(new Date(examination.endAt),'yyyy-mm-ddXHH:MM').replace('X','T') : null}  
+                          value={publish.endAt ? dateFormat(new Date(publish.endAt),'yyyy-mm-ddXHH:MM').replace('X','T') : null }  
                           onChange={handleChangeEndTime} type="datetime-local"
                           helperText="End time must be after start time"
                           error={message.endAt}/>
