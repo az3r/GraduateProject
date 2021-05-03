@@ -125,3 +125,14 @@ export async function getGroupsDetail(companies) {
   }
   return [];
 }
+
+export async function getDeveloperNotInGroup(company) {
+  const result = await Firestore()
+    .collection(collections.developers)
+    .where(Firestore.FieldPath.documentId(), 'not-in', company.members)
+    .get();
+
+  return result.docs.map((item) => transform(item));
+}
+// 1. lấy tất cả user chưa có trong company đó
+// 2. lấy tất cả submissions của problem
