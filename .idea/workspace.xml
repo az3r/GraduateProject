@@ -21,8 +21,11 @@
   <component name="ChangeListManager">
     <list default="true" id="73bd1854-2930-493b-bbd0-fb90442d9327" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/libs/client/exams.js" beforeDir="false" afterPath="$PROJECT_DIR$/libs/client/exams.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/libs/client/problems.js" beforeDir="false" afterPath="$PROJECT_DIR$/libs/client/problems.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/libs/client/business.js" beforeDir="false" afterPath="$PROJECT_DIR$/libs/client/business.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/libs/client/developers.js" beforeDir="false" afterPath="$PROJECT_DIR$/libs/client/developers.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pages/examination/[id].jsx" beforeDir="false" afterPath="$PROJECT_DIR$/pages/examination/[id].jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pages/examination/start/[id].jsx" beforeDir="false" afterPath="$PROJECT_DIR$/pages/examination/start/[id].jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/utils/firestore.js" beforeDir="false" afterPath="$PROJECT_DIR$/utils/firestore.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -176,6 +179,7 @@
       <workItem from="1619340836387" duration="205000" />
       <workItem from="1619449184208" duration="9386000" />
       <workItem from="1619492589046" duration="9508000" />
+      <workItem from="1620018900093" duration="8080000" />
     </task>
     <servers />
   </component>

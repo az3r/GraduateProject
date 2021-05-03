@@ -344,6 +344,17 @@ export async function getServerSideProps({ params, req }) {
     }
   }
 
+  // Redirect to /examination/start/examId if you have participated but not submitted yet
+  const isSubmitted = await developers.getExamResults(user.id, params.id);
+  if(isParticipated === true && isSubmitted.length === 0){
+    return {
+      redirect: {
+        permanent: false,
+        destination: `/examination/start/${params.id}`
+      }
+    }
+  }
+
 
   const examSubmissions = await exams.getAllExamSubmissions(params.id);
 

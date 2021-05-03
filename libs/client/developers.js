@@ -280,7 +280,11 @@ export async function getExamResults(developerId, examId) {
     .orderBy('createdOn', 'desc')
     .get();
 
-  return snapshot.docs.map((doc) => transform(doc.data()));
+  if (snapshot.docs.length === 0) {
+    return [];
+  }
+
+  return snapshot.docs.map((doc) => transform(doc));
 }
 
 export async function createExamSubmission(

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import Head from 'next/head';
 import dynamic from 'next/dynamic';
-import { exams, developers } from '@libs/client';
+import { exams, developers, companies } from '@libs/client';
 import { useRouter } from 'next/router';
 import { parseCookies } from '@libs/client/cookies';
 import {
@@ -25,6 +25,7 @@ import withReactContent from 'sweetalert2-react-content';
 import BackupIcon from '@material-ui/icons/Backup';
 import TimerIcon from '@material-ui/icons/Timer';
 import HTMLReactParser from 'html-react-parser';
+import { sendThanks } from '@client/business';
 
 
 const TestProblemCoding = dynamic(() => import('../../../components/Examinations/TestProblemCoding'), {
@@ -119,6 +120,7 @@ export default function Start({ user, examId, exam }) {
   const [windowWidth, setWindowWidth] = useState(0);
   const [isSolvedProblems, setIsSolvedProblems] = useState(new Array(exam.problems.length).fill(false));
   const [timeOut, setTimeOut] = useState(exam.duration);
+  let time = null;
 
   const MySwal = withReactContent(Swal);
 
@@ -187,6 +189,9 @@ export default function Start({ user, examId, exam }) {
               correct += 1;
               score += exam.problems[i].score;
             }
+
+            // remove temporary item from localstorage
+            localStorage.removeItem(`${user.id}${i}Temporary`);
           }
 
           // remove item from localstorage
@@ -195,6 +200,7 @@ export default function Start({ user, examId, exam }) {
       }
     }
 
+    // Remove isSolvedProblems from local storage
     localStorage.removeItem(`${user.id}isSolvedProblems`);
 
     console.log(results);
@@ -205,8 +211,16 @@ export default function Start({ user, examId, exam }) {
       correct,
       results,
       score,
-      time: exam.duration - timeOut
+      time: (exam.duration - timeOut < 0) ? 0 : exam.duration - timeOut
     });
+
+    // Stop time of setTimeout and remove timeout from local storage
+    clearTimeout(time);
+    localStorage.removeItem(`${user.id}Timeout`);
+
+    // Send thanks
+    const comp = await companies.get(exam.companyId);
+    await sendThanks(user.name, comp.name, exam.title, user.email, comp.email);
 
     MySwal.close();
 
@@ -222,13 +236,6 @@ export default function Start({ user, examId, exam }) {
       }
     });
   }
-  useEffect(() => {
-    const isSolvedProblemsJson = localStorage.getItem(`${user.id}isSolvedProblems`);
-    if(isSolvedProblemsJson !== null){
-      const isSolvedProblemsObject = JSON.parse(isSolvedProblemsJson);
-      setIsSolvedProblems(isSolvedProblemsObject);
-    }
-  }, []);
 
   const handleIsSolvedProblemsChange = (index) => {
     const isSolvedProblemsDump = isSolvedProblems;
@@ -244,14 +251,40 @@ export default function Start({ user, examId, exam }) {
     setWindowHeight(window.innerHeight);
     setWindowWidth(window.innerWidth);
 
-    setTimeout(() => {
+    time = setTimeout(() => {
       if(timeOut === 0){
         submit();
       }
+
+      // Save timeout into local storage
+      const timeOutLocalStorage = {
+        timeOut,
+        date: Date.now(),
+      };
+      localStorage.setItem(`${user.id}Timeout`, JSON.stringify(timeOutLocalStorage));
       setTimeOut(timeOut - 1);
 
     }, 1000);
   }, [timeOut]);
+
+  useEffect(() => {
+    // Get isSolvedProblems from local storage
+    const isSolvedProblemsJson = localStorage.getItem(`${user.id}isSolvedProblems`);
+    if(isSolvedProblemsJson !== null){
+      const isSolvedProblemsObject = JSON.parse(isSolvedProblemsJson);
+      setIsSolvedProblems(isSolvedProblemsObject);
+    }
+
+
+    // Get timeout from local storage
+    const timeOutLocalStorage = localStorage.getItem(`${user.id}Timeout`);
+    if(timeOutLocalStorage !== null){
+      clearTimeout(time);
+      const timeOutObject = JSON.parse(timeOutLocalStorage);
+      const timeOutTemp = (timeOutObject.timeOut - Math.ceil((Date.now() - timeOutObject.date) / 1000)) < 0 ? 0 : (timeOutObject.timeOut - Math.ceil((Date.now() - timeOutObject.date) / 1000));
+      setTimeOut(timeOutTemp);
+    }
+  }, []);
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
@@ -279,7 +312,7 @@ export default function Start({ user, examId, exam }) {
   return (
     <>
       <Head>
-        <title>Examination - Smart Coder</title>
+        <title>Examination | Smart Coder</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
@@ -292,7 +325,7 @@ export default function Start({ user, examId, exam }) {
           <Box className={classes.minutes}>
             <TimerIcon />
             <Typography variant="h6">
-              {Math.ceil(timeOut/60)} mins left
+              {/* {Math.ceil(timeOut/60)} mins left */} {timeOut}
             </Typography>
           </Box>
 
@@ -514,7 +547,10 @@ export async function getServerSideProps({ params, req }) {
     }
   }
 
-  if(isParticipated === true){
+  const isSubmitted = await developers.getExamResults(user.id, params.id);
+  console.log(isSubmitted);
+
+  if(isParticipated === true && isSubmitted.length > 0){
     return {
       redirect: {
         permanent: false,
@@ -523,10 +559,11 @@ export async function getServerSideProps({ params, req }) {
     }
   }
 
-  // Join Exam
-  await developers.joinExam(user.id, params.id);
+  if(isParticipated === false){
+    // Join Exam
+    await developers.joinExam(user.id, params.id);
+  }
 
-  console.log(items);
 
   return {
     props: {

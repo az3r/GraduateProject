@@ -129,6 +129,22 @@ export function sendInvitation(
   );
 }
 
+export function sendThanks(toName, fromName, title, toEmail, replyTo) {
+  emailjs.send(
+    'service_8iweofn',
+    'template_32nlqql',
+    {
+      to_name: toName,
+      from_name: fromName,
+      title,
+      time: new Date(Date.now()).toDateString(),
+      to_email: toEmail,
+      reply_to: replyTo,
+    },
+    'user_AU32qXM7LlBXkNew3IgHQ'
+  );
+}
+
 export function getScoreOfCases(objects) {
   let score = 0;
   for (let i = 0; i < objects.length; i += 1) {
