@@ -20,7 +20,6 @@ import { Alert } from '@material-ui/lab';
 import { FirebaseAuth } from '@libs/client/firebase';
 import { signin, signinWithProvider, signout } from '@libs/client/authenticate';
 import json2mq from 'json2mq';
-import { getBaseUrl } from '@utils/urls';
 import { useAuth } from '@hooks/auth';
 import Cookies from 'universal-cookie';
 
@@ -171,62 +170,55 @@ export default function Login() {
   }
 
   function EmailForm() {
-    const [verification, setVerification] = React.useState(undefined);
     const [submitting, setSubmitting] = React.useState(false);
     return (
-      <>
-        {verification ? (
-          <EmailVerification user={verification.user} />
-        ) : (
-          <form onSubmit={submit}>
-            <Grid spacing={3} container direction="column">
-              <Grid item>
-                <Typography align="center" variant="h4">
-                  Sign into Smart Coder
-                </Typography>
-              </Grid>
-              <Grid item>
-                <TextField
-                  variant="filled"
-                  type="email"
-                  id="email"
-                  label="Email"
-                  fullWidth
-                  name="email"
-                  required
-                  disabled={submitting}
-                />
-              </Grid>
-              <Grid item>
-                <TextField
-                  variant="filled"
-                  id="password"
-                  type="password"
-                  label="Password"
-                  fullWidth
-                  name="password"
-                  required
-                  disabled={submitting}
-                />
-              </Grid>
-              {submitting ? (
-                <SubmittingProgress />
-              ) : (
-                <Grid item>
-                  <Button
-                    type="submit"
-                    fullWidth
-                    variant="contained"
-                    color="primary"
-                  >
-                    Signin
-                  </Button>
-                </Grid>
-              )}
+      <form onSubmit={submit}>
+        <Grid spacing={3} container direction="column">
+          <Grid item>
+            <Typography align="center" variant="h4">
+              Sign into Smart Coder
+            </Typography>
+          </Grid>
+          <Grid item>
+            <TextField
+              variant="filled"
+              type="email"
+              id="email"
+              label="Email"
+              fullWidth
+              name="email"
+              required
+              disabled={submitting}
+            />
+          </Grid>
+          <Grid item>
+            <TextField
+              variant="filled"
+              id="password"
+              type="password"
+              label="Password"
+              fullWidth
+              name="password"
+              required
+              disabled={submitting}
+            />
+          </Grid>
+          {submitting ? (
+            <SubmittingProgress />
+          ) : (
+            <Grid item>
+              <Button
+                type="submit"
+                fullWidth
+                variant="contained"
+                color="primary"
+              >
+                Signin
+              </Button>
             </Grid>
-          </form>
-        )}
-      </>
+          )}
+        </Grid>
+      </form>
     );
 
     async function submit(e) {
@@ -247,91 +239,12 @@ export default function Login() {
       } catch (error) {
         const { code } = error;
 
-        // handle email not verified
-        if (code === 'email_not_verified') {
-          setVerification({ user: error.user });
-          return;
-        }
-
         setSnackBarState({
           open: true,
           severity: 'error',
           message: code,
         });
         setSubmitting(false);
-      }
-    }
-  }
-
-  function EmailVerification({ user }) {
-    const { username, email } = user;
-    return (
-      <Grid container alignContent="center" spacing={2} direction="column">
-        <Grid item>
-          <Typography>
-            Hello <b>{username}</b>, you must verify your email before using our
-            service
-          </Typography>
-        </Grid>
-        <Grid item>
-          <TextField
-            type="email"
-            variant="outlined"
-            label="Email"
-            fullWidth
-            contentEditable={false}
-            value={email}
-          />
-        </Grid>
-        <Grid item>
-          <VerifyButton />
-        </Grid>
-      </Grid>
-    );
-    function VerifyButton() {
-      const [cooldown, setCooldown] = React.useState(0);
-      const [waiting, setWaiting] = React.useState(false);
-
-      React.useEffect(() => {
-        const timer = setInterval(() => {
-          setCooldown((prev) => {
-            if (prev <= 0) setWaiting(false);
-            return prev - 1;
-          });
-        }, 1000);
-        return () => clearInterval(timer);
-      }, []);
-      return (
-        <>
-          {waiting ? (
-            <Button disabled variant="contained" color="default" fullWidth>
-              Please wait for {cooldown} seconds...
-            </Button>
-          ) : (
-            <Button
-              fullWidth
-              color="primary"
-              variant="contained"
-              onClick={onVerifyEmail}
-            >
-              Verify email
-            </Button>
-          )}
-        </>
-      );
-
-      async function onVerifyEmail() {
-        // update ui
-        setCooldown(60);
-        setWaiting(true);
-
-        try {
-          const url = `${getBaseUrl()}login`;
-          auth.sendVerifyEmail(user, url);
-        } catch (error) {
-          // TODO: handler this error
-          console.error(error);
-        }
       }
     }
   }
