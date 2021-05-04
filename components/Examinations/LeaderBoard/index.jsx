@@ -80,7 +80,7 @@ export default function LeaderBoard({examSubmissions}) {
                 >
                   <TableCell>{(currentPage - 1)*10 + index + 1}</TableCell>
                   <TableCell component="th" scope="row">
-                    <Link href={`/profile/${submission.id}`}>
+                    <Link href={`/profile/${submission.developerId}`}>
                       <Typography className={classes.link}>
                         {submission.name}
                       </Typography>

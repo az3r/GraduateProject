@@ -90,6 +90,7 @@ export async function addSolvedProblem(
     .collection(collections.solvedProblems)
     .doc(problemId)
     .get();
+
   if (problem.exists) {
     if (status === 'Solved') {
       await problem.ref.update({

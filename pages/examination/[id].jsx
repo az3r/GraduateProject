@@ -287,7 +287,6 @@ export async function getServerSideProps({ params, req }) {
   let isParticipated = false;
 
   const examination = await exams.get({examId: params.id });
-  console.log(examination);
 
   try {
     if (Object.keys(cookies).length !== 0) {
@@ -371,6 +370,7 @@ export async function getServerSideProps({ params, req }) {
 
 
   const examSubmissions = await exams.getAllExamSubmissions(params.id);
+  console.log(examSubmissions);
 
 
   return {
