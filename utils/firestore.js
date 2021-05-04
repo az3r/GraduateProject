@@ -9,9 +9,7 @@ import { collections } from '@utils/constants';
 export function transform(document, attributes) {
   if (!document && !document.exists) return undefined;
   const data = document.data();
-  if (data !== undefined && data.id) {
-    data.id = document.id;
-  }
+  data.id = document.id;
   if (data !== undefined && data.createdOn)
     data.createdOn = data.createdOn.toMillis();
   if (data !== undefined && data.modifiedAt)
