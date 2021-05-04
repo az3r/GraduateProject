@@ -525,8 +525,8 @@ export async function getServerSideProps({ params, req }) {
             if(isInvited === false){
               return {
                 redirect: {
-                  permanent: true,
-                  destination: "/examination/uninvited_forbidden"
+                  permanent: false,
+                  destination: "/examination/reject/uninvited_forbidden"
                 }
               }
             }
