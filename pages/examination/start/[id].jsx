@@ -120,7 +120,8 @@ export default function Start({ user, examId, exam }) {
   const [windowWidth, setWindowWidth] = useState(0);
   const [isSolvedProblems, setIsSolvedProblems] = useState(new Array(exam.problems.length).fill(false));
   const [timeOut, setTimeOut] = useState(exam.duration);
-  let time = null;
+  const [isSubmited, setIsSubmitted] = useState(false);
+
 
   const MySwal = withReactContent(Swal);
 
@@ -141,6 +142,10 @@ export default function Start({ user, examId, exam }) {
   }
 
   const submit = async () => {
+    // Stop saving timeout to localStorage
+    setIsSubmitted(true);
+    localStorage.removeItem(`${user.id}${examId}Timeout`);
+
     MySwal.fire({
       title: 'Please Wait !',
       html: 'Submitting...',
@@ -161,7 +166,7 @@ export default function Start({ user, examId, exam }) {
         results.push(null);
       } else {
         // get from LocalStorage
-        const resultJson = localStorage.getItem(`${user.id}${i}`);
+        const resultJson = localStorage.getItem(`${user.id}${examId}${i}`);
 
         if (resultJson !== null) {
           const resultObject = JSON.parse(resultJson);
@@ -191,17 +196,17 @@ export default function Start({ user, examId, exam }) {
             }
 
             // remove temporary item from localstorage
-            localStorage.removeItem(`${user.id}${i}Temporary`);
+            localStorage.removeItem(`${user.id}${examId}${i}Temporary`);
           }
 
           // remove item from localstorage
-          localStorage.removeItem(`${user.id}${i}`);
+          localStorage.removeItem(`${user.id}${examId}${i}`);
         }
       }
     }
 
     // Remove isSolvedProblems from local storage
-    localStorage.removeItem(`${user.id}isSolvedProblems`);
+    localStorage.removeItem(`${user.id}${examId}isSolvedProblems`);
 
     console.log(results);
 
@@ -213,10 +218,6 @@ export default function Start({ user, examId, exam }) {
       score,
       time: (exam.duration - timeOut < 0) ? 0 : exam.duration - timeOut
     });
-
-    // Stop time of setTimeout and remove timeout from local storage
-    clearTimeout(time);
-    localStorage.removeItem(`${user.id}Timeout`);
 
     // Send thanks
     const comp = await companies.get(exam.companyId);
@@ -232,6 +233,7 @@ export default function Start({ user, examId, exam }) {
       showConfirmButton: true
     }).then((result) => {
       if (result.isConfirmed) {
+
         router.push(`/examination/end/${examId}`);
       }
     });
@@ -243,33 +245,40 @@ export default function Start({ user, examId, exam }) {
     setIsSolvedProblems(isSolvedProblemsDump);
 
     // Save isSolvedProblems to LocalStorage
-    localStorage.setItem(`${user.id}isSolvedProblems`, JSON.stringify(isSolvedProblemsDump));
+    localStorage.setItem(`${user.id}${examId}isSolvedProblems`, JSON.stringify(isSolvedProblemsDump));
   }
 
-
+  let time;
   useEffect(() => {
     setWindowHeight(window.innerHeight);
     setWindowWidth(window.innerWidth);
 
-    time = setTimeout(() => {
-      if(timeOut === 0){
-        submit();
+    time = setTimeout(async () => {
+      if(isSubmited === false){
+        if(timeOut === 0) {
+          await submit();
+        }
+        else{
+          // Save timeout into local storage
+          const timeOutLocalStorage = {
+            timeOut,
+            date: Date.now(),
+          };
+          localStorage.setItem(`${user.id}${examId}Timeout`, JSON.stringify(timeOutLocalStorage));
+          setTimeOut(timeOut - 1);
+        }
       }
-
-      // Save timeout into local storage
-      const timeOutLocalStorage = {
-        timeOut,
-        date: Date.now(),
-      };
-      localStorage.setItem(`${user.id}Timeout`, JSON.stringify(timeOutLocalStorage));
-      setTimeOut(timeOut - 1);
-
+      else{
+        localStorage.removeItem(`${user.id}${examId}Timeout`);
+        // Stop time of setTimeout and remove timeout from local storage
+        clearTimeout(time);
+      }
     }, 1000);
   }, [timeOut]);
 
   useEffect(() => {
     // Get isSolvedProblems from local storage
-    const isSolvedProblemsJson = localStorage.getItem(`${user.id}isSolvedProblems`);
+    const isSolvedProblemsJson = localStorage.getItem(`${user.id}${examId}isSolvedProblems`);
     if(isSolvedProblemsJson !== null){
       const isSolvedProblemsObject = JSON.parse(isSolvedProblemsJson);
       setIsSolvedProblems(isSolvedProblemsObject);
@@ -277,7 +286,7 @@ export default function Start({ user, examId, exam }) {
 
 
     // Get timeout from local storage
-    const timeOutLocalStorage = localStorage.getItem(`${user.id}Timeout`);
+    const timeOutLocalStorage = localStorage.getItem(`${user.id}${examId}Timeout`);
     if(timeOutLocalStorage !== null){
       clearTimeout(time);
       const timeOutObject = JSON.parse(timeOutLocalStorage);
@@ -465,7 +474,7 @@ export default function Start({ user, examId, exam }) {
               return (
                 <TabPanel value={value} index={index + 1}>
                   <Paper style={{paddingLeft: 50, paddingTop: 20, paddingBottom: 20, paddingRight: 50, maxHeight: windowHeight - 60, height: windowHeight - 60,  minWidth: windowWidth - 80, width: windowWidth - 80, overflow: 'auto'}}>
-                    <TestProblemCoding index={index.toString()} problem={problem} user={user} onIsSolvedProblemsChange={handleIsSolvedProblemsChange} onNextQuestion={handleNextQuestion} />
+                    <TestProblemCoding examId={examId} index={index.toString()} problem={problem} user={user} onIsSolvedProblemsChange={handleIsSolvedProblemsChange} onNextQuestion={handleNextQuestion} />
                   </Paper>
                 </TabPanel>
               )
@@ -473,7 +482,7 @@ export default function Start({ user, examId, exam }) {
               return (
                 <TabPanel value={value} index={index + 1}>
                   <Paper style={{paddingLeft: 50, paddingTop: 20, paddingBottom: 20, paddingRight: 50, maxHeight: windowHeight - 60, height: windowHeight - 60,  minWidth: windowWidth - 80, width: windowWidth - 80, overflow: 'auto'}}>
-                    <TestProblemMCQ index={index.toString()} problem={problem} user={user} onIsSolvedProblemsChange={handleIsSolvedProblemsChange} onNextQuestion={handleNextQuestion} />
+                    <TestProblemMCQ examId={examId} index={index.toString()} problem={problem} user={user} onIsSolvedProblemsChange={handleIsSolvedProblemsChange} onNextQuestion={handleNextQuestion} />
                   </Paper>
                 </TabPanel>
               )
@@ -568,7 +577,7 @@ export async function getServerSideProps({ params, req }) {
     return {
       redirect: {
         permanent: false,
-        destination: "/examination/participated_forbidden"
+        destination: "/examination/reject/participated_forbidden"
       }
     }
   }

@@ -123,6 +123,7 @@ const editorConfiguration = {
 };
 
 export default function Problem({
+  examId,
   index,
   problem,
   user,
@@ -154,7 +155,7 @@ export default function Problem({
   useEffect(() => {
     // Get code from localStorage
     const localStorageCode = localStorage.getItem(
-      `${user.id}${index}Temporary`
+      `${user.id}${examId}${index}Temporary`
     );
     if (localStorageCode != null) {
       setCode(localStorageCode);
@@ -162,7 +163,7 @@ export default function Problem({
   }, []);
 
   const handleCodeChange = (newCode) => {
-    localStorage.setItem(`${user.id}${index}Temporary`, newCode);
+    localStorage.setItem(`${user.id}${examId}${index}Temporary`, newCode);
     setCode(newCode);
   };
 
@@ -250,7 +251,7 @@ export default function Problem({
           ...response,
         },
       };
-      localStorage.setItem(`${user.id}${index}`, JSON.stringify(result));
+      localStorage.setItem(`${user.id}${examId}${index}`, JSON.stringify(result));
 
       onNextQuestion();
     }

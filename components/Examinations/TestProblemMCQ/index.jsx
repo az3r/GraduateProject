@@ -27,7 +27,7 @@ const styles = makeStyles({
   },
 });
 
-export default function TestProblemMCQ({index, problem, user, onIsSolvedProblemsChange, onNextQuestion}) {
+export default function TestProblemMCQ({examId, index, problem, user, onIsSolvedProblemsChange, onNextQuestion}) {
   const classes = styles();
   const [author, setAuthor] = useState({id: "#", name: "#"});
   const [company, setCompany] = useState({name: "#"});
@@ -50,7 +50,7 @@ export default function TestProblemMCQ({index, problem, user, onIsSolvedProblems
 
 
     // get from LocalStorage
-    const resultJson = localStorage.getItem(`${user.id}${index}`);
+    const resultJson = localStorage.getItem(`${user.id}${examId}${index}`);
 
     if(resultJson !== null){
       const resultObject = JSON.parse(resultJson);
@@ -81,7 +81,7 @@ export default function TestProblemMCQ({index, problem, user, onIsSolvedProblems
       selectedAnswer: event.target.value,
     };
 
-    localStorage.setItem(`${user.id}${index}`, JSON.stringify(result));
+    localStorage.setItem(`${user.id}${examId}${index}`, JSON.stringify(result));
   }
 
   useEffect(async () => {

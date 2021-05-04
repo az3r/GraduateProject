@@ -62,12 +62,10 @@ export async function update(
 
 /** get exam and its private attributes using either examId or exam itself */
 export async function get({ exam = undefined, examId = undefined }) {
-  let value;
-  let examinationId = examId;
+  let value = {};
   if (!exam && !examId) return undefined;
   if (exam) {
     value = exam;
-    examinationId = value.id;
   } else {
     // get public fields
     const snapshot = await Firestore()
@@ -78,10 +76,7 @@ export async function get({ exam = undefined, examId = undefined }) {
   }
 
   // get private fields
-  const attr = await getAttributeReference(
-    collections.exams,
-    examinationId // value.id
-  ).get();
+  const attr = await getAttributeReference(collections.exams, value.id).get();
 
   const attributes = transform(attr);
 
@@ -123,7 +118,6 @@ export async function getAll(companyId) {
 }
 
 export async function getPublishedExams() {
-  publishExam;
   const exams = await Firestore()
     .collection(collections.exams)
     .where('published', '==', true)
