@@ -9,7 +9,7 @@ import {
   Typography,
   Grid
 } from '@material-ui/core';
-import { companies, developers } from '@libs/client';
+import {  users } from '@libs/client';  // companies, developers,
 
 const Problem = dynamic(() => import('./Problem'), {
   ssr: false,
@@ -42,20 +42,13 @@ export default function TestProblemCoding({index, problem, user, onIsSolvedProbl
   const [company, setCompany] = useState({name: "#"});
 
   useEffect(async () => {
-    let developer = await developers.get(problem.owner);
+    const developer = await users.find(problem.owner);
 
     if(developer !== undefined){
       setAuthor(developer);
     }
-    else{
-      developer = await companies.get(problem.owner);
-      if(developer !== undefined){
-        setAuthor(developer);
-      }
-    }
 
-
-    const comp = await companies.get(problem.companyId);
+    const comp = await users.find(problem.companyId);
 
     if(comp !== undefined){
       setCompany(comp);

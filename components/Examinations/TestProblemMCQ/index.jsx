@@ -8,6 +8,7 @@ import {
 } from '@material-ui/core';
 
 import HTMLReactParser from 'html-react-parser';
+import { users } from '@libs/client';
 
 
 const styles = makeStyles({
@@ -28,13 +29,26 @@ const styles = makeStyles({
 
 export default function TestProblemMCQ({index, problem, user, onIsSolvedProblemsChange, onNextQuestion}) {
   const classes = styles();
-  const [author] = useState({id: "#", name: "#"});
-  const [company] = useState({name: "#"});
+  const [author, setAuthor] = useState({id: "#", name: "#"});
+  const [company, setCompany] = useState({name: "#"});
   const [answer, setAnswer] = useState('');
 
   console.log(index);
 
-  useEffect(() => {
+  useEffect(async () => {
+    // Set Author
+    const developer = await users.find(problem.owner);
+    if(developer !== undefined){
+      setAuthor(developer);
+    }
+
+    // Set Company
+    const comp = await users.find(problem.companyId);
+    if(comp !== undefined){
+      setCompany(comp);
+    }
+
+
     // get from LocalStorage
     const resultJson = localStorage.getItem(`${user.id}${index}`);
 

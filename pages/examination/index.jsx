@@ -80,23 +80,21 @@ export async function getServerSideProps({req}) {
       if (cookies.user) {
         user = JSON.parse(cookies.user);
 
-        // //Mock data
-        // const problem1 = await problems.get({problem: undefined, problemId: "npZVtiYgmbTCmNTXHzEK"});
-        // const problem2 = await problems.get({problem: undefined, problemId: "QyLDueAaJQTBeEAEzftJ"});
-        // await exams.create(user.uid,
-        //   { title: "Exam 2",
-        //     content: "Exam 2",
-        //     duration: 1200,
-        //     password: "12345678",
-        //     problems: [
-        //       problem1,
-        //       problem2
-        //     ]
-        //   });
-        // await exams.publishExam("Q9ZOTat7Se3XPQAlQwi5", Date.now(), Date.now());
+        if(user) {
+          user = await developers.get(user.uid);
 
-        user = await developers.get(user.uid);
-        joinedExams = await developers.getJoinedExams(user);
+          // Unaccessed forbidden page
+          if (user === undefined) {
+            return {
+              redirect: {
+                permanent: false,
+                destination: "/unaccessed_forbidden"
+              }
+            }
+          }
+
+          joinedExams = await developers.getJoinedExams(user);
+        }
       }
     }
   }
