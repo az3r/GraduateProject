@@ -9,14 +9,17 @@ export default function AuthProvider({ children }) {
   const [user, setUser] = React.useState();
   React.useEffect(() => {
     const unsubscribe = FirebaseAuth().onAuthStateChanged(async (value) => {
-      if (value) {
-        const signedInUser = await find(value.uid);
-        if (signedInUser) {
-          delete signedInUser.email;
-          setUser(Object.assign(value, signedInUser));
+      // magic
+      setTimeout(async () => {
+        if (value) {
+          const signedInUser = await find(value.uid);
+          if (signedInUser) {
+            delete signedInUser.email;
+            setUser(Object.assign(value, signedInUser));
+          }
         }
-      }
-      setUser(value);
+        setUser(value);
+      }, 1000);
     });
     return unsubscribe;
   }, []);
