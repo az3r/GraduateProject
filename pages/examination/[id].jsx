@@ -131,7 +131,7 @@ export default function Introduction({examId, examination, isInvited, isParticip
                 <Typography variant="inherit" className={classes.infoKey}>Starts at</Typography>
                 <Typography variant="h6" className={classes.infoValue}>
                   {dateFormat(
-                    new Date(examination.startAt),
+                    (new Date(examination.startAt)).toDateString(),
                     'dd/mm/yyyy "-" HH:MM TT'
                   )}
                 </Typography>
@@ -140,7 +140,7 @@ export default function Introduction({examId, examination, isInvited, isParticip
                 <Typography variant="inherit" className={classes.infoKey}>Ends at</Typography>
                 <Typography variant="h6" className={classes.infoValue}>
                   {dateFormat(
-                    new Date(examination.endAt),
+                    (new Date(examination.endAt)).toDateString(),
                     'dd/mm/yyyy "-" HH:MM TT'
                   )}
                 </Typography>
@@ -166,7 +166,7 @@ export default function Introduction({examId, examination, isInvited, isParticip
                 <br />
                 <Typography variant="subtitle1">
                   {
-                    HTMLReactParser(examination.content)
+                    HTMLReactParser(`${examination.content}`)
                   }
                 </Typography>
               </Box>
@@ -287,29 +287,43 @@ export async function getServerSideProps({ params, req }) {
   let isParticipated = false;
 
   const examination = await exams.get({examId: params.id });
+  console.log(examination);
 
   try {
     if (Object.keys(cookies).length !== 0) {
       if (cookies.user) {
         user = JSON.parse(cookies.user);
-        user = await developers.get(user.uid);
 
-        if(examination.isPrivate === true){
+        if(user) {
+          user = await developers.get(user.uid);
 
-          const invitedDevelopers = await exams.getInvitedDevelopers(params.id);
-
-          for(let i = 0; i < invitedDevelopers.length; i+=1){
-            if(invitedDevelopers[i].id === user.id){
-              isInvited = true;
-              break;
-            }
-          }
-
-          if(isInvited === false){
+          // Unaccessed forbidden page
+          if (user === undefined) {
             return {
               redirect: {
                 permanent: false,
-                destination: "/examination/reject/uninvited_forbidden"
+                destination: "/unaccessed_forbidden"
+              }
+            }
+          }
+
+          if(examination.isPrivate === true){
+
+            const invitedDevelopers = await exams.getInvitedDevelopers(params.id);
+
+            for(let i = 0; i < invitedDevelopers.length; i+=1){
+              if(invitedDevelopers[i].id === user.id){
+                isInvited = true;
+                break;
+              }
+            }
+
+            if(isInvited === false){
+              return {
+                redirect: {
+                  permanent: false,
+                  destination: "/examination/reject/uninvited_forbidden"
+                }
               }
             }
           }

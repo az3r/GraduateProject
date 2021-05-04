@@ -9,9 +9,13 @@ import { collections } from '@utils/constants';
 export function transform(document, attributes) {
   if (!document) return undefined;
   const data = document.data();
-  data.id = document.id;
-  if (data.createdOn) data.createdOn = data.createdOn.toMillis();
-  if (data.modifiedAt) data.modifiedAt = data.modifiedAt.toMillis();
+  if (data !== undefined && data.id) {
+    data.id = document.id;
+  }
+  if (data !== undefined && data.createdOn)
+    data.createdOn = data.createdOn.toMillis();
+  if (data !== undefined && data.modifiedAt)
+    data.modifiedAt = data.modifiedAt.toMillis();
   if (attributes?.exists) Object.assign(data, attributes.data());
   return data;
 }

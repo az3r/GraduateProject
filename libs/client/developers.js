@@ -17,6 +17,7 @@ export async function get(uid) {
     collections.developers,
     uid
   ).get();
+
   return transform(document, attributes);
 }
 
