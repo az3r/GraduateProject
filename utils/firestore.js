@@ -7,7 +7,7 @@ import { collections } from '@utils/constants';
  * @param attributes document reference to document's private attributes
  */
 export function transform(document, attributes) {
-  if (!document) return undefined;
+  if (!document && !document.exists) return undefined;
   const data = document.data();
   data.id = document.id;
   if (data.createdOn) data.createdOn = data.createdOn.toMillis();

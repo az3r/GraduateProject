@@ -134,3 +134,81 @@ export async function getDeveloperNotInGroup(company) {
 
   return result.docs.map((item) => transform(item));
 }
+
+export async function getProblemSubmissions(problemId) {
+  // get submission
+  const submissionSnapshot = await Firestore()
+    .collection(collections.problemSubmissions)
+    .where('problemId', '==', problemId)
+    .get();
+
+  const submissions = submissionSnapshot.docs.map((item) => transform(item));
+
+  // get problems' info
+  const problemIds = Array.from(
+    new Set(submissions.map((item) => item.problemId))
+  );
+  const problemSnapshot = await Firestore()
+    .collection(collections.problems)
+    .where(Firestore.FieldPath.documentId(), 'in', problemIds)
+    .get();
+  const problems = problemSnapshot.docs.map((item) => transform(item));
+
+  // get developers' info
+  const developerIds = Array.from(
+    new Set(submissions.map((item) => item.developerId))
+  );
+  const developerSnapshot = await Firestore()
+    .collection(collections.developers)
+    .where(Firestore.FieldPath.documentId(), 'in', developerIds)
+    .get();
+  const developers = developerSnapshot.docs.map((item) => transform(item));
+
+  // merge data
+  return submissions.map((submission) => {
+    const i = developers.findIndex(
+      (developer) => submission.developerId === developer.id
+    );
+    const k = problems.findIndex(
+      (problem) => submission.problemId === problem.id
+    );
+    return { ...submission, ...developers[i], ...problems[k] };
+  });
+}
+
+export async function getExamSubmissions(examId) {
+  // get submission
+  const submissionSnapshot = await Firestore()
+    .collection(collections.examSubmissions)
+    .where('examId', '==', examId)
+    .get();
+
+  const submissions = submissionSnapshot.docs.map((item) => transform(item));
+
+  // get exams' info
+  const examIds = Array.from(new Set(submissions.map((item) => item.examId)));
+  const examSnapshot = await Firestore()
+    .collection(collections.problems)
+    .where(Firestore.FieldPath.documentId(), 'in', examIds)
+    .get();
+  const exams = examSnapshot.docs.map((item) => transform(item));
+
+  // get developers' info
+  const developerIds = Array.from(
+    new Set(submissions.map((item) => item.developerId))
+  );
+  const developerSnapshot = await Firestore()
+    .collection(collections.developers)
+    .where(Firestore.FieldPath.documentId(), 'in', developerIds)
+    .get();
+  const developers = developerSnapshot.docs.map((item) => transform(item));
+
+  // merge data
+  return submissions.map((submission) => {
+    const i = developers.findIndex(
+      (developer) => submission.developerId === developer.id
+    );
+    const k = exams.findIndex((exam) => submission.examId === exam.id);
+    return { ...submission, ...developers[i], ...exams[k] };
+  });
+}

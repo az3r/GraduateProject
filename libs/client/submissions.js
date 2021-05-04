@@ -1,4 +1,5 @@
 import { urls } from '@utils/constants';
+
 import { FirebaseAuth } from './firebase';
 
 const { compiler } = urls;
@@ -43,7 +44,8 @@ export async function test({ lang, code, testcases }) {
 
     // subtract score for every failed testcase
     if (failedIndexes?.length) {
-      const amount = failedIndexes.reduce((a, b) => a.score + b.score) || 0;
+      const amount =
+        failedIndexes.reduce((current, { score: next }) => current + next) || 0;
       score -= amount;
     }
   }
