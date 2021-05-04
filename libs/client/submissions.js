@@ -17,7 +17,13 @@ const statuses = {
 export async function test({ lang, code, testcases }) {
   if (!testcases?.length) throw new Error('no testcase provided');
 
-  const token = await FirebaseAuth().currentUser.getIdToken(true);
+  let token = null;
+  try {
+    token = await FirebaseAuth().currentUser.getIdToken(true);
+  } catch (e) {
+    token = 'userId';
+  }
+
   const task = fetch(`${compiler}${langs[lang.toLowerCase()]}`, {
     method: 'POST',
     headers: {

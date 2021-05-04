@@ -53,27 +53,34 @@ export default function Problem({ problems, user, solvedProblemsNumber, unsolved
 export async function getServerSideProps({req}) {
   const cookies = parseCookies(req);
   let user = null;
-  let userDetail = null;
   let solvedProblemsNumber = 0;
   let unsolvedProblemsNumber = 0;
 
   try {
-
     if (Object.keys(cookies).length !== 0) {
       if (cookies.user) {
         user = JSON.parse(cookies.user);
 
 
         if(user){
-          userDetail = await developers.get(user.uid);
+          user = await developers.get(user.uid);
 
+          // Unaccessed forbidden page
+          if(user === undefined){
+            return {
+              redirect: {
+                permanent: false,
+                destination: "/unaccessed_forbidden"
+              }
+            }
+          }
 
           // Get solved problems
-          const solvedProblems = await developers.getSolvedProblems(user.uid);
+          const solvedProblems = await developers.getSolvedProblems(user.id);
           solvedProblemsNumber = solvedProblems.length;
 
           // Get unsolved problems
-          const unsolvedProblems = await developers.getUnsolvedProblems(user.uid);
+          const unsolvedProblems = await developers.getUnsolvedProblems(user.id);
           unsolvedProblemsNumber = unsolvedProblems.length;
 
           console.log(solvedProblemsNumber);
@@ -91,7 +98,7 @@ export async function getServerSideProps({req}) {
   return {
     props: {
       problems: items,
-      user: userDetail,
+      user,
       solvedProblemsNumber,
       unsolvedProblemsNumber
     },

@@ -10,7 +10,7 @@ import { useAuth } from '@hooks/auth';
 import UserAvatar from '@components/UserProfile/Components/UserAvatar';
 import CompanyProfileTabs from '@components/UserProfile/Company';
 import AppLayout from '@components/Layout';
-import * as userServices from '@libs/client/users';
+import * as companyServices from '@libs/client/companies';
 
 const useStyles = makeStyles({
   introBox: {
@@ -77,7 +77,6 @@ export default function Index(props) {
 
   // user get from useAuth()
   const auth = useAuth();
-  const [userAuth, setUserAuth] = useState(auth);
 
   // introHeight state
   const [introHeight, setIntroHeight] = useState(0);
@@ -103,7 +102,7 @@ export default function Index(props) {
   useEffect(async () => {
     if (auth) {
       // get info
-      apiUser = await userServices.find(props.user.uid);
+      apiUser = await companyServices.get(props.user.uid);
 
       // check role is company
       if (apiUser.role === 'developer') {
@@ -122,7 +121,6 @@ export default function Index(props) {
       });
 
       setUser(apiUser);
-      setUserAuth(auth);
     }
   }, [auth]);
 
@@ -145,7 +143,6 @@ export default function Index(props) {
         <Box style={{ height: introHeight }} className={classes.introBox}>
           <UserAvatar
             user={user}
-            userAuth={userAuth}
             setUser={setUser}
             setSnackBarState={setSnackBarState}
           />
@@ -153,7 +150,6 @@ export default function Index(props) {
         <Box p={3}>
           <CompanyProfileTabs
             user={user}
-            userAuth={userAuth}
             setUser={setUser}
             setSnackBarState={setSnackBarState}
           />

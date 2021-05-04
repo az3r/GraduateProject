@@ -145,7 +145,6 @@ export default function Ranking({usersExamScore}) {
 export async function getServerSideProps() {
   const usersExamScore = await developers.getUserByExamScore();
 
-
   return {
     props: {
       usersExamScore

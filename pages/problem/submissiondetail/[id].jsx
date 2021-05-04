@@ -161,7 +161,7 @@ export default function SubmissionDetails({ problemSubmissionDetails }) {  // , 
       </Head>
 
       <AppLayout>
-        <Container maxWidth disableGutters>
+        <Container maxWidth='xl' disableGutters>
           <Grid container>
             <Hidden smDown>
               <Grid item xs={12} container className={classes.subNavBar} direction="row" justify="space-between" alignItems="center">
@@ -368,7 +368,7 @@ export default function SubmissionDetails({ problemSubmissionDetails }) {  // , 
                             <br />
                             <Typography variant="h6" style={{ color: 'gray' }}>Your Output (stdout)</Typography>
                             <Typography
-                              style={{ marginLeft: 20, fontWeight: 'bolder' }}>{result.input}</Typography>
+                              style={{ marginLeft: 20, fontWeight: 'bolder' }}>{result.expected}</Typography>
                             <br />
                             <Typography variant="h6" style={{ color: 'gray' }}>Expected Output</Typography>
                             <Typography
@@ -418,15 +418,44 @@ export async function getServerSideProps({ params, req }) {
   let problemSubmissionDetails = null;
 
   try {
-
     if (Object.keys(cookies).length !== 0) {
       if (cookies.user) {
         user = JSON.parse(cookies.user);
 
-        problemSubmissionDetails = await developers.getProblemSubmissionDetails(
-          user.uid,
-          params.id
-        );
+        if(user) {
+          user = await developers.get(user.uid);
+
+          // Unaccessed forbidden page
+          if (user === undefined) {
+            return {
+              redirect: {
+                permanent: false,
+                destination: "/unaccessed_forbidden"
+              }
+            }
+          }
+
+          problemSubmissionDetails = await developers.getProblemSubmissionDetails(
+            user.id,
+            params.id
+          );
+        }
+      }
+      else{
+        return {
+          redirect: {
+            permanent: false,
+            destination: "/login"
+          }
+        }
+      }
+    }
+    else{
+      return {
+        redirect: {
+          permanent: false,
+          destination: "/login"
+        }
       }
     }
   } catch (e) {

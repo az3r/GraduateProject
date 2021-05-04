@@ -23,6 +23,7 @@ import SaveOutlinedIcon from '@material-ui/icons/SaveOutlined';
 import ChipInput from 'material-ui-chip-input';
 import AddCircleRoundedIcon from '@material-ui/icons/AddCircleRounded';
 import DeleteRoundedIcon from '@material-ui/icons/DeleteRounded';
+import { useAuth } from '@hooks/auth';
 import * as devServices from '@libs/client/developers';
 import * as userServices from '@libs/client/users';
 
@@ -57,7 +58,10 @@ const without = (array, filtered) =>
 
 export default function BasicInfoTab(props) {
   const classes = useStyles();
-  const { user, setUser, setSnackBarState, isOnlyWatch, userAuth } = props;
+  const { user, setUser, setSnackBarState, isOnlyWatch } = props;
+
+  // user get from useAuth()
+  const auth = useAuth();
 
   // alert dialog
   const [openAlertDialog, setOpenAlertDialog] = React.useState(false);
@@ -126,8 +130,8 @@ export default function BasicInfoTab(props) {
     handleCloseAlertDialog();
 
     try {
-      await userServices.updateName(userAuth, 'developer', tabUser.name);
-      await devServices.update(userAuth.uid, tabUser);
+      await userServices.updateName(auth, 'developer', tabUser.name);
+      await devServices.update(auth.uid, tabUser);
       setUser(tabUser);
 
       setSnackBarState({

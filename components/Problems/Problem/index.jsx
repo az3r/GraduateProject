@@ -173,7 +173,7 @@ export default function Problem({problem, user}) {  // { problemSubmissionHistor
 
   useEffect(async () => {
     if(user){
-      const histories = await developers.getProblemSubmissions(user.uid, problem.id);
+      const histories = await developers.getProblemSubmissions(user.id, problem.id);
       setProblemSubmissions(histories);
     }
 
@@ -270,7 +270,7 @@ export default function Problem({problem, user}) {  // { problemSubmissionHistor
         setNotification("You have passed the sample test cases. Click the submit button to run your code against all the test cases.");
 
         await developers.createProblemSubmission(
-          user.uid,
+          user.id,
           {
             problemId: problem.id,
             problemName: problem.title,
@@ -282,8 +282,8 @@ export default function Problem({problem, user}) {  // { problemSubmissionHistor
 
 
         // Add solved problem
-        const usr = await developers.get(user.uid);
-        await developers.addSolvedProblem(usr, {problemId: problem.id, score: response.score, status: 'Solved'});
+        // const usr = await developers.get(user.id);
+        await developers.addSolvedProblem(user, {problemId: problem.id, score: response.score, status: 'Solved'});
       } else {
         status = "Wrong Answer";
         score = response.score;
@@ -292,7 +292,7 @@ export default function Problem({problem, user}) {  // { problemSubmissionHistor
         setNotification(`${response.failed}/${response.results.length} test cases failed`);
 
         await developers.createProblemSubmission(
-          user.uid,
+          user.id,
           {
             problemId: problem.id,
             problemName: problem.title,
@@ -304,8 +304,8 @@ export default function Problem({problem, user}) {  // { problemSubmissionHistor
       }
 
       // Add solved problem
-      const usr = await developers.get(user.uid);
-      await developers.addSolvedProblem(usr, {problemId: problem.id, score: response.score, status: 'Unsolved'});
+      // const usr = await developers.get(user.id);
+      await developers.addSolvedProblem(user, {problemId: problem.id, score: response.score, status: 'Unsolved'});
     } catch (e) {
       status = "Compilation Error";
       score = 0;
@@ -315,7 +315,7 @@ export default function Problem({problem, user}) {  // { problemSubmissionHistor
       setRunCodeResult(e);
 
       await developers.createProblemSubmission(
-        user.uid,
+        user.id,
         {
           problemId: problem.id,
           problemName: problem.title,
@@ -329,7 +329,7 @@ export default function Problem({problem, user}) {  // { problemSubmissionHistor
       setDisplayRunCode('block');
 
       // Update problem submission histories
-      const histories = await developers.getProblemSubmissions(user.uid, problem.id);
+      const histories = await developers.getProblemSubmissions(user.id, problem.id);
       setProblemSubmissions(histories);
 
       // Display submission info
@@ -569,7 +569,7 @@ export default function Problem({problem, user}) {  // { problemSubmissionHistor
                                   <br />
                                   <Typography variant="h6" style={{ color: 'gray' }}>Your Output (stdout)</Typography>
                                   <Typography
-                                    style={{ marginLeft: 20, fontWeight: 'bolder' }}>{result.input}</Typography>
+                                    style={{ marginLeft: 20, fontWeight: 'bolder' }}>{result.expected}</Typography>
                                   <br />
                                   <Typography variant="h6" style={{ color: 'gray' }}>Expected Output</Typography>
                                   <Typography

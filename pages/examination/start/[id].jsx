@@ -325,7 +325,7 @@ export default function Start({ user, examId, exam }) {
           <Box className={classes.minutes}>
             <TimerIcon />
             <Typography variant="h6">
-              {/* {Math.ceil(timeOut/60)} mins left */} {timeOut}
+               {Math.ceil(timeOut/60)} mins left
             </Typography>
           </Box>
 
@@ -491,29 +491,43 @@ export async function getServerSideProps({ params, req }) {
   let isInvited = false;
   let isParticipated = false;
 
-  const items = await exams.get({examId: params.id});
+
+  const items = await exams.get({ examId: params.id });
   try {
     if (Object.keys(cookies).length !== 0) {
       if (cookies.user) {
         user = JSON.parse(cookies.user);
-        user = await developers.get(user.uid);
 
-        if(items.isPrivate === true){
+        if(user) {
+          user = await developers.get(user.uid);
 
-          const invitedDevelopers = await exams.getInvitedDevelopers(params.id);
-
-          for(let i = 0; i < invitedDevelopers.length; i+=1){
-            if(invitedDevelopers[i].id === user.id){
-              isInvited = true;
-              break;
-            }
-          }
-
-          if(isInvited === false){
+          // Unaccessed forbidden page
+          if (user === undefined) {
             return {
               redirect: {
                 permanent: false,
-                destination: "/examination/uninvited_forbidden"
+                destination: "/unaccessed_forbidden"
+              }
+            }
+          }
+
+          if(items.isPrivate === true){
+
+            const invitedDevelopers = await exams.getInvitedDevelopers(params.id);
+
+            for(let i = 0; i < invitedDevelopers.length; i+=1){
+              if(invitedDevelopers[i].id === user.id){
+                isInvited = true;
+                break;
+              }
+            }
+
+            if(isInvited === false){
+              return {
+                redirect: {
+                  permanent: false,
+                  destination: "/examination/reject/uninvited_forbidden"
+                }
               }
             }
           }

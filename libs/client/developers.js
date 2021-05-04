@@ -8,10 +8,16 @@ export async function get(uid) {
     .collection(collections.developers)
     .doc(uid)
     .get();
+
+  if (document.data() === undefined) {
+    return undefined;
+  }
+
   const attributes = await getAttributeReference(
     collections.developers,
     uid
   ).get();
+
   return transform(document, attributes);
 }
 
@@ -91,7 +97,7 @@ export async function addSolvedProblem(
         score,
         status,
       });
-    } else if (problem.get('score') < score) {
+    } else if (problem.get('score') <= score) {
       await problem.ref.update({
         modifiedAt: Firestore.Timestamp.now(),
         score,

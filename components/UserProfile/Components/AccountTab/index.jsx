@@ -34,7 +34,7 @@ const useStyles = makeStyles((theme) => ({
 
 export default function AccountTab(props) {
   const classes = useStyles();
-  const { user, setUser, setSnackBarState, userAuth } = props;
+  const { user, setUser, setSnackBarState } = props;
   const [strongPassword, setStrongPassword] = React.useState(true);
 
   // passwords state

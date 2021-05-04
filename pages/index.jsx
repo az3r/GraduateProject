@@ -9,7 +9,7 @@ import {
   Box,
   Hidden
 } from '@material-ui/core';
-import { developers } from '@libs/client';
+import { users } from '@libs/client';
 import { parseCookies } from '@client/cookies';
 
 const useStyles = makeStyles({
@@ -99,9 +99,7 @@ export async function getServerSideProps({req}) {
 
 
         if(user){
-          user = await developers.get(user.uid);
-
-          console.log(user);
+          user = await users.find(user.uid);
 
           if(user.role === "developer"){
             return {

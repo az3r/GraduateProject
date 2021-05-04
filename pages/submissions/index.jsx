@@ -166,7 +166,6 @@ export async function getServerSideProps({req}) {
   let problemSubmissions = [];
 
   try {
-
     if (Object.keys(cookies).length !== 0) {
       if (cookies.user) {
         user = JSON.parse(cookies.user);
@@ -175,6 +174,15 @@ export async function getServerSideProps({req}) {
         if(user){
           user = await developers.get(user.uid);
 
+          // Unaccessed forbidden page
+          if(user === undefined){
+            return {
+              redirect: {
+                permanent: false,
+                destination: "/unaccessed_forbidden"
+              }
+            }
+          }
 
           // Get all problem submissions
           problemSubmissions = await developers.getAllProblemSubmissions(user.id, false);

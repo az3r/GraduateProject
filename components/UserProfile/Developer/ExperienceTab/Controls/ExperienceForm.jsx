@@ -26,6 +26,9 @@ const useStyles = makeStyles((theme) => ({
     alignContent: 'center',
     margin: theme.spacing(1),
   },
+  textarea: {
+    resize: 'both',
+  },
 }));
 
 const initialExp = {
@@ -103,6 +106,8 @@ export default function ExperienceForm(props) {
             <Grid item xs={12} sm={12}>
               <TextField
                 variant="outlined"
+                multiline
+                inputProps={{ className: classes.textarea }}
                 label="Description"
                 name="description"
                 value={experience.description}

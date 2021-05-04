@@ -63,9 +63,12 @@ export async function update(
 /** get exam and its private attributes using either examId or exam itself */
 export async function get({ exam = undefined, examId = undefined }) {
   let value;
+  let examinationId = examId;
   if (!exam && !examId) return undefined;
-  if (exam) value = exam;
-  else {
+  if (exam) {
+    value = exam;
+    examinationId = value.id;
+  } else {
     // get public fields
     const snapshot = await Firestore()
       .collection(collections.exams)
@@ -75,27 +78,30 @@ export async function get({ exam = undefined, examId = undefined }) {
   }
 
   // get private fields
-  const snapshot = await getAttributeReference(
+  const attr = await getAttributeReference(
     collections.exams,
-    value.id
+    examinationId // value.id
   ).get();
 
-  const attributes = transform(snapshot);
+  const attributes = transform(attr);
+
   // const problemTasks = await attributes.problems.map(async (item) => {
   //   if (item.title) return item;
   //   return await getProblem({ problemId: item.problemId });
   // });
 
   const problemTasks = [];
-  for (let i = 0; i < attributes.problems.length; i += 1) {
-    if (attributes.problems[i].title) {
-      problemTasks.push(attributes.problems[i]);
-    } else {
-      const item = await getProblem({
-        problemId: attributes.problems[i].id,
-      });
-      problemTasks.push(item);
-      // problemTasks.push(getProblem({ problemId: attributes.problems[i].id }));
+  if (attributes !== undefined) {
+    for (let i = 0; i < attributes.problems.length; i += 1) {
+      if (attributes.problems[i].title) {
+        problemTasks.push(attributes.problems[i]);
+      } else {
+        const item = await getProblem({
+          problemId: attributes.problems[i].id,
+        });
+        problemTasks.push(item);
+        // problemTasks.push(getProblem({ problemId: attributes.problems[i].id }));
+      }
     }
   }
 

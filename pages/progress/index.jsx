@@ -112,7 +112,14 @@ export default function YourProgress({ user, acceptedProblemSubmissions, submiss
                   <Grid container direction="row" spacing={5}>
                     <Grid item xs={12}>
                       <Box className={classes.captionItem}>
-                        <Typography variant="h2" style={{ color: COLORS[2] }}>{user.problemScore}</Typography>
+                        {
+                          user.problemScore &&
+                          <Typography variant="h2" style={{ color: COLORS[2] }}>{user.problemScore}</Typography>
+                        }
+                        {
+                          user.problemScore === undefined &&
+                          <Typography variant="h2" style={{ color: COLORS[2] }}>0</Typography>
+                        }
                         <Typography variant="h6">Score</Typography>
                       </Box>
                     </Grid>
@@ -230,6 +237,15 @@ export async function getServerSideProps({req}) {
         if(user){
           user = await developers.get(user.uid);
 
+          // Unaccessed forbidden page
+          if(user === undefined){
+            return {
+              redirect: {
+                permanent: false,
+                destination: "/unaccessed_forbidden"
+              }
+            }
+          }
 
           // Get all problem submissions
           const problemSubmissions = await developers.getAllProblemSubmissions(user.id, false);
