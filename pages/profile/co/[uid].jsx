@@ -50,6 +50,14 @@ export async function getServerSideProps(context) {
   const { uid } = context.query;
   const user = await companyServices.get(uid);
 
+  // check user exists
+  if (!user)
+    return {
+      props: {
+        user: null,
+      },
+    };
+
   // set default values for undefined field
   defaultUserProps.forEach((prop) => {
     if (user[prop] === undefined) {

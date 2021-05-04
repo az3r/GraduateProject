@@ -20,7 +20,7 @@ import SchoolIcon from '@material-ui/icons/School';
 import DeleteIcon from '@material-ui/icons/Delete';
 import EditIcon from '@material-ui/icons/Edit';
 import SaveOutlinedIcon from '@material-ui/icons/SaveOutlined';
-
+import { useAuth } from '@hooks/auth';
 import {
   VerticalTimeline,
   VerticalTimelineElement,
@@ -63,9 +63,12 @@ const without = (array, filtered) =>
 
 export default function ExperiencesTab(props) {
   const classes = useStyles();
-  const { user, setUser, setSnackBarState, isOnlyWatch, userAuth } = props;
+  const { user, setUser, setSnackBarState, isOnlyWatch } = props;
   const [openPopup, setOpenPopup] = useState(false);
   const [openAlertDialog, setOpenAlertDialog] = React.useState(false);
+
+  // user get from useAuth()
+  const auth = useAuth();
 
   // check action for popup: add new exp or edit exp
   const [isAddNewExp, setIsAddNewExp] = useState(true);
@@ -107,7 +110,7 @@ export default function ExperiencesTab(props) {
 
     try {
       const newUser = { ...user, experiences: timelineElements };
-      await devServices.update(userAuth.uid, newUser);
+      await devServices.update(auth.uid, newUser);
       setUser(newUser);
 
       setSnackBarState({

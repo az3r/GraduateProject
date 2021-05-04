@@ -52,22 +52,28 @@ export async function getServerSideProps(context) {
   const { uid } = context.query;
   const user = await devServices.get(uid);
 
-  if (user) {
-    // set default values for undefined field
-    defaultUserProps.forEach((prop) => {
-      if (user[prop] === undefined) {
-        if (
-          prop === 'websites' ||
-          prop === 'technicalSkills' ||
-          prop === 'experiences'
-        ) {
-          user[prop] = [];
-        } else {
-          user[prop] = '';
-        }
+  // check user exists
+  if (!user)
+    return {
+      props: {
+        user: null,
+      },
+    };
+
+  // set default values for undefined field
+  defaultUserProps.forEach((prop) => {
+    if (user[prop] === undefined) {
+      if (
+        prop === 'websites' ||
+        prop === 'technicalSkills' ||
+        prop === 'experiences'
+      ) {
+        user[prop] = [];
+      } else {
+        user[prop] = '';
       }
-    });
-  }
+    }
+  });
 
   return {
     props: {
