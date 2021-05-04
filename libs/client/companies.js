@@ -9,6 +9,10 @@ export async function get(companyId) {
     .doc(companyId)
     .get();
 
+  if (company.data() === undefined) {
+    return undefined;
+  }
+
   const attributes = await getAttributeReference(
     collections.companies,
     companyId

@@ -325,7 +325,7 @@ export default function Start({ user, examId, exam }) {
           <Box className={classes.minutes}>
             <TimerIcon />
             <Typography variant="h6">
-              {/* {Math.ceil(timeOut/60)} mins left */} {timeOut}
+               {Math.ceil(timeOut/60)} mins left
             </Typography>
           </Box>
 

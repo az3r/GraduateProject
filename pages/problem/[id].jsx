@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import Head from 'next/head';
 import dynamic from 'next/dynamic';
-import { companies, developers, problems } from '@libs/client';
+import { developers, problems, users } from '@libs/client'; // companies
 import { parseCookies } from '@libs/client/cookies';
 import {
   makeStyles,
@@ -45,20 +45,13 @@ export default function Test({ problem, user }) {   // , problemSubmissionHistor
   const [company, setCompany] = useState({name: "#"});
 
   useEffect(async () => {
-    let developer = await developers.get(problem.owner);
+    const developer = await users.find(problem.owner);
 
     if(developer !== undefined){
       setAuthor(developer);
     }
-    else{
-      developer = await companies.get(problem.owner);
-      if(developer !== undefined){
-        setAuthor(developer);
-      }
-    }
 
-
-    const comp = await companies.get(problem.companyId);
+    const comp = await users.find(problem.companyId);
 
     if(comp !== undefined){
       setCompany(comp);
@@ -157,7 +150,6 @@ export default function Test({ problem, user }) {   // , problemSubmissionHistor
 export async function getServerSideProps({ params, req }) {
   const cookies = parseCookies(req);
   let user = null;
-  // let problemSubmissionHistory = null;
   let item = [];
   try {
     item = await problems.get({problem: undefined, problemId: params.id});
@@ -166,10 +158,20 @@ export async function getServerSideProps({ params, req }) {
     if (Object.keys(cookies).length !== 0) {
       if (cookies.user) {
         user = JSON.parse(cookies.user);
-        // problemSubmissionHistory = await submissions.getProblemSubmissions(
-        //   user.uid,
-        //   params.id
-        // );
+
+        if(user) {
+          user = await developers.get(user.uid);
+
+          // Unaccessed forbidden page
+          if (user === undefined) {
+            return {
+              redirect: {
+                permanent: false,
+                destination: "/unaccessed_forbidden"
+              }
+            }
+          }
+        }
       }
     }
   } catch (e) {
@@ -180,7 +182,6 @@ export async function getServerSideProps({ params, req }) {
     props: {
       problem: item,
       user,
-      // problemSubmissionHistory,
     },
   };
 }
