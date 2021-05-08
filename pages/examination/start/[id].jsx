@@ -194,14 +194,14 @@ export default function Start({ user, examId, exam }) {
               correct += 1;
               score += exam.problems[i].score;
             }
-
-            // remove temporary item from localstorage
-            localStorage.removeItem(`${user.id}${examId}${i}Temporary`);
           }
 
           // remove item from localstorage
           localStorage.removeItem(`${user.id}${examId}${i}`);
         }
+
+        // remove temporary item from localstorage
+        localStorage.removeItem(`${user.id}${examId}${i}Temporary`);
       }
     }
 

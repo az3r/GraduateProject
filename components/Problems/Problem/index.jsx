@@ -301,11 +301,11 @@ export default function Problem({problem, user}) {  // { problemSubmissionHistor
             code,
             data: response,
           });
-      }
 
-      // Add solved problem
-      // const usr = await developers.get(user.id);
-      await developers.addSolvedProblem(user, {problemId: problem.id, score: response.score, status: 'Unsolved'});
+        // Add solved problem
+        // const usr = await developers.get(user.id);
+        await developers.addSolvedProblem(user, {problemId: problem.id, score: response.score, status: 'Unsolved'});
+      }
     } catch (e) {
       status = "Compilation Error";
       score = 0;

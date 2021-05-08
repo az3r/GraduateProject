@@ -15,7 +15,7 @@ import IconButton from '@material-ui/core/IconButton';
 import DeleteIcon from '@material-ui/icons/Delete';
 import EditIcon from '@material-ui/icons/Edit';
 import HelpOutlineRoundedIcon from '@material-ui/icons/HelpOutlineRounded';
-import { comments, developers, } from '@libs/client';
+import { comments } from '@libs/client';
 import dateFormat from 'dateformat';
 import withReactContent from 'sweetalert2-react-content';
 import Swal from "sweetalert2";
@@ -86,15 +86,15 @@ export default function Comment({user, problemId}){
       return;
     }
 
-    const usr = await developers.get(user.uid);
+    // const usr = await developers.get(user.uid);
 
 
-    if(usr !== null){
+    if(user !== null){
       const newlyCreatedCommentId = await comments.createProblemComment(problemId,
         {
-          userId: usr.id,
-          username: usr.name,
-          avatar: usr.avatar,
+          userId: user.id,
+          username: user.name,
+          avatar: user.avatar,
           content
         });
 
@@ -143,14 +143,14 @@ export default function Comment({user, problemId}){
 
   const handleUpdate = async () => {
     setEditOpen(false);
-    const usr = await developers.get(user.uid);
+    // const usr = await developers.get(user.uid);
 
-    if(usr !== null) {
+    if(user !== null) {
       await comments.updateComment(problemId, editedCommentId,
         {
-          userId: usr.id,
-          username: usr.name,
-          avatar: usr.avatar,
+          userId: user.id,
+          username: user.name,
+          avatar: user.avatar,
           content: editedContent,
         });
 
@@ -205,7 +205,7 @@ export default function Comment({user, problemId}){
                 <div>{HTMLReactParser(comment.content)}</div>
                 <div>
                   {
-                    (user && comment.userId === user.uid) &&
+                    (user && comment.userId === user.id) &&
                     <>
                       <IconButton onClick={() => handleEditClickOpen({comment})} aria-label="edit" style={{padding: 0, marginLeft: 10, marginTop: 10}}>
                         <EditIcon fontSize="small" />

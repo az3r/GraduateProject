@@ -1,9 +1,5 @@
 import { collections } from '@utils/constants';
-import {
-  getAttributeReference,
-  transform,
-  getExamSubmissionReference,
-} from '@utils/firestore';
+import { getAttributeReference, transform } from '@utils/firestore';
 import { Firestore } from './firebase';
 // eslint-disable-next-line import/no-cycle
 import { get as getProblem } from './problems';
@@ -212,29 +208,26 @@ export async function publishExam(examId, startAt, endAt, show) {
 
 export async function getAllExamSubmissions(examId) {
   const result = await Firestore()
-    .collection(collections.developers)
-    .orderBy('examScore', 'desc')
-    .orderBy('name', 'asc')
-    .orderBy(Firestore.FieldPath.documentId(), 'asc')
+    .collection(collections.examSubmissions)
+    .where('examId', '==', examId)
+    .orderBy('score', 'desc')
+    .orderBy('time', 'asc')
+    .orderBy('createdOn', 'asc')
     .get();
 
+  if (result.docs.length === 0) {
+    return [];
+  }
+
   const examSubmissions = [];
-
   for (let i = 0; i < result.docs.length; i += 1) {
-    const doc = transform(result.docs[i]);
-    const examSubmission = await getExamSubmissionReference(
-      collections.developers,
-      doc.id,
-      examId
-    ).get();
-
-    // console.log(transform(examSubmission.docs[0]));
-
-    if (examSubmission.docs.length > 0) {
-      const item = examSubmission.docs[0].data();
-      item.createdOn = item.createdOn.toMillis();
-      examSubmissions.push(Object.assign(transform(result.docs[i]), item));
-    }
+    const examSubmision = transform(result.docs[i]);
+    const document = await Firestore()
+      .collection(collections.developers)
+      .doc(examSubmision.developerId)
+      .get();
+    const attributes = transform(document);
+    examSubmissions.push(Object.assign(attributes, examSubmision));
   }
 
   return examSubmissions;
