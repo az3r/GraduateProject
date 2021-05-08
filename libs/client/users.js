@@ -71,11 +71,10 @@ export async function updateAvatar(user, role, file) {
 
 /**
  * send a password reset email and redirect user back to app
- * @param {object} user an user object retrieved from useAuth()
  * @param {string} email email to send
  * @param {string} redirect redirect url to your app
  */
-export async function sendPasswordResetEmail(user, email, redirect) {
+export async function sendPasswordResetEmail(email, redirect) {
   await FirebaseAuth().sendPasswordResetEmail(email, { url: redirect });
 }
 
