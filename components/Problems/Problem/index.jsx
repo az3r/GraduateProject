@@ -207,8 +207,6 @@ export default function Problem({problem, user}) {  // { problemSubmissionHistor
         testcases: problem.cases,
       });
 
-      console.log(response);
-
       if (response.failed === 0) {
         setRunCodeResult(response.results);
         setRunCodeStatus("Accepted");
@@ -259,8 +257,6 @@ export default function Problem({problem, user}) {  // { problemSubmissionHistor
         code,
         testcases: problem.cases,
       });
-
-      console.log(response);
 
       if (response.failed === 0) {
         status = "Accepted";

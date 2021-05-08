@@ -65,7 +65,7 @@ export default function DetailGroup({selected,children})
     }
     return(
         <Grid container>
-            <Grid item lg={2} md={2} sm={12} xs={12}>
+            <Grid item lg={2} md={2} sm={2} xs={2}>
                 <div className={classes.root}>
                     <MenuList>
                         <MenuItem onClick={goToIndexPage} className={classes.spaceMenu}>
@@ -132,7 +132,7 @@ export default function DetailGroup({selected,children})
                     </MenuList>
                 </div>
             </Grid>
-            <Grid item lg={10} md={10} sm={12} xs={12} className={classes.infoBackground}>
+            <Grid item lg={10} md={10} sm={10} xs={10} className={classes.infoBackground}>
                 {children}
             </Grid>
         </Grid>

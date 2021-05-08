@@ -195,7 +195,7 @@ export default function GroupQuestionsBank({ exams }) {
                 <TableCell align="right">
                   {item.endAt ? dateFormat(new Date(item.endAt), 'dd/mm/yyyy "at" HH:MM TT') : '-'}
                 </TableCell>
-                <TableCell align="right">{item.isPrivate.toString()}</TableCell>
+                <TableCell align="right">{(!item.isPrivate).toString()}</TableCell>
               </TableRow>
             ))
           ) : (
@@ -226,9 +226,9 @@ function getListAfterSearch(list, filterName, type) {
     item.title.toLowerCase().includes(filterName.toLowerCase())
   );
   if (type === '1') {
-    result = result.filter((item) => !item.isPrivate);
+    result = result.filter((item) => item.isPrivate === true);
   } else if (type === '2') {
-    result = result.filter((item) => item.isPrivate);
+    result = result.filter((item) => item.isPrivate === false);
   }
   return result;
 }
@@ -244,9 +244,9 @@ function getDisplayListForPagination(
     item.title.toLowerCase().includes(filterName.toLowerCase())
   );
   if (type === '1') {
-    result = result.filter((item) => !item.isPrivate);
+    result = result.filter((item) => item.isPrivate === true);
   } else if (type === '2') {
-    result = result.filter((item) => item.isPrivate);
+    result = result.filter((item) => item.isPrivate === false);
   }
   result = result.slice(
     start * numberOfItemsPerPage,
