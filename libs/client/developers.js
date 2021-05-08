@@ -208,6 +208,11 @@ export async function createProblemSubmission(
       createdOn: Firestore.Timestamp.now(),
     });
 
+  // add to problem's participants
+  await Firestore()
+    .collection(collections.problems)
+    .add({ participants: Firestore.FieldValue.arrayUnion(developerId) });
+
   return id;
 }
 
