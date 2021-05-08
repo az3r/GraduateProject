@@ -101,8 +101,8 @@ export async function get({ exam = undefined, examId = undefined }) {
   }
 
   return {
-    ...value,
     ...attributes,
+    ...value,
     problems: problemTasks,
   };
 }
@@ -170,9 +170,9 @@ export async function getParticipants(examId) {
 }
 
 /** add developer to invitation list */
-export async function addToInvitation(examId, developerId) {
+export async function addToInvitation(examId, email) {
   await getAttributeReference(collections.exams, examId).update({
-    invited: Firestore.FieldValue.arrayUnion(developerId),
+    invited: Firestore.FieldValue.arrayUnion(email),
   });
 }
 
@@ -182,16 +182,7 @@ export async function getInvitedDevelopers(examId) {
     examId
   ).get();
 
-  const developerIds = attributes.get('invited');
-  if (developerIds?.length > 0) {
-    const developers = await Firestore()
-      .collection(collections.developers)
-      .where(Firestore.FieldPath.documentId(), 'in', developerIds)
-      .get();
-
-    return developers.docs.map((dev) => dev.data());
-  }
-  return [];
+  return attributes.get('invited') || [];
 }
 
 /** remove developers from invigation list, does not remove them from participants list */
