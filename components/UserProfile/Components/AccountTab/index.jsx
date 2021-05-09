@@ -49,7 +49,7 @@ export default function AccountTab(props) {
     try {
       await userServices.sendPasswordResetEmail(
         auth.email,
-        'http://localhost:3000'
+        `${window.location.origin}/login`
       );
       setCheckEmailSent(true);
 
@@ -63,7 +63,7 @@ export default function AccountTab(props) {
       setSnackBarState({
         open: true,
         severity: 'error',
-        message: 'Internal server error',
+        message: err.message,
       });
     }
   };
@@ -83,10 +83,10 @@ export default function AccountTab(props) {
         </Grid>
         <Grid item xs={12} className={classes.divider}>
           <Grid container spacing={3}>
-            <Grid item xs={12} sm={2} >
+            <Grid item xs={12} sm={2}>
               Email
             </Grid>
-            <Grid item xs={12} sm={3} >
+            <Grid item xs={12} sm={3}>
               <TextField
                 id="emailTextField"
                 value={user.email}

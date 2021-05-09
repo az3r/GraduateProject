@@ -79,6 +79,8 @@ export default function Index(props) {
 
   // user get from useAuth()
   const auth = useAuth();
+  // console.log(props.user);
+  // console.log(auth);
 
   // introHeight state
   const [introHeight, setIntroHeight] = useState(0);
@@ -127,6 +129,10 @@ export default function Index(props) {
       });
 
       setUser(apiUser);
+    }
+
+    if(auth == null){
+      router.replace('/login');
     }
   }, [auth]);
 
