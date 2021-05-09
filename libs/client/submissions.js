@@ -51,7 +51,9 @@ export async function test({ lang, code, testcases }) {
     // subtract score for every failed testcase
     if (failedIndexes?.length) {
       const amount =
-        failedIndexes.reduce((current, { score: next }) => current + next) || 0;
+        failedIndexes.reduce(
+          (current, index) => current + testcases[index].score
+        ) || 0;
       score -= amount;
     }
   }
