@@ -21,14 +21,8 @@
   <component name="ChangeListManager">
     <list default="true" id="73bd1854-2930-493b-bbd0-fb90442d9327" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/components/Examinations/LeaderBoard/index.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/Examinations/LeaderBoard/index.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/components/Problems/Comment/index.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/Problems/Comment/index.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/components/Problems/Problem/index.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/Problems/Problem/index.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/libs/client/developers.js" beforeDir="false" afterPath="$PROJECT_DIR$/libs/client/developers.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/libs/client/exams.js" beforeDir="false" afterPath="$PROJECT_DIR$/libs/client/exams.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pages/examination/[id].jsx" beforeDir="false" afterPath="$PROJECT_DIR$/pages/examination/[id].jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pages/examination/start/[id].jsx" beforeDir="false" afterPath="$PROJECT_DIR$/pages/examination/start/[id].jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/utils/firestore.js" beforeDir="false" afterPath="$PROJECT_DIR$/utils/firestore.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/components/Problems/Submissions/index.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/Problems/Submissions/index.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pages/problem/submissiondetail/[id].jsx" beforeDir="false" afterPath="$PROJECT_DIR$/pages/problem/submissiondetail/[id].jsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -183,7 +177,8 @@
       <workItem from="1619449184208" duration="9386000" />
       <workItem from="1619492589046" duration="9508000" />
       <workItem from="1620018900093" duration="12600000" />
-      <workItem from="1620102155559" duration="35203000" />
+      <workItem from="1620102155559" duration="36382000" />
+      <workItem from="1620578556765" duration="328000" />
     </task>
     <servers />
   </component>

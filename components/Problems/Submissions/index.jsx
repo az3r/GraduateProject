@@ -30,7 +30,7 @@ export default function Submissions({problemSubmissions}){
             <TableRow>
               <TableCell>Time Submitted</TableCell>
               <TableCell>Status</TableCell>
-              <TableCell>Runtime</TableCell>
+              {/* <TableCell>Runtime</TableCell> */}
               <TableCell>Score</TableCell>
               <TableCell />
             </TableRow>
@@ -67,7 +67,7 @@ export default function Submissions({problemSubmissions}){
                         submission.status === 'Compilation Error' && <p style={{color: 'red', fontWeight: 'bolder'}}>{submission.status}</p>
                       }
                     </TableCell>
-                    <TableCell>120 ms</TableCell>
+                    {/* <TableCell>120 ms</TableCell> */}
                     <TableCell>
                       {submission.score}
                     </TableCell>

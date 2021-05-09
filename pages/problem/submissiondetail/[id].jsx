@@ -217,9 +217,9 @@ export default function SubmissionDetails({ problemSubmissionDetails }) {  // , 
                 </Box>
 
                 <Box style={{display: 'flex'}}>
-                  <Typography variant="h6" style={{marginRight: 30}}>
-                    Runtime: <span style={{fontWeight: 'normal', color: 'gray'}}>100 ms</span>
-                  </Typography>
+                  {/* <Typography variant="h6" style={{marginRight: 30}}> */}
+                  {/*  Runtime: <span style={{fontWeight: 'normal', color: 'gray'}}>100 ms</span> */}
+                  {/* </Typography> */}
                   <Typography variant="h6" style={{marginRight: 30}}>
                     {(problemSubmissionDetails.status === 'Accepted' || problemSubmissionDetails.status === 'Wrong Answer') &&
                       <>
@@ -437,7 +437,7 @@ export async function getServerSideProps({ params, req }) {
 
           problemSubmissionDetails = await developers.getProblemSubmissionDetails(
             params.id
-          ); //user.id,
+          ); // user.id,
         }
       }
       else{
