@@ -26,9 +26,6 @@ const useStyles = makeStyles({
     width: 350,
     borderRadius: 16,
   },
-  createdDate: {
-    color: 'black',
-  },
   typeStyle: {
     margin: '20px',
   },
@@ -44,6 +41,12 @@ const useStyles = makeStyles({
     width: 480,
     overflow: 'hidden',
     textOverflow: 'ellipsis',
+  },
+  linkStyleBC: {
+    '&:hover': {
+      cursor: 'pointer',
+      textDecoration: 'underline',
+    },
   },
 });
 
@@ -122,7 +125,7 @@ export default function GroupQuestionsBank({ exams }) {
     <Box m={3}>
       <Breadcrumbs>
         <Link color="inherit" href="/company-groups">
-          Company groups
+          <Typography className={classes.linkStyleBC}>Company groups</Typography>
         </Link>
         <Typography color="textPrimary">Current group</Typography>
         <Typography color="textPrimary">Examinations</Typography>

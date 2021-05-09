@@ -280,7 +280,7 @@ export default function Index({ submission }) {
               </>
             )}
             {submission.status === 'Compilation Error' && (
-              <Box style={{ marginLeft: 20, marginRight: 20, marginTop: 20 }}>
+              <Box style={{ marginLeft: 20, marginRight: 20, marginTop: 20, overflow: 'scroll' }}>
                 <Typography variant="h6" style={{ color: 'gray' }}>
                   Compiler Messages
                 </Typography>

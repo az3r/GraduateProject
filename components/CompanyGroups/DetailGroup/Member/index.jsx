@@ -1,10 +1,10 @@
 import { getMembers } from '@libs/client/companies';
 import {
   Avatar,
-  Badge,
   Box,
   Breadcrumbs,
   Button,
+  Chip,
   Divider,
   IconButton,
   makeStyles,
@@ -19,6 +19,7 @@ import CardActionArea from '@material-ui/core/CardActionArea';
 import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
 import HelpIcon from '@material-ui/icons/Help';
+import LinkIcon from '@material-ui/icons/Link';
 import React, { useEffect, useState } from 'react';
 
 const useStyles = makeStyles((theme) => ({
@@ -27,19 +28,6 @@ const useStyles = makeStyles((theme) => ({
     margin: 20,
     width: 350,
     borderRadius: 16,
-  },
-  addBtn: {
-    float: 'right',
-    marginBottom: '10px',
-  },
-  itemsContainer: {
-    clear: 'right',
-  },
-  createdDate: {
-    color: 'black',
-  },
-  typeStyle: {
-    margin: '20px',
   },
   root: {
     width: 200,
@@ -51,6 +39,12 @@ const useStyles = makeStyles((theme) => ({
     marginLeft: 'auto',
     marginRight: 'auto',
     marginBottom: 20,
+  },
+  linkStyle: {
+    '&:hover': {
+      cursor: 'pointer',
+      textDecoration: 'underline',
+    },
   },
 }));
 
@@ -69,7 +63,7 @@ export default function GroupMember({ user, company }) {
     <Box m={3}>
       <Breadcrumbs>
         <Link color="inherit" href="/company-groups">
-          Company groups
+          <Typography className={classes.linkStyle}>Company groups</Typography>
         </Link>
         <Typography color="textPrimary">Current group</Typography>
 
@@ -100,30 +94,32 @@ export default function GroupMember({ user, company }) {
         </Link>
       </Box>
       <Box display="flex" flexWrap="wrap">
-        <Badge badgeContent="Admin" color="primary">
-          <Card className={classes.root}>
-            <CardActionArea>
-              <CardContent style={{ wordWrap: 'break-word' }}>
-                <Avatar
-                  alt="Remy Sharp"
-                  src={company.avatar}
-                  className={classes.avt}
-                />
-                <Typography gutterBottom variant="h5" component="h2">
-                  {company.name}
-                </Typography>
-                <Typography variant="body2" color="textSecondary" component="p">
-                  {company.email}
-                </Typography>
-              </CardContent>
-            </CardActionArea>
-            <CardActions>
-              <Button size="small" color="primary">
-                Member info
+        <Card className={classes.root}>
+          <CardActionArea>
+            <CardContent style={{ wordWrap: 'break-word' }}>
+              <Avatar
+                alt="Remy Sharp"
+                src={company.avatar}
+                className={classes.avt}
+              />
+              <Chip style={{marginBottom: 10}} label="Admin" variant="outlined" size="small" />
+              <Typography gutterBottom variant="h5" component="h2">
+                {company.name}
+              </Typography>
+              <Typography variant="body2" color="textSecondary" component="p">
+                {company.email}
+              </Typography>
+            </CardContent>
+          </CardActionArea>
+          <CardActions>
+          <Button size="small" color="primary" variant="outlined">
+                Contributions
               </Button>
-            </CardActions>
-          </Card>
-        </Badge>
+              <IconButton color="secondary" aria-label="add an alarm">
+                <LinkIcon />
+              </IconButton>
+          </CardActions>
+        </Card>
         {members.map((item) => (
           <Card className={classes.root}>
             <CardActionArea>
@@ -142,9 +138,12 @@ export default function GroupMember({ user, company }) {
               </CardContent>
             </CardActionArea>
             <CardActions>
-              <Button size="small" color="primary">
-                Member info
+              <Button size="small" color="primary" variant="outlined">
+                Contributions
               </Button>
+              <IconButton color="secondary" aria-label="add an alarm">
+                <LinkIcon />
+              </IconButton>
             </CardActions>
           </Card>
         ))}

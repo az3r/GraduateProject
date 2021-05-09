@@ -1,77 +1,25 @@
-// import { getMembers } from '@libs/client/companies';
-import { Box, Breadcrumbs, Divider, Typography } from '@material-ui/core';
+import { Box, Breadcrumbs, Divider, makeStyles, Typography } from '@material-ui/core';
 import Link from 'next/link';
-import React
-// { useEffect, useState } 
-from 'react';
-// import { Pie, PieChart } from 'recharts';
+import React from 'react';
+
+const useStyles = makeStyles({
+  linkStyle: {
+    '&:hover': {
+      cursor: 'pointer',
+      textDecoration: 'underline',
+    },
+  },
+});
 
 export default function GroupGeneral({ company }) {
-    // const [members,setMembers] = useState([]);
-    // useEffect(async ()=> {
-    //     const mems = await getMembers(company);
-    //     setMembers(mems);
-    //     console.log(mems);
-    // }, []);
 
-    // const data02 = [
-    //     {
-    //       "name": "Group A",
-    //       "value": 2400
-    //     },
-    //     {
-    //       "name": "Group B",
-    //       "value": 4567
-    //     },
-    //     {
-    //       "name": "Group C",
-    //       "value": 1398
-    //     },
-    //     {
-    //       "name": "Group D",
-    //       "value": 9800
-    //     },
-    //     {
-    //       "name": "Group E",
-    //       "value": 3908
-    //     },
-    //     {
-    //       "name": "Group F",
-    //       "value": 4800
-    //     }
-    //   ];
-    //   const data01 = [
-    //     {
-    //       "name": "Group A",
-    //       "value": 400
-    //     },
-    //     {
-    //       "name": "Group B",
-    //       "value": 300
-    //     },
-    //     {
-    //       "name": "Group C",
-    //       "value": 300
-    //     },
-    //     {
-    //       "name": "Group D",
-    //       "value": 200
-    //     },
-    //     {
-    //       "name": "Group E",
-    //       "value": 278
-    //     },
-    //     {
-    //       "name": "Group F",
-    //       "value": 189
-    //     }
-    //   ];
+  const classes = useStyles();
 
   return (
     <Box m={3}>
       <Breadcrumbs>
         <Link color="inherit" href="/company-groups">
-          Company groups
+          <Typography className={classes.linkStyle}>Company groups</Typography>
         </Link>
         <Typography color="textPrimary">Current group</Typography>
 

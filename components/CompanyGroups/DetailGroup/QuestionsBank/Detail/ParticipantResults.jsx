@@ -49,10 +49,10 @@ const useStyle = makeStyles((theme) => ({
     color: 'green',
   },
   wrong: {
-    color: 'red',
+    color: 'orange',
   },
   compileError: {
-    color: 'orange',
+    color: 'red',
   },
   case: {
     marginRight: '10px',
