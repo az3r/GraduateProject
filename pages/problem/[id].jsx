@@ -153,8 +153,6 @@ export async function getServerSideProps({ params, req }) {
   let item = [];
   try {
     item = await problems.get({problem: undefined, problemId: params.id});
-    console.dir(item);
-
     if (Object.keys(cookies).length !== 0) {
       if (cookies.user) {
         user = JSON.parse(cookies.user);

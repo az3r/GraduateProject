@@ -248,10 +248,7 @@ export async function getProblemSubmissions(developerId, problemId) {
   return submissions.docs.map((doc) => transform(doc));
 }
 
-export async function getProblemSubmissionDetails(
-  developerId,
-  problemSubmissionId
-) {
+export async function getProblemSubmissionDetails(problemSubmissionId) {
   const snapshot = await Firestore()
     .collection(collections.problemSubmissions)
     .doc(problemSubmissionId)

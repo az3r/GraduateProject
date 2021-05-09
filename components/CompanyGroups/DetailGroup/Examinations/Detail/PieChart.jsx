@@ -1,4 +1,3 @@
-import { Typography } from '@material-ui/core';
 import React from 'react';
 import { PieChart, Pie, Sector, Cell } from 'recharts';
 
@@ -77,19 +76,8 @@ const renderActiveShape = (props) => {
 
 const COLORS = ['#0088FE', '#00C49F'];
 
-export default function YourProgress({ correct, total }) {
+export default function Index({ data }) {
   const [activeIndex, setActiveIndex] = React.useState(0);
-  let data;
-  if (correct === 0) data = [{ name: 'Wrongs', value: total }];
-  else
-    data =
-      correct === total
-        ? [{ name: 'Corrects', value: correct }]
-        : [
-            { name: 'Corrects', value: correct },
-            { name: 'Total', value: total },
-          ];
-
   return (
     <div>
       <PieChart width={400} height={250}>
@@ -110,10 +98,6 @@ export default function YourProgress({ correct, total }) {
         ))}
       </Pie>
     </PieChart>
-
-    <Typography style={{textAlign: 'center'}}>
-      Corrects: {correct} - Total: {total}
-    </Typography>
     </div>
   );
 }

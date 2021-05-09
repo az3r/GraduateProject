@@ -113,117 +113,122 @@ export default function ResultPage({ submission }) {
         </Link>
         <Typography color="textPrimary">Result</Typography>
       </Breadcrumbs>
+      <br/>
       <Divider />
-      <Box m={3} p={2} boxShadow={1}>
-        <Typography
-          variant="h4"
-          className={[classes.centerText, classes.spacing].join(' ')}
-        >
-          Examination Result Report
-        </Typography>
-        <Avatar
-          className={[classes.avatar, classes.centerPage, classes.spacing].join(
-            ' '
-          )}
-          alt="Remy Sharp"
-          src={dev.avatar}
-        />
-        <table
-          className={[
-            classes.examineeTable,
-            classes.centerPage,
-            classes.spacing,
-          ].join(' ')}
-        >
-          <tr>
-            <th className={classes.examineeTable}>Name:</th>
-            <td className={classes.examineeTable}>
-              <Typography>{dev.name}</Typography>
-            </td>
-          </tr>
-          <tr>
-            <th className={classes.examineeTable}>Email:</th>
-            <td className={classes.examineeTable}>
-              <Typography>{dev.email}</Typography>
-            </td>
-          </tr>
-          <tr>
-            <th className={classes.examineeTable}>Examination ID:</th>
-            <td className={classes.examineeTable}>
-              <Typography>{exam}</Typography>
-            </td>
-          </tr>
-          <tr>
-            <th className={classes.examineeTable}>Submitted at:</th>
-            <td className={classes.examineeTable}>
-              <Typography>
-                {dateFormat(
-                  new Date(submission.createdOn),
-                  'HH:MM TT, dd-mmmm-yyyy'
-                )}
-              </Typography>
-            </td>
-          </tr>
-        </table>
+      <br/>
 
-        <Box m={3} p={2} display="flex" justifyContent="center">
-          <PieChart correct={submission.correct} total={submission.total} />
-        </Box>
-
-        <Box boxShadow={2} mt={3} className={classes.root}>
-          <Tabs
-            orientation="vertical"
-            variant="scrollable"
-            value={valueTab}
-            onChange={handleChange}
-            aria-label="Vertical tabs example"
-            className={classes.tabs}
-          >
-            {submission.results.map((item, index) => (
-              <Tab
-                label={`Question ${index + 1}`}
-                icon={getResultTabIcon(item)}
-              />
-            ))}
-          </Tabs>
-
-          {submission.results.map((item, idx) => (
-            <TabPanel className={classes.tabPane} value={valueTab} index={idx}>
-              {item.isMCQ ? (
-                <Box p={2}>
-                  <Typography>
-                    <b>Correct answer:</b> {item.details.correctAnswer}
-                  </Typography>
-                  <Typography>
-                    <b>Selected answer:</b> {item.details.selectedAnswer}
-                  </Typography>
-                </Box>
-              ) : (
-                <Box p={2}>
-                  <b>Code:</b>
-                  <pre>{item.details.code}</pre>
-                  <Divider />
-                  <b>Test cases:</b>
-                  <ul>
-                    <li>Passed: {item.details.passed}</li>
-                    <li>Failed: {item.details.failed}</li>
-                  </ul>
-                  <Box display="flex" flexWrap="wrap">
-                    {item.details.results.map((testCase, k) => (
-                      <Chip
-                        label={`Test case ${k + 1}`}
-                        className={[
-                          testCase.passed ? classes.passCase : classes.failCase,
-                          classes.case,
-                        ].join(' ')}
-                      />
-                    ))}
-                  </Box>
-                </Box>
+      <Typography
+        variant="h4"
+        className={[classes.centerText, classes.spacing].join(' ')}
+      >
+        Examination Result Report
+      </Typography>
+      <Avatar
+        className={[classes.avatar, classes.centerPage, classes.spacing].join(
+          ' '
+        )}
+        alt="Remy Sharp"
+        src={dev.avatar}
+      />
+      <table
+        className={[
+          classes.examineeTable,
+          classes.centerPage,
+          classes.spacing,
+        ].join(' ')}
+      >
+        <tr>
+          <th className={classes.examineeTable}>Name:</th>
+          <td className={classes.examineeTable}>
+            <Typography>{dev.name}</Typography>
+          </td>
+        </tr>
+        <tr>
+          <th className={classes.examineeTable}>Email:</th>
+          <td className={classes.examineeTable}>
+            <Typography>{dev.email}</Typography>
+          </td>
+        </tr>
+        <tr>
+          <th className={classes.examineeTable}>Examination ID:</th>
+          <td className={classes.examineeTable}>
+            <Typography>{exam}</Typography>
+          </td>
+        </tr>
+        <tr>
+          <th className={classes.examineeTable}>Submitted at:</th>
+          <td className={classes.examineeTable}>
+            <Typography>
+              {dateFormat(
+                new Date(submission.createdOn),
+                'HH:MM TT, dd-mmmm-yyyy'
               )}
-            </TabPanel>
+            </Typography>
+          </td>
+        </tr>
+      </table>
+
+      <Box mt={3} p={2} display="flex" justifyContent="center">
+        <PieChart data={getChartData(submission.correct, submission.total)} />
+      </Box>
+      <Box display="flex" justifyContent="center">
+        <Typography style={{ textAlign: 'center' }}>
+          Corrects: {submission.correct} - Total: {submission.total}
+        </Typography>
+      </Box>
+      <Box boxShadow={2} mt={3} className={classes.root}>
+        <Tabs
+          orientation="vertical"
+          variant="scrollable"
+          value={valueTab}
+          onChange={handleChange}
+          aria-label="Vertical tabs example"
+          className={classes.tabs}
+        >
+          {submission.results.map((item, index) => (
+            <Tab
+              label={`Question ${index + 1}`}
+              icon={getResultTabIcon(item)}
+            />
           ))}
-        </Box>
+        </Tabs>
+
+        {submission.results.map((item, idx) => (
+          <TabPanel className={classes.tabPane} value={valueTab} index={idx}>
+            {item.isMCQ ? (
+              <Box p={2}>
+                <Typography>
+                  <b>Correct answer:</b> {item.details.correctAnswer}
+                </Typography>
+                <Typography>
+                  <b>Selected answer:</b> {item.details.selectedAnswer}
+                </Typography>
+              </Box>
+            ) : (
+              <Box p={2}>
+                <b>Code:</b>
+                <pre>{item.details.code}</pre>
+                <Divider />
+                <b>Test cases:</b>
+                <ul>
+                  <li>Passed: {item.details.passed}</li>
+                  <li>Failed: {item.details.failed}</li>
+                </ul>
+                <Box display="flex" flexWrap="wrap">
+                  {item.details.results.map((testCase, k) => (
+                    <Chip
+                      label={`Test case ${k + 1}`}
+                      className={[
+                        testCase.passed ? classes.passCase : classes.failCase,
+                        classes.case,
+                      ].join(' ')}
+                    />
+                  ))}
+                </Box>
+              </Box>
+            )}
+          </TabPanel>
+        ))}
       </Box>
     </Box>
   );
@@ -257,4 +262,18 @@ function getResultTabIcon(result) {
     default:
       return <CloseIcon className={classes.incorrect} />;
   }
+}
+
+function getChartData(correct, total) {
+  let data;
+  if (correct === 0) data = [{ name: 'Wrongs', value: total }];
+  else
+    data =
+      correct === total
+        ? [{ name: 'Corrects', value: correct }]
+        : [
+            { name: 'Corrects', value: correct },
+            { name: 'Total', value: total },
+          ];
+  return data;
 }
