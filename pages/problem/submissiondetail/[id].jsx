@@ -436,9 +436,8 @@ export async function getServerSideProps({ params, req }) {
           }
 
           problemSubmissionDetails = await developers.getProblemSubmissionDetails(
-            user.id,
             params.id
-          );
+          ); //user.id,
         }
       }
       else{
