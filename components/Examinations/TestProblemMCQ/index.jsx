@@ -33,8 +33,6 @@ export default function TestProblemMCQ({examId, index, problem, user, onIsSolved
   const [company, setCompany] = useState({name: "#"});
   const [answer, setAnswer] = useState('');
 
-  console.log(index);
-
   useEffect(async () => {
     // Set Author
     const developer = await users.find(problem.owner);

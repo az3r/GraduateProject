@@ -3,6 +3,8 @@ import { getDifficultyString } from '@libs/client/business';
 import {
   Box,
   Button,
+  Chip,
+  Divider,
   Grid,
   InputBase,
   makeStyles,
@@ -146,6 +148,18 @@ export default function DetailTab({ user, problemProp }) {
             </Button>
           </Link>
         </Box>
+        <Typography>
+          <b>Difficult:</b> {getDifficultyString(problemProp.difficulty)}
+        </Typography>
+        <Typography>
+          <b>Score:</b> {problemProp.score}
+        </Typography>
+        {problemProp.isMCQ ? null : (
+          <Typography>
+            <b>Published:</b> {problemProp.published.toString()}
+          </Typography>
+        )}
+        <Divider />
         {problemProp.isMCQ ? (
           <>{HTMLReactParser(problemProp.title)}</>
         ) : (
@@ -154,12 +168,6 @@ export default function DetailTab({ user, problemProp }) {
             {HTMLReactParser(problemProp.content)}
           </>
         )}
-        <Typography>
-          <b>Difficult:</b> {getDifficultyString(problemProp.difficulty)}
-        </Typography>
-        <Typography>
-          <b>Score:</b> {problemProp.score}
-        </Typography>
         {problemProp.isMCQ ? null : (
           <Box display="flex" justifyContent="center" m={1}>
             <Button
@@ -181,32 +189,26 @@ export default function DetailTab({ user, problemProp }) {
               </DialogTitle>
               <DialogContent className={classes.testCasesDialog}>
                 <DialogContentText id="alert-dialog-slide-description">
-                  {problemProp.cases.length !== 0 ? (
-                    <div className={classes.root}>
-                      <Tabs
-                        orientation="vertical"
-                        variant="scrollable"
-                        value={valueTab}
-                        onChange={handleChangeTab}
-                        aria-label="Vertical tabs example"
-                        className={classes.tabs}
-                      >
-                        {problemProp.cases.map((_, index) => (
-                          <Tab label={`Test case ${index + 1}`} />
-                        ))}
-                      </Tabs>
-                      {problemProp.cases.map((item, idx) => (
-                        <TabPanel value={valueTab} index={idx}>
-                          <Typography>Test case {idx + 1}:</Typography>
-                          <pre>{`   {\n     input: ${item.input}\n     output: ${item.output}\n     score: ${item.score}\n   }`}</pre>
-                        </TabPanel>
+                  <div className={classes.root}>
+                    <Tabs
+                      orientation="vertical"
+                      variant="scrollable"
+                      value={valueTab}
+                      onChange={handleChangeTab}
+                      aria-label="Vertical tabs example"
+                      className={classes.tabs}
+                    >
+                      {problemProp.cases.map((_, index) => (
+                        <Tab label={`Test case ${index + 1}`} />
                       ))}
-                    </div>
-                  ) : (
-                    <Typography>
-                      There are no records for list of question
-                    </Typography>
-                  )}
+                    </Tabs>
+                    {problemProp.cases.map((item, idx) => (
+                      <TabPanel value={valueTab} index={idx}>
+                        <Typography>Test case {idx + 1}:</Typography>
+                        <pre>{`   {\n     input: ${item.input}\n     output: ${item.output}\n     score: ${item.score}\n   }`}</pre>
+                      </TabPanel>
+                    ))}
+                  </div>
                 </DialogContentText>
               </DialogContent>
               <DialogActions>
@@ -257,7 +259,7 @@ export default function DetailTab({ user, problemProp }) {
                 <MenuItem value={40}>40</MenuItem>
               </Select>
               <Select
-                style={{ minWidth: 150 }}
+                style={{ minWidth: 150, marginRight: 20 }}
                 labelId="demo-customized-select-label"
                 id="demo-customized-select"
                 value={theme}
@@ -275,6 +277,12 @@ export default function DetailTab({ user, problemProp }) {
                 <MenuItem value="terminal">Terminal</MenuItem>
                 <MenuItem value="twilight">Twilight</MenuItem>
               </Select>
+              <Chip
+                size="small"
+                label={problemProp.language}
+                style={{ marginTop: 10 }}
+                color="primary"
+              />
             </Box>
             <CodeEditor
               language={problemProp.language}

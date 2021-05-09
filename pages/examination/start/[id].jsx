@@ -207,9 +207,6 @@ export default function Start({ user, examId, exam }) {
 
     // Remove isSolvedProblems from local storage
     localStorage.removeItem(`${user.id}${examId}isSolvedProblems`);
-
-    console.log(results);
-
     await developers.createExamSubmission(user, {
       examId,
       total: exam.problems.length,
@@ -571,8 +568,6 @@ export async function getServerSideProps({ params, req }) {
   }
 
   const isSubmitted = await developers.getExamResults(user.id, params.id);
-  console.log(isSubmitted);
-
   if(isParticipated === true && isSubmitted.length > 0){
     return {
       redirect: {

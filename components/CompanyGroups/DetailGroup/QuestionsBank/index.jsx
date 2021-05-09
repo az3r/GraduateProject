@@ -204,7 +204,7 @@ export default function GroupQuestionsBank({ questions }) {
                 </TableCell>
                 <TableCell align="right">
                   {item.isMCQ ? (
-                    <Typography>None</Typography>
+                    <Typography>-</Typography>
                   ) : (
                     <Typography>{item.language}</Typography>
                   )}

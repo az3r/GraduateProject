@@ -222,9 +222,6 @@ export default function Problem({
         code,
         testcases: problem.cases,
       });
-
-      console.log(response);
-
       if (response.failed === 0) {
         status = 'Accepted';
       } else {
@@ -251,7 +248,10 @@ export default function Problem({
           ...response,
         },
       };
-      localStorage.setItem(`${user.id}${examId}${index}`, JSON.stringify(result));
+      localStorage.setItem(
+        `${user.id}${examId}${index}`,
+        JSON.stringify(result)
+      );
 
       onNextQuestion();
     }

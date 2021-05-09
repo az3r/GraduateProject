@@ -119,8 +119,6 @@ export async function getServerSideProps({req}) {
 
   // Get users score for TOP SCORE
   const usersExamScore = await developers.getUserByExamScore();
-  console.log(usersExamScore);
-
   return {
     props: {
       user,

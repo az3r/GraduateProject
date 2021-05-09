@@ -8,7 +8,9 @@ import {
   TextField,
   Typography,
 } from '@material-ui/core';
-import SaveOutlinedIcon from '@material-ui/icons/SaveOutlined';
+import EmailIcon from '@material-ui/icons/Email';
+import { useAuth } from '@hooks/auth';
+import * as userServices from '@libs/client/users';
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -27,36 +29,43 @@ const useStyles = makeStyles((theme) => ({
     border: '1px solid white',
     borderBottomColor: '#eeeeee',
   },
-  textField: {
-    width: 250,
-  },
+  // textField: {
+  //   width: 250,
+  // },
 }));
 
 export default function AccountTab(props) {
   const classes = useStyles();
   const { user, setUser, setSnackBarState } = props;
-  const [strongPassword, setStrongPassword] = React.useState(true);
+  const [checkEmailSent, setCheckEmailSent] = React.useState(false);
 
-  // passwords state
-  const [passwords, setPasswords] = React.useState({
-    currentPassword: '',
-    newPassword: '',
-    confirmPassword: '',
-  });
-  const handleChangePasswords = (prop) => (event) => {
-    setPasswords({ ...passwords, [prop]: event.target.value });
-  };
+  // user get from useAuth()
+  const auth = useAuth();
 
   // submit
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
 
-    // const isValidCurrentPass = checkCurrentPass(passwords.currentPassword);
-    console.log(
-      `cur: ${passwords.currentPassword}
-      new: ${passwords.newPassword}
-      confirm: ${passwords.confirmPassword}`
-    );
+    try {
+      await userServices.sendPasswordResetEmail(
+        auth.email,
+        'http://localhost:3000'
+      );
+      setCheckEmailSent(true);
+
+      setSnackBarState({
+        open: true,
+        severity: 'success',
+        message: 'sent email successfully!',
+      });
+    } catch (err) {
+      console.log(err);
+      setSnackBarState({
+        open: true,
+        severity: 'error',
+        message: 'Internal server error',
+      });
+    }
   };
 
   return (
@@ -73,11 +82,11 @@ export default function AccountTab(props) {
           </Typography>
         </Grid>
         <Grid item xs={12} className={classes.divider}>
-          <Grid container spacing={1}>
-            <Grid item xs={12} sm={3} className={classes.paper}>
+          <Grid container spacing={3}>
+            <Grid item xs={12} sm={2} >
               Email
             </Grid>
-            <Grid item xs={12} sm={9}>
+            <Grid item xs={12} sm={3} >
               <TextField
                 id="emailTextField"
                 value={user.email}
@@ -87,73 +96,20 @@ export default function AccountTab(props) {
                 disabled
               />
             </Grid>
-          </Grid>
-        </Grid>
-        <Grid item xs={12} className={classes.divider}>
-          <Grid container spacing={1}>
-            <Grid item xs={12} sm={3} className={classes.paper}>
-              Current Password
-            </Grid>
-            <Grid item xs={12} sm={9}>
-              <TextField
-                type="password"
-                name="currentPassword"
-                className={classes.textField}
-                onChange={handleChangePasswords('currentPassword')}
-                variant="outlined"
-                required
-              />
+            <Grid item xs={12} sm={4}>
+              <Button
+                type="submit"
+                className={classes.saveButton}
+                color="primary"
+                variant="contained"
+                startIcon={<EmailIcon />}
+                disabled={checkEmailSent}
+              >
+                Send a link to reset password to your email.
+              </Button>
             </Grid>
           </Grid>
         </Grid>
-        <Grid item xs={12} className={classes.divider}>
-          <Grid container spacing={1}>
-            <Grid item xs={12} sm={3} className={classes.paper}>
-              New Password
-            </Grid>
-            <Grid item xs={12} sm={9}>
-              <TextField
-                type="password"
-                name="newPassword"
-                className={classes.textField}
-                onChange={handleChangePasswords('newPassword')}
-                autoComplete="new-password"
-                variant="outlined"
-                required
-                error={!strongPassword}
-                helperText={strongPassword ? null : 'Weak password'}
-              />
-            </Grid>
-          </Grid>
-        </Grid>
-        <Grid item xs={12} className={classes.divider}>
-          <Grid container spacing={1}>
-            <Grid item xs={12} sm={3} className={classes.paper}>
-              Confirm Password
-            </Grid>
-            <Grid item xs={12} sm={9}>
-              <TextField
-                type="password"
-                name="confirmPassword"
-                className={classes.textField}
-                onChange={handleChangePasswords('confirmPassword')}
-                autoComplete="confirm-password"
-                variant="outlined"
-                required
-              />
-            </Grid>
-          </Grid>
-        </Grid>
-
-        <Button
-          type="submit"
-          className={classes.saveButton}
-          color="primary"
-          variant="contained"
-          startIcon={<SaveOutlinedIcon />}
-        >
-          Save Changes
-        </Button>
       </Grid>
     </form>
   );

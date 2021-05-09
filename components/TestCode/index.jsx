@@ -156,10 +156,7 @@ export default function Test({ problem, user, problemSubmissionHistory, nextProb
         testcases: problem.cases,
       });
 
-      console.log(response);
-
       if (response.failed === 0) {
-        console.log("Correct!");
         setTestCodeResult('Correct!');
       } else {
         setTestCodeResult(

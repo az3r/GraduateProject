@@ -6,8 +6,10 @@ import {
   Breadcrumbs,
   Button,
   Divider,
+  IconButton,
   makeStyles,
   OutlinedInput,
+  Tooltip,
   Typography,
 } from '@material-ui/core';
 import Link from 'next/link';
@@ -16,6 +18,7 @@ import Card from '@material-ui/core/Card';
 import CardActionArea from '@material-ui/core/CardActionArea';
 import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
+import HelpIcon from '@material-ui/icons/Help';
 import React, { useEffect, useState } from 'react';
 
 const useStyles = makeStyles((theme) => ({
@@ -51,8 +54,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function GroupMember({ company }) {
-  console.log(company);
+export default function GroupMember({ user, company }) {
   const [members, setMembers] = useState([]);
   const classes = useStyles();
   const router = useRouter();
@@ -82,15 +84,23 @@ export default function GroupMember({ company }) {
         />
       </Box>
       <Box m={3} display="flex" justifyContent="flex-end">
+        <Tooltip title="Only admin can add members.">
+          <IconButton aria-label="delete">
+            <HelpIcon />
+          </IconButton>
+        </Tooltip>
         <Link href={`/company-groups/${id}/members/add`}>
-          <Button color="secondary" variant="contained">
-            Add question
+          <Button
+            color="secondary"
+            variant="contained"
+            disabled={user.role !== 'company'}
+          >
+            Add member
           </Button>
         </Link>
       </Box>
-
-      <Box m={3} display="flex" justifyContent="center">
-        <Badge badgeContent="Admin group" color="primary">
+      <Box display="flex" flexWrap="wrap">
+        <Badge badgeContent="Admin" color="primary">
           <Card className={classes.root}>
             <CardActionArea>
               <CardContent style={{ wordWrap: 'break-word' }}>
@@ -109,17 +119,11 @@ export default function GroupMember({ company }) {
             </CardActionArea>
             <CardActions>
               <Button size="small" color="primary">
-                Share
-              </Button>
-              <Button size="small" color="primary">
-                Learn More
+                Member info
               </Button>
             </CardActions>
           </Card>
         </Badge>
-      </Box>
-
-      <Box display="flex">
         {members.map((item) => (
           <Card className={classes.root}>
             <CardActionArea>
@@ -139,10 +143,7 @@ export default function GroupMember({ company }) {
             </CardActionArea>
             <CardActions>
               <Button size="small" color="primary">
-                Share
-              </Button>
-              <Button size="small" color="primary">
-                Learn More
+                Member info
               </Button>
             </CardActions>
           </Card>

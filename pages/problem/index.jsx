@@ -82,9 +82,6 @@ export async function getServerSideProps({req}) {
           // Get unsolved problems
           const unsolvedProblems = await developers.getUnsolvedProblems(user.id);
           unsolvedProblemsNumber = unsolvedProblems.length;
-
-          console.log(solvedProblemsNumber);
-          console.log(unsolvedProblemsNumber);
         }
 
       }
