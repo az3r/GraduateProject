@@ -41,6 +41,12 @@ const useStyles = makeStyles((theme) => ({
   step: {
     wordWrap: 'break-word',
   },
+  linkStyle: {
+    '&:hover': {
+      cursor: 'pointer',
+      textDecoration: 'underline',
+    },
+  },
 }));
 
 function TabPanel(props) {
@@ -66,6 +72,7 @@ function TabPanel(props) {
 export default function DetailExamination({ user, examProp }) {
   const [value, setValue] = useState(0);
   const [examination, setExamination] = useState(examProp);
+  const classes = useStyles();
   const router = useRouter();
   const { id, exam } = router.query;
 
@@ -87,20 +94,20 @@ export default function DetailExamination({ user, examProp }) {
     <Box m={3}>
       <Breadcrumbs>
         <Link color="inherit" href="/company-groups">
-          Company groups
+          <Typography className={classes.linkStyle}>Company groups</Typography>
         </Link>
         <Link color="inherit" href={`/company-groups/${id}`}>
-          Current group
+          <Typography className={classes.linkStyle}>Current group</Typography>
         </Link>
         <Link color="inherit" href={`/company-groups/${id}/examinations`}>
-          Examinations
+          <Typography className={classes.linkStyle}>Examinations</Typography>
         </Link>
         <Typography color="textPrimary">Detail</Typography>
       </Breadcrumbs>
       <Divider />
       <Grid container>
         <Grid item lg={10} md={10} sm={10} xs={10}>
-          <Box m={3} p={2}>
+          <Box m={3}>
             <Paper>
               <Tabs
                 value={value}

@@ -122,7 +122,7 @@ export default function DetailTab({ user, examination, handlePublish }) {
   };
 
   return (
-    <Box m={3} p={2}>
+    <Box>
       <Box mb={1} display="flex" justifyContent="flex-end">
         <Tooltip title="Only owner can publish and edit examination">
           <IconButton aria-label="delete">
@@ -245,8 +245,10 @@ export default function DetailTab({ user, examination, handlePublish }) {
           )}
         </Typography>
       ) : null}
+      <br/>
       <Divider />
-      <Box p={2}>
+      <br/>
+      <Box>
         <Box display="flex" justifyContent="center" mb={3}>
           <Typography color="secondary" variant="h4">
             GENERAL INFORMATION SECTION
@@ -269,8 +271,10 @@ export default function DetailTab({ user, examination, handlePublish }) {
           <b>Score:</b> {examination.score}
         </Typography>
       </Box>
+      <br/>
       <Divider />
-      <Box p={2}>
+      <br/>
+      <Box>
         <Box display="flex" justifyContent="center" mb={3}>
           <Typography color="secondary" variant="h4">
             QUESTIONS SECTION
@@ -279,7 +283,7 @@ export default function DetailTab({ user, examination, handlePublish }) {
         <Typography>
           <b>Total questions:</b> {examination.problems.length}
         </Typography>
-        <Box boxShadow={2} mt={3} className={classes.root}>
+        <div className={classes.root}>
           <Tabs
             orientation="vertical"
             variant="scrollable"
@@ -298,7 +302,7 @@ export default function DetailTab({ user, examination, handlePublish }) {
               <QuestionInfo question={item} noLoadFromDB />
             </TabPanel2>
           ))}
-        </Box>
+        </div>
       </Box>
     </Box>
   );

@@ -5,7 +5,17 @@ import { Firestore } from './firebase';
 /** nếu company tạo problem có thể bỏ field developerId */
 export async function create(
   companyId,
-  { cases, code, content, difficulty, language, title, published, developerId }
+  {
+    cases,
+    code,
+    content,
+    difficulty,
+    language,
+    title,
+    published,
+    developerId,
+    runtime,
+  }
 ) {
   // calculate score
   let score = 0;
@@ -32,7 +42,7 @@ export async function create(
     .doc(problemId)
     .collection(collections.attributes)
     .doc(collections.attributes)
-    .set({ parent: problemId, cases, code, content });
+    .set({ parent: problemId, cases, code, content, runtime });
   return problemId;
 }
 
@@ -105,7 +115,7 @@ export async function getPublishedProblems() {
  */
 export async function update(
   id,
-  { cases, code, content, difficulty, language, title, published }
+  { cases, code, content, difficulty, language, title, published, runtime }
 ) {
   // calculate score
   let score = 0;
@@ -125,6 +135,7 @@ export async function update(
     cases,
     code,
     content,
+    runtime,
   });
   return true;
 }

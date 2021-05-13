@@ -219,6 +219,12 @@ export default function DetailTab({ user, problemProp }) {
             </Dialog>
           </Box>
         )}
+        <Typography><b>Runtime list:</b></Typography>
+        <Box m={3} p={2} display="flex" flexWrap="wrap">
+          {problemProp.runtime.map((item) => (
+            <Chip label={`${item} ms`} style={{ marginRight: 10, marginBottom: 10 }} />
+          ))}
+        </Box>
       </Grid>
       <Grid
         item

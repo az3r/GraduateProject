@@ -74,6 +74,7 @@ export default function UpdateQuestion({ problemProp }) {
         language: question.language,
         title: question.title,
         published: question.published,
+        runtime: question.runtime
       });
     else
       await updateMCQ(problemProp.id, {
