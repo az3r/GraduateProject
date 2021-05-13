@@ -18,6 +18,7 @@ import {
 import { getProblems } from '@libs/client/companies';
 import HTMLReactParser from 'html-react-parser';
 import { Pagination } from '@material-ui/lab';
+import { get } from '@libs/client/problems';
 
 const useStyles = makeStyles({
   container: {
@@ -154,11 +155,8 @@ export default function AddProblemFromLibrary({
                 <IconButton
                   variant="contained"
                   color="primary"
-                  onClick={() =>
-                    handleAddQuestionFromLibrary({
-                      id: item.id,
-                      score: item.score,
-                    })
+                  onClick={async () =>
+                    handleAddQuestionFromLibrary(await get({problemId: item.id}))
                   }
                 >
                   <AddIcon />

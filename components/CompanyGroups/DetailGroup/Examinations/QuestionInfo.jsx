@@ -36,7 +36,6 @@ const useStyles = makeStyles((theme)=>({
 export default function QuestionInfo({question, noLoadFromDB})
 {
     const [problem,setProblem] = useState({});
-    const [loading,setLoading] = useState(true);
     useEffect(async ()=>{
         if(question.id && !noLoadFromDB)
         {
@@ -46,13 +45,12 @@ export default function QuestionInfo({question, noLoadFromDB})
             setProblem(problemData);
         }
         else setProblem(question)
-        setLoading(false);
     },[question]);
 
     return(
         <Box>
             {
-                loading ? 
+                Object.keys(problem).length === 0 ? 
                 <CircularProgress />
                 : 
                 <ShowInfoQuestionMCQ problem={problem}/>

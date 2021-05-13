@@ -490,7 +490,7 @@ export default function EditExamination({ user, examProp, onSubmitExam }) {
                     />
                   </Dialog>
                 </div>
-                <QuestionInfo question={item} />
+                <QuestionInfo question={item} noLoadFromDB/>
                 <br />
                 <Divider />
                 <br />
