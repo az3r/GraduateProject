@@ -22,6 +22,8 @@ import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
+import PublicIcon from '@material-ui/icons/Public';
+import LockIcon from '@material-ui/icons/Lock';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import React, { useState } from 'react';
@@ -139,14 +141,26 @@ export default function DetailTab({ user, problemProp }) {
         style={{ wordWrap: 'break-word' }}
         className={classes.tabs}
       >
-        <Box display="flex" justifyContent="flex-end" m={1}>
-          <Link
-            href={`/company-groups/${id}/questions-bank/update?question=${question}`}
-          >
-            <Button variant="outlined" disabled={problemProp.owner !== user.id}>
-              Edit question
-            </Button>
-          </Link>
+        <Box display="flex" m={1}>
+          <Box flexGrow={1}>
+            {problemProp.published ? (
+              <Chip color="primary" label="Public" icon={<PublicIcon />} />
+            ) : (
+              <Chip color="primary" label="Private" icon={<LockIcon />} />
+            )}
+          </Box>
+          <Box>
+            <Link
+              href={`/company-groups/${id}/questions-bank/update?question=${question}`}
+            >
+              <Button
+                variant="outlined"
+                disabled={problemProp.owner !== user.id}
+              >
+                Edit question
+              </Button>
+            </Link>
+          </Box>
         </Box>
         <Typography>
           <b>Difficult:</b> {getDifficultyString(problemProp.difficulty)}
@@ -154,11 +168,6 @@ export default function DetailTab({ user, problemProp }) {
         <Typography>
           <b>Score:</b> {problemProp.score}
         </Typography>
-        {problemProp.isMCQ ? null : (
-          <Typography>
-            <b>Published:</b> {problemProp.published.toString()}
-          </Typography>
-        )}
         <Divider />
         {problemProp.isMCQ ? (
           <>{HTMLReactParser(problemProp.title)}</>
@@ -219,12 +228,21 @@ export default function DetailTab({ user, problemProp }) {
             </Dialog>
           </Box>
         )}
-        <Typography><b>Runtime list:</b></Typography>
-        <Box m={3} p={2} display="flex" flexWrap="wrap">
-          {problemProp.runtime.map((item) => (
-            <Chip label={`${item} ms`} style={{ marginRight: 10, marginBottom: 10 }} />
-          ))}
-        </Box>
+        {problemProp.runtime ? (
+          <>
+            <Typography>
+              <b>Runtime list:</b>
+            </Typography>
+            <Box m={3} p={2} display="flex" flexWrap="wrap">
+              {problemProp.runtime.map((item) => (
+                <Chip
+                  label={`${item} ms`}
+                  style={{ marginRight: 10, marginBottom: 10 }}
+                />
+              ))}
+            </Box>
+          </>
+        ) : null}
       </Grid>
       <Grid
         item
@@ -248,47 +266,52 @@ export default function DetailTab({ user, problemProp }) {
           </Box>
         ) : (
           <>
-            <Box display="flex" justifyContent="flex-end" m={1}>
-              <Select
-                style={{ minWidth: 50, marginRight: 20 }}
-                value={size}
-                onChange={handleSizeChange}
-                input={<BootstrapInput />}
-              >
-                <MenuItem value={14}>14</MenuItem>
-                <MenuItem value={16}>16</MenuItem>
-                <MenuItem value={18}>18</MenuItem>
-                <MenuItem value={20}>20</MenuItem>
-                <MenuItem value={24}>24</MenuItem>
-                <MenuItem value={28}>28</MenuItem>
-                <MenuItem value={32}>32</MenuItem>
-                <MenuItem value={40}>40</MenuItem>
-              </Select>
-              <Select
-                style={{ minWidth: 150, marginRight: 20 }}
-                labelId="demo-customized-select-label"
-                id="demo-customized-select"
-                value={theme}
-                onChange={handleThemeChange}
-                input={<BootstrapInput />}
-              >
-                <MenuItem value="xcode">Xcode</MenuItem>
-                <MenuItem value="monokai">Monokai</MenuItem>
-                <MenuItem value="github">Github</MenuItem>
-                <MenuItem value="tomorrow">Tomorrow</MenuItem>
-                <MenuItem value="kuroir">Kuroir</MenuItem>
-                <MenuItem value="solarized_dark">Solarized Dark</MenuItem>
-                <MenuItem value="textmate">Textmate</MenuItem>
-                <MenuItem value="solarized_light">Solarized Light</MenuItem>
-                <MenuItem value="terminal">Terminal</MenuItem>
-                <MenuItem value="twilight">Twilight</MenuItem>
-              </Select>
-              <Chip
-                size="small"
-                label={problemProp.language}
-                style={{ marginTop: 10 }}
-                color="primary"
-              />
+            <Box display="flex" m={1}>
+              <Box flexGrow={1}>
+                <Chip
+                  size="medium"
+                  label={problemProp.language}
+                  color="primary"
+                />
+              </Box>
+              <Box>
+                <Select
+                  style={{ minWidth: 50, marginRight: 20 }}
+                  value={size}
+                  onChange={handleSizeChange}
+                  input={<BootstrapInput />}
+                >
+                  <MenuItem value={14}>14</MenuItem>
+                  <MenuItem value={16}>16</MenuItem>
+                  <MenuItem value={18}>18</MenuItem>
+                  <MenuItem value={20}>20</MenuItem>
+                  <MenuItem value={24}>24</MenuItem>
+                  <MenuItem value={28}>28</MenuItem>
+                  <MenuItem value={32}>32</MenuItem>
+                  <MenuItem value={40}>40</MenuItem>
+                </Select>
+              </Box>
+              <Box>
+                <Select
+                  style={{ minWidth: 150, marginRight: 20 }}
+                  labelId="demo-customized-select-label"
+                  id="demo-customized-select"
+                  value={theme}
+                  onChange={handleThemeChange}
+                  input={<BootstrapInput />}
+                >
+                  <MenuItem value="xcode">Xcode</MenuItem>
+                  <MenuItem value="monokai">Monokai</MenuItem>
+                  <MenuItem value="github">Github</MenuItem>
+                  <MenuItem value="tomorrow">Tomorrow</MenuItem>
+                  <MenuItem value="kuroir">Kuroir</MenuItem>
+                  <MenuItem value="solarized_dark">Solarized Dark</MenuItem>
+                  <MenuItem value="textmate">Textmate</MenuItem>
+                  <MenuItem value="solarized_light">Solarized Light</MenuItem>
+                  <MenuItem value="terminal">Terminal</MenuItem>
+                  <MenuItem value="twilight">Twilight</MenuItem>
+                </Select>
+              </Box>
             </Box>
             <CodeEditor
               language={problemProp.language}

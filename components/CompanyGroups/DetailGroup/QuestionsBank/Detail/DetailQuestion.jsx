@@ -1,4 +1,4 @@
-import { Box, Breadcrumbs, Divider, Typography } from '@material-ui/core';
+import { Box, Breadcrumbs, Divider, makeStyles, Typography } from '@material-ui/core';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import Tabs from '@material-ui/core/Tabs';
@@ -6,9 +6,20 @@ import Tab from '@material-ui/core/Tab';
 import React, { useState } from 'react';
 import ParticipantsTab from './ParticipantsTab';
 import DetailTab from './DetailTab';
+import CommentsTab from './CommentsTab';
+
+const useStyles = makeStyles({
+  linkStyle: {
+    '&:hover': {
+      cursor: 'pointer',
+      textDecoration: 'underline',
+    },
+  },
+});
 
 export default function DetailQuestion({ user, problemProp }) {
   const [value, setValue] = useState(0);
+  const classes = useStyles();
 
   const router = useRouter();
   const { id } = router.query;
@@ -20,13 +31,18 @@ export default function DetailQuestion({ user, problemProp }) {
   return (
     <Box m={3}>
       <Breadcrumbs>
-        <Link href="/company-groups">Company groups</Link>
-        <Link href={`/company-groups/${id}`}>Current group</Link>
+        <Link href="/company-groups">
+          <Typography className={classes.linkStyle}>Company groups</Typography>
+        </Link>
+        <Link href={`/company-groups/${id}`}>
+          <Typography className={classes.linkStyle}>Current group</Typography>
+        </Link>
         <Link href={`/company-groups/${id}/questions-bank`}>
-          Questions bank
+          <Typography className={classes.linkStyle}>Questions bank</Typography>
         </Link>
         <Typography color="textPrimary">Detail</Typography>
       </Breadcrumbs>
+      <br/>
       <Divider />
       <br />
       {problemProp.isMCQ ? (
@@ -41,13 +57,17 @@ export default function DetailQuestion({ user, problemProp }) {
             centered
           >
             <Tab label="Detail" />
-            <Tab label="Participants" /> 
+            <Tab label="Participants" disabled={!problemProp.published}/> 
+            <Tab label="Comments" disabled={!problemProp.published}/> 
           </Tabs>
           <TabPanel value={value} index={0}>
             <DetailTab user={user} problemProp={problemProp} />
           </TabPanel>
           <TabPanel value={value} index={1}>
             <ParticipantsTab problemProp={problemProp} />
+          </TabPanel>
+          <TabPanel value={value} index={2}>
+            <CommentsTab/>
           </TabPanel>
         </>
       )}

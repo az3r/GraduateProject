@@ -166,11 +166,12 @@ export default function Index({ submission }) {
 
       <Box display="flex" justifyContent="center">
         <Typography style={{ textAlign: 'center' }}>
-          Total: {submission.length} - Accepted:{' '}
-          {submission.filter((item) => item.status === 'Accepted').length} -
-          Wrong:{' '}
-          {submission.filter((item) => item.status === 'Wrong Answer').length} -
-          Compilation Error:{' '}
+          <b>Total:</b> {submission.length} - 
+          <b>Accepted:</b>{' '}
+          {submission.filter((item) => item.status === 'Accepted').length} - 
+          <b>Wrong:</b>{' '}
+          {submission.filter((item) => item.status === 'Wrong Answer').length} - 
+          <b>Compilation Error:</b>{' '}
           {
             submission.filter((item) => item.status === 'Compilation Error')
               .length
@@ -261,7 +262,7 @@ function getDataChart(submission) {
       value: wrong,
     },
     {
-      name: 'Compilation Error',
+      name: 'Error',
       value: error,
     },
   ];
