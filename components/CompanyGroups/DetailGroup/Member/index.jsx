@@ -4,12 +4,14 @@ import {
   Box,
   Breadcrumbs,
   Button,
+  Chip,
   Divider,
   IconButton,
   makeStyles,
   OutlinedInput,
   Tooltip,
   Typography,
+  Link as MLink,
 } from '@material-ui/core';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
@@ -32,6 +34,7 @@ const useStyles = makeStyles((theme) => ({
   root: {
     width: 200,
     marginRight: 20,
+    marginBottom: 20,
   },
   avt: {
     width: theme.spacing(10),
@@ -142,32 +145,41 @@ export default function GroupMember({ user, company }) {
           </Button>
         </Link>
       </Box>
-      {/* <Card className={classes.root}>
-          <CardActionArea>
-            <CardContent style={{ wordWrap: 'break-word' }}>
-              <Avatar
-                alt="Remy Sharp"
-                src={company.avatar}
-                className={classes.avt}
-              />
-              <Chip style={{marginBottom: 10}} label="Admin" variant="outlined" size="small" />
-              <Typography gutterBottom variant="h5" component="h2">
-                {company.name}
-              </Typography>
-              <Typography variant="body2" color="textSecondary" component="p">
-                {company.email}
-              </Typography>
-            </CardContent>
-          </CardActionArea>
-          <CardActions>
-          <Button size="small" color="primary" variant="outlined">
-                Contributions
-              </Button>
-              <IconButton color="secondary" aria-label="add an alarm">
-                <LinkIcon />
-              </IconButton>
-          </CardActions>
-        </Card> */}
+      <Card className={classes.root}>
+        <CardActionArea>
+          <CardContent style={{ wordWrap: 'break-word' }}>
+            <Avatar
+              alt="Remy Sharp"
+              src={company.avatar}
+              className={classes.avt}
+            />
+            <Chip
+              style={{ marginBottom: 10 }}
+              label="Admin"
+              variant="outlined"
+              size="small"
+            />
+            <Typography gutterBottom variant="h5" component="h2">
+              {company.name}
+            </Typography>
+            <Typography variant="body2" color="textSecondary" component="p">
+              {company.email}
+            </Typography>
+          </CardContent>
+        </CardActionArea>
+        <CardActions>
+          <Link href={`/company-groups/${id}/members/${company.id}`}>
+            <Button size="small" color="primary" variant="outlined">
+              Contributions
+            </Button>
+          </Link>
+          <IconButton color="secondary">
+            <MLink target="_blank" href={`/profile/co/${company.id}`}>
+              <LinkIcon />
+            </MLink>
+          </IconButton>
+        </CardActions>
+      </Card>
       <Box display="flex" flexWrap="wrap">
         {filtedMembers.map((item) => (
           <Card className={classes.root}>
@@ -187,11 +199,15 @@ export default function GroupMember({ user, company }) {
               </CardContent>
             </CardActionArea>
             <CardActions>
-              <Button size="small" color="primary" variant="outlined">
-                Contributions
-              </Button>
-              <IconButton color="secondary" aria-label="add an alarm">
-                <LinkIcon />
+              <Link href={`/company-groups/${id}/members/${item.id}`}>
+                <Button size="small" color="primary" variant="outlined">
+                  Contributions
+                </Button>
+              </Link>
+              <IconButton color="secondary">
+                <MLink target="_blank" href={`/profile/dev/${item.id}`}>
+                  <LinkIcon />
+                </MLink>
               </IconButton>
             </CardActions>
           </Card>

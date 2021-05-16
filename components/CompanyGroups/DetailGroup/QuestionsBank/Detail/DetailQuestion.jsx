@@ -1,9 +1,23 @@
-import { Box, Breadcrumbs, Divider, makeStyles, Typography } from '@material-ui/core';
+import {
+  Box,
+  Breadcrumbs,
+  Button,
+  Divider,
+  makeStyles,
+  Typography,
+} from '@material-ui/core';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
+import DeleteIcon from '@material-ui/icons/Delete';
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import ErrorOutlineIcon from '@material-ui/icons/ErrorOutline';
+import CheckCircleOutlineIcon from '@material-ui/icons/CheckCircleOutline';
 import React, { useState } from 'react';
+import { remove } from '@libs/client/problems';
 import ParticipantsTab from './ParticipantsTab';
 import DetailTab from './DetailTab';
 import CommentsTab from './CommentsTab';
@@ -19,10 +33,32 @@ const useStyles = makeStyles({
 
 export default function DetailQuestion({ user, problemProp }) {
   const [value, setValue] = useState(0);
+  const [open, setOpen] = useState(false);
+  const [open2, setOpen2] = useState(false);
+
   const classes = useStyles();
 
   const router = useRouter();
-  const { id } = router.query;
+  const { id, question } = router.query;
+
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+
+  const handleAgree = async () => {
+    await remove(question);
+    setOpen(false);
+    setOpen2(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+
+  const handleClose2 = () => {
+    setOpen2(false);
+    router.replace(`/company-groups/${id}/questions-bank`)
+  };
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
@@ -42,7 +78,7 @@ export default function DetailQuestion({ user, problemProp }) {
         </Link>
         <Typography color="textPrimary">Detail</Typography>
       </Breadcrumbs>
-      <br/>
+      <br />
       <Divider />
       <br />
       {problemProp.isMCQ ? (
@@ -57,8 +93,8 @@ export default function DetailQuestion({ user, problemProp }) {
             centered
           >
             <Tab label="Detail" />
-            <Tab label="Participants" disabled={!problemProp.published}/> 
-            <Tab label="Comments" disabled={!problemProp.published}/> 
+            <Tab label="Participants" disabled={!problemProp.published} />
+            <Tab label="Comments" disabled={!problemProp.published} />
           </Tabs>
           <TabPanel value={value} index={0}>
             <DetailTab user={user} problemProp={problemProp} />
@@ -67,10 +103,55 @@ export default function DetailQuestion({ user, problemProp }) {
             <ParticipantsTab problemProp={problemProp} />
           </TabPanel>
           <TabPanel value={value} index={2}>
-            <CommentsTab/>
+            <CommentsTab />
           </TabPanel>
         </>
       )}
+      <Box m={5} display="flex" justifyContent="center">
+        <Button
+          onClick={handleClickOpen}
+          variant="contained"
+          style={{ color: 'red' }}
+          startIcon={<DeleteIcon />}
+        >
+          Delete question
+        </Button>
+        <Dialog open={open} onClose={handleClose}>
+          <DialogContent style={{ width: 500 }}>
+            <Box>
+              <Box display="flex" justifyContent="center" m={3}>
+                <ErrorOutlineIcon style={{ fontSize: 50, color: 'red' }} />
+              </Box>
+              <Typography style={{textAlign: 'center'}}>Do you want to delete this question?</Typography>
+            </Box>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={handleAgree} color="primary" autoFocus>
+              Agree
+            </Button>
+            <Button onClick={handleClose} color="secondary">
+              Disagree
+            </Button>
+          </DialogActions>
+        </Dialog>
+        <Dialog open={open2} onClose={handleClose2}>
+          <DialogContent style={{ width: 500 }}>
+            <Box>
+              <Box display="flex" justifyContent="center" m={3}>
+                <CheckCircleOutlineIcon
+                  style={{ fontSize: 50, color: '#088247' }}
+                />
+              </Box>
+              <Typography style={{textAlign: 'center'}}>Delete successfully</Typography>
+            </Box>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={handleClose2} color="primary">
+              Close
+            </Button>
+          </DialogActions>
+        </Dialog>
+      </Box>
     </Box>
   );
 }

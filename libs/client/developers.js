@@ -316,8 +316,8 @@ export async function getProblems(companyId, developerId) {
 /** get all exams of a company created by this developer */
 export async function getExams(companyId, developerId) {
   const snapshot = await Firestore()
-    .collection(collections.problems)
-    .where('deleted', '==', false)
+    .collection(collections.exams)
+    // .where('deleted', '==', false)
     .where('companyId', '==', companyId)
     .where('owner', '==', developerId)
     .orderBy('createdOn', 'desc')
