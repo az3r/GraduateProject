@@ -26,15 +26,11 @@ import { find } from '@libs/client/users';
 import { addToInvitation } from '@libs/client/exams';
 import { useRouter } from 'next/router';
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles({
   root: {
     width: '100%',
-    maxWidth: '500px',
-    backgroundColor: theme.palette.background.paper,
-    height: '500px',
-    overflow: 'scroll',
-    overflowX: 'hidden',
-    margin: 'auto',
+    maxWidth: '700px',
+    margin: 'auto'
   },
   inline: {
     display: 'inline',
@@ -48,7 +44,7 @@ const useStyles = makeStyles((theme) => ({
   typeStyle: {
     margin: '20px',
   },
-}));
+});
 
 const Transition = React.forwardRef((props, ref) => (
   <Slide direction="up" ref={ref} {...props} />

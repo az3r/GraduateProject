@@ -104,10 +104,12 @@ export default function DetailExamination({ user, examProp }) {
         </Link>
         <Typography color="textPrimary">Detail</Typography>
       </Breadcrumbs>
+      <br/>
       <Divider />
-      <Grid container>
+      <br/>
+      <Grid container spacing={2}>
         <Grid item lg={10} md={10} sm={10} xs={10}>
-          <Box m={3}>
+          <Box boxShadow={2}>
             <Paper>
               <Tabs
                 value={value}

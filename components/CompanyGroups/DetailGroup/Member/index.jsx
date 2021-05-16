@@ -4,7 +4,6 @@ import {
   Box,
   Breadcrumbs,
   Button,
-  Chip,
   Divider,
   IconButton,
   makeStyles,
@@ -21,6 +20,7 @@ import CardContent from '@material-ui/core/CardContent';
 import HelpIcon from '@material-ui/icons/Help';
 import LinkIcon from '@material-ui/icons/Link';
 import React, { useEffect, useState } from 'react';
+import { Pagination } from '@material-ui/lab';
 
 const useStyles = makeStyles((theme) => ({
   outlinedInput: {
@@ -48,8 +48,14 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+const ITEMS_PER_PAGE = 20;
+
 export default function GroupMember({ user, company }) {
   const [members, setMembers] = useState([]);
+  const [filtedMembers, setFiltedMembers] = useState([]);
+  const [searchKey, setSearchKey] = useState('');
+  const [numberOfPages, setNumberOfPages] = useState(1);
+  const [page, setPage] = useState(1);
   const classes = useStyles();
   const router = useRouter();
   const { id } = router.query;
@@ -57,7 +63,47 @@ export default function GroupMember({ user, company }) {
   useEffect(async () => {
     const mems = await getMembers(company);
     setMembers(mems);
+    const filtered = getDisplayListForPagination(
+      mems,
+      0,
+      ITEMS_PER_PAGE,
+      searchKey
+    );
+    setFiltedMembers(filtered);
+    const pages = getNumberOfPages(mems);
+    setNumberOfPages(pages);
   }, []);
+
+  const handleChangePage = (event, value) => {
+    setPage(value);
+    const filtered = getDisplayListForPagination(
+      members,
+      value - 1,
+      ITEMS_PER_PAGE,
+      searchKey
+    );
+    setFiltedMembers(filtered);
+  };
+
+  const handleSearchChange = (e) => {
+    setSearchKey(e.target.value);
+  };
+
+  const handleSearchKeyPress = (e) => {
+    if (e.key === 'Enter') {
+      const newList = getListAfterSearch(members, searchKey);
+      const pages = getNumberOfPages(newList);
+      setNumberOfPages(pages);
+      const filtered = getDisplayListForPagination(
+        members,
+        0,
+        ITEMS_PER_PAGE,
+        searchKey
+      );
+      setFiltedMembers(filtered);
+      setPage(1);
+    }
+  };
 
   return (
     <Box m={3}>
@@ -69,11 +115,14 @@ export default function GroupMember({ user, company }) {
 
         <Typography color="textPrimary">Group members</Typography>
       </Breadcrumbs>
+      <br />
       <Divider />
-
+      <br />
       <Box m={3} p={2} display="flex" justifyContent="center">
         <OutlinedInput
           className={classes.outlinedInput}
+          onChange={handleSearchChange}
+          onKeyPress={handleSearchKeyPress}
           placeholder="Search..."
         />
       </Box>
@@ -93,8 +142,7 @@ export default function GroupMember({ user, company }) {
           </Button>
         </Link>
       </Box>
-      <Box display="flex" flexWrap="wrap">
-        <Card className={classes.root}>
+      {/* <Card className={classes.root}>
           <CardActionArea>
             <CardContent style={{ wordWrap: 'break-word' }}>
               <Avatar
@@ -119,8 +167,9 @@ export default function GroupMember({ user, company }) {
                 <LinkIcon />
               </IconButton>
           </CardActions>
-        </Card>
-        {members.map((item) => (
+        </Card> */}
+      <Box display="flex" flexWrap="wrap">
+        {filtedMembers.map((item) => (
           <Card className={classes.root}>
             <CardActionArea>
               <CardContent style={{ wordWrap: 'break-word' }}>
@@ -148,6 +197,45 @@ export default function GroupMember({ user, company }) {
           </Card>
         ))}
       </Box>
+      <Box display="flex" justifyContent="center" p={2}>
+        <Pagination
+          count={numberOfPages}
+          page={page}
+          color="primary"
+          onChange={handleChangePage}
+        />
+      </Box>
     </Box>
   );
+}
+
+function getNumberOfPages(list) {
+  return list.length % ITEMS_PER_PAGE === 0
+    ? Math.floor(list.length / ITEMS_PER_PAGE)
+    : Math.floor(list.length / ITEMS_PER_PAGE) + 1;
+}
+
+function getListAfterSearch(list, filterName) {
+  const result = list.filter(
+    (item) =>
+      item.name.toLowerCase().includes(filterName.toLowerCase()) ||
+      item.email.toLowerCase().includes(filterName.toLowerCase())
+  );
+  return result;
+}
+
+function getDisplayListForPagination(
+  list,
+  start,
+  numberOfItemsPerPage,
+  filterName
+) {
+  const result = list
+    .filter(
+      (item) =>
+        item.name.toLowerCase().includes(filterName.toLowerCase()) ||
+        item.email.toLowerCase().includes(filterName.toLowerCase())
+    )
+    .slice(start * numberOfItemsPerPage, (start + 1) * numberOfItemsPerPage);
+  return result;
 }

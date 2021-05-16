@@ -78,6 +78,7 @@ const useStyle = makeStyles((theme) => ({
 }));
 
 export default function ResultPage({ submission }) {
+  console.log(submission);
   const classes = useStyle();
   const router = useRouter();
   const [valueTab, setValueTab] = useState(0);
@@ -173,7 +174,7 @@ export default function ResultPage({ submission }) {
       </Box>
       <Box display="flex" justifyContent="center">
         <Typography style={{ textAlign: 'center' }}>
-          Corrects: {submission.correct} - Total: {submission.total}
+          <b>Corrects:</b> {submission.correct} - <b>Total:</b> {submission.total}
         </Typography>
       </Box>
       <Box boxShadow={2} mt={3} className={classes.root}>

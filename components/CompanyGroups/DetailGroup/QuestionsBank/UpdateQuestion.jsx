@@ -21,20 +21,10 @@ import CodingQuestionForm from './CodingQuestionForm';
 import MultipleChoiceForm from './MultipleChoiceForm';
 
 const useStyles = makeStyles({
-  textFail: {
-    color: '#F74B4D',
-  },
   displayScrollSpy: {
     position: 'fixed',
     marginRight: '10px',
     marginLeft: '10px',
-  },
-  isCurrent: {
-    fontWeight: 'bold',
-    '& :nth-child(1)': {
-      color: '#088247',
-      fontSize: '14px',
-    },
   },
   contentScrollSpy: {
     color: '#000000',
@@ -48,6 +38,12 @@ const useStyles = makeStyles({
   },
   listItem: {
     marginBottom: '10px',
+  },
+  linkStyle: {
+    '&:hover': {
+      cursor: 'pointer',
+      textDecoration: 'underline',
+    },
   },
 });
 
@@ -74,7 +70,7 @@ export default function UpdateQuestion({ problemProp }) {
         language: question.language,
         title: question.title,
         published: question.published,
-        runtime: question.runtime
+        runtime: question.runtime,
       });
     else
       await updateMCQ(problemProp.id, {
@@ -93,20 +89,31 @@ export default function UpdateQuestion({ problemProp }) {
       <Grid container>
         <Grid item lg={10} md={10}>
           <Breadcrumbs>
-            <Link href="/company-groups">Company groups</Link>
-            <Link href={`/company-groups/${id}`}>Current group</Link>
+            <Link href="/company-groups">
+              <Typography className={classes.linkStyle}>
+                Company groups
+              </Typography>
+            </Link>
+            <Link href={`/company-groups/${id}`}>
+              <Typography className={classes.linkStyle}>
+                Current group
+              </Typography>
+            </Link>
             <Link href={`/company-groups/${id}/questions-bank`}>
-              Questions bank
+              <Typography className={classes.linkStyle}>
+                Questions bank
+              </Typography>
             </Link>
             <Link
               href={`/company-groups/${id}/questions-bank/detail?question=${problemProp.id}`}
             >
-              Detail
+              <Typography className={classes.linkStyle}>Detail</Typography>
             </Link>
             <Typography color="textPrimary">Update</Typography>
           </Breadcrumbs>
+          <br/>
           <Divider />
-
+          <br/>
           <Box m={3}>
             {problemProp.isMCQ ? (
               <MultipleChoiceForm

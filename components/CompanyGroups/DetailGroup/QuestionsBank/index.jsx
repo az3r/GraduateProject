@@ -135,8 +135,9 @@ export default function GroupQuestionsBank({ questions }) {
 
         <Typography color="textPrimary">Questions bank</Typography>
       </Breadcrumbs>
+      <br />
       <Divider />
-
+      <br />
       <Box m={3} p={2} display="flex" justifyContent="center">
         <OutlinedInput
           className={classes.outlinedInput}

@@ -130,7 +130,9 @@ export default function GroupQuestionsBank({ exams }) {
         <Typography color="textPrimary">Current group</Typography>
         <Typography color="textPrimary">Examinations</Typography>
       </Breadcrumbs>
+      <br/>
       <Divider />
+      <br/>
       <Box m={3} p={2} display="flex" justifyContent="center">
         <OutlinedInput
           className={classes.outlinedInput}

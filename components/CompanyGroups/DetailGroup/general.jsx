@@ -25,7 +25,9 @@ export default function GroupGeneral({ company }) {
 
         <Typography color="textPrimary">General</Typography>
       </Breadcrumbs>
+      <br/>
       <Divider />
+      <br/>
       <Box m={3}>
         <Box m={1} display="flex" justifyContent="center">
           <Typography variant="h4">{company.name}</Typography>

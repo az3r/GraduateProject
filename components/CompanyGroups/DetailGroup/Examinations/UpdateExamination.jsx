@@ -1,6 +1,14 @@
 import React, { useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import { Box, Breadcrumbs, Button, Divider, Grid, Slide, Typography } from '@material-ui/core';
+import {
+  Box,
+  Breadcrumbs,
+  Button,
+  Divider,
+  Grid,
+  Slide,
+  Typography,
+} from '@material-ui/core';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { update } from '@libs/client/exams';
@@ -12,75 +20,86 @@ import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 import EditExamination from './EditExamination';
 
 const useStyles = makeStyles({
-  textFail: {
-    color: '#F74B4D',
-  },
   displayScrollSpy: {
-      position: "fixed",
-      marginRight: "10px",
-      marginLeft: "10px"
-  },
-  isCurrent: {
-      fontWeight: 'bold',
-      "& :nth-child(1)": {
-          color: "#088247",
-          fontSize: "14px"
-        }
+    position: 'fixed',
+    marginRight: '10px',
+    marginLeft: '10px',
   },
   contentScrollSpy: {
-      color: "#000000",
-      fontSize: "13px",
-      wordWrap: "break-word",
-      textDecoration: 'none'
+    color: '#000000',
+    fontSize: '13px',
+    wordWrap: 'break-word',
+    textDecoration: 'none',
   },
-  listContentStyle : {
-      listStyle: "none",
-      paddingLeft: 15
+  listContentStyle: {
+    listStyle: 'none',
+    paddingLeft: 15,
   },
   listItem: {
-      marginBottom: "10px"
+    marginBottom: '10px',
+  },
+  linkStyle: {
+    '&:hover': {
+      cursor: 'pointer',
+      textDecoration: 'underline',
+    },
   },
 });
 
-const Transition = React.forwardRef((props, ref) => <Slide direction="up" ref={ref} {...props} />);
+const Transition = React.forwardRef((props, ref) => (
+  <Slide direction="up" ref={ref} {...props} />
+));
 
-
-export default function UpdateExamination({user, examProp}) {
+export default function UpdateExamination({ user, examProp }) {
   const [open, setOpen] = useState(false);
   const classes = useStyles();
   const router = useRouter();
-  const {id, exam} = router.query;
+  const { id, exam } = router.query;
 
-  
   const handleClose = () => {
     setOpen(false);
   };
 
   const onSubmitExam = async (examObj) => {
-    await update(exam,examObj);
+    await update(exam, examObj);
     setOpen(true);
-  }
+  };
   return (
     <Box m={3}>
       <Grid container>
         <Grid item lg={10} md={10}>
           <Breadcrumbs>
             <Link color="inherit" href="/company-groups">
+              <Typography className={classes.linkStyle}>
                 Company groups
+              </Typography>
             </Link>
             <Link color="inherit" href={`/company-groups/${id}`}>
+              <Typography className={classes.linkStyle}>
                 Current group
+              </Typography>
             </Link>
             <Link color="inherit" href={`/company-groups/${id}/examinations`}>
+              <Typography className={classes.linkStyle}>
                 Examinations
+              </Typography>
             </Link>
-            <Link color="inherit" href={`/company-groups/${id}/examinations/detail?exam=${exam}`}>
-                Detail
+            <Link
+              color="inherit"
+              href={`/company-groups/${id}/examinations/detail?exam=${exam}`}
+            >
+              <Typography className={classes.linkStyle}>Detail</Typography>
             </Link>
             <Typography color="textPrimary">Update</Typography>
           </Breadcrumbs>
-          <Divider/>
-          <EditExamination user={user} onSubmitExam={onSubmitExam} examProp={examProp}/>
+          <br/>
+          <Divider />
+          <br/>
+          <EditExamination
+            user={user}
+            onSubmitExam={onSubmitExam}
+            examProp={examProp}
+          />
           <Dialog
             open={open}
             TransitionComponent={Transition}
@@ -89,37 +108,64 @@ export default function UpdateExamination({user, examProp}) {
             aria-describedby="alert-dialog-slide-description"
           >
             <DialogContent>
-                <DialogContentText id="alert-dialog-slide-description">
-                    <Box display="flex" m={3} p={2}>
-                        <CheckCircleIcon color="primary"/>
-                        <Typography variant="h5" color="primary" style={{marginLeft: 10}}>
-                            Update examination completed
-                        </Typography>
-                    </Box>
-                    <Link href={`/company-groups/${id}/examinations/detail?exam=${exam}`}>Back to examination</Link>
-                </DialogContentText>
+              <DialogContentText id="alert-dialog-slide-description">
+                <Box display="flex" m={3} p={2}>
+                  <CheckCircleIcon color="primary" />
+                  <Typography
+                    variant="h5"
+                    color="primary"
+                    style={{ marginLeft: 10 }}
+                  >
+                    Update examination completed
+                  </Typography>
+                </Box>
+                <Link
+                  href={`/company-groups/${id}/examinations/detail?exam=${exam}`}
+                >
+                  Back to examination
+                </Link>
+              </DialogContentText>
             </DialogContent>
             <DialogActions>
-                <Button onClick={handleClose} color="primary">
-                    Close
-                </Button>
+              <Button onClick={handleClose} color="primary">
+                Close
+              </Button>
             </DialogActions>
-        </Dialog>
+          </Dialog>
         </Grid>
         <Grid item lg={2} md={2}>
           <div className={classes.displayScrollSpy}>
-              <Typography variant="h6">Content:</Typography>
-              <div className={classes.listContentStyle}>
-                  <li className={classes.listItem}><a href="#section-20" className={classes.contentScrollSpy}>Enter title</a></li>
-                  <li className={classes.listItem}><a href="#section-21" className={classes.contentScrollSpy}>Enter content</a></li>
-                  <li className={classes.listItem}><a href="#section-22" className={classes.contentScrollSpy}>Enter password</a></li>
-                  <li className={classes.listItem}><a href="#section-23" className={classes.contentScrollSpy}>Enter duration</a></li>
-                  <li className={classes.listItem}><a href="#section-24" className={classes.contentScrollSpy}>Add questions</a></li>
-              </div>
+            <Typography variant="h6">Content:</Typography>
+            <div className={classes.listContentStyle}>
+              <li className={classes.listItem}>
+                <a href="#section-20" className={classes.contentScrollSpy}>
+                  Enter title
+                </a>
+              </li>
+              <li className={classes.listItem}>
+                <a href="#section-21" className={classes.contentScrollSpy}>
+                  Enter content
+                </a>
+              </li>
+              <li className={classes.listItem}>
+                <a href="#section-22" className={classes.contentScrollSpy}>
+                  Enter password
+                </a>
+              </li>
+              <li className={classes.listItem}>
+                <a href="#section-23" className={classes.contentScrollSpy}>
+                  Enter duration
+                </a>
+              </li>
+              <li className={classes.listItem}>
+                <a href="#section-24" className={classes.contentScrollSpy}>
+                  Add questions
+                </a>
+              </li>
+            </div>
           </div>
         </Grid>
       </Grid>
     </Box>
   );
 }
-

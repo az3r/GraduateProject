@@ -33,13 +33,13 @@ const useStyles = makeStyles((theme) => ({
     flexGrow: 1,
     backgroundColor: theme.palette.background.paper,
     display: 'flex',
-    height: 500,
+    height: 700,
   },
   tabs: {
     borderRight: `1px solid ${theme.palette.divider}`,
   },
   tabContent: {
-    width: '80%',
+    width: '100%',
     overflow: 'scroll',
   },
 }));
@@ -280,9 +280,6 @@ export default function DetailTab({ user, examination, handlePublish }) {
             QUESTIONS SECTION
           </Typography>
         </Box>
-        <Typography>
-          <b>Total questions:</b> {examination.problems.length}
-        </Typography>
         <div className={classes.root}>
           <Tabs
             orientation="vertical"

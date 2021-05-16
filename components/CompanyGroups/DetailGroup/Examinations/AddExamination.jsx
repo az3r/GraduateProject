@@ -12,20 +12,10 @@ import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 import EditExamination from './EditExamination';
 
 const useStyles = makeStyles({
-  textFail: {
-    color: '#F74B4D',
-  },
   displayScrollSpy: {
       position: "fixed",
       marginRight: "10px",
       marginLeft: "10px"
-  },
-  isCurrent: {
-      fontWeight: 'bold',
-      "& :nth-child(1)": {
-          color: "#088247",
-          fontSize: "14px"
-        }
   },
   contentScrollSpy: {
       color: "#000000",
@@ -39,6 +29,12 @@ const useStyles = makeStyles({
   },
   listItem: {
       marginBottom: "10px"
+  },
+  linkStyle: {
+    '&:hover': {
+      cursor: 'pointer',
+      textDecoration: 'underline',
+    },
   },
 });
 
@@ -69,17 +65,19 @@ export default function AddExamination({user}) {
         <Grid item lg={10} md={10}>
           <Breadcrumbs>
             <Link color="inherit" href="/company-groups">
-                Company groups
+                <Typography className={classes.linkStyle}>Company groups</Typography>
             </Link>
             <Link color="inherit" href={`/company-groups/${id}`}>
-                Current group
+                <Typography className={classes.linkStyle}>Current group</Typography>
             </Link>
             <Link color="inherit" href={`/company-groups/${id}/examinations`}>
-                Examinations
+                <Typography className={classes.linkStyle}>Examinations</Typography>
             </Link>
             <Typography color="textPrimary">Add</Typography>
           </Breadcrumbs>
+          <br/>
           <Divider/>
+          <br/>
           <EditExamination user={user} onSubmitExam={onSubmitExam} examProp={null}/>
           <Dialog
             open={open}
