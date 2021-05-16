@@ -7,6 +7,7 @@ import {
   Button,
   TextField,
   Typography,
+  Link,
 } from '@material-ui/core';
 import EmailIcon from '@material-ui/icons/Email';
 import { useAuth } from '@hooks/auth';
@@ -41,6 +42,10 @@ export default function AccountTab(props) {
 
   // user get from useAuth()
   const auth = useAuth();
+  let link;
+  if (auth.role === 'developer')
+    link = `${window.location.origin}/profile/dev/${auth.uid}`;
+  else link = `${window.location.origin}/profile/co/${auth.uid}`;
 
   // submit
   const handleSubmit = async (event) => {
@@ -83,10 +88,22 @@ export default function AccountTab(props) {
         </Grid>
         <Grid item xs={12} className={classes.divider}>
           <Grid container spacing={3}>
+            <Grid item xs={12} sm={2} style={{ height: 80 }}>
+              Link
+            </Grid>
+            <Grid item xs={12} sm={10}>
+              <Link href={link} target="_blank" style={{ color: '#1890ff' }}>
+                {link}
+              </Link>
+            </Grid>
+          </Grid>
+        </Grid>
+        <Grid item xs={12} className={classes.divider}>
+          <Grid container spacing={3}>
             <Grid item xs={12} sm={2}>
               Email
             </Grid>
-            <Grid item xs={12} sm={3}>
+            <Grid item xs={12} sm={10}>
               <TextField
                 id="emailTextField"
                 value={user.email}
@@ -96,7 +113,17 @@ export default function AccountTab(props) {
                 disabled
               />
             </Grid>
-            <Grid item xs={12} sm={4}>
+          </Grid>
+        </Grid>
+        <Grid
+          item
+          xs={12}
+          className={classes.divider}
+          style={{ marginTop: 15 }}
+        >
+          <Grid container spacing={3}>
+            <Grid item xs={12} sm={2} />
+            <Grid item xs={12} sm={10}>
               <Button
                 type="submit"
                 className={classes.saveButton}
@@ -105,7 +132,7 @@ export default function AccountTab(props) {
                 startIcon={<EmailIcon />}
                 disabled={checkEmailSent}
               >
-                Send a link to reset password to your email.
+                Send a password reset link to my email.
               </Button>
             </Grid>
           </Grid>

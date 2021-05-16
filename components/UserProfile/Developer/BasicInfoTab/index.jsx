@@ -196,7 +196,13 @@ export default function BasicInfoTab(props) {
         </Grid>
         <Grid item xs={12} className={classes.divider}>
           <Grid container spacing={1}>
-            <Grid item xs={12} sm={3} className={classes.paper}>
+            <Grid
+              item
+              xs={12}
+              sm={3}
+              className={classes.paper}
+              style={{ height: 60 }}
+            >
               Websites
             </Grid>
             <Grid item xs={12} sm={9}>
@@ -327,6 +333,7 @@ export default function BasicInfoTab(props) {
             color="primary"
             startIcon={<SaveOutlinedIcon />}
             onClick={handleOpenAlertDialog}
+            style={{ marginTop: 15 }}
           >
             Save Changes
           </Button>
