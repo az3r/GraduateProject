@@ -79,8 +79,6 @@ export default function Index(props) {
 
   // user get from useAuth()
   const auth = useAuth();
-  // console.log(props.user);
-  // console.log(auth);
 
   // introHeight state
   const [introHeight, setIntroHeight] = useState(0);
@@ -108,9 +106,11 @@ export default function Index(props) {
       // get info
       apiUser = await devServices.get(props.user.uid);
 
-      // check role is company
-      if (apiUser.role === 'company') {
+      // check loginUser access to wrong profile link
+      // role is developer, but access company profile link
+      if (!apiUser && props.user) {
         router.replace('/profile/co');
+        return;
       }
 
       // set default values for undefined field
@@ -129,10 +129,6 @@ export default function Index(props) {
       });
 
       setUser(apiUser);
-    }
-
-    if(auth == null){
-      router.replace('/login');
     }
   }, [auth]);
 

@@ -144,7 +144,7 @@ export default function BasicInfoTab(props) {
       setSnackBarState({
         open: true,
         severity: 'error',
-        message: 'Internal server error',
+        message: err.message,
       });
     }
   };

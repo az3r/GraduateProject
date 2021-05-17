@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 /* eslint-disable react/destructuring-assignment */
 import React, { useState, useEffect } from 'react';
 import Head from 'next/head';
@@ -8,6 +9,8 @@ import CompanyProfileTabs from '@components/UserProfile/Company';
 import AppLayout from '@components/Layout';
 import ErrorPage from '@components/CustomErrorPage';
 import * as companyServices from '@libs/client/companies';
+import { parseCookies } from '@libs/client/cookies';
+import { useRouter } from 'next/router';
 
 const useStyles = makeStyles({
   introBox: {
@@ -69,15 +72,28 @@ export async function getServerSideProps(context) {
     }
   });
 
+  // check user in cookie is the same user in query
+  const cookies = parseCookies(context.req);
+  const cookiesStr = JSON.stringify(cookies);
+  let isTheSameUser = false;
+
+  if (Object.keys(cookies).length !== 0 && cookies.user) {
+    if(cookiesStr.includes(uid)){
+      isTheSameUser = true;
+    }
+  }
+
   return {
     props: {
       user,
+      isTheSameUser,
     },
   };
 }
 
 export default function Index(props) {
   const classes = useStyles();
+  const router = useRouter();
 
   // flag to avoid change user info
   const isOnlyWatch = true;
@@ -89,6 +105,13 @@ export default function Index(props) {
   if (!apiUser || apiUser.role !== 'company') {
     return <ErrorPage />;
   }
+
+  // check user in cookie is the same user in query
+  useEffect(() => {
+    if (props.isTheSameUser) {
+      router.replace('/profile/co');
+    }
+  });
 
   // introHeight state
   const [introHeight, setIntroHeight] = useState(0);

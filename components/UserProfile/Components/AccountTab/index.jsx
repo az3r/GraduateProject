@@ -1,6 +1,6 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable no-console */
-import React from 'react';
+import React, { useEffect } from 'react';
 import {
   makeStyles,
   Grid,
@@ -39,13 +39,18 @@ export default function AccountTab(props) {
   const classes = useStyles();
   const { user, setUser, setSnackBarState } = props;
   const [checkEmailSent, setCheckEmailSent] = React.useState(false);
+  const [link, setLink] = React.useState('');
 
   // user get from useAuth()
   const auth = useAuth();
-  let link;
-  if (auth.role === 'developer')
-    link = `${window.location.origin}/profile/dev/${auth.uid}`;
-  else link = `${window.location.origin}/profile/co/${auth.uid}`;
+
+  useEffect(async () => {
+    if (auth) {
+      if (auth.role === 'developer')
+        setLink(`${window.location.origin}/profile/dev/${auth.uid}`);
+      else setLink(`${window.location.origin}/profile/co/${auth.uid}`);
+    }
+  }, [auth]);
 
   // submit
   const handleSubmit = async (event) => {

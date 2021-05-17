@@ -104,9 +104,11 @@ export default function Index(props) {
       // get info
       apiUser = await companyServices.get(props.user.uid);
 
-      // check role is company
-      if (apiUser.role === 'developer') {
+      // check loginUser access to wrong profile link
+      // role is company, but access dev profile link
+      if (!apiUser && props.user) {
         router.replace('/profile/dev');
+        return;
       }
 
       // set default values for undefined field
