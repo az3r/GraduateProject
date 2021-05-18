@@ -293,7 +293,7 @@ export default function DetailTab({ user, problemProp }) {
               </Box>
               <Box>
                 <Select
-                  style={{ minWidth: 150, marginRight: 20 }}
+                  style={{ minWidth: 150 }}
                   labelId="demo-customized-select-label"
                   id="demo-customized-select"
                   value={theme}
