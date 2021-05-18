@@ -10,7 +10,7 @@ import Typography from '@material-ui/core/Typography';
 import { Box, Link } from '@material-ui/core';
 import { useRouter } from 'next/router';
 import { Pagination } from '@material-ui/lab';
-import { getProblemComments } from '@libs/client/comments';
+import { getExamComments } from '@libs/client/comments';
 import HTMLReactParser from 'html-react-parser';
 
 const useStyles = makeStyles({
@@ -37,10 +37,10 @@ export default function CommentsTab() {
   const [page, setPage] = useState(1);
   const classes = useStyles();
   const router = useRouter();
-  const { question } = router.query;
+  const { exam } = router.query;
 
   useEffect(async () => {
-    const cmts = await getProblemComments(question);
+    const cmts = await getExamComments(exam);
     setComments(cmts);
     setNumberOfPages(getNumberOfPages(cmts));
     const temp = getDisplayListForPagination(cmts, 0, ITEMS_PER_PAGE);

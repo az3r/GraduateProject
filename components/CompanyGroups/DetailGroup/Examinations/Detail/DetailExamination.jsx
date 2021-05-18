@@ -20,6 +20,7 @@ import dateFormat from 'dateformat';
 import DetailTab from './DetailTab';
 import InvitationTab from './InvitationTab';
 import ParticipantsTab from './ParticipantsTab';
+import CommentsTab from './CommentsTab';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -121,6 +122,7 @@ export default function DetailExamination({ user, examProp }) {
                 <Tab label="Detail" />
                 <Tab label="Invitation" />
                 <Tab label="Participants" />
+                <Tab label="Comments" />
               </Tabs>
               <TabPanel value={value} index={0}>
                 <DetailTab
@@ -134,6 +136,9 @@ export default function DetailExamination({ user, examProp }) {
               </TabPanel>
               <TabPanel value={value} index={2}>
                 <ParticipantsTab examination={examination} />
+              </TabPanel>
+              <TabPanel value={value} index={3}>
+                <CommentsTab/>
               </TabPanel>
             </Paper>
           </Box>

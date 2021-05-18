@@ -12,14 +12,10 @@ import { Box, Button, Link, OutlinedInput } from '@material-ui/core';
 import { useRouter } from 'next/router';
 import { Pagination } from '@material-ui/lab';
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles({
   root: {
     width: '100%',
-    maxWidth: '500px',
-    backgroundColor: theme.palette.background.paper,
-    height: '500px',
-    overflow: 'scroll',
-    overflowX: 'hidden',
+    maxWidth: '700px',
     margin: 'auto',
   },
   inline: {
@@ -31,7 +27,7 @@ const useStyles = makeStyles((theme) => ({
     width: 350,
     borderRadius: 16,
   },
-}));
+});
 
 const ITEMS_PER_PAGE = 10;
 
