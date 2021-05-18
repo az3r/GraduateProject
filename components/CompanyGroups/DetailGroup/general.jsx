@@ -56,12 +56,12 @@ export default function GroupGeneral({ company }) {
   const [exams, setExams] = useState(0);
 
   useEffect(async () => {
+    console.log(company);
     const props = await getProblems(company.id);
     const exas = await getExams(company.id);
 
-    console.log(company);
-    setQuestions(props.length);
-    setExams(exas.length);
+    setQuestions(props?.length || 0);
+    setExams(exas?.length || 0);
     setLoading(false);
   }, []);
 
@@ -103,7 +103,7 @@ export default function GroupGeneral({ company }) {
                 avatar={<PeopleAltOutlinedIcon className={classes.icon} />}
               />
               <CardContent>
-                <Typography variant="h4">{company.members.length}</Typography>
+                <Typography variant="h4">{company.members?.length || 0}</Typography>
                 <Typography variant="h6">Members</Typography>
               </CardContent>
             </Card>
