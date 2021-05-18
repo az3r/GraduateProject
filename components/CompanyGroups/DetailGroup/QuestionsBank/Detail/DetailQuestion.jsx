@@ -107,6 +107,7 @@ export default function DetailQuestion({ user, problemProp }) {
           </TabPanel>
         </>
       )}
+      <Divider/>
       <Box m={5} display="flex" justifyContent="center">
         <Button
           onClick={handleClickOpen}
