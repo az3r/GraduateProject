@@ -13,7 +13,6 @@ import {
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
-import DialogContentText from '@material-ui/core/DialogContentText';
 import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
@@ -86,13 +85,19 @@ export default function AddQuestion({ user }) {
         <Grid item lg={10} md={10}>
           <Breadcrumbs>
             <Link href="/company-groups">
-              <Typography className={classes.linkStyle}>Company groups</Typography>
+              <Typography className={classes.linkStyle}>
+                Company groups
+              </Typography>
             </Link>
             <Link href={`/company-groups/${id}`}>
-              <Typography className={classes.linkStyle}>Current group</Typography>
+              <Typography className={classes.linkStyle}>
+                Current group
+              </Typography>
             </Link>
             <Link href={`/company-groups/${id}/questions-bank`}>
-              <Typography className={classes.linkStyle}>Questions bank</Typography>
+              <Typography className={classes.linkStyle}>
+                Questions bank
+              </Typography>
             </Link>
             <Typography color="textPrimary">Add</Typography>
           </Breadcrumbs>
@@ -128,25 +133,24 @@ export default function AddQuestion({ user }) {
             aria-labelledby="alert-dialog-slide-title"
             aria-describedby="alert-dialog-slide-description"
           >
-            <DialogContent>
-              <DialogContentText id="alert-dialog-slide-description">
-                <Box display="flex" m={3} p={2}>
-                  <CheckCircleIcon color="primary" />
-                  <Typography
-                    variant="h5"
-                    color="primary"
-                    style={{ marginLeft: 10 }}
-                  >
-                    Add question completed
-                  </Typography>
+            <DialogContent style={{ width: 500 }}>
+              <Box>
+                <Box display="flex" justifyContent="center" m={3}>
+                  <CheckCircleIcon style={{ fontSize: 50, color: '#088247' }} />
                 </Box>
-                <Link href={`/company-groups/${id}/questions-bank`}>
-                  Back to questions bank
-                </Link>
-              </DialogContentText>
+                <Typography style={{ textAlign: 'center' }}>
+                  Add question successfully
+                </Typography>
+              </Box>
             </DialogContent>
             <DialogActions>
-              <Button onClick={handleClose} color="primary">
+              <Link
+                href={`/company-groups/${id}/questions-bank`}
+                style={{ textAlign: 'center' }}
+              >
+                Back to questions bank page
+              </Link>
+              <Button onClick={handleClose} color="secondary">
                 Close
               </Button>
             </DialogActions>

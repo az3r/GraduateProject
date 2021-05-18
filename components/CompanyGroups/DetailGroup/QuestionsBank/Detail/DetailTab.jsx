@@ -157,7 +157,7 @@ export default function DetailTab({ user, problemProp }) {
                 variant="outlined"
                 disabled={problemProp.owner !== user.id}
               >
-                Edit question
+                Update question
               </Button>
             </Link>
           </Box>

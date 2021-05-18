@@ -18,7 +18,6 @@ import { Pagination } from '@material-ui/lab';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
-import DialogContentText from '@material-ui/core/DialogContentText';
 import { addDevelopers } from '@libs/client/companies';
 import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 import { useRouter } from 'next/router';
@@ -206,22 +205,18 @@ export default function AddMember({ developers }) {
         aria-labelledby="alert-dialog-slide-title"
         aria-describedby="alert-dialog-slide-description"
       >
-        <DialogContent>
-          <DialogContentText id="alert-dialog-slide-description">
-            <Box display="flex" m={3} p={2}>
-              <CheckCircleIcon color="primary" />
-              <Typography
-                variant="h5"
-                color="primary"
-                style={{ marginLeft: 10 }}
-              >
-                Add member to group successfully!
-              </Typography>
+        <DialogContent style={{ width: 500 }}>
+          <Box>
+            <Box display="flex" justifyContent="center" m={3}>
+              <CheckCircleIcon style={{ fontSize: 50, color: '#088247' }} />
             </Box>
-          </DialogContentText>
+            <Typography style={{ textAlign: 'center' }}>
+              Add member successfully
+            </Typography>
+          </Box>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleClose} color="primary">
+          <Button onClick={handleClose} color="secondary">
             Close
           </Button>
         </DialogActions>

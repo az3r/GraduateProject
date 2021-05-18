@@ -12,7 +12,6 @@ import {
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
-import DialogContentText from '@material-ui/core/DialogContentText';
 import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
@@ -111,9 +110,9 @@ export default function UpdateQuestion({ problemProp }) {
             </Link>
             <Typography color="textPrimary">Update</Typography>
           </Breadcrumbs>
-          <br/>
+          <br />
           <Divider />
-          <br/>
+          <br />
           <Box m={3}>
             {problemProp.isMCQ ? (
               <MultipleChoiceForm
@@ -135,27 +134,24 @@ export default function UpdateQuestion({ problemProp }) {
             aria-labelledby="alert-dialog-slide-title"
             aria-describedby="alert-dialog-slide-description"
           >
-            <DialogContent>
-              <DialogContentText id="alert-dialog-slide-description">
-                <Box display="flex" m={3} p={2}>
-                  <CheckCircleIcon color="primary" />
-                  <Typography
-                    variant="h5"
-                    color="primary"
-                    style={{ marginLeft: 10 }}
-                  >
-                    Update question completed
-                  </Typography>
+            <DialogContent style={{ width: 500 }}>
+              <Box>
+                <Box display="flex" justifyContent="center" m={3}>
+                  <CheckCircleIcon style={{ fontSize: 50, color: '#088247' }} />
                 </Box>
-                <Link
-                  href={`/company-groups/${id}/questions-bank/detail?question=${problemProp.id}`}
-                >
-                  Back to question
-                </Link>
-              </DialogContentText>
+                <Typography style={{ textAlign: 'center' }}>
+                  Update question successfully
+                </Typography>
+              </Box>
             </DialogContent>
             <DialogActions>
-              <Button onClick={handleClose} color="primary">
+              <Link
+                href={`/company-groups/${id}/questions-bank/detail?question=${problemProp.id}`}
+                style={{ textAlign: 'center' }}
+              >
+                Back to question detail page
+              </Link>
+              <Button onClick={handleClose} color="secondary">
                 Close
               </Button>
             </DialogActions>

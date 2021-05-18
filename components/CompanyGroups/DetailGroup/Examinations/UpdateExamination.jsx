@@ -15,7 +15,6 @@ import { update } from '@libs/client/exams';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
-import DialogContentText from '@material-ui/core/DialogContentText';
 import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 import EditExamination from './EditExamination';
 
@@ -92,9 +91,9 @@ export default function UpdateExamination({ user, examProp }) {
             </Link>
             <Typography color="textPrimary">Update</Typography>
           </Breadcrumbs>
-          <br/>
+          <br />
           <Divider />
-          <br/>
+          <br />
           <EditExamination
             user={user}
             onSubmitExam={onSubmitExam}
@@ -107,27 +106,24 @@ export default function UpdateExamination({ user, examProp }) {
             aria-labelledby="alert-dialog-slide-title"
             aria-describedby="alert-dialog-slide-description"
           >
-            <DialogContent>
-              <DialogContentText id="alert-dialog-slide-description">
-                <Box display="flex" m={3} p={2}>
-                  <CheckCircleIcon color="primary" />
-                  <Typography
-                    variant="h5"
-                    color="primary"
-                    style={{ marginLeft: 10 }}
-                  >
-                    Update examination completed
-                  </Typography>
+            <DialogContent style={{ width: 500 }}>
+              <Box>
+                <Box display="flex" justifyContent="center" m={3}>
+                  <CheckCircleIcon style={{ fontSize: 50, color: '#088247' }} />
                 </Box>
-                <Link
-                  href={`/company-groups/${id}/examinations/detail?exam=${exam}`}
-                >
-                  Back to examination
-                </Link>
-              </DialogContentText>
+                <Typography style={{ textAlign: 'center' }}>
+                  Update examination successfully
+                </Typography>
+              </Box>
             </DialogContent>
             <DialogActions>
-              <Button onClick={handleClose} color="primary">
+              <Link
+                href={`/company-groups/${id}/examinations/detail?exam=${exam}`}
+                style={{ textAlign: 'center' }}
+              >
+                Back to detail page
+              </Link>
+              <Button onClick={handleClose} color="secondary">
                 Close
               </Button>
             </DialogActions>
