@@ -22,7 +22,9 @@ export default function Index({ user, submission }) {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <AppLayout>
-        <ParticipantResult user={user} submission={submission[0]}/>
+        {submission ? (
+          <ParticipantResult user={user} submission={submission[0]} />
+        ) : null}
       </AppLayout>
     </>
   );
@@ -46,16 +48,17 @@ export async function getServerSideProps({ req, query }) {
             },
           };
         }
-      }
-      const detailUser = await getDev(user.id);
-      if (detailUser.companies.includes(id)) {
-        const submission = await getExamResults(uid, exam);
-        return {
-          props: {
-            user,
-            submission,
-          },
-        };
+      } else {
+        const detailUser = await getDev(user.id);
+        if (detailUser.companies.includes(id)) {
+          const submission = await getExamResults(uid, exam);
+          return {
+            props: {
+              user,
+              submission,
+            },
+          };
+        }
       }
     }
   }

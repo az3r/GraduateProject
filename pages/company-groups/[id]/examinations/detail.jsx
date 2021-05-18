@@ -10,10 +10,12 @@ import { get as getDev } from '@libs/client/developers';
 import dynamic from 'next/dynamic';
 
 const DetailExamination = dynamic(
-  () => import('@components/CompanyGroups/DetailGroup/Examinations/Detail/DetailExamination'),
+  () =>
+    import(
+      '@components/CompanyGroups/DetailGroup/Examinations/Detail/DetailExamination'
+    ),
   { ssr: false }
 );
-
 
 export default function Index({ user, examination }) {
   const router = useRouter();
@@ -31,7 +33,9 @@ export default function Index({ user, examination }) {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <AppLayout>
-        <DetailExamination user={user} examProp={examination}/>
+        {examination ? (
+          <DetailExamination user={user} examProp={examination} />
+        ) : null}
       </AppLayout>
     </>
   );
@@ -45,30 +49,28 @@ export async function getServerSideProps({ req, query }) {
       const user = await find(JSON.parse(cookies.user).uid);
       const { id, exam } = query;
 
-      if(user.role === 'company')
-      {
-        if(id === user.id) 
-        {
-          const examination = await get({examId: exam});
-          if(examination.companyId === id)
+      if (user.role === 'company') {
+        if (id === user.id) {
+          const examination = await get({ examId: exam });
+          if (examination.companyId === id)
             return {
               props: {
                 user,
-                examination
-                },
+                examination,
+              },
             };
         }
-      }
-      const detailUser = await getDev(user.id);
-      if(detailUser.companies.includes(id))
-      {
-        const examination = await get({examId: exam});
-        return {
-          props: {
-            user,
-            examination
-          },
-        };
+      } else {
+        const detailUser = await getDev(user.id);
+        if (detailUser.companies.includes(id)) {
+          const examination = await get({ examId: exam });
+          return {
+            props: {
+              user,
+              examination,
+            },
+          };
+        }
       }
     }
   }

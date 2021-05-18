@@ -78,7 +78,6 @@ const useStyle = makeStyles((theme) => ({
 }));
 
 export default function ResultPage({ submission }) {
-  console.log(submission);
   const classes = useStyle();
   const router = useRouter();
   const [valueTab, setValueTab] = useState(0);

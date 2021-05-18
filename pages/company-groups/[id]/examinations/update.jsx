@@ -10,24 +10,28 @@ import { get as getDev } from '@libs/client/developers';
 import dynamic from 'next/dynamic';
 
 const UpdateExamination = dynamic(
-  () => import('@components/CompanyGroups/DetailGroup/Examinations/UpdateExamination'),
+  () =>
+    import(
+      '@components/CompanyGroups/DetailGroup/Examinations/UpdateExamination'
+    ),
   { ssr: false }
 );
 
-
 export default function Index({ user, examination }) {
   const router = useRouter();
-  const {id, exam} = router.query;
+  const { id, exam } = router.query;
 
   useEffect(() => {
     if (!user) {
       router.replace('/login');
     }
-    if(examination)
-    {
-      if(Date.now() >= examination.startAt) router.replace(`/company-groups/${id}/examinations/detail?exam=${exam}`);
-    }
-    else router.replace(`/company-groups/${id}/examinations/detail?exam=${exam}`);
+    if (examination) {
+      if (Date.now() >= examination.startAt)
+        router.replace(
+          `/company-groups/${id}/examinations/detail?exam=${exam}`
+        );
+    } else
+      router.replace(`/company-groups/${id}/examinations/detail?exam=${exam}`);
   }, []);
 
   return (
@@ -37,10 +41,9 @@ export default function Index({ user, examination }) {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <AppLayout>
-        {
-         examination ?         
-         <UpdateExamination user={user} examProp={examination}/> : null
-        }
+        {examination ? (
+          <UpdateExamination user={user} examProp={examination} />
+        ) : null}
       </AppLayout>
     </>
   );
@@ -54,46 +57,42 @@ export async function getServerSideProps({ req, query }) {
       const user = await find(JSON.parse(cookies.user).uid);
       const { id, exam } = query;
 
-      if(user.role === 'company')
-      {
-        if(id === user.id) 
-        {
-            const examination = await get({examId: exam});
-            if(examination.owner === user.id)
-            {
-              return {
-                props: {
-                    user,
-                    examination
-                    },
-              };
-            }
+      if (user.role === 'company') {
+        if (id === user.id) {
+          const examination = await get({ examId: exam });
+          if (examination.owner === user.id) {
             return {
               props: {
-                  user,
-                  examination: null
-                  },
-            }
-        }
-      }
-      const detailUser = await getDev(user.id);
-      if(detailUser.companies.includes(id))
-      {
-        const examination = await get({examId: exam});
-        if(examination.owner === detailUser.id)
-        {
+                user,
+                examination,
+              },
+            };
+          }
           return {
             props: {
-                user,
-                examination
-                },
+              user,
+              examination: null,
+            },
           };
         }
-        return {
-          props: {
-              user,
-              examination: null
+      } else {
+        const detailUser = await getDev(user.id);
+        if (detailUser.companies.includes(id)) {
+          const examination = await get({ examId: exam });
+          if (examination.owner === detailUser.id) {
+            return {
+              props: {
+                user,
+                examination,
               },
+            };
+          }
+          return {
+            props: {
+              user,
+              examination: null,
+            },
+          };
         }
       }
     }

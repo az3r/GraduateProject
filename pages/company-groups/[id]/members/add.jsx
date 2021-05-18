@@ -42,7 +42,6 @@ export async function getServerSideProps({ req, query }) {
     if (cookies.user) {
       const user = await find(JSON.parse(cookies.user).uid);
       const { id } = query;
-
       if (user.role === 'company') {
         if (id === user.id) {
           const company = await getCompany(id);
@@ -56,6 +55,11 @@ export async function getServerSideProps({ req, query }) {
             },
           };
         }
+        return {
+          props: {
+            user: null,
+          },
+        };
       }
       const detailUser = await get(user.id);
       if (detailUser.companies.includes(id)) {

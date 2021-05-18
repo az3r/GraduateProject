@@ -10,10 +10,12 @@ import dynamic from 'next/dynamic';
 import { get } from '@libs/client/problems';
 
 const DetailQuestion = dynamic(
-  () => import('@components/CompanyGroups/DetailGroup/QuestionsBank/Detail/DetailQuestion'),
+  () =>
+    import(
+      '@components/CompanyGroups/DetailGroup/QuestionsBank/Detail/DetailQuestion'
+    ),
   { ssr: false }
 );
-
 
 export default function Index({ user, problem }) {
   const router = useRouter();
@@ -22,11 +24,10 @@ export default function Index({ user, problem }) {
     if (!user) {
       router.replace('/login');
     }
-    if(!problem)
-    {
+    if (!problem) {
       router.replace('/login');
     }
-  },[]);
+  }, []);
 
   return (
     <>
@@ -35,7 +36,7 @@ export default function Index({ user, problem }) {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <AppLayout>
-        <DetailQuestion user={user} problemProp={problem}/>
+        {problem ? <DetailQuestion user={user} problemProp={problem} /> : null}
       </AppLayout>
     </>
   );
@@ -49,31 +50,33 @@ export async function getServerSideProps({ req, query }) {
       const user = await find(JSON.parse(cookies.user).uid);
       const { id, question } = query;
 
-      if(user.role === 'company')
-      {
-        if(id === user.id) 
-        {
-          const problem = await get({problemId: question});
-          if(problem.companyId === id)
+      if (user.role === 'company') {
+        if (id === user.id) {
+          const problem = await get({ problemId: question });
+          if (problem.companyId === id)
             return {
               props: {
                 user,
-                problem
-                },
+                problem,
+              },
             };
         }
+        return {
+          props: {
+            user: null,
+          },
+        };
       }
       const detailUser = await getDev(user.id);
-      if(detailUser.companies.includes(id))
-      {
-        const problem = await get({problemId: question});
-        if(problem.companyId === id)
-            return {
-              props: {
-                user,
-                problem
-                },
-            };
+      if (detailUser.companies.includes(id)) {
+        const problem = await get({ problemId: question });
+        if (problem.companyId === id)
+          return {
+            props: {
+              user,
+              problem,
+            },
+          };
       }
     }
   }

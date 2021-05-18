@@ -9,7 +9,6 @@ import { find } from '@libs/client/users';
 import { get } from '@libs/client/developers';
 import { get as getCompany } from '@libs/client/companies';
 
-
 export default function Index({ user, company }) {
   const router = useRouter();
   useEffect(() => {
@@ -25,7 +24,7 @@ export default function Index({ user, company }) {
       </Head>
       <AppLayout>
         <DetailGroup selected={2}>
-            <GroupMember user={user} company={company}/>
+          {company ? <GroupMember user={user} company={company} /> : null}
         </DetailGroup>
       </AppLayout>
     </>
@@ -40,27 +39,29 @@ export async function getServerSideProps({ req, query }) {
       const user = await find(JSON.parse(cookies.user).uid);
       const { id } = query;
 
-      if(user.role === 'company')
-      {
-        if(id === user.id) 
-        {
+      if (user.role === 'company') {
+        if (id === user.id) {
           const company = await getCompany(id);
           return {
             props: {
               user,
-              company
-              },
+              company,
+            },
           };
         }
+        return {
+          props: {
+            user: null,
+          },
+        };
       }
       const detailUser = await get(user.id);
-      if(detailUser.companies.includes(id))
-      {
+      if (detailUser.companies.includes(id)) {
         const company = await getCompany(id);
         return {
           props: {
             user,
-            company
+            company,
           },
         };
       }

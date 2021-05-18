@@ -56,7 +56,6 @@ export default function GroupGeneral({ company }) {
   const [exams, setExams] = useState(0);
 
   useEffect(async () => {
-    console.log(company);
     const props = await getProblems(company.id);
     const exas = await getExams(company.id);
 

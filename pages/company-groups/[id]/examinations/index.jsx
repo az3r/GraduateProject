@@ -24,7 +24,7 @@ export default function Index({ user, exams }) {
       </Head>
       <AppLayout>
         <DetailGroup selected={4}>
-            <GroupExaminations user={user||user} exams={exams||exams}/>
+          {exams ? <GroupExaminations user={user} exams={exams} /> : null}
         </DetailGroup>
       </AppLayout>
     </>
@@ -39,27 +39,29 @@ export async function getServerSideProps({ req, query }) {
       const user = await find(JSON.parse(cookies.user).uid);
       const { id } = query;
 
-      if(user.role === 'company')
-      {
-        if(id === user.id) 
-        {
+      if (user.role === 'company') {
+        if (id === user.id) {
           const exams = await getExams(user.id);
           return {
             props: {
               user,
-              exams
-              },
+              exams,
+            },
           };
         }
+        return {
+          props: {
+            user: null,
+          },
+        };
       }
       const detailUser = await get(user.id);
-      if(detailUser.companies.includes(id))
-      {
+      if (detailUser.companies.includes(id)) {
         const exams = await getExams(id);
         return {
           props: {
             user,
-            exams  
+            exams,
           },
         };
       }

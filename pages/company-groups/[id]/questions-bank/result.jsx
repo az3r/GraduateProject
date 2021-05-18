@@ -22,7 +22,7 @@ export default function Index({ user, submission }) {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <AppLayout>
-        <ParticipantResults submission={submission}/>
+        {submission ? <ParticipantResults submission={submission} /> : null}
       </AppLayout>
     </>
   );
@@ -46,6 +46,11 @@ export async function getServerSideProps({ req, query }) {
             },
           };
         }
+        return {
+          props: {
+            user: null,
+          },
+        };
       }
       const detailUser = await getDev(user.id);
       if (detailUser.companies.includes(id)) {

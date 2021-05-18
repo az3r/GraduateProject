@@ -9,14 +9,14 @@ import { find } from '@libs/client/users';
 import { getProblems } from '@libs/client/companies';
 import { get } from '@libs/client/developers';
 
-export default function Index({ user,questions }) {
+export default function Index({ user, questions }) {
   const router = useRouter();
 
   useEffect(() => {
     if (!user) {
       router.replace('/login');
     }
-  },[]);
+  }, []);
   return (
     <>
       <Head>
@@ -25,7 +25,9 @@ export default function Index({ user,questions }) {
       </Head>
       <AppLayout>
         <DetailGroup selected={3}>
-            <GroupQuestionsBank user={user} questions={questions}/>
+          {questions ? (
+            <GroupQuestionsBank user={user} questions={questions} />
+          ) : null}
         </DetailGroup>
       </AppLayout>
     </>
@@ -39,28 +41,30 @@ export async function getServerSideProps({ req, query }) {
     if (cookies.user) {
       const user = await find(JSON.parse(cookies.user).uid);
       const { id } = query;
-      if(user.role === 'company')
-      {
-        if(id === user.id) 
-        {
+      if (user.role === 'company') {
+        if (id === user.id) {
           const questions = await getProblems(user.id);
           return {
             props: {
               user,
-              questions
-              },
+              questions,
+            },
           };
         }
+        return {
+          props: {
+            user: null,
+          },
+        };
       }
       const detailUser = await get(user.id);
-      if(detailUser.companies.includes(id))
-      {
+      if (detailUser.companies.includes(id)) {
         const questions = await getProblems(id);
         return {
           props: {
             user,
-            questions
-            },
+            questions,
+          },
         };
       }
     }
