@@ -82,6 +82,8 @@ const useStyles = makeStyles((theme) => ({
   },
   tabs: {
     borderRight: `1px solid ${theme.palette.divider}`,
+    height: 500,
+    overflowY: 'scroll'
   },
   root: {
     flexGrow: 1,
@@ -236,7 +238,7 @@ export default function DetailTab({ user, problemProp }) {
             <Box m={3} p={2} display="flex" flexWrap="wrap">
               {problemProp.runtime.map((item) => (
                 <Chip
-                  label={`${item} ms`}
+                  label={`<= ${item.runtime} ms (${item.percentage}%)`}
                   style={{ marginRight: 10, marginBottom: 10 }}
                 />
               ))}

@@ -195,11 +195,16 @@ export default function AddQuestion({ user }) {
                   </li>
                   <li className={classes.listItem}>
                     <a href="#CP-7" className={classes.contentScrollSpy}>
-                      Choose to publish question
+                      Submit runtime
                     </a>
                   </li>
                   <li className={classes.listItem}>
                     <a href="#CP-8" className={classes.contentScrollSpy}>
+                      Choose to publish question
+                    </a>
+                  </li>
+                  <li className={classes.listItem}>
+                    <a href="#CP-9" className={classes.contentScrollSpy}>
                       Submit problem and finish
                     </a>
                   </li>

@@ -129,10 +129,14 @@ export default function CodingQuestionForm({
     output: false,
     casesScore: false,
     runtime: false,
+    percentage: false,
   });
   const [valueTab, setValueTab] = useState(0);
   const [open, setOpen] = useState(false);
-  const [tempRuntime, setTempRuntime] = useState(0);
+  const [tempRuntime, setTempRuntime] = useState({
+    runtime: 0,
+    percentage: 0,
+  });
 
   const handleChangeTitle = (e) => {
     const { value } = e.target;
@@ -326,20 +330,40 @@ export default function CodingQuestionForm({
   };
 
   const handleRuntimeChange = (e) => {
-    setTempRuntime(Number(e.target.value));
+    setTempRuntime({ ...tempRuntime, runtime: Number(e.target.value) });
+    setMessage({ ...message, runtime: false });
   };
 
-  const handleRuntimePress = (e) => {
-    if (e.key === 'Enter') {
-      let tempRuntimeList = [...question.runtime];
-      const lastRuntime = tempRuntimeList[tempRuntimeList.length - 1];
-      if (!lastRuntime || lastRuntime <= tempRuntime) {
-        tempRuntimeList = [...tempRuntimeList, tempRuntime];
-        setQuestion({ ...question, runtime: tempRuntimeList });
-        setMessage({ ...message, runtime: false });
-      } else {
+  const handlePercentageChange = (e) => {
+    setTempRuntime({ ...tempRuntime, percentage: Number(e.target.value) });
+    setMessage({ ...message, percentage: false });
+  };
+
+  const handleAddRuntime = () => {
+    if (tempRuntime.runtime === 0) {
+      setMessage({ ...message, runtime: true });
+      return;
+    }
+    if (tempRuntime.percentage === 0 || tempRuntime.percentage > 100) {
+      setMessage({ ...message, percentage: true });
+      return;
+    }
+    let tempRuntimeList = [...question.runtime];
+    const lastRuntime = tempRuntimeList[tempRuntimeList.length - 1];
+    if (!lastRuntime) {
+      tempRuntimeList = [...tempRuntimeList, tempRuntime];
+      setQuestion({ ...question, runtime: tempRuntimeList });
+    } else {
+      if (tempRuntime.runtime <= lastRuntime.runtime) {
         setMessage({ ...message, runtime: true });
+        return;
       }
+      if (tempRuntime.percentage >= lastRuntime.percentage) {
+        setMessage({ ...message, percentage: true });
+        return;
+      }
+      tempRuntimeList = [...tempRuntimeList, tempRuntime];
+      setQuestion({ ...question, runtime: tempRuntimeList });
     }
   };
 
@@ -696,24 +720,37 @@ export default function CodingQuestionForm({
         boxShadow={2}
         p={2}
         m={3}
-        id="CP-6"
+        id="CP-7"
       >
         <Box m={3} p={2} display="flex" justifyContent="center">
           <Typography color="secondary" variant="h4">
             RUNTIME SECTION
           </Typography>
         </Box>
-        <Box m={3} p={2} display="flex" justifyContent="center">
+        <Box m={3} display="flex" justifyContent="center">
           <TextField
             type="number"
             variant="outlined"
             label="Add runtime (in ms)"
             className={classes.input}
             onChange={handleRuntimeChange}
-            onKeyPress={handleRuntimePress}
-            helperText="Runtime must be in ascending order"
+            helperText="Runtime must be &lt; previous one"
             error={message.runtime}
           />
+          <TextField
+            type="number"
+            variant="outlined"
+            label="Add percentage of score (&le;100)"
+            className={classes.input}
+            onChange={handlePercentageChange}
+            helperText="Percentage must be &lt; previous one"
+            error={message.percentage}
+          />
+        </Box>
+        <Box display="flex" justifyContent="center">
+          <Button color="primary" variant="outlined" onClick={handleAddRuntime}>
+            Add runtime
+          </Button>
         </Box>
         <Box m={3} p={2} display="flex" flexWrap="wrap">
           {question.runtime.length === 0 ? (
@@ -722,7 +759,7 @@ export default function CodingQuestionForm({
             question.runtime.map((item, index) => (
               <Chip
                 onDelete={() => handleDeleteRuntime(index)}
-                label={`${item} ms`}
+                label={`<= ${item.runtime} ms (${item.percentage}%)`}
                 style={{ marginRight: 10, marginBottom: 10 }}
               />
             ))
@@ -737,7 +774,7 @@ export default function CodingQuestionForm({
           boxShadow={2}
           p={2}
           m={3}
-          id="CP-7"
+          id="CP-8"
         >
           <FormControlLabel
             control={
@@ -759,7 +796,7 @@ export default function CodingQuestionForm({
       <Box display="flex" justifyContent="center">
         <Typography className={classes.error}>{message.message}</Typography>
       </Box>
-      <Box display="flex" justifyContent="center" m={3} id="CP-8">
+      <Box display="flex" justifyContent="center" m={3} id="CP-9">
         <Button color="primary" variant="contained" onClick={handleClickSubmit}>
           Submit
         </Button>
