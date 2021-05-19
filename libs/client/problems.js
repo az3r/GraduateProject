@@ -102,6 +102,7 @@ export async function getPublishedProblems() {
   const problems = await Firestore()
     .collection(collections.problems)
     .where('published', '==', true)
+    .where('deleted', '==', false)
     .orderBy('createdOn', 'desc')
     .get();
   return problems.docs.map((problem) => transform(problem));

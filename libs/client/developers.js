@@ -47,6 +47,7 @@ export async function getJoinedExams(developer) {
     const snapshot = await Firestore()
       .collection(collections.exams)
       .where(Firestore.FieldPath.documentId(), 'in', developer.joinedExams)
+      .where('deleted', '==', false)
       .get();
 
     return snapshot.docs.map((doc) => transform(doc));
@@ -152,6 +153,7 @@ export async function getSolvedProblems(uid) {
     .doc(uid)
     .collection(collections.solvedProblems)
     .where('status', '==', 'Solved')
+    .where('deleted', '==', false)
     .get();
 
   if (ids.docs.length === 0) {
@@ -175,6 +177,7 @@ export async function getUnsolvedProblems(uid) {
     .doc(uid)
     .collection(collections.solvedProblems)
     .where('status', '==', 'Unsolved')
+    .where('deleted', '==', false)
     .get();
 
   if (ids.docs.length === 0) {
@@ -317,7 +320,7 @@ export async function getProblems(companyId, developerId) {
 export async function getExams(companyId, developerId) {
   const snapshot = await Firestore()
     .collection(collections.exams)
-    // .where('deleted', '==', false)
+    .where('deleted', '==', false)
     .where('companyId', '==', companyId)
     .where('owner', '==', developerId)
     .orderBy('createdOn', 'desc')

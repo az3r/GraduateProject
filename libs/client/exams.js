@@ -24,6 +24,7 @@ export async function create(
       duration,
       isPrivate,
       score,
+      deleted: false,
       createdOn: Firestore.Timestamp.now(),
     });
   await getAttributeReference(collections.exams, id).set({ id, problems });
@@ -108,6 +109,7 @@ export async function getAll(companyId) {
   const exams = await Firestore()
     .collection(collections.exams)
     .where(Firestore.FieldPath.documentId(), '==', companyId)
+    .where('deleted', '==', false)
     .orderBy('createdOn', 'desc')
     .get();
   return exams.docs.map((exam) => transform(exam));
@@ -116,6 +118,7 @@ export async function getAll(companyId) {
 export async function getPublishedExams() {
   const exams = await Firestore()
     .collection(collections.exams)
+    .where('deleted', '==', false)
     .where('published', '==', true)
     .orderBy('startAt', 'desc')
     .orderBy('createdOn', 'asc')
@@ -231,4 +234,11 @@ export async function getAllExamSubmissions(examId) {
   }
 
   return examSubmissions;
+}
+
+export async function remove(id) {
+  await Firestore()
+    .collection(collections.exams)
+    .doc(id)
+    .update({ deleted: true });
 }
