@@ -14,7 +14,7 @@ const statuses = {
   error: 'syntax-error',
 };
 
-export async function test({ lang, code, testcases }) {
+export async function test({ lang, code, testcases, runtime }) {
   if (!testcases?.length) throw new Error('no testcase provided');
 
   let token = null;
@@ -57,7 +57,16 @@ export async function test({ lang, code, testcases }) {
         ) || 0;
       score -= amount;
     }
+
+    // compare with runetime
+    for (let i = 0; i < runtime.length; i += 1) {
+      if (data.totalElapsedTime < runtime[i].runtime) {
+        score *= runtime[i].percentage / 100;
+        break;
+      }
+    }
   }
+
   const result = { ...data, status, score };
   return response.status === 200 ? result : Promise.reject(result);
 }
