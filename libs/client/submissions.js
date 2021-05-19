@@ -27,6 +27,7 @@ export async function test({ lang, code, testcases }) {
   const task = fetch(`${compiler}${langs[lang.toLowerCase()]}`, {
     method: 'POST',
     headers: {
+      'Content-Security-Policy': 'upgrade-insecure-requests',
       'Content-Type': 'application/json',
       Authorization: `Bearer ${token}`,
     },
