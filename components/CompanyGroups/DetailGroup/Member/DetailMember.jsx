@@ -12,13 +12,21 @@ import {
   TableRow,
   Typography,
   Link as MLink,
+  Button,
 } from '@material-ui/core';
 import { Pagination } from '@material-ui/lab';
+import DeleteIcon from '@material-ui/icons/Delete';
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import ErrorOutlineIcon from '@material-ui/icons/ErrorOutline';
+import CheckCircleOutlineIcon from '@material-ui/icons/CheckCircleOutline';
 import dateFormat from 'dateformat';
 import HTMLReactParser from 'html-react-parser';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
+import { removeDevelopers } from '@libs/client/companies';
 
 const useStyles = makeStyles({
   outlinedInput: {
@@ -52,9 +60,11 @@ export default function DetailMember({ questions, exams }) {
   const [type, setType] = useState(0);
   const [numberOfPages, setNumberOfPages] = useState(1);
   const [page, setPage] = useState(1);
+  const [open, setOpen] = useState(false);
+  const [open2, setOpen2] = useState(false);
   const classes = useStyles();
   const router = useRouter();
-  const { id } = router.query;
+  const { id, idMem } = router.query;
 
   useEffect(() => {
     setNumberOfPages(getNumberOfPages(questions));
@@ -126,6 +136,26 @@ export default function DetailMember({ questions, exams }) {
     setListToShow(filtered);
   };
 
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+
+  const handleAgree = async () => {
+    await removeDevelopers(id,[idMem])
+    setOpen(false);
+    setOpen2(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+
+  const handleClose2 = () => {
+    setOpen2(false);
+    router.replace(`/company-groups/${id}/members`)
+  };
+
+
   return (
     <Box m={3}>
       <Breadcrumbs>
@@ -175,50 +205,54 @@ export default function DetailMember({ questions, exams }) {
             </TableRow>
           </TableHead>
           <TableBody>
-            {listToShow.map((item, index) => (
-              <TableRow
-                className={classes.tableRow}
-                hover
-                style={
-                  index % 2
-                    ? { background: 'rgb(250, 250, 250)' }
-                    : { background: 'white' }
-                }
-              >
-                <TableCell
-                  component="th"
-                  scope="row"
-                  className={classes.linkStyle}
+            {listToShow.length === 0 ? (
+              <Typography>There are no records</Typography>
+            ) : (
+              listToShow.map((item, index) => (
+                <TableRow
+                  className={classes.tableRow}
+                  hover
+                  style={
+                    index % 2
+                      ? { background: 'rgb(250, 250, 250)' }
+                      : { background: 'white' }
+                  }
                 >
-                  <MLink
-                    target="_blank"
-                    href={
-                      type === 0
-                        ? `/company-groups/${id}/questions-bank/detail?question=${item.id}`
-                        : `/company-groups/${id}/examinations/detail?exam=${item.id}`
-                    }
+                  <TableCell
+                    component="th"
+                    scope="row"
+                    className={classes.linkStyle}
                   >
-                    {type === 0 ? (
-                      <div className={classes.titleCol}>
-                        {HTMLReactParser(item.title)}
-                      </div>
-                    ) : (
-                      <div className={classes.titleCol}>
-                        <Typography>{item.title}</Typography>
-                      </div>
-                    )}
-                  </MLink>
-                </TableCell>
-                <TableCell>
-                  <Typography>
-                    {dateFormat(
-                      new Date(item.createdOn),
-                      'HH:MM TT, dd-mmmm-yyyy'
-                    )}
-                  </Typography>
-                </TableCell>
-              </TableRow>
-            ))}
+                    <MLink
+                      target="_blank"
+                      href={
+                        type === 0
+                          ? `/company-groups/${id}/questions-bank/detail?question=${item.id}`
+                          : `/company-groups/${id}/examinations/detail?exam=${item.id}`
+                      }
+                    >
+                      {type === 0 ? (
+                        <div className={classes.titleCol}>
+                          {HTMLReactParser(item.title)}
+                        </div>
+                      ) : (
+                        <div className={classes.titleCol}>
+                          <Typography>{item.title}</Typography>
+                        </div>
+                      )}
+                    </MLink>
+                  </TableCell>
+                  <TableCell>
+                    <Typography>
+                      {dateFormat(
+                        new Date(item.createdOn),
+                        'HH:MM TT, dd-mmmm-yyyy'
+                      )}
+                    </Typography>
+                  </TableCell>
+                </TableRow>
+              ))
+            )}
           </TableBody>
         </Table>
       </Box>
@@ -229,6 +263,56 @@ export default function DetailMember({ questions, exams }) {
           color="primary"
           onChange={handleChangePage}
         />
+      </Box>
+      <Divider />
+      <Box m={5} display="flex" justifyContent="center">
+        <Button
+          onClick={handleClickOpen}
+          variant="contained"
+          style={{ color: 'red' }}
+          startIcon={<DeleteIcon />}
+        >
+          Delete member
+        </Button>
+        <Dialog open={open} onClose={handleClose}>
+          <DialogContent style={{ width: 500 }}>
+            <Box>
+              <Box display="flex" justifyContent="center" m={3}>
+                <ErrorOutlineIcon style={{ fontSize: 50, color: 'red' }} />
+              </Box>
+              <Typography style={{ textAlign: 'center' }}>
+                Do you want to delete this member?
+              </Typography>
+            </Box>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={handleAgree} color="primary" autoFocus>
+              Agree
+            </Button>
+            <Button onClick={handleClose} color="secondary">
+              Disagree
+            </Button>
+          </DialogActions>
+        </Dialog>
+        <Dialog open={open2} onClose={handleClose2}>
+          <DialogContent style={{ width: 500 }}>
+            <Box>
+              <Box display="flex" justifyContent="center" m={3}>
+                <CheckCircleOutlineIcon
+                  style={{ fontSize: 50, color: '#088247' }}
+                />
+              </Box>
+              <Typography style={{ textAlign: 'center' }}>
+                Delete successfully
+              </Typography>
+            </Box>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={handleClose2} color="primary">
+              Close
+            </Button>
+          </DialogActions>
+        </Dialog>
       </Box>
     </Box>
   );
