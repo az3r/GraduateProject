@@ -244,14 +244,15 @@ export default function CodingQuestionForm({
             score: 0,
           },
         ],
+        runtime: []
       });
 
       let resultMessage = '';
       let passed = false;
       if (result.failed === 1) {
-        resultMessage = `Test failed!\nExpected output: ${result.results[0].expected}\nActual output: ${result.results[0].actual}`;
+        resultMessage = `Test failed!\nExpected output: ${result.results[0].expected}\nActual output: ${result.results[0].actual}\nRuntime: ${result.totalElapsedTime} ms`;
       } else {
-        resultMessage = 'Test passed';
+        resultMessage = `Test passed!\nRuntime: ${result.totalElapsedTime} ms`;
         passed = true;
       }
 
@@ -266,7 +267,7 @@ export default function CodingQuestionForm({
     } catch (err) {
       setMessage({
         ...message,
-        test: 'Error, please check again your input and output',
+        test: 'Error!\nPlease check your input and output again. Make sure you submit only 1 test case.',
         isTesting: false,
         testResult: true,
         isTestSuccess: false,
