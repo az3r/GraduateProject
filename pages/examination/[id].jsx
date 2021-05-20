@@ -107,7 +107,6 @@ export default function Introduction({examId, examination, isInvited, isParticip
         <title>Examination | Smart Coder</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
-
       <Grid container >
         <Grid item xs={12} md={5} >
           <Paper style={{paddingLeft: 50, paddingTop: 50, paddingRight: 50, maxHeight: windowHeight, height: windowHeight, overflow: 'auto'}}>
@@ -332,7 +331,7 @@ export async function getServerSideProps({ params, req }) {
         return {
           redirect: {
             permanent: false,
-            destination: "/login"
+            destination: `/login?returnURL=examination/${params.id}`
           }
         }
       }
@@ -341,7 +340,7 @@ export async function getServerSideProps({ params, req }) {
       return {
         redirect: {
           permanent: false,
-          destination: "/login"
+          destination: `/login?returnURL=examination/${params.id}`
         }
       }
     }

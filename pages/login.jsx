@@ -29,6 +29,7 @@ export default function Login() {
   const theme = useTheme();
   const smUp = useMediaQuery(theme.breakpoints.up('sm'));
   const auth = useAuth();
+  const { returnURL } = router.query;
 
   const [snackBarState, setSnackBarState] = React.useState({
     open: false,
@@ -60,7 +61,9 @@ export default function Login() {
         });
       } else {
         const destination =
-          auth.role === 'company' ? `/company-groups/${auth.uid}` : '/';
+          auth.role === 'company'
+            ? `/company-groups/${auth.uid}`
+            : `/${returnURL || ''}`;
         router.push(destination);
       }
     }
