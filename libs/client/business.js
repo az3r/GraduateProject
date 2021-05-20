@@ -112,7 +112,7 @@ export function sendInvitation(
   toName,
   examinerName,
   examId,
-  examPassword,
+  examTitle,
   sendTo
 ) {
   emailjs.send(
@@ -122,7 +122,7 @@ export function sendInvitation(
       to_name: toName,
       examiner_name: examinerName,
       exam_id: examId,
-      exam_password: examPassword,
+      exam_name: examTitle,
       send_to: sendTo,
     },
     'user_vdAvQzs8a2nH9TdfDiLcK'

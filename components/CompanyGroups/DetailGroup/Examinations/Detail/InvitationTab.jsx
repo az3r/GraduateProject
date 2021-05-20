@@ -52,7 +52,7 @@ const Transition = React.forwardRef((props, ref) => (
 
 const ITEMS_PER_PAGE = 10;
 
-export default function InvitationTab() {
+export default function InvitationTab({examination}) {
   const classes = useStyles();
   const router = useRouter();
   const { id, exam } = router.query;
@@ -161,7 +161,7 @@ export default function InvitationTab() {
 
   const sendInivation = async (invitedUser) => {
     await addToInvitation(exam, invitedUser.email);
-    sendInvitation(invitedUser.name,examiner.name,exam.id,exam.password,invitedUser.email);
+    sendInvitation(invitedUser.name,examiner.name,examination.id,examination.title,invitedUser.email);
     const newUsers = [...users];
     const index = newUsers.findIndex((user) => user.id === invitedUser.id);
     newUsers[index].isInvited = true;
@@ -172,7 +172,7 @@ export default function InvitationTab() {
     await addToInvitation(exam, email);
     setSendEmailNotify(`Sent invitation to email ${email}`);
     setEmail('');
-    sendInvitation("Examinee",examiner.name,exam.id,exam.password,email);
+    sendInvitation("Examinee",examiner.name,examination.id,examination.title,email);
   };
 
   return (
