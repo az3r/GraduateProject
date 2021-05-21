@@ -308,9 +308,8 @@ export async function getServerSideProps({ params, req }) {
           if(examination.isPrivate === true){
 
             const invitedDevelopers = await exams.getInvitedDevelopers(params.id);
-
             for(let i = 0; i < invitedDevelopers.length; i+=1){
-              if(invitedDevelopers[i].id === user.id){
+              if(invitedDevelopers[i] === user.email){
                 isInvited = true;
                 break;
               }
