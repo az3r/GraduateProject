@@ -19,7 +19,28 @@ import 'react-tabs/style/react-tabs.css';
 import dateFormat from 'dateformat';
 import Comment from '@components/TestCode/Problem/Comment';
 
-
+ClassicEditor.defaultConfig = {
+  toolbar: {
+    items: [
+      'heading',
+      '|',
+      'bold',
+      'italic',
+      '|',
+      'bulletedList',
+      'numberedList',
+      '|',
+      'insertTable',
+      '|',
+      'undo',
+      'redo'
+    ]
+  },
+  table: {
+    contentToolbar: [ 'tableColumn', 'tableRow', 'mergeTableCells' ]
+  },
+  language: 'en'
+};
 
 const useStyles = makeStyles({
   title: {

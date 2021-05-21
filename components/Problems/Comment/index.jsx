@@ -24,6 +24,29 @@ import { CKEditor } from '@ckeditor/ckeditor5-react';
 import { useRouter } from 'next/router';
 import HTMLReactParser from 'html-react-parser';
 
+ClassicEditor.defaultConfig = {
+  toolbar: {
+    items: [
+      'heading',
+      '|',
+      'bold',
+      'italic',
+      '|',
+      'bulletedList',
+      'numberedList',
+      '|',
+      'insertTable',
+      '|',
+      'undo',
+      'redo'
+    ]
+  },
+  table: {
+    contentToolbar: [ 'tableColumn', 'tableRow', 'mergeTableCells' ]
+  },
+  language: 'en'
+};
+
 
 
 const useStyles = makeStyles(() => ({

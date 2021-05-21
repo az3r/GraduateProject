@@ -10,9 +10,7 @@ export default function Layout({ children }) {
   return (
     <>
       <AppBar />
-      <main style={{minHeight : "100vh"}}>
-        {children}
-      </main>
+      <main style={{ minHeight: '100vh' }}>{children}</main>
     </>
   );
 }

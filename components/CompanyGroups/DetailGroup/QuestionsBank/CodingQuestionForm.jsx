@@ -31,6 +31,29 @@ import clsx from 'clsx';
 import React, { useState } from 'react';
 import HelpIcon from '@material-ui/icons/Help';
 
+ClassicEditor.defaultConfig = {
+  toolbar: {
+    items: [
+      'heading',
+      '|',
+      'bold',
+      'italic',
+      '|',
+      'bulletedList',
+      'numberedList',
+      '|',
+      'insertTable',
+      '|',
+      'undo',
+      'redo'
+    ]
+  },
+  table: {
+    contentToolbar: [ 'tableColumn', 'tableRow', 'mergeTableCells' ]
+  },
+  language: 'en'
+};
+
 const useStyles = makeStyles((theme) => ({
   whiteBackground: {
     backgroundColor: '#ffffff',

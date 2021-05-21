@@ -25,6 +25,28 @@ import withReactContent from 'sweetalert2-react-content';
 import CloseIcon from '@material-ui/icons/Close';
 import CheckIcon from '@material-ui/icons/Check';
 
+ClassicEditor.defaultConfig = {
+  toolbar: {
+    items: [
+      'heading',
+      '|',
+      'bold',
+      'italic',
+      '|',
+      'bulletedList',
+      'numberedList',
+      '|',
+      'insertTable',
+      '|',
+      'undo',
+      'redo'
+    ]
+  },
+  table: {
+    contentToolbar: [ 'tableColumn', 'tableRow', 'mergeTableCells' ]
+  },
+  language: 'en'
+};
 
 function TabPanel(props) {
   const { children, value, index } = props;

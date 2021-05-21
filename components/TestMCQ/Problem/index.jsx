@@ -1,25 +1,35 @@
 import React from 'react';
 
-import {
-  makeStyles,
-  Avatar,
-  Box,
-  Paper
-}from "@material-ui/core";
+import { makeStyles, Avatar, Box, Paper } from '@material-ui/core';
 
+import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 
-import {
-  Tab,
-  Tabs,
-  TabList,
-  TabPanel
-} from 'react-tabs';
-
-import { CKEditor } from '@ckeditor/ckeditor5-react'
+import { CKEditor } from '@ckeditor/ckeditor5-react';
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import 'react-tabs/style/react-tabs.css';
 
-
+ClassicEditor.defaultConfig = {
+  toolbar: {
+    items: [
+      'heading',
+      '|',
+      'bold',
+      'italic',
+      '|',
+      'bulletedList',
+      'numberedList',
+      '|',
+      'insertTable',
+      '|',
+      'undo',
+      'redo',
+    ],
+  },
+  table: {
+    contentToolbar: ['tableColumn', 'tableRow', 'mergeTableCells'],
+  },
+  language: 'en',
+};
 
 const useStyles = makeStyles({
   title: {
@@ -42,16 +52,15 @@ const useStyles = makeStyles({
     display: 'flex',
     justifyContent: 'space-between',
     marginLeft: 15,
-  }
+  },
 });
 
 const editorConfiguration = {
-  toolbar: [ ],
+  toolbar: [],
 };
 
-export default function Problem({question, difficulty, score}) {
+export default function Problem({ question, difficulty, score }) {
   const classes = useStyles();
-
 
   return (
     <Tabs>
@@ -60,29 +69,52 @@ export default function Problem({question, difficulty, score}) {
       </TabList>
 
       <TabPanel>
-        <Paper style={{maxHeight: window.outerHeight, height: window.outerHeight - 181, overflow: 'auto'}}>
+        <Paper
+          style={{
+            maxHeight: window.outerHeight,
+            height: window.outerHeight - 181,
+            overflow: 'auto',
+          }}
+        >
           <h2 className={classes.title}>MCQ</h2>
           <div className={classes.problemInfo}>
-            {difficulty === 0 &&
-              <Box component="span" display="inline" p="4px" borderRadius={16} className={classes.difficultyBox}
-                   bgcolor="green">
+            {difficulty === 0 && (
+              <Box
+                component="span"
+                display="inline"
+                p="4px"
+                borderRadius={16}
+                className={classes.difficultyBox}
+                bgcolor="green"
+              >
                 Easy
               </Box>
-            }
+            )}
 
-            {difficulty === 1 &&
-              <Box component="span" display="inline" p="4px" borderRadius={16} className={classes.difficultyBox}
-                   bgcolor="orange">
+            {difficulty === 1 && (
+              <Box
+                component="span"
+                display="inline"
+                p="4px"
+                borderRadius={16}
+                className={classes.difficultyBox}
+                bgcolor="orange"
+              >
                 Medium
               </Box>
-            }
-            {difficulty === 2 &&
-              <Box component="span" display="inline" p="4px" borderRadius={16} className={classes.difficultyBox}
-                   bgcolor="red">
+            )}
+            {difficulty === 2 && (
+              <Box
+                component="span"
+                display="inline"
+                p="4px"
+                borderRadius={16}
+                className={classes.difficultyBox}
+                bgcolor="red"
+              >
                 Hard
               </Box>
-            }
-
+            )}
 
             {/* <Box component="span" display="inline" p={'4px'} borderRadius={16} className={classes.difficultyBox} */}
             {/*     bgcolor={difficulty === 0 ? "green" : difficulty === 1 ? "orange" : "red"}> */}
@@ -92,16 +124,18 @@ export default function Problem({question, difficulty, score}) {
             {/* </Box> */}
 
             <Box className={classes.scoreBox}>
-              <Box>
-                Score: {score}
-              </Box>
-              <Avatar className={classes.scoreAvatar} alt="Score" src="/coins_48px.png" />
+              <Box>Score: {score}</Box>
+              <Avatar
+                className={classes.scoreAvatar}
+                alt="Score"
+                src="/coins_48px.png"
+              />
             </Box>
           </div>
           <CKEditor
-            editor={ ClassicEditor }
+            editor={ClassicEditor}
             disabled
-            config={ editorConfiguration }
+            config={editorConfiguration}
             data={question}
           />
         </Paper>

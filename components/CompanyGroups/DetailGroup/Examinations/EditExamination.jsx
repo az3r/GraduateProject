@@ -31,6 +31,29 @@ import NewQuestionForExamination from './NewQuestionForExamination';
 import QuestionInfo from './QuestionInfo';
 import EditQuestionForExamination from './EditQuestionForExamination';
 
+ClassicEditor.defaultConfig = {
+  toolbar: {
+    items: [
+      'heading',
+      '|',
+      'bold',
+      'italic',
+      '|',
+      'bulletedList',
+      'numberedList',
+      '|',
+      'insertTable',
+      '|',
+      'undo',
+      'redo'
+    ]
+  },
+  table: {
+    contentToolbar: [ 'tableColumn', 'tableRow', 'mergeTableCells' ]
+  },
+  language: 'en'
+};
+
 const useStyles = makeStyles((theme) => ({
   whiteBackground: {
     backgroundColor: '#ffffff',
