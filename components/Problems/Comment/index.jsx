@@ -23,6 +23,7 @@ import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import { CKEditor } from '@ckeditor/ckeditor5-react';
 import { useRouter } from 'next/router';
 import HTMLReactParser from 'html-react-parser';
+import Pagination from '@material-ui/lab/Pagination';
 
 ClassicEditor.defaultConfig = {
   toolbar: {
@@ -66,8 +67,16 @@ const useStyles = makeStyles(() => ({
     marginBottom: 10,
     padding: 10,
   },
+  pagination: {
+    marginTop: 10,
+    marginBottom: 10,
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
 }));
 
+const COMMENT_PER_PAGE = 10;
 
 export default function Comment({user, problemId}){
   const classes = useStyles();
@@ -81,11 +90,37 @@ export default function Comment({user, problemId}){
   const [editedCommentId, setEditedCommentId] = useState('');
   const [deletedCommentId, setDeletedCommentId] = useState('');
 
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPage, setTotalPage] = useState(
+    Math.ceil(commentsArray.length / COMMENT_PER_PAGE)
+  );
+  const [pagedComments, setPagedComments] = useState(
+    commentsArray.slice(
+      (currentPage - 1) * COMMENT_PER_PAGE,
+      currentPage * COMMENT_PER_PAGE
+    ));
+
+  const handlePagination = (e, page) => {
+    setCurrentPage(page);
+
+    setPagedComments(commentsArray.slice(
+      (page - 1) * COMMENT_PER_PAGE,
+      page * COMMENT_PER_PAGE
+    ));
+  };
+
 
   useEffect(async () => {
     const cmt = await comments.getProblemComments(problemId);
     // console.log(cmt);
     setCommentArray(cmt);
+
+    setPagedComments(cmt.slice(
+      (currentPage - 1) * COMMENT_PER_PAGE,
+      currentPage * COMMENT_PER_PAGE
+    ));
+
+    setTotalPage(Math.ceil(cmt.length / COMMENT_PER_PAGE));
   }, []);
 
   const MySwal = withReactContent(Swal);
@@ -124,6 +159,13 @@ export default function Comment({user, problemId}){
       if(newlyCreatedCommentId !== null){
         const cmt = await comments.getProblemComments(problemId);
         setCommentArray(cmt);
+
+        setPagedComments(cmt.slice(
+          (currentPage - 1) * COMMENT_PER_PAGE,
+          currentPage * COMMENT_PER_PAGE
+        ));
+
+        setTotalPage(Math.ceil(cmt.length / COMMENT_PER_PAGE));
       }
 
       setContent('');
@@ -152,6 +194,13 @@ export default function Comment({user, problemId}){
     await comments.deleteProblemComment(problemId, deletedCommentId);
     const cmt = await comments.getProblemComments(problemId);
     setCommentArray(cmt);
+
+    setPagedComments(cmt.slice(
+      (currentPage - 1) * COMMENT_PER_PAGE,
+      currentPage * COMMENT_PER_PAGE
+    ));
+
+    setTotalPage(Math.ceil(cmt.length / COMMENT_PER_PAGE));
   };
 
   const handleEditClickOpen = ({comment}) => {
@@ -179,6 +228,13 @@ export default function Comment({user, problemId}){
 
       const cmt = await comments.getProblemComments(problemId);
       setCommentArray(cmt);
+
+      setPagedComments(cmt.slice(
+        (currentPage - 1) * COMMENT_PER_PAGE,
+        currentPage * COMMENT_PER_PAGE
+      ));
+
+      setTotalPage(Math.ceil(cmt.length / COMMENT_PER_PAGE));
     }
   };
 
@@ -210,13 +266,13 @@ export default function Comment({user, problemId}){
           </Button>
         </Box>
         {
-          commentsArray.map((comment) => (
+          pagedComments.map((comment) => (
             <Box boxShadow={3} className={classes.root}>
               <Avatar variant="circle" src={comment.avatar}  />
               <Box style={{marginLeft: 10, marginRight: 10}}>
                 <h3 style={{display: 'inline-block', marginLeft: 0, marginRight: 10, marginTop: 0, marginBottom: 10}}>
                   {/* <Link href={`/profile/${comment.id}`}> */}
-                  <a href={`/profile/${comment.id}`} style={{color: 'green', textDecoration: 'none'}}>{comment.username}</a>
+                  <a href={`/profile/dev/${comment.userId}`} style={{color: 'green', textDecoration: 'none'}}>{comment.username}</a>
                   {/* </Link> */}
                 </h3>
                 <span style={{fontWeight: 'lighter', color: 'gray'}}>
@@ -225,7 +281,7 @@ export default function Comment({user, problemId}){
                       'mmmm dd, yyyy "at" HH:MM TT'
                     )}
                   </span>
-                <div>{HTMLReactParser(comment.content)}</div>
+                <div style={{wordBreak: "break-all"}}>{HTMLReactParser(comment.content)}</div>
                 <div>
                   {
                     (user && comment.userId === user.id) &&
@@ -254,6 +310,15 @@ export default function Comment({user, problemId}){
             </Box>
           ))
         }
+        <div className={classes.pagination}>
+          <Pagination
+            onChange={handlePagination}
+            count={totalPage}
+            page={currentPage}
+            variant="outlined"
+            color="primary"
+          />
+        </div>
         <br />
       </Paper>
 

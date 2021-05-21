@@ -156,6 +156,7 @@ export default function YourProgress({ user, acceptedProblemSubmissions, submiss
                       <TableCell>Created On</TableCell>
                       <TableCell>Status</TableCell>
                       <TableCell>Language</TableCell>
+                      <TableCell>Runtime</TableCell>
                       <TableCell>Score</TableCell>
                       <TableCell />
                     </TableRow>
@@ -198,6 +199,7 @@ export default function YourProgress({ user, acceptedProblemSubmissions, submiss
                             </Link>
                           </TableCell>
                           <TableCell>{submission.language}</TableCell>
+                          <TableCell>{submission.totalElapsedTime} ms</TableCell>
                           <TableCell>{submission.score}</TableCell>
                           <TableCell>
                             <Button href={`/problem/submissiondetail/${submission.id}`} variant="outlined" color='primary'>View Results</Button>

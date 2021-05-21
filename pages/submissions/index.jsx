@@ -77,6 +77,7 @@ export default function Submissions({problemSubmissions}) {
                   <TableCell>Created On</TableCell>
                   <TableCell>Status</TableCell>
                   <TableCell>Language</TableCell>
+                  <TableCell>Runtime</TableCell>
                   <TableCell>Score</TableCell>
                   <TableCell />
                 </TableRow>
@@ -126,7 +127,7 @@ export default function Submissions({problemSubmissions}) {
                             </Typography>
                           }
                           {
-                            submission.status === "Compilation Error" &&
+                            (submission.status === "Compilation Error" ||  submission.status === "Time Limit Exceeded") &&
                             <Typography  className={classes.link} style={{color: 'red'}}>
                               {submission.status}
                             </Typography>
@@ -134,6 +135,14 @@ export default function Submissions({problemSubmissions}) {
                         </Link>
                       </TableCell>
                       <TableCell>{submission.language}</TableCell>
+                      {
+                        submission.totalElapsedTime === undefined &&
+                        <TableCell>N/A</TableCell>
+                      }
+                      {
+                        submission.totalElapsedTime !== undefined &&
+                        <TableCell>{submission.totalElapsedTime} ms</TableCell>
+                      }
                       <TableCell>{submission.score}</TableCell>
                       <TableCell>
                         <Button href={`/problem/submissiondetail/${submission.id}`} variant="outlined" color='primary'>View Results</Button>

@@ -10,7 +10,8 @@ import YourProgress from '@components/Problems/YourProgress';
 import AppLayout from '@components/Layout';
 import { parseCookies } from '@libs/client/cookies';
 
-export default function Problem({ problems, user, solvedProblemsNumber, unsolvedProblemsNumber }) {
+export default function Problem({ problems, user, problemsNumber, solvedProblemsNumber, unsolvedProblemsNumber }) {
+
   return (
     <>
       <Head>
@@ -35,7 +36,7 @@ export default function Problem({ problems, user, solvedProblemsNumber, unsolved
             </Grid>
             <Hidden smDown>
               <Grid item xs={false} md={4} lg={4}>
-                <YourProgress user={user} problemsNumber={problems.length} solvedProblemsNumber={solvedProblemsNumber} unsolvedProblemsNumber={unsolvedProblemsNumber} />
+                <YourProgress user={user} problemsNumber={problemsNumber} solvedProblemsNumber={solvedProblemsNumber} unsolvedProblemsNumber={unsolvedProblemsNumber} />
               </Grid>
             </Hidden>
           </Grid>
@@ -53,6 +54,7 @@ export default function Problem({ problems, user, solvedProblemsNumber, unsolved
 export async function getServerSideProps({req}) {
   const cookies = parseCookies(req);
   let user = null;
+  let problemsNumber = 0;
   let solvedProblemsNumber = 0;
   let unsolvedProblemsNumber = 0;
 
@@ -79,9 +81,13 @@ export async function getServerSideProps({req}) {
           const solvedProblems = await developers.getSolvedProblems(user.id);
           solvedProblemsNumber = solvedProblems.length;
 
+          console.log(solvedProblems);
+
           // Get unsolved problems
           const unsolvedProblems = await developers.getUnsolvedProblems(user.id);
           unsolvedProblemsNumber = unsolvedProblems.length;
+
+          console.log(unsolvedProblems);
         }
 
       }
@@ -90,12 +96,16 @@ export async function getServerSideProps({req}) {
     console.log(e);
   }
 
-  const items = await probs.getPublishedProblems();
+  const publishedProblems = await probs.getPublishedProblems(false);
+  const deletedPublishedProblems = await probs.getPublishedProblems(true);
+  problemsNumber = publishedProblems.length + deletedPublishedProblems.length;
+
 
   return {
     props: {
-      problems: items,
+      problems: publishedProblems,
       user,
+      problemsNumber,
       solvedProblemsNumber,
       unsolvedProblemsNumber
     },

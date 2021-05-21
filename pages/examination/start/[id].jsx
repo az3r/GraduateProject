@@ -499,6 +499,34 @@ export async function getServerSideProps({ params, req }) {
 
 
   const items = await exams.get({ examId: params.id });
+
+
+  if(items.published === undefined ||  items.published === false){
+    return {
+      redirect: {
+        permanent: false,
+        destination: "/examination/reject/unpublished_forbidden"
+      }
+    }
+  }
+
+  if(items.startAt > Date.now()) {
+    return {
+      redirect: {
+        permanent: false,
+        destination: "/examination/reject/notstarted_forbidden"
+      }
+    }
+  }
+
+  if(items.endAt < Date.now()) {
+    return {
+      redirect: {
+        permanent: false,
+        destination: "/examination/reject/ended_forbidden"
+      }
+    }
+  }
   try {
     if (Object.keys(cookies).length !== 0) {
       if (cookies.user) {
@@ -522,7 +550,7 @@ export async function getServerSideProps({ params, req }) {
             const invitedDevelopers = await exams.getInvitedDevelopers(params.id);
 
             for(let i = 0; i < invitedDevelopers.length; i+=1){
-              if(invitedDevelopers[i].id === user.id){
+              if(invitedDevelopers[i] === user.email){
                 isInvited = true;
                 break;
               }

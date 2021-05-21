@@ -30,7 +30,7 @@ export default function Submissions({problemSubmissions}){
             <TableRow>
               <TableCell>Time Submitted</TableCell>
               <TableCell>Status</TableCell>
-              {/* <TableCell>Runtime</TableCell> */}
+               <TableCell>Runtime</TableCell>
               <TableCell>Score</TableCell>
               <TableCell />
             </TableRow>
@@ -64,10 +64,17 @@ export default function Submissions({problemSubmissions}){
                         submission.status === 'Wrong Answer' && <p style={{color: 'orange', fontWeight: 'bolder'}}>{submission.status}</p>
                       }
                       {
-                        submission.status === 'Compilation Error' && <p style={{color: 'red', fontWeight: 'bolder'}}>{submission.status}</p>
+                        (submission.status === 'Compilation Error' || submission.status === 'Time Limit Exceeded') && <p style={{color: 'red', fontWeight: 'bolder'}}>{submission.status}</p>
                       }
                     </TableCell>
-                    {/* <TableCell>120 ms</TableCell> */}
+                    {
+                      submission.totalElapsedTime === undefined &&
+                      <TableCell>N/A</TableCell>
+                    }
+                    {
+                      submission.totalElapsedTime !== undefined &&
+                      <TableCell>{submission.totalElapsedTime} ms</TableCell>
+                    }
                     <TableCell>
                       {submission.score}
                     </TableCell>

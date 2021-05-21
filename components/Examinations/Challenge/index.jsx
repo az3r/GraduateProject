@@ -195,7 +195,7 @@ export default function Challenge({user, exams}) {
                                 onClick={() => handleJoinExam(examination.id)}>ENDED</Button>
                       }
                       {
-                        examination.isJoined === true &&
+                        (examination.isJoined === true && examination.startAt <= Date.now() && examination.endAt >= Date.now()) &&
                         <Button size="small" variant="contained" color="secondary"
                                 onClick={() => handleJoinExam(examination.id)}>JOINED</Button>
                       }

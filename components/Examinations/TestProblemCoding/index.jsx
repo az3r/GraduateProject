@@ -39,7 +39,7 @@ export default function TestProblemCoding({examId, index, problem, user, onIsSol
 
 
   const [author, setAuthor] = useState({id: "#", name: "#"});
-  const [company, setCompany] = useState({name: "#"});
+  const [company, setCompany] = useState({id: "#", name: "#"});
 
   useEffect(async () => {
     const developer = await users.find(problem.owner);
@@ -86,12 +86,20 @@ export default function TestProblemCoding({examId, index, problem, user, onIsSol
               <Box className={classes.root}>
                 <Box className={classes.info}>
                   <Typography style={{color: 'green', fontWeight: 'bolder'}}>Author</Typography>
-                  <Link href={`/profile/${author.id}`} variant="body2">{author.name}</Link>
+                  {
+                    author.id !== company.id &&
+                    <Link href={`/profile/dev/${author.id}`} variant="body1">{author.name}</Link>
+                  }
+                  {
+                    author.id === company.id &&
+                    <Link href={`/profile/co/${author.id}`} variant="body1">{author.name}</Link>
+                  }
                 </Box>
                 <hr />
                 <Box className={classes.info}>
                   <Typography style={{color: 'green', fontWeight: 'bolder'}}>Company</Typography>
-                  <Typography>{company.name}</Typography>
+                  {/* <Typography>{company.name}</Typography> */}
+                  <Link href={`/profile/co/${company.id}`} variant="body1">{company.name}</Link>
                 </Box>
                 <hr />
                 <Box className={classes.info}>

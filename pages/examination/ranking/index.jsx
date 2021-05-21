@@ -105,7 +105,7 @@ export default function Ranking({usersExamScore}) {
                     <Avatar variant="circular" src={userScore.avatar} />
                     <Box style={{marginRight: 'auto'}}>
                       <h3 style={{display: 'inline-block', marginLeft: 20, marginRight: 0, marginTop: 0, marginBottom: 0}}>
-                        <a href={`/profile/${userScore.id}`} style={{color: 'green', textDecoration: 'none'}}>{userScore.name}</a>
+                        <a href={`/profile/dev/${userScore.id}`} style={{color: 'green', textDecoration: 'none'}}>{userScore.name}</a>
                       </h3>
                       {
                         userScore.joinedExams === undefined &&

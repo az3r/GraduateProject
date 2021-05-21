@@ -11,7 +11,7 @@ import {
   FormControlLabel,
   Checkbox,
   FormGroup,
-  FormHelperText
+  FormHelperText, Link,
 } from '@material-ui/core';
 
 // import { route } from 'next/dist/next-server/server/router';
@@ -19,7 +19,7 @@ import {
 // import { calculateTotalExamTime } from '@libs/client/business';
 // import AppLayout from '../../components/Layout';
 import { parseCookies } from '@client/cookies';
-import { exams, developers } from '@libs/client';
+import { exams, developers, companies } from '@libs/client';
 import { useRouter  } from 'next/router';
 import {formatDuration} from '@client/business';
 import dateFormat from 'dateformat';
@@ -65,6 +65,7 @@ export default function Introduction({examId, examination, isInvited, isParticip
   const [windowHeight, setWindowHeight] = useState(0);
   const [value, setValue] = useState(false);
   const [leaderBoard, setLeaderBoard] = useState(false);
+  const [company, setCompany] = useState({id: "#", name: "#", avatar: "/coding.png"});
 
 
   const handleLeaderBoardChange = () => {
@@ -74,8 +75,15 @@ export default function Introduction({examId, examination, isInvited, isParticip
     setValue(!value);
   }
 
-  useEffect(() => {
+  useEffect(async () => {
     setWindowHeight(window.innerHeight);
+
+    const comp = await companies.get(examination.companyId);
+
+    if(comp !== null){
+      setCompany(comp);
+    }
+
   }, []);
 
   const MySwal = withReactContent(Swal);
@@ -117,7 +125,7 @@ export default function Introduction({examId, examination, isInvited, isParticip
             <br />
             <br />
             <Grid container>
-              <Grid item xs={6} >
+              <Grid item xs={6}>
                 <Typography variant="inherit" className={classes.infoKey}>Competition Duration</Typography>
                 <Typography variant="h6" className={classes.infoValue}>{formatDuration(examination.duration)}</Typography>
               </Grid>
@@ -148,10 +156,10 @@ export default function Introduction({examId, examination, isInvited, isParticip
             <br />
             <br />
              <Box>
-              <Typography variant="h6" style={{color: 'darkgray'}}>Sponsored By</Typography>
+              <Typography variant="h6" style={{color: 'darkgray'}}>Sponsored By <Link style={{color: "inherit", fontWeight: "bolder"}} href={`/profile/co/${company.id}`} underline="none">{company.name}</Link></Typography>
                <br />
                <Box style={{textAlign: 'center'}}>
-                 <img src="/coding.png" alt="coding icon" />
+                 <img src={company.avatar} alt="coding icon" />
                </Box>
              </Box>
           </Paper>
@@ -225,7 +233,7 @@ export default function Introduction({examId, examination, isInvited, isParticip
                 {
                   examination.endAt < Date.now() &&
                   <>
-                    <Typography variant="h5" style={{color: 'red', fontWeight: 'bolder'}}>The contest has already ended!</Typography>
+                    <Typography variant="h5" style={{color: 'red', fontWeight: 'bolder'}}>The contest ended!</Typography>
                     <br />
                     <Button style={{marginLeft: 10}} variant="contained" color="primary" disabled>Let's Begin!</Button>
                     {
@@ -286,6 +294,16 @@ export async function getServerSideProps({ params, req }) {
   let isParticipated = false;
 
   const examination = await exams.get({examId: params.id });
+
+  if(examination.published === undefined ||  examination.published === false){
+    return {
+      redirect: {
+        permanent: false,
+        destination: "/examination/reject/unpublished_forbidden"
+      }
+    }
+  }
+
 
   try {
     if (Object.keys(cookies).length !== 0) {
@@ -368,7 +386,6 @@ export async function getServerSideProps({ params, req }) {
 
 
   const examSubmissions = await exams.getAllExamSubmissions(params.id);
-  console.log(examSubmissions);
 
 
   return {

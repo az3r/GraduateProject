@@ -166,6 +166,7 @@ export default function Problem({
   const [runCodeResult, setRunCodeResult] = useState([]);
   const [theme, setTheme] = useState('xcode');
   const [size, setSize] = useState(14);
+  const [runtime, setRuntime] = useState(0);
 
   const handleSizeChange = (event) => {
     setSize(event.target.value);
@@ -206,6 +207,7 @@ export default function Problem({
         lang: problem.language,
         code,
         testcases: problem.cases,
+        runtime: problem.runtime
       });
 
       if (response.failed === 0) {
@@ -214,20 +216,30 @@ export default function Problem({
         setNotification(
           'You have passed the sample test cases. Click the submit button to run your code against all the test cases.'
         );
+        setRuntime(response.totalElapsedTime);
       } else {
         setRunCodeResult(response.results);
         setRunCodeStatus('Wrong Answer');
         setNotification(
           `${response.failed}/${response.results.length} test cases failed`
         );
+        setRuntime(response.totalElapsedTime);
       }
     } catch (e) {
       console.log(e);
-      setRunCodeStatus('Compilation Error');
-      setNotification(
-        'Check the compiler output, fix the error and try again.'
-      );
-      setRunCodeResult(e);
+
+      if(e.status === 'syntax-error') {
+        setRunCodeStatus('Compilation Error');
+        setNotification(
+          'Check the compiler output, fix the error and try again.'
+        );
+        setRunCodeResult(e);
+      }
+      else if(e.status === 'runtime-error') {
+        setRunCodeStatus("Time Limit Exceeded");
+        setNotification("Check the code, fix the error and try again.");
+        setRunCodeResult(e);
+      }
     } finally {
       setDisplayWaiting('none');
       setDisplayRunCode('block');
@@ -244,6 +256,7 @@ export default function Problem({
         lang: problem.language,
         code,
         testcases: problem.cases,
+        runtime: problem.runtime
       });
       if (response.failed === 0) {
         status = 'Accepted';
@@ -251,7 +264,12 @@ export default function Problem({
         status = 'Wrong Answer';
       }
     } catch (e) {
-      status = 'Compilation Error';
+      if(e.status === 'syntax-error') {
+        status = 'Compilation Error';
+      }
+      else if(e.status === 'runtime-error') {
+        status = 'Time Limit Exceeded';
+      }
       response = e;
     } finally {
       setDisplayWaiting('none');
@@ -438,8 +456,20 @@ export default function Problem({
                   Compilation Error :(
                 </Typography>
               )}
+              {runCodeStatus === 'Time Limit Exceeded' && (
+                <Typography
+                  variant="h4"
+                  style={{ fontWeight: 'bolder', color: 'red' }}
+                >
+                  Time Limit Exceeded :(
+                </Typography>
+              )}
             </Paper>
             <Box style={{ marginTop: 10, color: 'gray' }}>{notification}</Box>
+            {
+              (runCodeStatus === "Accepted" || runCodeStatus === "Wrong Answer") &&
+              <Box style={{marginTop: 10, color: 'gray'}}>Runtime: <span style={{fontWeight: "bolder"}}>{runtime} ms</span></Box>
+            }
             <br />
             <Box boxShadow={3} className={classes.root2}>
               {(runCodeStatus === 'Accepted' ||
@@ -582,7 +612,7 @@ export default function Problem({
                   ))}
                 </>
               )}
-              {runCodeStatus === 'Compilation Error' && (
+              {(runCodeStatus === "Compilation Error" || runCodeStatus === "Time Limit Exceeded") && (
                 <Box style={{ marginLeft: 20, marginRight: 20, marginTop: 20 }}>
                   <Typography variant="h6" style={{ color: 'gray' }}>
                     Compiler Messages

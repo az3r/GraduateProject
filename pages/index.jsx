@@ -36,7 +36,7 @@ export default function Home() {
       </Head>
 
       <Container maxWidth="lg">
-        <Grid container direction='row' spacing={10}>
+        <Grid container direction='row' spacing={5}>
           <Grid item xs={12} md={6}>
             <Box className={classes.logo}>
               <img src="/logo.png" alt="Logo" />

@@ -40,7 +40,7 @@ export default function Index({user, examinations, usersExamScore}) {
   return (
     <>
       <Head>
-        <title>Examination</title>
+        <title>Examination | Smart Code</title>
         <link rel="icon" href="/favicon.ico" />
         <link rel="icon" href="/favicon.ico" />
       </Head>

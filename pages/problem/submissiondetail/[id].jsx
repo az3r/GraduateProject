@@ -170,10 +170,10 @@ export default function SubmissionDetails({ problemSubmissionDetails }) {  // , 
                     <Link color="inherit" href="/"  >
                       Home
                     </Link>
-                    <Link color="inherit" href="/" >
+                    <Link color="inherit" href={`/problem/${problemSubmissionDetails.problemId}`} >
                       Problem
                     </Link>
-                    <Link color="inherit" href="/submissiondetail" >
+                    <Link color="inherit" href="/submissions" >
                       Submission Details
                     </Link>
                     <Typography color="textPrimary">{problemSubmissionDetails.problemName}</Typography>
@@ -210,16 +210,27 @@ export default function SubmissionDetails({ problemSubmissionDetails }) {  // , 
                     {problemSubmissionDetails.status === 'Wrong Answer' &&
                       <span style={{color: 'orange'}}>{` ${  problemSubmissionDetails.status}`}</span>
                     }
-                    {problemSubmissionDetails.status === 'Compilation Error' &&
+                    { (problemSubmissionDetails.status === 'Compilation Error' || problemSubmissionDetails.status === "Time Limit Exceeded") &&
                       <span style={{color: 'red'}}>{` ${  problemSubmissionDetails.status}`}</span>
                     }
                   </Typography>
                 </Box>
 
                 <Box style={{display: 'flex'}}>
-                  {/* <Typography variant="h6" style={{marginRight: 30}}> */}
-                  {/*  Runtime: <span style={{fontWeight: 'normal', color: 'gray'}}>100 ms</span> */}
-                  {/* </Typography> */}
+                  {
+                    (problemSubmissionDetails.status === 'Accepted' || problemSubmissionDetails.status === 'Wrong Answer') &&
+                    <Typography variant="h6" style={{marginRight: 30}}>
+                      Runtime:
+                      <span style={{fontWeight: 'normal', color: 'gray'}}> {problemSubmissionDetails.totalElapsedTime} ms</span>
+                    </Typography>
+                  }
+                  {
+                    (problemSubmissionDetails.status === 'Compilation Error' || problemSubmissionDetails.status === 'Time Limit Exceeded') &&
+                    <Typography variant="h6" style={{marginRight: 30}}>
+                      Runtime:
+                      <span style={{fontWeight: 'normal', color: 'gray'}}> N/A</span>
+                    </Typography>
+                  }
                   <Typography variant="h6" style={{marginRight: 30}}>
                     {(problemSubmissionDetails.status === 'Accepted' || problemSubmissionDetails.status === 'Wrong Answer') &&
                       <>
@@ -383,7 +394,7 @@ export default function SubmissionDetails({ problemSubmissionDetails }) {  // , 
               </>
             }
             {
-              problemSubmissionDetails.status === "Compilation Error" &&
+              (problemSubmissionDetails.status === "Compilation Error" || problemSubmissionDetails.status === "Time Limit Exceeded") &&
               <Box style={{marginLeft: 20, marginRight: 20, marginTop: 20}}>
                 <Typography variant="h6" style={{color: 'gray'}}>Compiler Messages</Typography>
                 <Typography style={{marginLeft: 20, fontWeight: 'bolder'}}>{problemSubmissionDetails.status}</Typography>

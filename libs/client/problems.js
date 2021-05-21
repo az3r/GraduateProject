@@ -98,11 +98,11 @@ export async function get({ problem = undefined, problemId = undefined }) {
   return undefined;
 }
 
-export async function getPublishedProblems() {
+export async function getPublishedProblems(deleted = false) {
   const problems = await Firestore()
     .collection(collections.problems)
     .where('published', '==', true)
-    .where('deleted', '==', false)
+    .where('deleted', '==', deleted)
     .orderBy('createdOn', 'desc')
     .get();
   return problems.docs.map((problem) => transform(problem));

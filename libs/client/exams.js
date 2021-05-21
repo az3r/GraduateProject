@@ -85,7 +85,7 @@ export async function get({ exam = undefined, examId = undefined }) {
   const problemTasks = [];
   if (attributes !== undefined) {
     for (let i = 0; i < attributes.problems.length; i += 1) {
-      if (attributes.problems[i].title) {
+      if (attributes.problems[i].id) {
         problemTasks.push(attributes.problems[i]);
       } else {
         const item = await getProblem({

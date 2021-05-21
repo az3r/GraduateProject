@@ -42,7 +42,7 @@ export default function Test({ problem, user }) {   // , problemSubmissionHistor
   const classes = useStyles();
 
   const [author, setAuthor] = useState({id: "#", name: "#"});
-  const [company, setCompany] = useState({name: "#"});
+  const [company, setCompany] = useState({id: "#", name: "#"});
 
   useEffect(async () => {
     const developer = await users.find(problem.owner);
@@ -104,12 +104,20 @@ export default function Test({ problem, user }) {   // , problemSubmissionHistor
               <Box className={classes.root}>
                 <Box className={classes.info}>
                   <Typography style={{color: 'green', fontWeight: 'bolder'}}>Author</Typography>
-                  <Link href={`/profile/${author.id}`} variant="body2">{author.name}</Link>
+                  {
+                    author.id !== company.id &&
+                    <Link href={`/profile/dev/${author.id}`} variant="body1">{author.name}</Link>
+                  }
+                  {
+                    author.id === company.id &&
+                    <Link href={`/profile/co/${author.id}`} variant="body1">{author.name}</Link>
+                  }
                 </Box>
                 <hr />
                 <Box className={classes.info}>
                   <Typography style={{color: 'green', fontWeight: 'bolder'}}>Company</Typography>
-                  <Typography>{company.name}</Typography>
+                  {/* <Typography>{company.name}</Typography> */}
+                  <Link href={`/profile/co/${company.id}`} variant="body1">{company.name}</Link>
                 </Box>
                 <hr />
                 <Box className={classes.info}>
@@ -153,6 +161,16 @@ export async function getServerSideProps({ params, req }) {
   let item = [];
   try {
     item = await problems.get({problem: undefined, problemId: params.id});
+
+    if(item.deleted !== undefined && item.deleted === true){
+      return {
+        redirect: {
+          permanent: false,
+          destination: "/problem/reject/deleted_forbidden"
+        }
+      }
+    }
+
     if (Object.keys(cookies).length !== 0) {
       if (cookies.user) {
         user = JSON.parse(cookies.user);

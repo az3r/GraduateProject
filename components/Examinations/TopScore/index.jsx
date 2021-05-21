@@ -50,6 +50,7 @@ const useStyles = makeStyles({
     '&:hover': {
       backgroundColor: 'rgb(128, 128, 128, 0.5)',
       cursor: 'pointer',
+      borderRadius: 20,
     },
   },
   score: {
@@ -92,7 +93,7 @@ export default function TopScore({usersExamScore}) {
         {
           usersExamScore[0] !== undefined &&
           <Box className={classes.top1}>
-            <Link href={`/profile/${usersExamScore[0].id}`} underline="none">
+            <Link href={`/profile/dev/${usersExamScore[0].id}`} underline="none">
               <Avatar
                 style={{
                   display: 'block',
@@ -110,7 +111,7 @@ export default function TopScore({usersExamScore}) {
         {
           (usersExamScore[1] !== undefined && usersExamScore[2] !== undefined) &&
           <Box className={classes.top23}>
-            <Link href={`/profile/${usersExamScore[1].id}`} underline="none">
+            <Link href={`/profile/dev/${usersExamScore[1].id}`} underline="none">
               <Avatar
                 style={{
                   display: 'block',
@@ -123,7 +124,7 @@ export default function TopScore({usersExamScore}) {
               />
               <Typography>{usersExamScore[1].name} ({usersExamScore[1].examScore})</Typography>
             </Link>
-            <Link href={`/profile/${usersExamScore[2].id}`} underline="none">
+            <Link href={`/profile/dev/${usersExamScore[2].id}`} underline="none">
               <Avatar
                 style={{
                   display: 'block',
@@ -153,9 +154,11 @@ export default function TopScore({usersExamScore}) {
                       alt="avatar"
                       src={userexamscore.avatar}
                     />
-                    <Typography color="primary" variant="h6" style={{ margin: 10 }}>
-                      {userexamscore.name}
-                    </Typography>
+                    <Link href={`/profile/dev/${userexamscore.id}`} underline="none">
+                      <Typography color="primary" variant="h6" style={{ margin: 10 }}>
+                        {userexamscore.name}
+                      </Typography>
+                    </Link>
                     <Box className={classes.score}>
                       {userexamscore.examScore}
                       <img alt="Score" src="/coins_28px.png" />

@@ -153,7 +153,6 @@ export async function getSolvedProblems(uid) {
     .doc(uid)
     .collection(collections.solvedProblems)
     .where('status', '==', 'Solved')
-    .where('deleted', '==', false)
     .get();
 
   if (ids.docs.length === 0) {
@@ -177,7 +176,6 @@ export async function getUnsolvedProblems(uid) {
     .doc(uid)
     .collection(collections.solvedProblems)
     .where('status', '==', 'Unsolved')
-    .where('deleted', '==', false)
     .get();
 
   if (ids.docs.length === 0) {
