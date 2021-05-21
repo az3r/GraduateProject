@@ -6,11 +6,13 @@ import {
   Chip,
   Divider,
   Grid,
+  IconButton,
   InputBase,
   makeStyles,
   MenuItem,
   Select,
   Slide,
+  Tooltip,
   Typography,
   withStyles,
 } from '@material-ui/core';
@@ -24,6 +26,7 @@ import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import PublicIcon from '@material-ui/icons/Public';
 import LockIcon from '@material-ui/icons/Lock';
+import HelpIcon from '@material-ui/icons/Help';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import React, { useState } from 'react';
@@ -83,7 +86,7 @@ const useStyles = makeStyles((theme) => ({
   tabs: {
     borderRight: `1px solid ${theme.palette.divider}`,
     height: 500,
-    overflowY: 'scroll'
+    overflowY: 'scroll',
   },
   root: {
     flexGrow: 1,
@@ -152,6 +155,11 @@ export default function DetailTab({ user, problemProp }) {
             )}
           </Box>
           <Box>
+            <Tooltip title="Only owner can edit examination">
+              <IconButton>
+                <HelpIcon />
+              </IconButton>
+            </Tooltip>
             <Link
               href={`/company-groups/${id}/questions-bank/update?question=${question}`}
             >
