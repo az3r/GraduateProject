@@ -13,6 +13,29 @@ import {
 } from '@material-ui/core';
 import React, { useState } from 'react';
 
+ClassicEditor.defaultConfig = {
+  toolbar: {
+    items: [
+      'heading',
+      '|',
+      'bold',
+      'italic',
+      '|',
+      'bulletedList',
+      'numberedList',
+      '|',
+      'insertTable',
+      '|',
+      'undo',
+      'redo'
+    ]
+  },
+  table: {
+    contentToolbar: [ 'tableColumn', 'tableRow', 'mergeTableCells' ]
+  },
+  language: 'en'
+};
+
 const useStyles = makeStyles({
   whiteBackground: {
     backgroundColor: '#ffffff',
@@ -242,6 +265,7 @@ export default function MultipleChoiceForm({ onFormSubmit, propQuestion }) {
               editor={ClassicEditor}
               data={question.question}
               onChange={handleChangeQuestion}
+              
             />
             <p
               style={{ fontSize: '0.75rem', color: 'rgba(0, 0, 0, 0.54)' }}
