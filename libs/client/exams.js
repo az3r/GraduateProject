@@ -1,8 +1,6 @@
 import { collections } from '@utils/constants';
 import { getAttributeReference, transform } from '@utils/firestore';
 import { Firestore } from './firebase';
-// eslint-disable-next-line import/no-cycle
-import { get as getProblem } from './problems';
 
 /** nếu company tạo exam có thể bỏ field developerId */
 export async function create(
@@ -85,16 +83,16 @@ export async function get({ exam = undefined, examId = undefined }) {
   const problemTasks = [];
   if (attributes !== undefined) {
     for (let i = 0; i < attributes.problems.length; i += 1) {
-      if (attributes.problems[i].id) {
-        problemTasks.push(attributes.problems[i]);
-      } else {
-        const item = await getProblem({
-          problemId: attributes.problems[i].id,
-        });
-        problemTasks.push(item);
-        // problemTasks.push(getProblem({ problemId: attributes.problems[i].id }));
-      }
+      // if (attributes.problems[i].id) {
+      problemTasks.push(attributes.problems[i]);
+      // } else {
+      //   const item = await getProblem({
+      //     problemId: attributes.problems[i].id,
+      //   });
+      //   problemTasks.push(item);
+      // problemTasks.push(getProblem({ problemId: attributes.problems[i].id }));
     }
+    // }
   }
 
   return {
