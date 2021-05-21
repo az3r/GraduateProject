@@ -129,6 +129,19 @@ export function sendInvitation(
   );
 }
 
+export function sendInvitationMember(toName, groupName, sendTo) {
+  emailjs.send(
+    'service_6zw4uj8',
+    'template_csiyb8j',
+    {
+      to_name: toName,
+      group_name: groupName,
+      send_to: sendTo,
+    },
+    'user_vdAvQzs8a2nH9TdfDiLcK'
+  );
+}
+
 export function sendThanks(toName, fromName, title, toEmail, replyTo) {
   emailjs.send(
     'service_8iweofn',

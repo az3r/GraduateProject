@@ -22,6 +22,8 @@ import { addDevelopers } from '@libs/client/companies';
 import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
+import { find } from '@libs/client/users';
+import { sendInvitationMember } from '@libs/client/business';
 
 const useStyles = makeStyles({
   root: {
@@ -60,11 +62,13 @@ export default function AddMember({ developers }) {
   const [numberOfPages, setNumberOfPages] = useState(1);
   const [page, setPage] = useState(1);
   const [open, setOpen] = useState(false);
+  const [company,setCompany] = useState({});
 
   const route = useRouter();
   const { id } = route.query;
 
   React.useEffect(async () => {
+    setCompany(await find(id));
     setUsers(developers);
     const filtered = getDisplayListForPagination(
       developers,
@@ -110,6 +114,7 @@ export default function AddMember({ developers }) {
 
   const sendInivation = async (dev) => {
     await addDevelopers(id, [dev.id]);
+    sendInvitationMember(dev.name,company.name,dev.email);
     const newUsers = [...users];
     const index = newUsers.findIndex((item) => item.id === dev.id);
     newUsers.splice(index, 1);
