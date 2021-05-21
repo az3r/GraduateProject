@@ -55,6 +55,7 @@ export default function GroupQuestionsBank({ exams }) {
   const classes = useStyles();
   const [searchKey, setSearchKey] = useState('');
   const [type, setType] = useState(0);
+  const [type2, setType2] = useState(0);
   const [numberOfPages, setNumberOfPages] = useState(1);
   const [filtedExams, setFilterExams] = useState([]);
   const [page, setPage] = useState(1);
@@ -67,7 +68,8 @@ export default function GroupQuestionsBank({ exams }) {
       0,
       ITEMS_PER_PAGE,
       searchKey,
-      type
+      type,
+      type2
     );
     setFilterExams(filtered);
     setNumberOfPages(getNumberOfPages(exams));
@@ -75,7 +77,7 @@ export default function GroupQuestionsBank({ exams }) {
 
   const handleChangeType = (e) => {
     setType(e.target.value);
-    const newList = getListAfterSearch(exams, searchKey, e.target.value);
+    const newList = getListAfterSearch(exams, searchKey, e.target.value, type2);
     const pages = getNumberOfPages(newList);
     setNumberOfPages(pages);
     const filtered = getDisplayListForPagination(
@@ -83,6 +85,24 @@ export default function GroupQuestionsBank({ exams }) {
       0,
       ITEMS_PER_PAGE,
       searchKey,
+      e.target.value,
+      type2
+    );
+    setFilterExams(filtered);
+    setPage(1);
+  };
+
+  const handleChangeType2 = (e) => {
+    setType2(e.target.value);
+    const newList = getListAfterSearch(exams, searchKey, type, e.target.value);
+    const pages = getNumberOfPages(newList);
+    setNumberOfPages(pages);
+    const filtered = getDisplayListForPagination(
+      exams,
+      0,
+      ITEMS_PER_PAGE,
+      searchKey,
+      type,
       e.target.value
     );
     setFilterExams(filtered);
@@ -95,7 +115,7 @@ export default function GroupQuestionsBank({ exams }) {
 
   const handleSearchKeyPress = (e) => {
     if (e.key === 'Enter') {
-      const newList = getListAfterSearch(exams, searchKey, type);
+      const newList = getListAfterSearch(exams, searchKey, type, type2);
       const pages = getNumberOfPages(newList);
       setNumberOfPages(pages);
       const filtered = getDisplayListForPagination(
@@ -103,7 +123,8 @@ export default function GroupQuestionsBank({ exams }) {
         0,
         ITEMS_PER_PAGE,
         searchKey,
-        type
+        type,
+        type2
       );
       setFilterExams(filtered);
       setPage(1);
@@ -117,7 +138,8 @@ export default function GroupQuestionsBank({ exams }) {
       value - 1,
       ITEMS_PER_PAGE,
       searchKey,
-      type
+      type,
+      type2
     );
     setFilterExams(filtered);
   };
@@ -142,6 +164,16 @@ export default function GroupQuestionsBank({ exams }) {
         />
         <Select
           native
+          value={type2}
+          onChange={handleChangeType2}
+          className={classes.typeStyle}
+        >
+          <option value={0}>All</option>
+          <option value={1}>Published exams</option>
+          <option value={2}>Unpublished exams</option>
+        </Select>
+        <Select
+          native
           value={type}
           onChange={handleChangeType}
           className={classes.typeStyle}
@@ -161,7 +193,7 @@ export default function GroupQuestionsBank({ exams }) {
       <Table className={classes.table} size="small" aria-label="a dense table">
         <TableHead>
           <TableRow>
-            <TableCell style={{ fontWeight: 'bolder' }}>Questions</TableCell>
+            <TableCell style={{ fontWeight: 'bolder' }}>Examinations</TableCell>
             <TableCell style={{ fontWeight: 'bolder' }}>Published</TableCell>
             <TableCell style={{ fontWeight: 'bolder' }}>Start</TableCell>
             <TableCell style={{ fontWeight: 'bolder' }}>End</TableCell>
@@ -226,7 +258,7 @@ function getNumberOfPages(list) {
     : Math.floor(list.length / ITEMS_PER_PAGE) + 1;
 }
 
-function getListAfterSearch(list, filterName, type) {
+function getListAfterSearch(list, filterName, type, type2) {
   let result = list.filter((item) =>
     item.title.toLowerCase().includes(filterName.toLowerCase())
   );
@@ -234,6 +266,11 @@ function getListAfterSearch(list, filterName, type) {
     result = result.filter((item) => item.isPrivate === true);
   } else if (type === '2') {
     result = result.filter((item) => item.isPrivate === false);
+  }
+  if (type2 === '1') {
+    result = result.filter((item) => item.published === true);
+  } else if (type2 === '2') {
+    result = result.filter((item) => !item.published);
   }
   return result;
 }
@@ -243,7 +280,8 @@ function getDisplayListForPagination(
   start,
   numberOfItemsPerPage,
   filterName,
-  type
+  type,
+  type2
 ) {
   let result = list.filter((item) =>
     item.title.toLowerCase().includes(filterName.toLowerCase())
@@ -252,6 +290,11 @@ function getDisplayListForPagination(
     result = result.filter((item) => item.isPrivate === true);
   } else if (type === '2') {
     result = result.filter((item) => item.isPrivate === false);
+  }
+  if (type2 === '1') {
+    result = result.filter((item) => item.published === true);
+  } else if (type2 === '2') {
+    result = result.filter((item) => !item.published);
   }
   result = result.slice(
     start * numberOfItemsPerPage,
