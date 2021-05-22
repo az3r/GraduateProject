@@ -2,13 +2,12 @@ import {
   Avatar,
   Box,
   Breadcrumbs,
-  Chip,
   Divider,
-  Link,
   makeStyles,
   Tabs,
   Tab,
   Typography,
+  Link as MLink,
 } from '@material-ui/core';
 import dateFormat from 'dateformat';
 import React, { useEffect, useState } from 'react';
@@ -16,6 +15,8 @@ import CheckIcon from '@material-ui/icons/Check';
 import CloseIcon from '@material-ui/icons/Close';
 import { useRouter } from 'next/router';
 import { find } from '@libs/client/users';
+import Link from 'next/link';
+import HTMLReactParser from 'html-react-parser';
 import PieChart from './PieChart';
 
 const useStyle = makeStyles((theme) => ({
@@ -23,8 +24,8 @@ const useStyle = makeStyles((theme) => ({
     textAlign: 'center',
   },
   avatar: {
-    width: '70px',
-    height: '70px',
+    width: '90px',
+    height: '90px',
   },
   spacing: {
     marginBottom: '30px',
@@ -75,9 +76,15 @@ const useStyle = makeStyles((theme) => ({
     display: 'flex',
     height: 500,
   },
+  linkStyle: {
+    '&:hover': {
+      cursor: 'pointer',
+      textDecoration: 'underline',
+    },
+  },
 }));
 
-export default function ResultPage({ submission }) {
+export default function ResultPage({ submission, questions }) {
   const classes = useStyle();
   const router = useRouter();
   const [valueTab, setValueTab] = useState(0);
@@ -85,8 +92,7 @@ export default function ResultPage({ submission }) {
   const [dev, setDev] = useState({});
 
   useEffect(async () => {
-    const devDB = await find(uid);
-    setDev(devDB);
+    setDev(await find(uid));
   }, []);
 
   const handleChange = (event, newValue) => {
@@ -97,29 +103,30 @@ export default function ResultPage({ submission }) {
     <Box m={1} p={2}>
       <Breadcrumbs>
         <Link color="inherit" href="/company-groups">
-          Company groups
+          <Typography className={classes.linkStyle}>Company groups</Typography>
         </Link>
         <Link color="inherit" href={`/company-groups/${id}`}>
-          Current group
+          <Typography className={classes.linkStyle}>Current group</Typography>
         </Link>
         <Link color="inherit" href={`/company-groups/${id}/examinations`}>
-          Examinations
+          <Typography className={classes.linkStyle}>Examinations</Typography>
         </Link>
         <Link
           color="inherit"
-          href={`/company-groups/9UAoBzvkF8QULevb2ZR4Y36HBsF3/examinations/detail?exam=${exam}`}
+          href={`/company-groups/${id}/examinations/detail?exam=${exam}`}
         >
-          Detail
+          <Typography className={classes.linkStyle}>Detail</Typography>
         </Link>
         <Typography color="textPrimary">Result</Typography>
       </Breadcrumbs>
-      <br/>
+      <br />
       <Divider />
-      <br/>
+      <br />
 
       <Typography
         variant="h4"
         className={[classes.centerText, classes.spacing].join(' ')}
+        color="primary"
       >
         Examination Result Report
       </Typography>
@@ -140,7 +147,9 @@ export default function ResultPage({ submission }) {
         <tr>
           <th className={classes.examineeTable}>Name:</th>
           <td className={classes.examineeTable}>
-            <Typography>{dev.name}</Typography>
+            <MLink target="_blank" href={`/profile/dev/${dev.id}`}>
+              <Typography>{dev.name}</Typography>
+            </MLink>
           </td>
         </tr>
         <tr>
@@ -166,6 +175,12 @@ export default function ResultPage({ submission }) {
             </Typography>
           </td>
         </tr>
+        <tr>
+          <th className={classes.examineeTable}>Score:</th>
+          <td className={classes.examineeTable}>
+            <Typography>{submission.score}</Typography>
+          </td>
+        </tr>
       </table>
 
       <Box mt={3} p={2} display="flex" justifyContent="center">
@@ -173,7 +188,8 @@ export default function ResultPage({ submission }) {
       </Box>
       <Box display="flex" justifyContent="center">
         <Typography style={{ textAlign: 'center' }}>
-          <b>Corrects:</b> {submission.correct} - <b>Total:</b> {submission.total}
+          <b>Corrects:</b> {submission.correct} - <b>Total:</b>{' '}
+          {submission.total}
         </Typography>
       </Box>
       <Box boxShadow={2} mt={3} className={classes.root}>
@@ -195,40 +211,115 @@ export default function ResultPage({ submission }) {
 
         {submission.results.map((item, idx) => (
           <TabPanel className={classes.tabPane} value={valueTab} index={idx}>
-            {item.isMCQ ? (
-              <Box p={2}>
-                <Typography>
-                  <b>Correct answer:</b> {item.details.correctAnswer}
-                </Typography>
-                <Typography>
-                  <b>Selected answer:</b> {item.details.selectedAnswer}
-                </Typography>
-              </Box>
-            ) : (
-              <Box p={2}>
-                <b>Code:</b>
-                <pre>{item.details.code}</pre>
-                <Divider />
-                <b>Test cases:</b>
-                <ul>
-                  <li>Passed: {item.details.passed}</li>
-                  <li>Failed: {item.details.failed}</li>
-                </ul>
-                <Box display="flex" flexWrap="wrap">
-                  {item.details.results.map((testCase, k) => (
-                    <Chip
-                      label={`Test case ${k + 1}`}
-                      className={[
-                        testCase.passed ? classes.passCase : classes.failCase,
-                        classes.case,
-                      ].join(' ')}
-                    />
-                  ))}
-                </Box>
-              </Box>
-            )}
+            {getDetailResult(item, questions[idx])}
           </TabPanel>
         ))}
+      </Box>
+    </Box>
+  );
+}
+
+function getDetailResult(item, problem) {
+  const classes = useStyle();
+  const [valueTab, setValueTab] = useState(0);
+
+  const handleChangeTab = (event, newValue) => {
+    setValueTab(newValue);
+  };
+  if (item === null) {
+    return (
+      <Box p={2}>
+        <Typography className={classes.incorrect}>
+          Submission for this question is empty
+        </Typography>
+      </Box>
+    );
+  }
+  if (item.isMCQ) {
+    return (
+      <Box p={2}>
+        <Typography variant="h6">{HTMLReactParser(problem.title)}</Typography>
+        <ol type="A">
+          <li>{HTMLReactParser(problem.answers.A)}</li>
+          <li>{HTMLReactParser(problem.answers.B)}</li>
+          <li>{HTMLReactParser(problem.answers.C)}</li>
+          <li>{HTMLReactParser(problem.answers.D)}</li>
+        </ol>
+        <Typography>
+          <b>Correct:</b> {item.details.correctAnswer}
+        </Typography>
+        <br />
+        <Divider />
+        <br />
+        <Typography>
+          <b>Selected:</b> {item.details.selectedAnswer}
+        </Typography>
+      </Box>
+    );
+  }
+  return (
+    <Box p={2}>
+      <Typography variant="h6">{problem.title}</Typography>
+      {HTMLReactParser(problem.content)}
+      <br />
+      <Divider />
+      <br />
+      <b>Code submitted:</b>
+      <pre>{item.details.code}</pre>
+      <br />
+      <Divider />
+      <br />
+      <Box display="flex" flexWrap="wrap">
+        {item.details.results?.length > 0 ? (
+          <div className={classes.root}>
+            <Tabs
+              orientation="vertical"
+              variant="scrollable"
+              value={valueTab}
+              onChange={handleChangeTab}
+              aria-label="Vertical tabs example"
+              className={classes.tabs}
+            >
+              {item.details.results.map((value, index) => (
+                <Tab
+                  label={`Test case ${index + 1}`}
+                  icon={getTestCaseTabIcon(value)}
+                />
+              ))}
+            </Tabs>
+            {item.details.results.map((value, idx) => (
+              <TabPanel value={valueTab} index={idx}>
+                <Typography variant="h6" style={{ color: 'gray' }}>
+                  Input (stdin)
+                </Typography>
+                <pre style={{ marginLeft: 20, fontWeight: 'bolder' }}>
+                  {value.input}
+                </pre>
+                <br />
+                <Typography variant="h6" style={{ color: 'gray' }}>
+                  Your Output (stdout)
+                </Typography>
+                <pre style={{ marginLeft: 20, fontWeight: 'bolder' }}>
+                  {value.passed ? value.expected : value.actual}
+                </pre>
+                {!value.passed ? (
+                  <>
+                    <Typography variant="h6" style={{ color: 'gray' }}>
+                      Expected Output
+                    </Typography>
+                    <pre style={{ marginLeft: 20, fontWeight: 'bolder' }}>
+                      {value.expected}
+                    </pre>{' '}
+                  </>
+                ) : null}
+
+                <br />
+              </TabPanel>
+            ))}
+          </div>
+        ) : (
+          <Typography className={classes.incorrect}>{item.status}</Typography>
+        )}
       </Box>
     </Box>
   );
@@ -259,6 +350,18 @@ function getResultTabIcon(result) {
       return <CheckIcon className={classes.correct} />;
     case 'Accepted':
       return <CheckIcon className={classes.correct} />;
+    default:
+      return <CloseIcon className={classes.incorrect} />;
+  }
+}
+
+function getTestCaseTabIcon(result) {
+  const classes = useStyle();
+  switch (result.passed) {
+    case true:
+      return <CheckIcon className={classes.correct} />;
+    // case 'Accepted':
+    //   return <CheckIcon className={classes.correct} />;
     default:
       return <CloseIcon className={classes.incorrect} />;
   }

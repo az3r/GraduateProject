@@ -6,8 +6,9 @@ import AppLayout from '@components/Layout';
 import { find } from '@libs/client/users';
 import { get as getDev, getExamResults } from '@libs/client/developers';
 import ParticipantResult from '@components/CompanyGroups/DetailGroup/Examinations/Detail/ParticipantResult';
+import { get } from '@libs/client/exams';
 
-export default function Index({ user, submission }) {
+export default function Index({ user, submission, questions }) {
   const router = useRouter();
   useEffect(() => {
     if (!user) {
@@ -23,7 +24,7 @@ export default function Index({ user, submission }) {
       </Head>
       <AppLayout>
         {submission ? (
-          <ParticipantResult user={user} submission={submission[0]} />
+          <ParticipantResult user={user} submission={submission[0]} questions={questions} />
         ) : null}
       </AppLayout>
     </>
@@ -41,10 +42,12 @@ export async function getServerSideProps({ req, query }) {
       if (user.role === 'company') {
         if (id === user.id) {
           const submission = await getExamResults(uid, exam);
+          const examination = await get({examId: exam});
           return {
             props: {
               user,
               submission,
+              questions: examination.problems
             },
           };
         }
@@ -52,10 +55,12 @@ export async function getServerSideProps({ req, query }) {
         const detailUser = await getDev(user.id);
         if (detailUser.companies.includes(id)) {
           const submission = await getExamResults(uid, exam);
+          const examination = await get({examId: exam});
           return {
             props: {
               user,
               submission,
+              questions: examination.problems
             },
           };
         }
