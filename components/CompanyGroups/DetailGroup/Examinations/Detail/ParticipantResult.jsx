@@ -188,8 +188,9 @@ export default function ResultPage({ submission, questions }) {
       </Box>
       <Box display="flex" justifyContent="center">
         <Typography style={{ textAlign: 'center' }}>
-          <b>Corrects:</b> {submission.correct} - <b>Total:</b>{' '}
-          {submission.total}
+        <b>Total:</b>{' '}
+          {submission.total} - <b>Corrects:</b> {submission.correct} - <b>Wrongs:</b>{' '}
+          {submission.total - submission.correct} 
         </Typography>
       </Box>
       <Box boxShadow={2} mt={3} className={classes.root}>
@@ -376,7 +377,7 @@ function getChartData(correct, total) {
         ? [{ name: 'Corrects', value: correct }]
         : [
             { name: 'Corrects', value: correct },
-            { name: 'Total', value: total },
+            { name: 'Wrong', value: total - correct },
           ];
   return data;
 }
