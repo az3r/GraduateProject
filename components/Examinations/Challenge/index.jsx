@@ -17,7 +17,8 @@ import dateFormat from 'dateformat';
 import { useRouter  } from 'next/router';
 import Swal from 'sweetalert2'
 import withReactContent from 'sweetalert2-react-content'
-import { formatDuration } from '@libs/client/business';
+import { formatTimeOut } from '@libs/client/business';
+
 
 const useStyles = makeStyles(() => ({
   tableContainer: {
@@ -163,7 +164,7 @@ export default function Challenge({user, exams}) {
                         </Box>
                       </Link>
                     </TableCell>
-                    <TableCell>{formatDuration(examination.duration)}</TableCell>
+                    <TableCell>{formatTimeOut(examination.duration)}</TableCell>
                     <TableCell>
                       <Box>
                           {dateFormat(

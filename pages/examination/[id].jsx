@@ -21,7 +21,7 @@ import {
 import { parseCookies } from '@client/cookies';
 import { exams, developers, companies } from '@libs/client';
 import { useRouter  } from 'next/router';
-import {formatDuration} from '@client/business';
+import { formatTimeOut } from '@client/business';
 import dateFormat from 'dateformat';
 import withReactContent from 'sweetalert2-react-content';
 import Swal from "sweetalert2";
@@ -127,7 +127,7 @@ export default function Introduction({examId, examination, isInvited, isParticip
             <Grid container>
               <Grid item xs={6}>
                 <Typography variant="inherit" className={classes.infoKey}>Competition Duration</Typography>
-                <Typography variant="h6" className={classes.infoValue}>{formatDuration(examination.duration)}</Typography>
+                <Typography variant="h6" className={classes.infoValue}>{formatTimeOut(examination.duration)}</Typography>
               </Grid>
               <Grid item xs={6} >
                 <Typography variant="inherit" className={classes.infoKey}>No. of questions</Typography>

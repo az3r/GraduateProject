@@ -90,6 +90,14 @@ export function formatTime(time) {
   return `${hrs}:${mins}:${secs}`;
 }
 
+export function formatTimeOut(timeOut) {
+  // Minutes and seconds
+  const mins = `0${Math.floor(timeOut / 60, 10)}`.slice(-2);
+  const secs = `0${timeOut % 60}`.slice(-2);
+
+  return `${mins} : ${secs}`;
+}
+
 export async function getUsersForInvitation(examId) {
   const invitedUsers = await getInvitedDevelopers(examId);
   const usersDB = await getAll();

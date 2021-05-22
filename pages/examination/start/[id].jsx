@@ -25,7 +25,7 @@ import withReactContent from 'sweetalert2-react-content';
 import BackupIcon from '@material-ui/icons/Backup';
 import TimerIcon from '@material-ui/icons/Timer';
 import HTMLReactParser from 'html-react-parser';
-import { sendThanks } from '@client/business';
+import { formatTimeOut, sendThanks } from '@client/business';
 
 
 const TestProblemCoding = dynamic(() => import('../../../components/Examinations/TestProblemCoding'), {
@@ -330,9 +330,9 @@ export default function Start({ user, examId, exam }) {
 
           <Box className={classes.minutes}>
             <TimerIcon />
-            <Typography variant="h6">
-               {Math.ceil(timeOut/60)} mins left
-            </Typography>
+              <Typography variant="h6">
+                {formatTimeOut(timeOut)}
+              </Typography>
           </Box>
 
           <Button onClick={() => handleSubmit()} color="inherit" size="large" startIcon={<BackupIcon />}>Submit</Button>
