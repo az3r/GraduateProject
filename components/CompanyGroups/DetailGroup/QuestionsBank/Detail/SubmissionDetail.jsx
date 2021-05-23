@@ -15,6 +15,10 @@ import { useRouter } from 'next/router';
 import Link from 'next/link';
 
 const useStyle = makeStyles({
+  container: {
+    width: '70%',
+    margin: 'auto'
+  },
   linkStyle: {
     '&:hover': {
       cursor: 'pointer',
@@ -69,7 +73,7 @@ export default function Index({ submission }) {
       <br />
       <Divider />
       <br />
-      <Box boxShadow={3} p={3}>
+      <Box boxShadow={3} p={3} className={classes.container}>
         <Box border={1} p={2}>
           <Typography variant="subtitle1">
             Submitted on
@@ -103,13 +107,25 @@ export default function Index({ submission }) {
                   style={{ color: 'orange' }}
                 >{` ${submission.status}`}</span>
               )}
-              {submission.status === 'Compilation Error' && (
+              {submission.status === 'Compilation Error' ||
+              submission.status === 'Time Limit Exceeded' ? (
                 <span style={{ color: 'red' }}>{` ${submission.status}`}</span>
-              )}
+              ) : null}
             </Typography>
           </Box>
 
           <Box style={{ display: 'flex' }}>
+            {' '}
+            <Typography variant="h6" style={{ marginRight: 30 }}>
+              Runtime:{' '}
+              {submission.results ? (
+                <span style={{ fontWeight: 'normal', color: 'gray' }}>
+                  {submission.totalElapsedTime} ms
+                </span>
+              ) : (
+                'N/A'
+              )}
+            </Typography>
             <Typography variant="h6" style={{ marginRight: 30 }}>
               {(submission.status === 'Accepted' ||
                 submission.status === 'Wrong Answer') && (
@@ -138,7 +154,7 @@ export default function Index({ submission }) {
           <Box>
             <pre>{submission.code}</pre>
           </Box>
-            <Box boxShadow={3} className={classes.root2}>
+          <Box boxShadow={3} className={classes.root2}>
             {(submission.status === 'Accepted' ||
               submission.status === 'Wrong Answer') && (
               <>
@@ -200,7 +216,7 @@ export default function Index({ submission }) {
                         paddingTop: 50,
                         overflow: 'auto',
                         maxHeight: 350,
-                        maxWidth: 800,
+                        width: '100%'
                       }}
                     >
                       {result.passed === false && (
@@ -279,8 +295,16 @@ export default function Index({ submission }) {
                 ))}
               </>
             )}
-            {submission.status === 'Compilation Error' && (
-              <Box style={{ marginLeft: 20, marginRight: 20, marginTop: 20, overflow: 'scroll' }}>
+            {submission.status === 'Compilation Error' ||
+            submission.status === 'Time Limit Exceeded' ? (
+              <Box
+                style={{
+                  marginLeft: 20,
+                  marginRight: 20,
+                  marginTop: 20,
+                  overflow: 'scroll',
+                }}
+              >
                 <Typography variant="h6" style={{ color: 'gray' }}>
                   Compiler Messages
                 </Typography>
@@ -302,7 +326,7 @@ export default function Index({ submission }) {
                 </Typography>
                 <br />
               </Box>
-            )}
+            ) : null}
           </Box>
         </Box>
       </Box>
