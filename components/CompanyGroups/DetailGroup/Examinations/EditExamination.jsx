@@ -4,7 +4,6 @@ import {
   Box,
   Button,
   Checkbox,
-  Divider,
   Drawer,
   FormControlLabel,
   IconButton,
@@ -45,13 +44,13 @@ ClassicEditor.defaultConfig = {
       'insertTable',
       '|',
       'undo',
-      'redo'
-    ]
+      'redo',
+    ],
   },
   table: {
-    contentToolbar: [ 'tableColumn', 'tableRow', 'mergeTableCells' ]
+    contentToolbar: ['tableColumn', 'tableRow', 'mergeTableCells'],
   },
-  language: 'en'
+  language: 'en',
 };
 
 const useStyles = makeStyles((theme) => ({
@@ -89,7 +88,7 @@ const useStyles = makeStyles((theme) => ({
   },
   deleteBtn: {
     color: 'red',
-    float: 'right',
+    marginLeft: 10
   },
   input: {
     '& input::-webkit-clear-button, & input::-webkit-outer-spin-button, & input::-webkit-inner-spin-button': {
@@ -301,7 +300,7 @@ export default function EditExamination({ user, examProp, onSubmitExam }) {
 
   return (
     <Box>
-      <Box m={3} p={2} boxShadow={2} className={classes.whiteBackground}>
+      <Box boxShadow={2} className={classes.whiteBackground}>
         <Box m={3} p={2} display="flex" justifyContent="center">
           <Typography color="secondary" variant="h4">
             GENERAL INFORMATION SECTION
@@ -387,13 +386,7 @@ export default function EditExamination({ user, examProp, onSubmitExam }) {
           />
         </Box>
       </Box>
-      <Box
-        boxShadow={2}
-        m={3}
-        p={2}
-        id="section-24"
-        className={classes.whiteBackground}
-      >
+      <Box boxShadow={2} id="section-24" className={classes.whiteBackground}>
         <Box m={3} p={2} display="flex" justifyContent="center">
           <Typography color="secondary" variant="h4">
             QUESTIONS SECTION
@@ -481,10 +474,19 @@ export default function EditExamination({ user, examProp, onSubmitExam }) {
                   </Tooltip>
                   <Button
                     color="primary"
+                    variant="outlined"
                     onClick={() => handleEditQuestion(idx, item)}
                     disabled={!!item.id}
                   >
                     Edit question
+                  </Button>
+                  <Button
+                    variant="outlined"
+                    className={classes.deleteBtn}
+                    onClick={() => handleDeleteQuestion(idx)}
+                    startIcon={<DeleteIcon />}
+                  >
+                    Delete question
                   </Button>
                   <Dialog
                     fullScreen
@@ -513,18 +515,7 @@ export default function EditExamination({ user, examProp, onSubmitExam }) {
                     />
                   </Dialog>
                 </div>
-                <QuestionInfo question={item} noLoadFromDB/>
-                <br />
-                <Divider />
-                <br />
-                <Button
-                  variant="outlined"
-                  className={classes.deleteBtn}
-                  onClick={() => handleDeleteQuestion(idx)}
-                  startIcon={<DeleteIcon />}
-                >
-                  Delete question
-                </Button>
+                <QuestionInfo question={item} noLoadFromDB />
               </TabPanel>
             ))}
           </div>

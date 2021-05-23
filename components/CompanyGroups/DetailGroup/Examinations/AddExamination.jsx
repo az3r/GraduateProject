@@ -67,7 +67,7 @@ export default function AddExamination({ user }) {
   };
   return (
     <Box m={3}>
-      <Grid container>
+      <Grid container spacing={2}>
         <Grid item lg={10} md={10}>
           <Breadcrumbs>
             <Link color="inherit" href="/company-groups">
@@ -141,12 +141,12 @@ export default function AddExamination({ user }) {
               </li>
               <li className={classes.listItem}>
                 <a href="#section-22" className={classes.contentScrollSpy}>
-                  Enter password
+                  Enter duration
                 </a>
               </li>
               <li className={classes.listItem}>
                 <a href="#section-23" className={classes.contentScrollSpy}>
-                  Enter duration
+                  Private exam?
                 </a>
               </li>
               <li className={classes.listItem}>
