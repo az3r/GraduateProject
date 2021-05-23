@@ -12,6 +12,7 @@ const statuses = {
   passed: 'passed',
   failed: 'failed',
   error: 'syntax-error',
+  timeout: 'runtime-error',
 };
 
 export async function test({ lang, code, testcases, runtime }) {
@@ -42,31 +43,38 @@ export async function test({ lang, code, testcases, runtime }) {
   })).score;
   const response = await task;
   const data = await response.json();
-  let status = statuses.error;
 
-  let score = response.status === 200 ? total : 0;
-  if (response.status === 200) {
-    const { failed, failedIndexes } = data;
-    status = failed > 0 ? statuses.failed : statuses.passed;
+  // failed
+  if (response.status >= 400) {
+    return Promise.reject({
+      ...data,
+      status: data.code ? statuses.error : statuses.timeout,
+      score: 0,
+    });
+  }
 
-    // subtract score for every failed testcase
-    if (failedIndexes?.length) {
-      const amount =
-        failedIndexes.reduce(
-          (current, index) => current + testcases[index].score
-        ) || 0;
-      score -= amount;
-    }
+  // success
+  const status = data.failed > 0 ? statuses.failed : statuses.passed;
+  let score = total;
 
-    // compare with runetime
-    for (let i = 0; i < runtime.length; i += 1) {
-      if (data.totalElapsedTime < runtime[i].runtime) {
-        score *= runtime[i].percentage / 100;
-        break;
-      }
+  // subtract for every fail test case
+  let amount = 0;
+  data.failedIndexes?.forEach((i) => {
+    amount += testcases[i].score;
+  });
+  score = total - amount;
+
+  // compare with runtime requirements
+  for (let i = 0; i < runtime.length; i += 1) {
+    if (data.totalElapsedTime < runtime[i].runtime) {
+      score *= runtime[i].percentage / 100;
+      break;
     }
   }
 
-  const result = { ...data, status, score };
-  return response.status === 200 ? result : Promise.reject(result);
+  return {
+    ...data,
+    score,
+    status,
+  };
 }
