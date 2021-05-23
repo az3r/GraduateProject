@@ -290,7 +290,7 @@ export default function CodingQuestionForm({
     } catch (err) {
       setMessage({
         ...message,
-        test: 'Error!\nPlease check your input and output again. Make sure you submit only 1 test case.',
+        test: `Error!\nPlease check your input and output again. Make sure you submit only 1 test case.`,
         isTesting: false,
         testResult: true,
         isTestSuccess: false,

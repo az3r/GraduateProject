@@ -2,6 +2,7 @@ import { get } from '@libs/client/problems';
 import {
   Box,
   Button,
+  Chip,
   Divider,
   makeStyles,
   Slide,
@@ -176,6 +177,18 @@ function ShowInfoQuestionMCQ({ problem }) {
               </Button>
             </DialogActions>
           </Dialog>
+          <br />
+          <br />
+          <Divider />
+          <br />
+          <Box display="flex" flexWrap="wrap">
+            {problem.runtime.map((item) => (
+              <Chip
+                label={`<= ${item.runtime} ms (${item.percentage}%)`}
+                style={{ marginRight: 10, marginBottom: 10 }}
+              />
+            ))}
+          </Box>
         </>
       )}
     </div>

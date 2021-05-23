@@ -91,6 +91,14 @@ export default function DetailExamination({ user, examProp }) {
     });
   };
 
+  const handleUnpublish = () => {
+    const temp = {...examination};
+    delete temp.published;
+    delete temp.startAt;
+    delete temp.endAt;
+    setExamination(temp);
+  }
+
   return (
     <Box m={3}>
       <Breadcrumbs>
@@ -129,6 +137,7 @@ export default function DetailExamination({ user, examProp }) {
                   user={user}
                   examination={examination}
                   handlePublish={handlePublish}
+                  handleUnpublish={handleUnpublish}
                 />
               </TabPanel>
               <TabPanel value={value} index={1}>

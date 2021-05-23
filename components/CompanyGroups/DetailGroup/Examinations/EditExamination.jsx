@@ -85,7 +85,7 @@ const useStyles = makeStyles((theme) => ({
   },
   tabPane: {
     width: '80%',
-    overflow: 'scroll',
+    overflowY: 'scroll',
   },
   deleteBtn: {
     color: 'red',
