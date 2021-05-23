@@ -15,5 +15,5 @@ export const collections = {
   attributes: 'Attributes',
 };
 export const urls = {
-  compiler: 'http://188.166.255.27:8080/',
+  compiler: 'https://nmtuan.cf/',
 };
