@@ -103,7 +103,7 @@ function ShowInfoQuestionMCQ({ problem }) {
       <br />
       {problem.isMCQ ? (
         <>
-          {HTMLReactParser(problem.title)}
+          <Typography variant="h6">{HTMLReactParser(problem.title)}</Typography>
           <ol type="A">
             <li>{HTMLReactParser(problem.answers.A)}</li>
             <li>{HTMLReactParser(problem.answers.B)}</li>
@@ -116,7 +116,7 @@ function ShowInfoQuestionMCQ({ problem }) {
         </>
       ) : (
         <>
-          <Typography>{problem.title}</Typography>
+          <Typography variant="h6">{problem.title}</Typography>
           <div style={{ wordWrap: 'break-word' }}>
             {HTMLReactParser(problem.content)}
           </div>
