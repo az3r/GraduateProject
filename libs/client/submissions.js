@@ -46,10 +46,12 @@ export async function test({ lang, code, testcases, runtime }) {
 
   // failed
   if (response.status >= 400) {
+    const stderr = data.code ? data.stderr : 'Time Limit Exceed';
     return Promise.reject({
       ...data,
       status: data.code ? statuses.error : statuses.timeout,
       score: 0,
+      stderr,
     });
   }
 
