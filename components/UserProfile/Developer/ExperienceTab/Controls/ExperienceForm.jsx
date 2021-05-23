@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 /* eslint-disable no-unused-vars */
 import React, { useState, useEffect } from 'react';
 import {
@@ -65,7 +66,39 @@ export default function ExperienceForm(props) {
     if (elementForEdit != null) setExperience(elementForEdit);
   }, [elementForEdit]);
 
-  // submit new experience
+  // handle change begin date
+  const handleChangeBeginDate = (event) => {
+    const d1 = new Date(event.target.value);
+    const d2 = new Date(experience.endDate);
+    let d1String = event.target.value;
+
+    if (d2 < d1) {
+      d1String = experience.endDate;
+    }
+
+    setExperience({
+      ...experience,
+      beginDate: d1String,
+    });
+  };
+
+  // handle change end date
+  const handleChangeEndDate = (event) => {
+    const d1 = new Date(experience.beginDate);
+    const d2 = new Date(event.target.value);
+    let d2String = event.target.value;
+
+    if (d2 < d1) {
+      d2String = experience.beginDate;
+    }
+
+    setExperience({
+      ...experience,
+      endDate: d2String,
+    });
+  };
+
+  // handle submit new experience
   const handleSubmit = (event) => {
     event.preventDefault();
 
@@ -145,7 +178,7 @@ export default function ExperienceForm(props) {
                 label="Begin Date"
                 name="beginDate"
                 value={experience.beginDate}
-                onChange={handleInputChange}
+                onChange={handleChangeBeginDate}
                 InputLabelProps={{
                   shrink: true,
                 }}
@@ -160,7 +193,7 @@ export default function ExperienceForm(props) {
                 label="End Date"
                 name="endDate"
                 value={experience.endDate}
-                onChange={handleInputChange}
+                onChange={handleChangeEndDate}
                 InputLabelProps={{
                   shrink: true,
                 }}
@@ -177,7 +210,7 @@ export default function ExperienceForm(props) {
                 variant="contained"
                 startIcon={<SaveOutlinedIcon />}
               >
-                Edit
+                {isAddNewExp ? 'Add' : 'Edit'}
               </Button>
             </Grid>
           </Grid>

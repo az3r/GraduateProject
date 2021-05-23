@@ -61,7 +61,7 @@ const useStyles = makeStyles((theme) => ({
 const without = (array, filtered) =>
   array.filter((element) => element != filtered);
 
-export default function ExperiencesTab(props) {
+export default function ExperienceTab(props) {
   const classes = useStyles();
   const { user, setUser, setSnackBarState, isOnlyWatch } = props;
   const [openPopup, setOpenPopup] = useState(false);
@@ -158,7 +158,7 @@ export default function ExperiencesTab(props) {
                   fontSize: 20,
                 }}
               >
-                Work Experience Timeline
+                Experience Timeline
               </Typography>
             </Grid>
             <Grid item xs={12} sm={2}>

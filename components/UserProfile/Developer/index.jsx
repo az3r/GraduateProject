@@ -11,7 +11,7 @@ import {
 } from '@material-ui/core';
 import BasicInfoTab from '@components/UserProfile/Developer/BasicInfoTab';
 import AccountTab from '@components/UserProfile/Components/AccountTab';
-import ExperiencesTab from '@components/UserProfile/Developer/ExperienceTab';
+import ExperienceTab from '@components/UserProfile/Developer/ExperienceTab';
 import PropTypes from 'prop-types';
 
 const useStyles = makeStyles((theme) => ({
@@ -83,11 +83,11 @@ export default function UserProfileTabs(props) {
           <Tab label="Basic Info" {...a11yProps(0)} />
 
           {/* if only watch */}
-          {isOnlyWatch ? <Tab label="Experiences" {...a11yProps(1)} /> : null}
+          {isOnlyWatch ? <Tab label="Experience" {...a11yProps(1)} /> : null}
 
           {/* else  */}
           {isOnlyWatch ? null : <Tab label="Account" {...a11yProps(1)} />}
-          {isOnlyWatch ? null : <Tab label="Experiences" {...a11yProps(2)} />}
+          {isOnlyWatch ? null : <Tab label="Experience" {...a11yProps(2)} />}
         </Tabs>
       </Grid>
 
@@ -104,7 +104,7 @@ export default function UserProfileTabs(props) {
         {/* if only watch */}
         {isOnlyWatch ? (
           <TabPanel value={value} index={1}>
-            <ExperiencesTab
+            <ExperienceTab
               user={user}
               setUser={setUser}
               setSnackBarState={setSnackBarState}
@@ -125,7 +125,7 @@ export default function UserProfileTabs(props) {
         )}
         {isOnlyWatch ? null : (
           <TabPanel value={value} index={2}>
-            <ExperiencesTab
+            <ExperienceTab
               user={user}
               setUser={setUser}
               setSnackBarState={setSnackBarState}
