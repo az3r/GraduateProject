@@ -13,7 +13,7 @@ function MainApp({ Component, pageProps }) {
     <ThemeProvider theme={LightTheme}>
       <Head>
         <meta
-          httpEquiv="Contetnt-Security-Policy"
+          httpEquiv="Content-Security-Policy"
           content="upgrade-insecure-requests"
         />
       </Head>
