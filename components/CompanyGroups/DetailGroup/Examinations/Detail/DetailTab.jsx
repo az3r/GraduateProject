@@ -25,7 +25,11 @@ import EditIcon from '@material-ui/icons/Edit';
 import HelpIcon from '@material-ui/icons/Help';
 import PublicIcon from '@material-ui/icons/Public';
 import LockIcon from '@material-ui/icons/Lock';
+import ErrorOutlineIcon from '@material-ui/icons/ErrorOutline';
+import CheckCircleOutlineIcon from '@material-ui/icons/CheckCircleOutline';
+import DeleteIcon from '@material-ui/icons/Delete';
 import dateFormat from 'dateformat';
+import { remove, unpublishExam } from '@libs/client/exams';
 import QuestionInfo from '../QuestionInfo';
 
 const useStyles = makeStyles((theme) => ({
@@ -40,7 +44,7 @@ const useStyles = makeStyles((theme) => ({
   },
   tabContent: {
     width: '100%',
-    overflow: 'scroll',
+    overflowY: 'scroll',
   },
 }));
 
@@ -66,7 +70,7 @@ function TabPanel2(props) {
   );
 }
 
-export default function DetailTab({ user, examination, handlePublish }) {
+export default function DetailTab({ user, examination, handlePublish, handleUnpublish }) {
   const { startAt } = examination;
   const { endAt } = examination;
   const [open, setOpen] = useState(false);
@@ -79,6 +83,8 @@ export default function DetailTab({ user, examination, handlePublish }) {
     endAt: false,
   });
   const [valueTab, setValueTab] = useState(0);
+  const [open2, setOpen2] = useState(false);
+  const [open3, setOpen3] = useState(false);
   const router = useRouter();
   const { id, exam } = router.query;
 
@@ -117,8 +123,33 @@ export default function DetailTab({ user, examination, handlePublish }) {
     }
   };
 
+  const handleUnpublishClick = async () => {
+    await unpublishExam(exam);
+    handleUnpublish();
+    setOpen(false);
+  }
+
   const handleChange = (event, newValue) => {
     setValueTab(newValue);
+  };
+
+  const handleClickOpen = () => {
+    setOpen2(true);
+  };
+
+  const handleAgree = async () => {
+    await remove(exam);
+    setOpen2(false);
+    setOpen3(true);
+  };
+
+  const handleClose = () => {
+    setOpen2(false);
+  };
+
+  const handleClose2 = () => {
+    setOpen3(false);
+    router.replace(`/company-groups/${id}/examinations`);
   };
 
   return (
@@ -200,6 +231,7 @@ export default function DetailTab({ user, examination, handlePublish }) {
                   <Button
                     style={{ backgroundColor: '#FF0505', color: '#ffffff' }}
                     variant="contained"
+                    onClick={handleUnpublishClick}
                   >
                     Unpublish
                   </Button>
@@ -245,9 +277,9 @@ export default function DetailTab({ user, examination, handlePublish }) {
           )}
         </Typography>
       ) : null}
-      <br/>
+      <br />
       <Divider />
-      <br/>
+      <br />
       <Box>
         <Box display="flex" justifyContent="center" mb={3}>
           <Typography color="secondary" variant="h4">
@@ -271,9 +303,9 @@ export default function DetailTab({ user, examination, handlePublish }) {
           <b>Score:</b> {examination.score}
         </Typography>
       </Box>
-      <br/>
+      <br />
       <Divider />
-      <br/>
+      <br />
       <Box>
         <Box display="flex" justifyContent="center" mb={3}>
           <Typography color="secondary" variant="h4">
@@ -300,6 +332,61 @@ export default function DetailTab({ user, examination, handlePublish }) {
             </TabPanel2>
           ))}
         </div>
+      </Box>
+      <Box m={5} display="flex" justifyContent="center">
+        <Tooltip title="Cannot delete published examination">
+          <IconButton aria-label="delete">
+            <HelpIcon />
+          </IconButton>
+        </Tooltip>
+        <Button
+          onClick={handleClickOpen}
+          variant="contained"
+          style={{ color: 'red' }}
+          startIcon={<DeleteIcon />}
+          disabled = {!!examination.published}
+        >
+          Delete examination
+        </Button>
+        <Dialog open={open2} onClose={handleClose}>
+          <DialogContent style={{ width: 500 }}>
+            <Box>
+              <Box display="flex" justifyContent="center" m={3}>
+                <ErrorOutlineIcon style={{ fontSize: 50, color: 'red' }} />
+              </Box>
+              <Typography style={{ textAlign: 'center' }}>
+                Do you want to delete this examination?
+              </Typography>
+            </Box>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={handleAgree} color="primary" autoFocus>
+              Agree
+            </Button>
+            <Button onClick={handleClose} color="secondary">
+              Disagree
+            </Button>
+          </DialogActions>
+        </Dialog>
+        <Dialog open={open3} onClose={handleClose2}>
+          <DialogContent style={{ width: 500 }}>
+            <Box>
+              <Box display="flex" justifyContent="center" m={3}>
+                <CheckCircleOutlineIcon
+                  style={{ fontSize: 50, color: '#088247' }}
+                />
+              </Box>
+              <Typography style={{ textAlign: 'center' }}>
+                Delete successfully
+              </Typography>
+            </Box>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={handleClose2} color="primary">
+              Close
+            </Button>
+          </DialogActions>
+        </Dialog>
       </Box>
     </Box>
   );

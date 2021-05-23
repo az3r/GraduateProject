@@ -12,10 +12,10 @@ function MainApp({ Component, pageProps }) {
   return (
     <ThemeProvider theme={LightTheme}>
       <Head>
-        <meta
+        {/* <meta
           httpEquiv="Content-Security-Policy"
           content="upgrade-insecure-requests"
-        />
+        /> */}
       </Head>
       <CssBaseline>
         <AuthProvider>

@@ -207,6 +207,15 @@ export async function publishExam(examId, startAt, endAt, show) {
     });
 }
 
+export async function unpublishExam(examId) {
+  await Firestore().collection(collections.exams).doc(examId).update({
+    published: Firestore.FieldValue.delete(),
+    startAt: Firestore.FieldValue.delete(),
+    endAt: Firestore.FieldValue.delete(),
+    modifiedAt: Firestore.Timestamp.now(),
+  });
+}
+
 export async function getAllExamSubmissions(examId) {
   const result = await Firestore()
     .collection(collections.examSubmissions)
