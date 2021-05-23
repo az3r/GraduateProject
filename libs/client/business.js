@@ -150,6 +150,22 @@ export function sendInvitationMember(toName, groupName, sendTo) {
   );
 }
 
+export function sendResults(toName, examId, examTitle, date, score, sendTo) {
+  emailjs.send(
+    'service_652c7qv',
+    'template_o7d2i1f',
+    {
+      to_name: toName,
+      exam_id: examId,
+      exam_name: examTitle,
+      submission_date: date,
+      score,
+      send_to: sendTo,
+    },
+    'user_fhiuiyPO3Nexw5fHdVnbW'
+  );
+}
+
 export function sendThanks(toName, fromName, title, toEmail, replyTo) {
   emailjs.send(
     'service_8iweofn',

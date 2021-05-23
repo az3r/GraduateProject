@@ -8,6 +8,7 @@ import {
   Tab,
   Typography,
   Link as MLink,
+  Button,
 } from '@material-ui/core';
 import dateFormat from 'dateformat';
 import React, { useEffect, useState } from 'react';
@@ -17,6 +18,7 @@ import { useRouter } from 'next/router';
 import { find } from '@libs/client/users';
 import Link from 'next/link';
 import HTMLReactParser from 'html-react-parser';
+import { sendResults } from '@libs/client/business';
 import PieChart from './PieChart';
 
 const useStyle = makeStyles((theme) => ({
@@ -84,7 +86,7 @@ const useStyle = makeStyles((theme) => ({
   },
 }));
 
-export default function ResultPage({ submission, questions }) {
+export default function ResultPage({ submission, examTitle, questions }) {
   const classes = useStyle();
   const router = useRouter();
   const [valueTab, setValueTab] = useState(0);
@@ -97,6 +99,14 @@ export default function ResultPage({ submission, questions }) {
 
   const handleChange = (event, newValue) => {
     setValueTab(newValue);
+  };
+
+  const handleSendResults = () => {
+    const date = dateFormat(
+      new Date(submission.createdOn),
+      'HH:MM TT, dd-mmmm-yyyy'
+    )
+    sendResults(dev.name,submission.examId,examTitle,date,submission.score,dev.email);
   };
 
   return (
@@ -215,6 +225,11 @@ export default function ResultPage({ submission, questions }) {
             {getDetailResult(item, questions[idx])}
           </TabPanel>
         ))}
+      </Box>
+      <Box mt={3} p={2} display="flex" justifyContent="center">
+        <Button color="primary" variant="outlined" onClick={handleSendResults}>
+          Send results email
+        </Button>
       </Box>
     </Box>
   );
