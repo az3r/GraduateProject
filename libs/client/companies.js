@@ -43,6 +43,7 @@ export async function update(
 export async function getExams(companyId) {
   const snapshot = await Firestore()
     .collection(collections.exams)
+    .where('deleted', '==', false)
     .where('companyId', '==', companyId)
     .orderBy('createdOn', 'desc')
     .get();
