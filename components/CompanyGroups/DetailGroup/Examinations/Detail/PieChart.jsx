@@ -77,7 +77,6 @@ const renderActiveShape = (props) => {
 const COLORS = ['#0088FE', '#00C49F', '#FFBB28'];
 
 export default function Index({ data }) {
-  console.log(data);
   const [activeIndex, setActiveIndex] = React.useState(0);
   return (
     <div>
