@@ -24,12 +24,10 @@ export default function Index({ user }) {
   return (
     <>
       <Head>
-        <title>Add questions - SmartCoder</title>
+        <title>Group Examinations | Smart Coder</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <AppLayout>
-        {user ? <AddExamination user={user} /> : null}
-      </AppLayout>
+      <AppLayout>{user ? <AddExamination user={user} /> : null}</AppLayout>
     </>
   );
 }

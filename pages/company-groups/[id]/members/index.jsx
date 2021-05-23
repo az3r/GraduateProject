@@ -19,7 +19,7 @@ export default function Index({ user, company }) {
   return (
     <>
       <Head>
-        <title>Group members - SmartCoder</title>
+        <title>Group Members | Smart Coder</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <AppLayout>

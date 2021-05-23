@@ -11,7 +11,7 @@ export default function Index({ companyGroups }) {
   return (
     <>
       <Head>
-        <title>Comapany groups - SmartCoder</title>
+        <title>Comapany groups | Smart Coder</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <AppLayout>

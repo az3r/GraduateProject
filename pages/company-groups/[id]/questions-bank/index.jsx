@@ -20,7 +20,7 @@ export default function Index({ user, questions }) {
   return (
     <>
       <Head>
-        <title>Group questions bank - SmartCoder</title>
+        <title>Group Questions Bank | Smart Coder</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <AppLayout>
