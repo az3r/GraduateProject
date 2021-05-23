@@ -24,7 +24,7 @@ export default function Index({ user }) {
   return (
     <>
       <Head>
-        <title>Add questions - SmartCoder</title>
+        <title>Group Questions Bank | Smart Coder</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <AppLayout>{user ? <AddQuestion user={user} /> : null}</AppLayout>

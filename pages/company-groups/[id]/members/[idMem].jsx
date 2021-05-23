@@ -22,7 +22,7 @@ export default function Index({ user, questions, exams }) {
   return (
     <>
       <Head>
-        <title>Group members - SmartCoder</title>
+        <title>Group Members | Smart Coder</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <AppLayout>

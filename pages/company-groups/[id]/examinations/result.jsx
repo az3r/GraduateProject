@@ -8,7 +8,7 @@ import { get as getDev, getExamResults } from '@libs/client/developers';
 import ParticipantResult from '@components/CompanyGroups/DetailGroup/Examinations/Detail/ParticipantResult';
 import { get } from '@libs/client/exams';
 
-export default function Index({ user, submission, questions }) {
+export default function Index({ user, submission, examTitle, questions }) {
   const router = useRouter();
   useEffect(() => {
     if (!user) {
@@ -19,12 +19,17 @@ export default function Index({ user, submission, questions }) {
   return (
     <>
       <Head>
-        <title>Group examinations - SmartCoder</title>
+        <title>Group Examinations | Smart Coder</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <AppLayout>
         {submission ? (
-          <ParticipantResult user={user} submission={submission[0]} questions={questions} />
+          <ParticipantResult
+            user={user}
+            submission={submission[0]}
+            examTitle={examTitle}
+            questions={questions}
+          />
         ) : null}
       </AppLayout>
     </>
@@ -38,16 +43,16 @@ export async function getServerSideProps({ req, query }) {
     if (cookies.user) {
       const user = await find(JSON.parse(cookies.user).uid);
       const { id, exam, uid } = query;
-
       if (user.role === 'company') {
         if (id === user.id) {
           const submission = await getExamResults(uid, exam);
-          const examination = await get({examId: exam});
+          const examination = await get({ examId: exam });
           return {
             props: {
               user,
               submission,
-              questions: examination.problems
+              examTitle: examination.title,
+              questions: examination.problems,
             },
           };
         }
@@ -55,12 +60,13 @@ export async function getServerSideProps({ req, query }) {
         const detailUser = await getDev(user.id);
         if (detailUser.companies.includes(id)) {
           const submission = await getExamResults(uid, exam);
-          const examination = await get({examId: exam});
+          const examination = await get({ examId: exam });
           return {
             props: {
               user,
               submission,
-              questions: examination.problems
+              examTitle: examination.title,
+              questions: examination.problems,
             },
           };
         }
