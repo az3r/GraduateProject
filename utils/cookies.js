@@ -6,3 +6,10 @@ export function save(user, login) {
     path: '/',
   });
 }
+export function remove() {
+  const cookies = new Cookies();
+  cookies.remove('user', {
+    path: '/',
+    expire: Date.now(),
+  });
+}

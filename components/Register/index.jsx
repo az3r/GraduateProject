@@ -6,31 +6,36 @@ import {
   CircularProgress,
   IconButton,
   InputAdornment,
+  MenuItem,
   TextField,
   Typography,
 } from '@material-ui/core';
-import Link from 'next/link';
 import useStyles from '@styles/auth.style';
 import { GitHub, Visibility, VisibilityOff } from '@material-ui/icons';
 import { useRouter } from 'next/router';
 import * as cookies from '@utils/cookies';
-import { useSnackBar } from '../hooks/snackbar';
-import { useAuth } from '../hooks/auth';
-import { FirebaseAuth } from '../libs/client/firebase';
-import * as authenticate from '../libs/client/authenticate';
-import { find } from '../libs/client/users';
+import { useSnackBar } from '@hooks/snackbar';
+import { useAuth } from '@hooks/auth';
+import { FirebaseAuth } from '@libs/client/firebase';
+import * as authenticate from '@libs/client/authenticate';
 
 const AUTH_PROVIDERS = {
   google: new FirebaseAuth.GoogleAuthProvider(),
   github: new FirebaseAuth.GithubAuthProvider(),
 };
 
-export default function Login() {
+export default function Register({ type }) {
   const router = useRouter();
   const { update: setUser } = useAuth();
   const { alert } = useSnackBar();
   const styles = useStyles();
-  const [form, update] = useState({ password: '', email: '' });
+
+  const [form, update] = useState({
+    password: '',
+    email: '',
+    username: '',
+    role: type,
+  });
   const [submitting, process] = useState(false);
   const [password, toggle] = useState(true);
 
@@ -47,7 +52,7 @@ export default function Login() {
     alert({
       open: true,
       severity: 'success',
-      message: 'Login successfully',
+      message: 'Register successfully',
     });
   }
 
@@ -63,7 +68,7 @@ export default function Login() {
     e.preventDefault();
     try {
       process(true);
-      const user = await authenticate.signinWithPassword(form);
+      const user = await authenticate.register({ ...form, role: form.role });
       onSuccess(user);
     } catch (error) {
       onFailure(error.code);
@@ -72,20 +77,23 @@ export default function Login() {
     }
   }
 
-  async function signInWithProvider(method) {
+  async function registerWithProvider(method) {
     try {
       const credentials = await FirebaseAuth().signInWithPopup(
         AUTH_PROVIDERS[method]
       );
       process(true);
 
-      const user = await find(credentials.user.uid);
-      if (user) onSuccess(user);
-      else {
-        // delete user from firebase auth
-        await credentials.user.delete();
-        onFailure('auth/user-not-found');
-      }
+      const user = {
+        id: credentials.user.uid,
+        email: credentials.user.email,
+        username: credentials.user.displayName,
+        role: form.role,
+        avatar: credentials.user.photoURL,
+      };
+      await authenticate.setupAccount(user);
+
+      onSuccess(user);
     } catch (error) {
       onFailure(error.code);
     } finally {
@@ -102,9 +110,37 @@ export default function Login() {
           </Typography>
           <Box paddingTop={1}>
             <Typography align="center" variant="h4">
-              Sign in
+              Sign up
             </Typography>
           </Box>
+          <TextField
+            className={styles.input}
+            select
+            required
+            label="Account's type"
+            value={form.role}
+            onChange={(e) =>
+              update((prev) => ({ ...prev, role: e.target.value }))
+            }
+          >
+            {['Developer', 'Company'].map((option) => (
+              <MenuItem key={option} value={option.toLowerCase()}>
+                {option}
+              </MenuItem>
+            ))}
+          </TextField>
+          <TextField
+            className={styles.input}
+            required
+            label="Username"
+            aria-label="username"
+            name="username"
+            type="text"
+            onChange={(e) =>
+              update((prev) => ({ ...prev, username: e.target.value }))
+            }
+            value={form.email}
+          />
           <TextField
             className={styles.input}
             required
@@ -148,38 +184,25 @@ export default function Login() {
             className={styles.button}
             type="submit"
             variant="contained"
-            color="primary"
+            color="secondary"
           >
-            {!submitting && 'Sign in'}
+            {!submitting && 'Register'}
             {submitting && (
               <CircularProgress style={{ width: 30, height: 30 }} />
             )}
           </Button>
           <Box display="flex" width="100%" justifyContent="center">
-            <IconButton onClick={() => signInWithProvider('google')}>
+            <IconButton onClick={() => registerWithProvider('google')}>
               <img
                 width="36px"
                 height="36px"
-                src="logo_google.webp"
+                src="/logo_google.webp"
                 alt="Google's logo"
               />
             </IconButton>
-            <IconButton onClick={() => signInWithProvider('github')}>
+            <IconButton onClick={() => registerWithProvider('github')}>
               <GitHub style={{ width: 40, height: 40, color: '#000000' }} />
             </IconButton>
-          </Box>
-          <Box
-            display="flex"
-            justifyContent="center"
-            alignItems="center"
-            paddingTop={2}
-          >
-            <Typography align="center">Does not have an account?</Typography>
-            <Link href="/register">
-              <Button variant="text" color="secondary">
-                Register
-              </Button>
-            </Link>
           </Box>
         </form>
       </Card>
