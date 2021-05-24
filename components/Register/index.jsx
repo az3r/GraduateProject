@@ -45,7 +45,7 @@ export default function Register({ type }) {
     const { returnURL } = router.query;
     const destination =
       user.role === 'company'
-        ? `/company-groups/${user.uid}`
+        ? `/company-groups/${user.id}`
         : `/${returnURL || ''}`;
     router.push(destination);
 
@@ -68,7 +68,10 @@ export default function Register({ type }) {
     e.preventDefault();
     try {
       process(true);
-      const user = await authenticate.register({ ...form, role: form.role });
+      const user = await authenticate.register({
+        ...form,
+        role: form.role.toLowerCase(),
+      });
       onSuccess(user);
     } catch (error) {
       onFailure(error.code);
@@ -88,7 +91,7 @@ export default function Register({ type }) {
         id: credentials.user.uid,
         email: credentials.user.email,
         username: credentials.user.displayName,
-        role: form.role,
+        role: form.role.toLowerCase(),
         avatar: credentials.user.photoURL,
       };
       await authenticate.setupAccount(user);
@@ -139,7 +142,7 @@ export default function Register({ type }) {
             onChange={(e) =>
               update((prev) => ({ ...prev, username: e.target.value }))
             }
-            value={form.email}
+            value={form.username}
           />
           <TextField
             className={styles.input}

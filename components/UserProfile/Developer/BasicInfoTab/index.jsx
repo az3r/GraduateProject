@@ -61,7 +61,7 @@ export default function BasicInfoTab(props) {
   const { user, setUser, setSnackBarState, isOnlyWatch } = props;
 
   // user get from useAuth()
-  const auth = useAuth();
+  const { user: auth } = useAuth();
 
   // alert dialog
   const [openAlertDialog, setOpenAlertDialog] = React.useState(false);

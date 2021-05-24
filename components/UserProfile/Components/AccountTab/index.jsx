@@ -42,7 +42,7 @@ export default function AccountTab(props) {
   const [link, setLink] = React.useState('');
 
   // user get from useAuth()
-  const auth = useAuth();
+  const { user: auth } = useAuth();
 
   useEffect(async () => {
     if (auth) {

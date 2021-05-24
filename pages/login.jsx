@@ -40,7 +40,7 @@ export default function Login() {
     const { returnURL } = router.query;
     const destination =
       user.role === 'company'
-        ? `/company-groups/${user.uid}`
+        ? `/company-groups/${user.id}`
         : `/${returnURL || ''}`;
     router.push(destination);
 

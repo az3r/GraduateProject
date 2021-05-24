@@ -32,15 +32,15 @@ export default function UserAvatar(props) {
   const { user, setUser, setSnackBarState, isOnlyWatch } = props;
 
   // user get from useAuth()
-  const auth = useAuth();
+  const { user: auth } = useAuth();
 
   const handleChangeAvatar = async (event) => {
     const image = event.target.files[0];
-    const {type} = image;
+    const { type } = image;
     const isImageType = type.includes('image/');
 
     // is not image
-    if(!isImageType){
+    if (!isImageType) {
       setSnackBarState({
         open: true,
         severity: 'error',
@@ -51,8 +51,8 @@ export default function UserAvatar(props) {
 
     // is image
     try {
-      await userServices.updateAvatar(auth, user.role, image)
-      setUser({...user, avatar: auth.photoURL});
+      await userServices.updateAvatar(auth, user.role, image);
+      setUser({ ...user, avatar: auth.photoURL });
 
       setSnackBarState({
         open: true,

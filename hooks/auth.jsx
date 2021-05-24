@@ -20,6 +20,14 @@ export default function AuthProvider({ children }) {
     });
   }, []);
 
+  React.useEffect(() => {
+    if (user) {
+      const auth = FirebaseAuth().currentUser;
+      user.sendEmailVerification = auth.sendEmailVerification;
+      user.uid = auth.uid;
+    }
+  }, [user]);
+
   return (
     <AuthContext.Provider value={{ user, update }}>
       {children}

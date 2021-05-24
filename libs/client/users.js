@@ -33,8 +33,6 @@ export async function updateName(user, role, displayName) {
   const collection =
     role === 'developer' ? collections.developers : collections.companies;
 
-  await user.updateProfile({ displayName });
-
   // sync in firestore
   await Firestore()
     .collection(collection)
@@ -56,9 +54,6 @@ export async function updateAvatar(user, role, file) {
   const ref = Storage().ref(`avatars/${user.uid}`);
   await ref.put(file);
   const url = await ref.getDownloadURL();
-
-  // update avatar using upload url
-  await user.updateProfile({ photoURL: url });
 
   // sync in firestore
   await Firestore()
@@ -102,5 +97,5 @@ export async function syncEmail(user, role, email) {
     role === 'developer' ? collections.developers : collections.companies;
 
   // sync in firestore
-  await Firestore().collection(collection).doc(user.uid).update({ email });
+  await Firestore().collection(collection).doc(user.id).update({ email });
 }
