@@ -8,17 +8,17 @@ const SnackBarContext = React.createContext({
     severity: '',
     message: '',
   },
-  toggle: () => {},
+  alert: () => {},
 });
 
 export default function SnackBarProvider({ children }) {
-  const [snackbar, toggle] = React.useState({
+  const [snackbar, alert] = React.useState({
     open: false,
     severity: '',
     message: '',
   });
   return (
-    <SnackBarContext.Provider value={{ snackbar, toggle }}>
+    <SnackBarContext.Provider value={{ snackbar, alert }}>
       <Snackbar
         anchorOrigin={{
           vertical: 'bottom',
@@ -26,7 +26,7 @@ export default function SnackBarProvider({ children }) {
         }}
         open={snackbar.open}
         autoHideDuration={2000}
-        onClose={() => toggle({ open: false })}
+        onClose={() => alert((prev) => ({ ...prev, open: false }))}
       >
         <Alert variant="filled" severity={snackbar.severity}>
           {snackbar.message}

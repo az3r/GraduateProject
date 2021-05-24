@@ -68,7 +68,7 @@ export default function ExperienceTab(props) {
   const [openAlertDialog, setOpenAlertDialog] = React.useState(false);
 
   // user get from useAuth()
-  const auth = useAuth();
+  const { user: auth } = useAuth();
 
   // check action for popup: add new exp or edit exp
   const [isAddNewExp, setIsAddNewExp] = useState(true);

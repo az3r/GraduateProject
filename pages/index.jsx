@@ -7,8 +7,9 @@ import {
   Typography,
   Grid,
   Box,
-  Hidden
+  Hidden,
 } from '@material-ui/core';
+import Link from 'next/link';
 import { users } from '@libs/client';
 import { parseCookies } from '@client/cookies';
 
@@ -16,13 +17,13 @@ const useStyles = makeStyles({
   logo: {
     display: 'flex',
     marginTop: 20,
-    alignItems: 'center'
+    alignItems: 'center',
   },
   authen: {
     display: 'flex',
     justifyContent: 'flex-end',
-    marginTop: 20
-  }
+    marginTop: 20,
+  },
 });
 
 export default function Home() {
@@ -36,40 +37,76 @@ export default function Home() {
       </Head>
 
       <Container maxWidth="lg">
-        <Grid container direction='row' spacing={5}>
+        <Grid container direction="row" spacing={5}>
           <Grid item xs={12} md={6}>
             <Box className={classes.logo}>
               <img src="/logo.png" alt="Logo" />
-              <Typography variant="h3" style={{ fontWeight: 'bolder' }}>Smart Code</Typography>
+              <Typography variant="h3" style={{ fontWeight: 'bolder' }}>
+                Smart Code
+              </Typography>
             </Box>
           </Grid>
           <Grid item xs={12} md={6}>
             <Box className={classes.authen}>
-              <Button href="/login" style={{marginRight: 15}} variant="outlined" color='primary'>Login</Button>
-              <Button href="/register" style={{marginRight: 15}} variant="outlined" color='secondary'>Sign Up</Button>
+              <Link href="/login">
+                <Button
+                  style={{ marginRight: 15 }}
+                  variant="outlined"
+                  color="primary"
+                >
+                  Login
+                </Button>
+              </Link>
+              <Link href="/register">
+                <Button
+                  style={{ marginRight: 15 }}
+                  variant="outlined"
+                  color="secondary"
+                >
+                  Sign Up
+                </Button>
+              </Link>
             </Box>
           </Grid>
           <Grid item xs={12} md={6}>
             <Box>
-              <Typography variant="h4" style={{ color: 'gray' }}>"Make it work, make it right, make it fast"</Typography>
-              <Typography variant="subtitle1" style={{ color: 'gray' }}>~~ Kent Beck ~~</Typography>
+              <Typography variant="h4" style={{ color: 'gray' }}>
+                "Make it work, make it right, make it fast"
+              </Typography>
+              <Typography variant="subtitle1" style={{ color: 'gray' }}>
+                ~~ Kent Beck ~~
+              </Typography>
             </Box>
             <br />
             <br />
-            <Grid container direction='row' spacing={5}>
-              <Grid  item xs={12} md={6}>
+            <Grid container direction="row" spacing={5}>
+              <Grid item xs={12} md={6}>
                 <Typography variant="h4">For Companies</Typography>
                 <br />
-                <Typography variant='subtitle1' style={{ color: 'gray' }}>Providing the complex and good problems is a urgent mission of leading companies.</Typography>
+                <Typography variant="subtitle1" style={{ color: 'gray' }}>
+                  Providing the complex and good problems is a urgent mission of
+                  leading companies.
+                </Typography>
                 <br />
-                <Button href="/register/company" variant="contained" color='primary'>Sign Up & Create</Button>
+                <Link href="/register/company">
+                  <Button variant="contained" color="primary">
+                    Sign Up & Create
+                  </Button>
+                </Link>
               </Grid>
-              <Grid  item xs={12} md={6}>
+              <Grid item xs={12} md={6}>
                 <Typography variant="h4">For Developers</Typography>
                 <br />
-                <Typography variant='subtitle1' style={{ color: 'gray' }}>Experience is a crucial thing for our own developers. So don't hesitate... Let's do it right now!</Typography>
+                <Typography variant="subtitle1" style={{ color: 'gray' }}>
+                  Experience is a crucial thing for our own developers. So don't
+                  hesitate... Let's do it right now!
+                </Typography>
                 <br />
-                <Button href="/register/developer" variant="contained" color='primary'>Sign Up & Code</Button>
+                <Link href="/register">
+                  <Button variant="contained" color="primary">
+                    Sign Up & Code
+                  </Button>
+                </Link>
               </Grid>
             </Grid>
           </Grid>
@@ -79,7 +116,9 @@ export default function Home() {
             </Grid>
           </Hidden>
           <Grid item xs={12}>
-            <Typography variant='subtitle1' style={{ color: 'gray' }}>Copyright@ 2021 Smart Code |</Typography>
+            <Typography variant="subtitle1" style={{ color: 'gray' }}>
+              Copyright@ 2021 Smart Code |
+            </Typography>
           </Grid>
         </Grid>
       </Container>
@@ -87,35 +126,33 @@ export default function Home() {
   );
 }
 
-export async function getServerSideProps({req}) {
+export async function getServerSideProps({ req }) {
   const cookies = parseCookies(req);
   let user = null;
 
   try {
-
     if (Object.keys(cookies).length !== 0) {
       if (cookies.user) {
         user = JSON.parse(cookies.user);
 
-
-        if(user){
+        if (user) {
           user = await users.find(user.uid);
 
-          if(user.role === "developer"){
+          if (user.role === 'developer') {
             return {
               redirect: {
                 permanent: false,
-                destination: "/problem"
-              }
-            }
+                destination: '/problem',
+              },
+            };
           }
-          if(user.role === "company"){
+          if (user.role === 'company') {
             return {
               redirect: {
                 permanent: false,
-                destination: "/company-groups"
-              }
-            }
+                destination: '/company-groups',
+              },
+            };
           }
         }
       }
@@ -125,7 +162,6 @@ export async function getServerSideProps({req}) {
   }
 
   return {
-    props: {
-    },
+    props: {},
   };
 }

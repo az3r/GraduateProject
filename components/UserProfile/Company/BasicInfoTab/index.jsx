@@ -65,7 +65,7 @@ export default function BasicInfoTab(props) {
   };
 
   // user get from useAuth()
-  const auth = useAuth();
+  const { user: auth } = useAuth();
 
   // user state in this tab
   const [tabUser, setTabUser] = useState(user);

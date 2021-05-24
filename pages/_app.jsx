@@ -3,6 +3,7 @@ import * as React from 'react';
 import { CssBaseline, ThemeProvider } from '@material-ui/core';
 import { CookiesProvider } from 'react-cookie';
 import Head from 'next/head';
+import SnackBarProvider from '@hooks/snackbar';
 import { LightTheme } from '../styles/themes';
 import AuthProvider from '../hooks/auth';
 import '../styles/edit.css';
@@ -20,7 +21,9 @@ function MainApp({ Component, pageProps }) {
       <CssBaseline>
         <AuthProvider>
           <CookiesProvider>
-            <Component {...pageProps} />
+            <SnackBarProvider>
+              <Component {...pageProps} />
+            </SnackBarProvider>
           </CookiesProvider>
         </AuthProvider>
       </CssBaseline>
