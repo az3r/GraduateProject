@@ -33,8 +33,15 @@ export async function signinWithProvider({ provider }) {
   return FirebaseAuth().signInWithPopup(provider);
 }
 
-export async function signin({ email, password }) {
-  return FirebaseAuth().signInWithEmailAndPassword(email, password);
+export async function signinWithPassword({ email, password }) {
+  const credentials = await FirebaseAuth().signInWithEmailAndPassword(
+    email,
+    password
+  );
+  const user = find(credentials.user.uid);
+  if (user) return user;
+  credentials.user.delete();
+  return Promise.reject({ code: 'auth/user-not-found' });
 }
 
 export async function sendVerifyEmail(user, url) {

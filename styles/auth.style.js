@@ -14,8 +14,7 @@ export default makeStyles((theme) => ({
     flexDirection: 'column',
   },
   card: {
-    maxWidth: '400px',
-    paddingBottom: theme.spacing(1),
+    padding: theme.spacing(4),
   },
   step: {
     width: '100%',
@@ -23,9 +22,12 @@ export default makeStyles((theme) => ({
     padding: theme.spacing(0, 4, 0, 4),
   },
   input: {
+    width: 400,
     margin: theme.spacing(2, 0),
   },
   button: {
-    margin: theme.spacing(2, 0, 4, 0),
+    padding: theme.spacing(1),
+    height: 40,
+    margin: theme.spacing(4, 0, 2, 0),
   },
 }));
