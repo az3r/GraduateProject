@@ -31,6 +31,7 @@ import clsx from 'clsx';
 import React, { useState } from 'react';
 import HelpIcon from '@material-ui/icons/Help';
 
+
 ClassicEditor.defaultConfig = {
   toolbar: {
     items: [
@@ -290,7 +291,7 @@ export default function CodingQuestionForm({
     } catch (err) {
       setMessage({
         ...message,
-        test: `Error!\nPlease check your input and output again. Make sure you submit only 1 test case.`,
+        test: `Error!\nMessage: ${err.status}`,
         isTesting: false,
         testResult: true,
         isTestSuccess: false,
@@ -631,6 +632,7 @@ export default function CodingQuestionForm({
               {message.test}
             </pre>
           </Box>
+          <a href='/guideline test case files.pdf' download>***Download guideline for format of submitted files***</a>
         </Box>
       </Box>
 
