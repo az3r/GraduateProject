@@ -4,7 +4,7 @@ import { CompanyAppBar, DeveloperAppBar, GuestAppBar } from '../AppBar';
 import { useAuth } from '../../hooks/auth';
 
 export default function Layout({ children }) {
-  const user = useAuth();
+  const { user } = useAuth();
   const AppBar = getLayout(user?.role);
 
   return (
