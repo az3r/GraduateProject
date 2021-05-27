@@ -7,10 +7,11 @@ import ListItemText from '@material-ui/core/ListItemText';
 import ListItemAvatar from '@material-ui/core/ListItemAvatar';
 import Avatar from '@material-ui/core/Avatar';
 import Typography from '@material-ui/core/Typography';
-import { getParticipants } from '@libs/client/exams';
+import { getAllExamSubmissions, getParticipants } from '@libs/client/exams';
 import { Box, Button, Link, OutlinedInput } from '@material-ui/core';
 import { useRouter } from 'next/router';
 import { Pagination } from '@material-ui/lab';
+import { CSVLink } from 'react-csv';
 
 const useStyles = makeStyles({
   root: {
@@ -38,8 +39,17 @@ export default function ParticipantsTab() {
   const [searchKey, setSearchKey] = useState('');
   const [numberOfPages, setNumberOfPages] = useState(1);
   const [page, setPage] = useState(1);
+  const [submissions, setSubmissions] = useState([]);
   const router = useRouter();
   const { id, exam } = router.query;
+
+  const headers = [
+    { label: 'Full name', key: 'name' },
+    { label: 'Email', key: 'email' },
+    { label: 'Corrects', key: 'correct' },
+    { label: 'Score', key: 'score' },
+    { label: 'Time', key: 'time' },
+  ];
 
   useEffect(async () => {
     const examJoiners = await getParticipants(exam);
@@ -48,11 +58,14 @@ export default function ParticipantsTab() {
       examJoiners,
       0,
       ITEMS_PER_PAGE,
-      searchKey,
+      searchKey
     );
-    setFilterUsers(filtered);
     const pages = getNumberOfPages(examJoiners);
     setNumberOfPages(pages);
+
+    const allSubmissions = await getAllExamSubmissions(exam);
+    setSubmissions(allSubmissions);
+    setFilterUsers(filtered);
   }, []);
 
   const handleChangePage = (event, value) => {
@@ -61,7 +74,7 @@ export default function ParticipantsTab() {
       participants,
       value - 1,
       ITEMS_PER_PAGE,
-      searchKey,
+      searchKey
     );
     setFilterUsers(filtered);
   };
@@ -100,45 +113,57 @@ export default function ParticipantsTab() {
       {filtedUsers.length === 0 ? (
         <Typography>Participants are empty</Typography>
       ) : (
-        <List className={classes.root}>
-          {filtedUsers.map((value) => (
-            <div key={value.id}>
-              <ListItem alignItems="flex-start">
-                <ListItemAvatar>
-                  <Avatar src={value.avatar} />
-                </ListItemAvatar>
-                <ListItemText
-                  primary={value.name}
-                  secondary={
-                    <>
-                      <Typography
-                        component="span"
-                        variant="body2"
-                        className={classes.inline}
-                        color="textPrimary"
-                      >
-                        {value.email}
-                      </Typography>
-                      <Link
-                        target="_blank"
-                        href={`/company-groups/${id}/examinations/result?exam=${exam}&uid=${value.id}`}
-                      >
-                        <Button
-                          variant="contained"
-                          color="secondary"
-                          style={{ float: 'right' }}
+        <>
+          <Box display="flex" justifyContent="flex-end">
+            <CSVLink
+              filename="Results.csv"
+              data={submissions}
+              headers={headers}
+              style={{ textDecoration: 'none' }}
+            >
+              <Button variant="outlined">Export results</Button>
+            </CSVLink>
+          </Box>
+          <List className={classes.root}>
+            {filtedUsers.map((value) => (
+              <div key={value.id}>
+                <ListItem alignItems="flex-start">
+                  <ListItemAvatar>
+                    <Avatar src={value.avatar} />
+                  </ListItemAvatar>
+                  <ListItemText
+                    primary={value.name}
+                    secondary={
+                      <>
+                        <Typography
+                          component="span"
+                          variant="body2"
+                          className={classes.inline}
+                          color="textPrimary"
                         >
-                          Result
-                        </Button>
-                      </Link>
-                    </>
-                  }
-                />
-              </ListItem>
-              <Divider variant="inset" component="li" />
-            </div>
-          ))}
-        </List>
+                          {value.email}
+                        </Typography>
+                        <Link
+                          target="_blank"
+                          href={`/company-groups/${id}/examinations/result?exam=${exam}&uid=${value.id}`}
+                        >
+                          <Button
+                            variant="contained"
+                            color="secondary"
+                            style={{ float: 'right' }}
+                          >
+                            Result
+                          </Button>
+                        </Link>
+                      </>
+                    }
+                  />
+                </ListItem>
+                <Divider variant="inset" component="li" />
+              </div>
+            ))}
+          </List>
+        </>
       )}
       <Box display="flex" justifyContent="center" p={2}>
         <Pagination
