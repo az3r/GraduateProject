@@ -48,10 +48,10 @@ export function getFormatResultFromFile(text) {
     if (splitedText[i] !== '\n') {
       arrayOfVariables = [...arrayOfVariables, splitedText[i]];
       if (i === splitedText.length - 1) {
-        result = [...result, arrayOfVariables.join(' ').trim()];
+        result = [...result, arrayOfVariables.join('').trim()];
       }
     } else if (splitedText[i] === '\n') {
-      result = [...result, arrayOfVariables.join(' ').trim()];
+      result = [...result, arrayOfVariables.join('').trim()];
       arrayOfVariables = [];
     }
   }

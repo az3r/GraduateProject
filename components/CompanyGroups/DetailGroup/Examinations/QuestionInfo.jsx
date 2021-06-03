@@ -36,9 +36,9 @@ const useStyles = makeStyles((theme) => ({
     height: 270,
   },
   tabContent: {
-    width: '65%',
+    width: '70%',
     overflow: 'scroll',
-    overflowX: 'hidden',
+    overflowX: 'scroll',
   },
 }));
 

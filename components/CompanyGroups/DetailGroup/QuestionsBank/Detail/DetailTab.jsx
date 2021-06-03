@@ -85,8 +85,6 @@ const useStyles = makeStyles((theme) => ({
   },
   tabs: {
     borderRight: `1px solid ${theme.palette.divider}`,
-    height: 500,
-    overflowY: 'scroll',
   },
   root: {
     flexGrow: 1,
@@ -95,9 +93,9 @@ const useStyles = makeStyles((theme) => ({
     height: 270,
   },
   tabContent: {
-    width: '65%',
+    width: '70%',
     overflow: 'scroll',
-    overflowX: 'hidden',
+    overflowX: 'scroll',
   },
 }));
 
