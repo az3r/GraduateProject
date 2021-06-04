@@ -566,6 +566,14 @@ export async function getServerSideProps({ params, req }) {
             }
           }
         }
+        else {
+          return {
+            redirect: {
+              permanent: false,
+              destination: "/login"
+            }
+          }
+        }
       }
       else{
         return {

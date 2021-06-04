@@ -123,8 +123,45 @@ export async function getServerSideProps({ params, req}) {
     if (Object.keys(cookies).length !== 0) {
       if (cookies.user) {
         user = JSON.parse(cookies.user);
-        user = await developers.get(user.uid);
+
+        if(user){
+          user = await developers.get(user.uid);
+
+          // Unaccessed forbidden page
+          if(user === undefined){
+            return {
+              redirect: {
+                permanent: false,
+                destination: "/unaccessed_forbidden"
+              }
+            }
+          }
+        }
+        else{
+          return {
+            redirect: {
+              permanent: false,
+              destination: '/login'
+            }
+          };
+        }
       }
+      else {
+        return {
+          redirect: {
+            permanent: false,
+            destination: '/login'
+          }
+        };
+      }
+    }
+    else {
+      return {
+        redirect: {
+          permanent: false,
+          destination: '/login',
+        }
+      };
     }
   } catch (e) {
     console.log(e);

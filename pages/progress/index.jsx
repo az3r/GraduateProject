@@ -270,6 +270,14 @@ export async function getServerSideProps({req}) {
           unsolvedProblemsNumber = unsolvedProblems.length;
 
         }
+        else {
+          return {
+            redirect: {
+              permanent: false,
+              destination: "/login"
+            }
+          }
+        }
       }
       else{
         return {

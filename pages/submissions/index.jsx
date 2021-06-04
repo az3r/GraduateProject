@@ -196,6 +196,14 @@ export async function getServerSideProps({req}) {
           // Get all problem submissions
           problemSubmissions = await developers.getAllProblemSubmissions(user.id, false);
         }
+        else{
+          return {
+            redirect: {
+              permanent: false,
+              destination: "/login"
+            }
+          }
+        }
       }
       else{
         return {

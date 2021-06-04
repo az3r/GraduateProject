@@ -14,6 +14,7 @@ import useStyles from '@styles/auth.style';
 import { GitHub, Visibility, VisibilityOff } from '@material-ui/icons';
 import { useRouter } from 'next/router';
 import * as cookies from '@utils/cookies';
+import Head from 'next/head';
 import { useSnackBar } from '../hooks/snackbar';
 import { useAuth } from '../hooks/auth';
 import { FirebaseAuth } from '../libs/client/firebase';
@@ -94,6 +95,12 @@ export default function Login() {
   }
 
   return (
+    <>
+    <Head>
+      <title>Login | Smart Code</title>
+      <link rel="icon" href="/favicon.ico" />
+    </Head>
+
     <div className={styles.root}>
       <Card className={styles.card}>
         <form onSubmit={submit} className={styles.form}>
@@ -184,5 +191,6 @@ export default function Login() {
         </form>
       </Card>
     </div>
+    </>
   );
 }
