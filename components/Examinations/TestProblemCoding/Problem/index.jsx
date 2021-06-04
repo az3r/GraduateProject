@@ -551,7 +551,7 @@ export default function Problem({
                               Input (stdin)
                             </Typography>
                             <Typography
-                              style={{ marginLeft: 20, fontWeight: 'bolder' }}
+                              style={{ marginLeft: 20, fontWeight: 'bolder', whiteSpace: 'pre-line' }}
                             >
                               {result.input}
                             </Typography>
@@ -560,7 +560,7 @@ export default function Problem({
                               Your Output (stdout)
                             </Typography>
                             <Typography
-                              style={{ marginLeft: 20, fontWeight: 'bolder' }}
+                              style={{ marginLeft: 20, fontWeight: 'bolder', whiteSpace: 'pre-line' }}
                             >
                               {result.actual}
                             </Typography>
@@ -569,7 +569,7 @@ export default function Problem({
                               Expected Output
                             </Typography>
                             <Typography
-                              style={{ marginLeft: 20, fontWeight: 'bolder' }}
+                              style={{ marginLeft: 20, fontWeight: 'bolder', whiteSpace: 'pre-line' }}
                             >
                               {result.expected}
                             </Typography>
@@ -582,7 +582,7 @@ export default function Problem({
                               Input (stdin)
                             </Typography>
                             <Typography
-                              style={{ marginLeft: 20, fontWeight: 'bolder' }}
+                              style={{ marginLeft: 20, fontWeight: 'bolder', whiteSpace: 'pre-line' }}
                             >
                               {result.input}
                             </Typography>
@@ -591,7 +591,7 @@ export default function Problem({
                               Your Output (stdout)
                             </Typography>
                             <Typography
-                              style={{ marginLeft: 20, fontWeight: 'bolder' }}
+                              style={{ marginLeft: 20, fontWeight: 'bolder', whiteSpace: 'pre-line' }}
                             >
                               {result.input}
                             </Typography>
@@ -600,7 +600,7 @@ export default function Problem({
                               Expected Output
                             </Typography>
                             <Typography
-                              style={{ marginLeft: 20, fontWeight: 'bolder' }}
+                              style={{ marginLeft: 20, fontWeight: 'bolder', whiteSpace: 'pre-line' }}
                             >
                               {result.expected}
                             </Typography>

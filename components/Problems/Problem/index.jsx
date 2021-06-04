@@ -25,6 +25,7 @@ import withReactContent from 'sweetalert2-react-content';
 import CloseIcon from '@material-ui/icons/Close';
 import CheckIcon from '@material-ui/icons/Check';
 
+
 ClassicEditor.defaultConfig = {
   toolbar: {
     items: [
@@ -608,15 +609,15 @@ export default function Problem({problem, user}) {  // { problemSubmissionHistor
                                   <br />
                                   <Typography variant="h6" style={{ color: 'gray' }}>Input (stdin)</Typography>
                                   <Typography
-                                    style={{ marginLeft: 20, fontWeight: 'bolder' }}>{result.input}</Typography>
+                                    style={{ marginLeft: 20, fontWeight: 'bolder', whiteSpace: 'pre-line' }}>{result.input}</Typography>
                                   <br />
                                   <Typography variant="h6" style={{ color: 'gray' }}>Your Output (stdout)</Typography>
                                   <Typography
-                                    style={{ marginLeft: 20, fontWeight: 'bolder' }}>{result.actual}</Typography>
+                                    style={{ marginLeft: 20, fontWeight: 'bolder', whiteSpace: 'pre-line' }}>{result.actual}</Typography>
                                   <br />
                                   <Typography variant="h6" style={{ color: 'gray' }}>Expected Output</Typography>
                                   <Typography
-                                    style={{ marginLeft: 20, fontWeight: 'bolder' }}>{result.expected}</Typography>
+                                    style={{ marginLeft: 20, fontWeight: 'bolder', whiteSpace: 'pre-line' }}>{result.expected}</Typography>
                                   <br />
                                 </>
                               }
@@ -625,15 +626,15 @@ export default function Problem({problem, user}) {  // { problemSubmissionHistor
                                 <>
                                   <Typography variant="h6" style={{ color: 'gray' }}>Input (stdin)</Typography>
                                   <Typography
-                                    style={{ marginLeft: 20, fontWeight: 'bolder' }}>{result.input}</Typography>
+                                    style={{ marginLeft: 20, fontWeight: 'bolder', whiteSpace: 'pre-line' }}>{result.input}</Typography>
                                   <br />
                                   <Typography variant="h6" style={{ color: 'gray' }}>Your Output (stdout)</Typography>
                                   <Typography
-                                    style={{ marginLeft: 20, fontWeight: 'bolder' }}>{result.expected}</Typography>
+                                    style={{ marginLeft: 20, fontWeight: 'bolder', whiteSpace: 'pre-line' }}>{result.expected}</Typography>
                                   <br />
                                   <Typography variant="h6" style={{ color: 'gray' }}>Expected Output</Typography>
                                   <Typography
-                                    style={{ marginLeft: 20, fontWeight: 'bolder' }}>{result.expected}</Typography>
+                                    style={{ marginLeft: 20, fontWeight: 'bolder', whiteSpace: 'pre-line' }}>{result.expected}</Typography>
                                   <br />
                                 </>
                               }

@@ -543,6 +543,14 @@ export async function getServerSideProps({ params, req }) {
             params.id
           ); // user.id,
         }
+        else {
+          return {
+            redirect: {
+              permanent: false,
+              destination: '/login',
+            },
+          };
+        }
       } else {
         return {
           redirect: {

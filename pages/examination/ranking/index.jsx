@@ -13,6 +13,7 @@ import Breadcrumbs from '@material-ui/core/Breadcrumbs';
 import Pagination from '@material-ui/lab/Pagination';
 
 import { developers } from '@libs/client';
+import { parseCookies } from '@client/cookies';
 
 const useStyles = makeStyles({
   userBox: {
@@ -142,7 +143,58 @@ export default function Ranking({usersExamScore}) {
   );
 }
 
-export async function getServerSideProps() {
+export async function getServerSideProps({req}) {
+  const cookies = parseCookies(req);
+  let user = null;
+
+  try {
+    if (Object.keys(cookies).length !== 0) {
+      if (cookies.user) {
+        user = JSON.parse(cookies.user);
+
+        if(user){
+          user = await developers.get(user.uid);
+
+          // Unaccessed forbidden page
+          if(user === undefined){
+            return {
+              redirect: {
+                permanent: false,
+                destination: "/unaccessed_forbidden"
+              }
+            }
+          }
+        }
+        else {
+          return {
+            redirect: {
+              permanent: false,
+              destination: "/login"
+            }
+          }
+        }
+      }
+      else{
+        return {
+          redirect: {
+            permanent: false,
+            destination: "/login"
+          }
+        }
+      }
+    }
+    else{
+      return {
+        redirect: {
+          permanent: false,
+          destination: "/login"
+        }
+      }
+    }
+  } catch (e) {
+    console.log(e);
+  }
+
   const usersExamScore = await developers.getUserByExamScore();
 
   return {

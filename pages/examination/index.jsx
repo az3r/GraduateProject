@@ -95,6 +95,30 @@ export async function getServerSideProps({req}) {
 
           joinedExams = await developers.getJoinedExams(user);
         }
+        else {
+          return {
+            redirect: {
+              permanent: false,
+              destination: "/login"
+            }
+          }
+        }
+      }
+      else {
+        return {
+          redirect: {
+            permanent: false,
+            destination: "/login"
+          }
+        }
+      }
+    }
+    else {
+      return {
+        redirect: {
+          permanent: false,
+          destination: "/login"
+        }
       }
     }
   }

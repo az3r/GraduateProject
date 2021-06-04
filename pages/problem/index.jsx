@@ -89,7 +89,30 @@ export async function getServerSideProps({req}) {
 
           console.log(unsolvedProblems);
         }
-
+        else {
+          return {
+            redirect: {
+              permanent: false,
+              destination: "/login"
+            }
+          }
+        }
+      }
+      else {
+        return {
+          redirect: {
+            permanent: false,
+            destination: "/login"
+          }
+        }
+      }
+    }
+    else {
+      return {
+        redirect: {
+          permanent: false,
+          destination: "/login"
+        }
       }
     }
   } catch (e) {

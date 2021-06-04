@@ -343,6 +343,14 @@ export async function getServerSideProps({ params, req }) {
             }
           }
         }
+        else {
+          return {
+            redirect: {
+              permanent: false,
+              destination: `/login?returnURL=examination/${params.id}`
+            }
+          }
+        }
       }
       else{
         return {
@@ -375,7 +383,7 @@ export async function getServerSideProps({ params, req }) {
 
   // Redirect to /examination/start/examId if you have participated but not submitted yet
   const isSubmitted = await developers.getExamResults(user.id, params.id);
-  if(isParticipated === true && isSubmitted.length === 0){
+  if(isParticipated === true && isSubmitted.length === 0 && examination.endAt >= Date.now()){
     return {
       redirect: {
         permanent: false,
