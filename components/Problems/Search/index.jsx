@@ -72,8 +72,7 @@ export default function Search({
             <MenuItem value="all">All Language</MenuItem>
             <MenuItem value="csharp">C#</MenuItem>
             <MenuItem value="java">Java</MenuItem>
-            <MenuItem value="javascript">Javascript</MenuItem>
-            <MenuItem value="c">C</MenuItem>
+            <MenuItem value="python">Python</MenuItem>
           </Select>
         </FormControl>
       </Grid>
