@@ -32,7 +32,7 @@ export default function Home() {
   return (
     <>
       <Head>
-        <title>Smart Code</title>
+        <title>Smart Coder</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
