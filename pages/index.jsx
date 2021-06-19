@@ -42,7 +42,7 @@ export default function Home() {
             <Box className={classes.logo}>
               <img src="/logo.png" alt="Logo" />
               <Typography variant="h3" style={{ fontWeight: 'bolder' }}>
-                Smart Code
+                Smart Coder
               </Typography>
             </Box>
           </Grid>
