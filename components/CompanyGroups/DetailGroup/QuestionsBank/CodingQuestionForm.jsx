@@ -31,7 +31,6 @@ import clsx from 'clsx';
 import React, { useState } from 'react';
 import HelpIcon from '@material-ui/icons/Help';
 
-
 ClassicEditor.defaultConfig = {
   toolbar: {
     items: [
@@ -46,13 +45,13 @@ ClassicEditor.defaultConfig = {
       'insertTable',
       '|',
       'undo',
-      'redo'
-    ]
+      'redo',
+    ],
   },
   table: {
-    contentToolbar: [ 'tableColumn', 'tableRow', 'mergeTableCells' ]
+    contentToolbar: ['tableColumn', 'tableRow', 'mergeTableCells'],
   },
-  language: 'en'
+  language: 'en',
 };
 
 const useStyles = makeStyles((theme) => ({
@@ -268,7 +267,7 @@ export default function CodingQuestionForm({
             score: 0,
           },
         ],
-        runtime: []
+        runtime: [],
       });
 
       let resultMessage = '';
@@ -632,7 +631,9 @@ export default function CodingQuestionForm({
               {message.test}
             </pre>
           </Box>
-          <a href='/guideline test case files.pdf' download>***Download guideline for format of submitted files***</a>
+          <a href="/guideline test case files.pdf" download>
+            ***Download guideline for format of submitted files***
+          </a>
         </Box>
       </Box>
 
@@ -729,7 +730,7 @@ export default function CodingQuestionForm({
                 </div>
               ) : (
                 <Typography>
-                  There are no records for list of question
+                  There are no records
                 </Typography>
               )}
             </DialogContent>
@@ -760,7 +761,7 @@ export default function CodingQuestionForm({
             label="Add runtime (in ms)"
             className={classes.input}
             onChange={handleRuntimeChange}
-            helperText="Runtime must be &lt; previous one"
+            helperText="Runtime must be &gt; previous one"
             error={message.runtime}
           />
           <TextField
@@ -772,6 +773,9 @@ export default function CodingQuestionForm({
             helperText="Percentage must be &lt; previous one"
             error={message.percentage}
           />
+        </Box>
+        <Box display="flex" justifyContent="center" mb={1}>
+          <Typography style={{ fontSize: '0.75rem', color: 'rgba(0, 0, 0, 0.54)' }}>E.g: &le; 200ms (100%) means user will get 100% of total score when runtime &le; 200ms</Typography>
         </Box>
         <Box display="flex" justifyContent="center">
           <Button color="primary" variant="outlined" onClick={handleAddRuntime}>

@@ -70,7 +70,12 @@ function TabPanel2(props) {
   );
 }
 
-export default function DetailTab({ user, examination, handlePublish, handleUnpublish }) {
+export default function DetailTab({
+  user,
+  examination,
+  handlePublish,
+  handleUnpublish,
+}) {
   const { startAt } = examination;
   const { endAt } = examination;
   const [open, setOpen] = useState(false);
@@ -127,7 +132,7 @@ export default function DetailTab({ user, examination, handlePublish, handleUnpu
     await unpublishExam(exam);
     handleUnpublish();
     setOpen(false);
-  }
+  };
 
   const handleChange = (event, newValue) => {
     setValueTab(newValue);
@@ -333,61 +338,63 @@ export default function DetailTab({ user, examination, handlePublish, handleUnpu
           ))}
         </div>
       </Box>
-      <Box m={5} display="flex" justifyContent="center">
-        <Tooltip title="Cannot delete published examination">
-          <IconButton aria-label="delete">
-            <HelpIcon />
-          </IconButton>
-        </Tooltip>
-        <Button
-          onClick={handleClickOpen}
-          variant="contained"
-          style={{ color: 'red' }}
-          startIcon={<DeleteIcon />}
-          disabled = {!!examination.published}
-        >
-          Delete examination
-        </Button>
-        <Dialog open={open2} onClose={handleClose}>
-          <DialogContent style={{ width: 500 }}>
-            <Box>
-              <Box display="flex" justifyContent="center" m={3}>
-                <ErrorOutlineIcon style={{ fontSize: 50, color: 'red' }} />
+      {examination.owner === user.id ? (
+        <Box m={5} display="flex" justifyContent="center">
+          <Tooltip title="Cannot delete published examination">
+            <IconButton aria-label="delete">
+              <HelpIcon />
+            </IconButton>
+          </Tooltip>
+          <Button
+            onClick={handleClickOpen}
+            variant="contained"
+            style={{ color: 'red' }}
+            startIcon={<DeleteIcon />}
+            disabled={!!examination.published}
+          >
+            Delete examination
+          </Button>
+          <Dialog open={open2} onClose={handleClose}>
+            <DialogContent style={{ width: 500 }}>
+              <Box>
+                <Box display="flex" justifyContent="center" m={3}>
+                  <ErrorOutlineIcon style={{ fontSize: 50, color: 'red' }} />
+                </Box>
+                <Typography style={{ textAlign: 'center' }}>
+                  Do you want to delete this examination?
+                </Typography>
               </Box>
-              <Typography style={{ textAlign: 'center' }}>
-                Do you want to delete this examination?
-              </Typography>
-            </Box>
-          </DialogContent>
-          <DialogActions>
-            <Button onClick={handleAgree} color="primary" autoFocus>
-              Agree
-            </Button>
-            <Button onClick={handleClose} color="secondary">
-              Disagree
-            </Button>
-          </DialogActions>
-        </Dialog>
-        <Dialog open={open3} onClose={handleClose2}>
-          <DialogContent style={{ width: 500 }}>
-            <Box>
-              <Box display="flex" justifyContent="center" m={3}>
-                <CheckCircleOutlineIcon
-                  style={{ fontSize: 50, color: '#088247' }}
-                />
+            </DialogContent>
+            <DialogActions>
+              <Button onClick={handleAgree} color="primary" autoFocus>
+                Agree
+              </Button>
+              <Button onClick={handleClose} color="secondary">
+                Disagree
+              </Button>
+            </DialogActions>
+          </Dialog>
+          <Dialog open={open3} onClose={handleClose2}>
+            <DialogContent style={{ width: 500 }}>
+              <Box>
+                <Box display="flex" justifyContent="center" m={3}>
+                  <CheckCircleOutlineIcon
+                    style={{ fontSize: 50, color: '#088247' }}
+                  />
+                </Box>
+                <Typography style={{ textAlign: 'center' }}>
+                  Delete successfully
+                </Typography>
               </Box>
-              <Typography style={{ textAlign: 'center' }}>
-                Delete successfully
-              </Typography>
-            </Box>
-          </DialogContent>
-          <DialogActions>
-            <Button onClick={handleClose2} color="primary">
-              Close
-            </Button>
-          </DialogActions>
-        </Dialog>
-      </Box>
+            </DialogContent>
+            <DialogActions>
+              <Button onClick={handleClose2} color="primary">
+                Close
+              </Button>
+            </DialogActions>
+          </Dialog>
+        </Box>
+      ) : null}
     </Box>
   );
 }

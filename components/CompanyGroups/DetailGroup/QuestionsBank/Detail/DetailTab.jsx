@@ -97,6 +97,11 @@ const useStyles = makeStyles((theme) => ({
     overflow: 'scroll',
     overflowX: 'scroll',
   },
+  info: {
+    borderRight: `1px solid ${theme.palette.divider}`,
+    height: 560,
+    overflowY: 'scroll'
+  }
 }));
 
 const Transition = React.forwardRef((props, ref) => (
@@ -142,7 +147,7 @@ export default function DetailTab({ user, problemProp }) {
         sm={12}
         xs={12}
         style={{ wordWrap: 'break-word' }}
-        className={classes.tabs}
+        className={classes.info}
       >
         <Box display="flex" m={1}>
           <Box flexGrow={1}>
