@@ -51,8 +51,8 @@ export default function UserAvatar(props) {
 
     // is image
     try {
-      await userServices.updateAvatar(auth, user.role, image);
-      setUser({ ...user, avatar: auth.photoURL });
+      const url = await userServices.updateAvatar(auth, user.role, image);
+      setUser({ ...user, avatar: url });
 
       setSnackBarState({
         open: true,

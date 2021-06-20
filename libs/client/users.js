@@ -51,15 +51,12 @@ export async function updateAvatar(user, role, file) {
     role === 'developer' ? collections.developers : collections.companies;
 
   // upload to storage
-  const ref = Storage().ref(`avatars/${user.uid}`);
+  const ref = Storage().ref(`avatars/${user.id}`);
   await ref.put(file);
   const url = await ref.getDownloadURL();
 
   // sync in firestore
-  await Firestore()
-    .collection(collection)
-    .doc(user.uid)
-    .update({ avatar: url });
+  await Firestore().collection(collection).doc(user.id).update({ avatar: url });
 
   return url;
 }
