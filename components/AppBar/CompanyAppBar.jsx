@@ -40,12 +40,12 @@ const useStyles = makeStyles((theme) => ({
 
 export default function MemberAppBar() {
   const styles = useStyles();
-  const user = useAuth();
+  const { user } = useAuth();
   const [open, setOpen] = React.useState(false);
   const anchorRef = React.useRef(null);
 
   return (
-    <AppBar position="static" style={{position: 'relative',zIndex:1}}>
+    <AppBar position="static" style={{ position: 'relative', zIndex: 1 }}>
       <Toolbar className={styles.menu}>
         <Link href="/company-groups">
           <MenuItem>
