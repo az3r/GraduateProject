@@ -42,11 +42,8 @@ export default function Register({ type }) {
   function onSuccess(user) {
     setUser(user);
     cookies.save(user, true);
-    const { returnURL } = router.query;
     const destination =
-      user.role === 'company'
-        ? `/company-groups/${user.id}`
-        : `/${returnURL || ''}`;
+      user.role === 'company' ? `/company-groups/${user.id}` : '/problem';
     router.push(destination);
 
     alert({
