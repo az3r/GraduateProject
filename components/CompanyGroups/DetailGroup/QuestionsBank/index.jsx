@@ -166,6 +166,7 @@ export default function GroupQuestionsBank({ questions }) {
       <Table className={classes.table} size="small" aria-label="a dense table">
         <TableHead>
           <TableRow>
+            <TableCell style={{ fontWeight: 'bolder' }}>No</TableCell>
             <TableCell style={{ fontWeight: 'bolder' }}>Questions</TableCell>
             <TableCell style={{ fontWeight: 'bolder' }}>Type</TableCell>
             <TableCell style={{ fontWeight: 'bolder' }}>Language</TableCell>
@@ -185,6 +186,7 @@ export default function GroupQuestionsBank({ questions }) {
                     : { background: 'white' }
                 }
               >
+                <TableCell>{(page - 1) * 10 + index + 1}</TableCell>
                 <TableCell
                   component="th"
                   scope="row"
