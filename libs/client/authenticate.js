@@ -8,14 +8,13 @@ export async function register({ username, email, password, role }) {
     password
   );
 
-  await setupAccount({
+  return setupAccount({
     id: credentials.user.uid,
     email,
     password,
     role,
     username,
   });
-  return credentials;
 }
 
 export async function signinWithPassword({ email, password }) {
@@ -23,7 +22,7 @@ export async function signinWithPassword({ email, password }) {
     email,
     password
   );
-  const user = find(credentials.user.uid);
+  const user = await find(credentials.user.uid);
   if (user) return user;
   credentials.user.delete();
   return Promise.reject({ code: 'auth/user-not-found' });
@@ -49,7 +48,7 @@ export async function setupAccount({ id, username, avatar, email, role }) {
     name: username,
     email,
     role,
-    avatar: avatar || 'https://picsum.photos/200',
+    avatar: avatar || 'https://picsum.photos/64',
     createdOn: Firestore.Timestamp.now(),
   });
 
@@ -58,4 +57,13 @@ export async function setupAccount({ id, username, avatar, email, role }) {
     .collection(collections.attributes)
     .doc(collections.attributes)
     .set({ parent: id });
+
+  return {
+    id,
+    name: username,
+    email,
+    role,
+    avatar: avatar || 'https://picsum.photos/64',
+    createdOn: Firestore.Timestamp.now(),
+  };
 }

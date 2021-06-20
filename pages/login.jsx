@@ -67,6 +67,7 @@ export default function Login() {
       const user = await authenticate.signinWithPassword(form);
       onSuccess(user);
     } catch (error) {
+      console.error(error);
       onFailure(error.code);
     } finally {
       process(false);
@@ -96,101 +97,101 @@ export default function Login() {
 
   return (
     <>
-    <Head>
-      <title>Login | Smart Code</title>
-      <link rel="icon" href="/favicon.ico" />
-    </Head>
+      <Head>
+        <title>Login | Smart Code</title>
+        <link rel="icon" href="/favicon.ico" />
+      </Head>
 
-    <div className={styles.root}>
-      <Card className={styles.card}>
-        <form onSubmit={submit} className={styles.form}>
-          <Typography align="center" variant="h3">
-            Smart Coder
-          </Typography>
-          <Box paddingTop={1}>
-            <Typography align="center" variant="h4">
-              Sign in
+      <div className={styles.root}>
+        <Card className={styles.card}>
+          <form onSubmit={submit} className={styles.form}>
+            <Typography align="center" variant="h3">
+              Smart Coder
             </Typography>
-          </Box>
-          <TextField
-            className={styles.input}
-            required
-            label="Email"
-            aria-label="email"
-            name="email"
-            type="email"
-            onChange={(e) =>
-              update((prev) => ({ ...prev, email: e.target.value }))
-            }
-            value={form.email}
-          />
-          <TextField
-            className={styles.input}
-            required
-            label="Password"
-            aria-label="password"
-            name="password"
-            type={password ? 'password' : 'text'}
-            value={form.password}
-            onChange={(e) =>
-              update((prev) => ({ ...prev, password: e.target.value }))
-            }
-            InputProps={{
-              endAdornment: (
-                <InputAdornment position="end">
-                  <IconButton
-                    aria-label="show-password-button"
-                    edge="end"
-                    onClick={() => toggle((prev) => !prev)}
-                  >
-                    {password ? <Visibility /> : <VisibilityOff />}
-                  </IconButton>
-                </InputAdornment>
-              ),
-            }}
-          />
-          <Button
-            fullWidth
-            disabled={submitting}
-            className={styles.button}
-            type="submit"
-            variant="contained"
-            color="primary"
-          >
-            {!submitting && 'Sign in'}
-            {submitting && (
-              <CircularProgress style={{ width: 30, height: 30 }} />
-            )}
-          </Button>
-          <Box display="flex" width="100%" justifyContent="center">
-            <IconButton onClick={() => signInWithProvider('google')}>
-              <img
-                width="36px"
-                height="36px"
-                src="logo_google.webp"
-                alt="Google's logo"
-              />
-            </IconButton>
-            <IconButton onClick={() => signInWithProvider('github')}>
-              <GitHub style={{ width: 40, height: 40, color: '#000000' }} />
-            </IconButton>
-          </Box>
-          <Box
-            display="flex"
-            justifyContent="center"
-            alignItems="center"
-            paddingTop={2}
-          >
-            <Typography align="center">Does not have an account?</Typography>
-            <Link href="/register">
-              <Button variant="text" color="secondary">
-                Register
-              </Button>
-            </Link>
-          </Box>
-        </form>
-      </Card>
-    </div>
+            <Box paddingTop={1}>
+              <Typography align="center" variant="h4">
+                Sign in
+              </Typography>
+            </Box>
+            <TextField
+              className={styles.input}
+              required
+              label="Email"
+              aria-label="email"
+              name="email"
+              type="email"
+              onChange={(e) =>
+                update((prev) => ({ ...prev, email: e.target.value }))
+              }
+              value={form.email}
+            />
+            <TextField
+              className={styles.input}
+              required
+              label="Password"
+              aria-label="password"
+              name="password"
+              type={password ? 'password' : 'text'}
+              value={form.password}
+              onChange={(e) =>
+                update((prev) => ({ ...prev, password: e.target.value }))
+              }
+              InputProps={{
+                endAdornment: (
+                  <InputAdornment position="end">
+                    <IconButton
+                      aria-label="show-password-button"
+                      edge="end"
+                      onClick={() => toggle((prev) => !prev)}
+                    >
+                      {password ? <Visibility /> : <VisibilityOff />}
+                    </IconButton>
+                  </InputAdornment>
+                ),
+              }}
+            />
+            <Button
+              fullWidth
+              disabled={submitting}
+              className={styles.button}
+              type="submit"
+              variant="contained"
+              color="primary"
+            >
+              {!submitting && 'Sign in'}
+              {submitting && (
+                <CircularProgress style={{ width: 30, height: 30 }} />
+              )}
+            </Button>
+            <Box display="flex" width="100%" justifyContent="center">
+              <IconButton onClick={() => signInWithProvider('google')}>
+                <img
+                  width="36px"
+                  height="36px"
+                  src="logo_google.webp"
+                  alt="Google's logo"
+                />
+              </IconButton>
+              <IconButton onClick={() => signInWithProvider('github')}>
+                <GitHub style={{ width: 40, height: 40, color: '#000000' }} />
+              </IconButton>
+            </Box>
+            <Box
+              display="flex"
+              justifyContent="center"
+              alignItems="center"
+              paddingTop={2}
+            >
+              <Typography align="center">Does not have an account?</Typography>
+              <Link href="/register">
+                <Button variant="text" color="secondary">
+                  Register
+                </Button>
+              </Link>
+            </Box>
+          </form>
+        </Card>
+      </div>
     </>
   );
 }

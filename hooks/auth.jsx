@@ -24,7 +24,6 @@ export default function AuthProvider({ children }) {
     if (user) {
       const auth = FirebaseAuth().currentUser;
       user.sendEmailVerification = auth.sendEmailVerification;
-      user.uid = auth.uid;
     }
   }, [user]);
 
