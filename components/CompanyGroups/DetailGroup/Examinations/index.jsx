@@ -147,14 +147,16 @@ export default function GroupQuestionsBank({ exams }) {
     <Box m={3}>
       <Breadcrumbs>
         <Link color="inherit" href="/company-groups">
-          <Typography className={classes.linkStyleBC}>Company groups</Typography>
+          <Typography className={classes.linkStyleBC}>
+            Company groups
+          </Typography>
         </Link>
         <Typography color="textPrimary">Current group</Typography>
         <Typography color="textPrimary">Examinations</Typography>
       </Breadcrumbs>
-      <br/>
+      <br />
       <Divider />
-      <br/>
+      <br />
       <Box m={3} p={2} display="flex" justifyContent="center">
         <OutlinedInput
           className={classes.outlinedInput}
@@ -193,6 +195,7 @@ export default function GroupQuestionsBank({ exams }) {
       <Table className={classes.table} size="small" aria-label="a dense table">
         <TableHead>
           <TableRow>
+            <TableCell style={{ fontWeight: 'bolder' }}>No</TableCell>
             <TableCell style={{ fontWeight: 'bolder' }}>Examinations</TableCell>
             <TableCell style={{ fontWeight: 'bolder' }}>Published</TableCell>
             <TableCell style={{ fontWeight: 'bolder' }}>Start</TableCell>
@@ -211,6 +214,7 @@ export default function GroupQuestionsBank({ exams }) {
                     : { background: 'white' }
                 }
               >
+                <TableCell>{(page - 1) * 10 + index + 1}</TableCell>
                 <TableCell
                   component="th"
                   scope="row"
@@ -222,17 +226,28 @@ export default function GroupQuestionsBank({ exams }) {
                     <div className={classes.titleCol}>{item.title}</div>
                   </Link>
                 </TableCell>
-                <TableCell align="right">{item.published ? item.published.toString() : '-'}</TableCell>
                 <TableCell align="right">
-                  {item.startAt ? dateFormat(
-                    new Date(item.startAt),
-                    'dd/mm/yyyy "at" HH:MM TT'
-                  ) : '-'}
+                  {item.published ? item.published.toString() : '-'}
                 </TableCell>
                 <TableCell align="right">
-                  {item.endAt ? dateFormat(new Date(item.endAt), 'dd/mm/yyyy "at" HH:MM TT') : '-'}
+                  {item.startAt
+                    ? dateFormat(
+                        new Date(item.startAt),
+                        'dd/mm/yyyy "at" HH:MM TT'
+                      )
+                    : '-'}
                 </TableCell>
-                <TableCell align="right">{(!item.isPrivate).toString()}</TableCell>
+                <TableCell align="right">
+                  {item.endAt
+                    ? dateFormat(
+                        new Date(item.endAt),
+                        'dd/mm/yyyy "at" HH:MM TT'
+                      )
+                    : '-'}
+                </TableCell>
+                <TableCell align="right">
+                  {(!item.isPrivate).toString()}
+                </TableCell>
               </TableRow>
             ))
           ) : (
