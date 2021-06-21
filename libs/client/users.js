@@ -36,7 +36,7 @@ export async function updateName(user, role, displayName) {
   // sync in firestore
   await Firestore()
     .collection(collection)
-    .doc(user.uid)
+    .doc(user.id)
     .update({ name: displayName });
 }
 
