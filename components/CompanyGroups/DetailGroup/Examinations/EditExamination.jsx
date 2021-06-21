@@ -101,7 +101,7 @@ const Transition = React.forwardRef((props, ref) => (
   <Slide direction="up" ref={ref} {...props} />
 ));
 
-export default function EditExamination({ user, examProp, onSubmitExam }) {
+export default function EditExamination({ user, examProp, onSubmitExam, problemsData }) {
   const classes = useStyles();
   const published = examProp?.published || false;
   const duration = examProp?.duration || 0;
@@ -330,10 +330,6 @@ export default function EditExamination({ user, examProp, onSubmitExam }) {
             Examination content must not be empty
           </Typography>
         </Box>
-        {/* <Box m={3} p={2} id="section-22">
-                    <Typography variant="h5">Enter password:</Typography>
-                    <TextField type="password" fullWidth/>
-                </Box> */}
         <Box m={3} p={2} id="section-23">
           <Typography variant="h5">* Enter duration:</Typography>
           <Box display="flex">
@@ -419,6 +415,7 @@ export default function EditExamination({ user, examProp, onSubmitExam }) {
               idCompany={id}
               questionsList={exam.questions}
               handleAddQuestionFromLibrary={handleAddQuestionFromLibrary}
+              problemsData={problemsData}
             />
           </Drawer>
           <Dialog

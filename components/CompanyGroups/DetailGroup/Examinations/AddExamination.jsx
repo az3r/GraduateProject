@@ -49,7 +49,7 @@ const Transition = React.forwardRef((props, ref) => (
   <Slide direction="up" ref={ref} {...props} />
 ));
 
-export default function AddExamination({ user }) {
+export default function AddExamination({ user, problemsData }) {
   const [open, setOpen] = useState(false);
   const classes = useStyles();
   const router = useRouter();
@@ -94,6 +94,7 @@ export default function AddExamination({ user }) {
             user={user}
             onSubmitExam={onSubmitExam}
             examProp={null}
+            problemsData={problemsData}
           />
           <Dialog
             open={open}

@@ -15,7 +15,6 @@ import {
   Select,
   Typography,
 } from '@material-ui/core';
-import { getProblems } from '@libs/client/companies';
 import HTMLReactParser from 'html-react-parser';
 import { Pagination } from '@material-ui/lab';
 import { get } from '@libs/client/problems';
@@ -47,37 +46,35 @@ export default function AddProblemFromLibrary({
   idCompany,
   questionsList,
   handleAddQuestionFromLibrary,
+  problemsData,
 }) {
-  const [problemsList, setProblemsList] = useState([]);
   const [filterQuestions, setFilterQuestions] = useState([]);
   const [searchKey, setSearchKey] = useState('');
   const [page, setPage] = useState(1);
   const [numberOfPages, setNumberOfPages] = useState(1);
 
   useEffect(async () => {
-    const problemsData = await getProblems(idCompany);
-    setProblemsList(problemsData);
     const filtered = getDisplayListForPagination(
-      problemsList,
+      problemsData,
       0,
       ITEMS_PER_PAGE,
       searchKey,
       type
     );
     setFilterQuestions(filtered);
-    setNumberOfPages(getNumberOfPages(problemsList));
-  }, [problemsList]);
+    setNumberOfPages(getNumberOfPages(problemsData));
+  }, []);
 
   const classes = useStyles();
   const [type, setType] = useState(0);
 
   const handleChangeType = (e) => {
     setType(e.target.value);
-    const newList = getListAfterSearch(problemsList, searchKey, e.target.value);
+    const newList = getListAfterSearch(problemsData, searchKey, e.target.value);
     const pages = getNumberOfPages(newList);
     setNumberOfPages(pages);
     const filtered = getDisplayListForPagination(
-      problemsList,
+      problemsData,
       0,
       ITEMS_PER_PAGE,
       searchKey,
@@ -93,11 +90,11 @@ export default function AddProblemFromLibrary({
 
   const handleSearchKeyPress = (e) => {
     if (e.key === 'Enter') {
-      const newList = getListAfterSearch(problemsList, searchKey, type);
+      const newList = getListAfterSearch(problemsData, searchKey, type);
       const pages = getNumberOfPages(newList);
       setNumberOfPages(pages);
       const filtered = getDisplayListForPagination(
-        problemsList,
+        problemsData,
         0,
         ITEMS_PER_PAGE,
         searchKey,
@@ -111,7 +108,7 @@ export default function AddProblemFromLibrary({
   const handleChangePage = (event, value) => {
     setPage(value);
     const filtered = getDisplayListForPagination(
-      problemsList,
+      problemsData,
       value - 1,
       ITEMS_PER_PAGE,
       searchKey,
@@ -156,7 +153,9 @@ export default function AddProblemFromLibrary({
                   variant="contained"
                   color="primary"
                   onClick={async () =>
-                    handleAddQuestionFromLibrary(await get({problemId: item.id}))
+                    handleAddQuestionFromLibrary(
+                      await get({ problemId: item.id })
+                    )
                   }
                 >
                   <AddIcon />
