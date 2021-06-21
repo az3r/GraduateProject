@@ -8,6 +8,7 @@ import { get } from '@libs/client/exams';
 import { get as getDev } from '@libs/client/developers';
 
 import dynamic from 'next/dynamic';
+import { getProblems } from '@libs/client/companies';
 
 const UpdateExamination = dynamic(
   () =>
@@ -17,7 +18,7 @@ const UpdateExamination = dynamic(
   { ssr: false }
 );
 
-export default function Index({ user, examination }) {
+export default function Index({ user, examination, problemsData }) {
   const router = useRouter();
   const { id, exam } = router.query;
 
@@ -42,7 +43,7 @@ export default function Index({ user, examination }) {
       </Head>
       <AppLayout>
         {examination ? (
-          <UpdateExamination user={user} examProp={examination} />
+          <UpdateExamination user={user} examProp={examination} problemsData={problemsData} />
         ) : null}
       </AppLayout>
     </>
@@ -61,10 +62,12 @@ export async function getServerSideProps({ req, query }) {
         if (id === user.id) {
           const examination = await get({ examId: exam });
           if (examination.owner === user.id) {
+            const problemsData = await getProblems(id);
             return {
               props: {
                 user,
                 examination,
+                problemsData
               },
             };
           }
@@ -80,10 +83,12 @@ export async function getServerSideProps({ req, query }) {
         if (detailUser.companies.includes(id)) {
           const examination = await get({ examId: exam });
           if (examination.owner === detailUser.id) {
+            const problemsData = await getProblems(id);
             return {
               props: {
                 user,
                 examination,
+                problemsData
               },
             };
           }
