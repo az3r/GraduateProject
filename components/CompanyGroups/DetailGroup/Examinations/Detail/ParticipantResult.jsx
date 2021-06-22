@@ -361,6 +361,8 @@ function TabPanel(props) {
 
 function getResultTabIcon(result) {
   const classes = useStyle();
+  if (result === null) return <CloseIcon className={classes.incorrect} />;
+  
   switch (result.status) {
     case true:
       return <CheckIcon className={classes.correct} />;
@@ -376,8 +378,6 @@ function getTestCaseTabIcon(result) {
   switch (result.passed) {
     case true:
       return <CheckIcon className={classes.correct} />;
-    // case 'Accepted':
-    //   return <CheckIcon className={classes.correct} />;
     default:
       return <CloseIcon className={classes.incorrect} />;
   }
