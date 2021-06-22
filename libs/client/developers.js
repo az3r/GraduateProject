@@ -93,13 +93,7 @@ export async function addSolvedProblem(
     .get();
 
   if (problem.exists) {
-    if (status === 'Solved') {
-      await problem.ref.update({
-        modifiedAt: Firestore.Timestamp.now(),
-        score,
-        status,
-      });
-    } else if (problem.get('score') <= score) {
+    if (status === 'Solved' && problem.get('score') <= score) {
       await problem.ref.update({
         modifiedAt: Firestore.Timestamp.now(),
         score,
@@ -123,6 +117,11 @@ export async function addSolvedProblem(
       (problem.exists ? problem.get('score') : 0) +
       score,
   });
+
+  developer.problemScore =
+    (developer.problemScore === undefined ? 0 : developer.problemScore) -
+    (problem.exists ? problem.get('score') : 0) +
+    score;
 }
 
 export async function getUserByExamScore() {
@@ -148,6 +147,7 @@ export async function getUserByExamScore() {
 }
 
 export async function getSolvedProblems(uid) {
+  createProblemSubmission;
   const ids = await Firestore()
     .collection(collections.developers)
     .doc(uid)

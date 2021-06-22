@@ -21,7 +21,7 @@
   <component name="ChangeListManager">
     <list default="true" id="73bd1854-2930-493b-bbd0-fb90442d9327" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pages/examination/[id].jsx" beforeDir="false" afterPath="$PROJECT_DIR$/pages/examination/[id].jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/libs/client/developers.js" beforeDir="false" afterPath="$PROJECT_DIR$/libs/client/developers.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -188,6 +188,7 @@
       <workItem from="1624037965749" duration="911000" />
       <workItem from="1624073218588" duration="599000" />
       <workItem from="1622777102908" duration="6601000" />
+      <workItem from="1624360931753" duration="6693000" />
     </task>
     <servers />
   </component>
@@ -207,10 +208,6 @@
     <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="WindowStateProjectService">
-    <state x="1503" y="0" width="1092" height="738" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1613881740621">
-      <screen x="1366" y="0" width="1366" height="738" />
-    </state>
-    <state x="1503" y="0" width="1092" height="738" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.0.1366.738/1366.0.1366.738@1366.0.1366.738" timestamp="1613881740621" />
     <state x="1786" y="171" key="#com.intellij.fileTypes.FileTypeChooser" timestamp="1619262361642">
       <screen x="1366" y="0" width="1366" height="738" />
     </state>
@@ -223,10 +220,10 @@
       <screen x="1366" y="0" width="1366" height="738" />
     </state>
     <state width="498" height="446" key="SwitcherDM/0.0.1366.738/1366.0.1366.738@1366.0.1366.738" timestamp="1617338221615" />
-    <state x="138" y="99" width="1052" height="534" key="find.popup" timestamp="1618632254495">
+    <state x="138" y="99" width="1052" height="534" key="find.popup" timestamp="1624361921570">
       <screen x="0" y="0" width="1366" height="738" />
     </state>
-    <state x="138" y="99" width="1052" height="534" key="find.popup/0.0.1366.738/1366.0.1366.738@0.0.1366.738" timestamp="1618632254495" />
+    <state x="138" y="99" width="1052" height="534" key="find.popup/0.0.1366.738/1366.0.1366.738@0.0.1366.738" timestamp="1624361921570" />
     <state x="1504" y="99" width="1052" height="534" key="find.popup/0.0.1366.738/1366.0.1366.738@1366.0.1366.738" timestamp="1618230161730" />
     <state x="1705" y="165" key="run.anything.popup" timestamp="1619515517880">
       <screen x="1366" y="0" width="1366" height="738" />
