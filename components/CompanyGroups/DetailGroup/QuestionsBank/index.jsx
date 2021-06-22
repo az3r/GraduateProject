@@ -42,6 +42,7 @@ const useStyles = makeStyles({
     width: 550,
     overflow: 'hidden',
     textOverflow: 'ellipsis',
+    height:30
   },
   linkStyleBC: {
     '&:hover': {
@@ -197,7 +198,7 @@ export default function GroupQuestionsBank({ questions }) {
                   >
                     {item.isMCQ ? (
                       <div className={classes.titleCol}>
-                        {HTMLReactParser(item.title)}
+                        {HTMLReactParser(formatMCQTitle(item.title))}
                       </div>
                     ) : (
                       <div className={classes.titleCol}>{item.title}</div>
@@ -282,4 +283,20 @@ function getDisplayListForPagination(
     (start + 1) * numberOfItemsPerPage
   );
   return result;
+}
+
+
+function formatMCQTitle(title)
+{
+  title = title.replace("<h2>","<p>");
+  title = title.replace("</h2>","</p>");
+  title = title.replace("<h3>","<p>");
+  title = title.replace("</h3>","</p>");
+  title = title.replace("<h4>","<p>");
+  title = title.replace("</h4>","</p>");
+  title = title.replace("<strong>","<p>");
+  title = title.replace("</strong>","</p>");
+  title = title.replace("<i>","<p>");
+  title = title.replace("</i>","</p>");
+  return title;
 }
