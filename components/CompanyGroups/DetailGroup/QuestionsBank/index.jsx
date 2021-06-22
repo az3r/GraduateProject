@@ -42,7 +42,7 @@ const useStyles = makeStyles({
     width: 550,
     overflow: 'hidden',
     textOverflow: 'ellipsis',
-    height:30
+    maxHeight: 32
   },
   linkStyleBC: {
     '&:hover': {
