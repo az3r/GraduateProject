@@ -159,7 +159,7 @@ export default function Introduction({examId, examination, isInvited, isParticip
               <Typography variant="h6" style={{color: 'darkgray'}}>Sponsored By <Link style={{color: "inherit", fontWeight: "bolder"}} href={`/profile/co/${company.id}`} underline="none">{company.name}</Link></Typography>
                <br />
                <Box style={{textAlign: 'center'}}>
-                 <img src={company.avatar} alt="coding icon" />
+                 <img style={{height: "120px", width: "120px"}} src={company.avatar} alt="coding icon" />
                </Box>
              </Box>
           </Paper>
