@@ -22,7 +22,7 @@ import Slide from '@material-ui/core/Slide';
 import React, { useState } from 'react';
 import DeleteIcon from '@material-ui/icons/Delete';
 import { useRouter } from 'next/router';
-import { create, createMCQ, get } from '@libs/client/problems';
+import { create, createMCQ } from '@libs/client/problems';
 import HelpIcon from '@material-ui/icons/Help';
 import { getScoreOfCases } from '@libs/client/business';
 import AddProblemFromLibrary from './AddProblemFromLibrary';
@@ -208,13 +208,14 @@ export default function EditExamination({ user, examProp, onSubmitExam, problems
       let idProblem = '';
       if (!question.isMCQ) {
         idProblem = await create(id, question);
+        question.score = getScoreOfCases(question.cases);
       } else {
         idProblem = await createMCQ(id, question);
       }
-      const problem = await get({ problemId: idProblem });
+      question.id = idProblem;
       setExam({
         ...exam,
-        questions: [...exam.questions, { id: idProblem, score: problem.score }],
+        questions: [...exam.questions, question],
       });
     } else {
       if (!question.isMCQ) {

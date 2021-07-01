@@ -27,7 +27,10 @@ const useStyles = makeStyles({
     width: '100%',
   },
   titleStyle: {
-    wordWrap: 'break-word',
+    whiteSpace: 'nowrap',
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
+    maxHeight: 40,
   },
   outlinedInput: {
     height: 30,
@@ -168,16 +171,16 @@ export default function AddProblemFromLibrary({
                   {item.isMCQ ? (
                     <>
                       <div className={classes.titleStyle}>
-                        {HTMLReactParser(item.title)}
+                        {HTMLReactParser(formatMCQTitle(item.title))}
                       </div>
-                      <Typography>Multiple choice question</Typography>
+                      <b>Multiple choice question</b>
                     </>
                   ) : (
                     <>
                       <Typography className={classes.titleStyle}>
                         {item.title}
                       </Typography>
-                      <Typography>Coding question</Typography>
+                      <b>Coding question</b>
                     </>
                   )}
                 </>
@@ -247,4 +250,18 @@ function getDisplayListForPagination(
     (start + 1) * numberOfItemsPerPage
   );
   return result;
+}
+
+function formatMCQTitle(title) {
+  title = title.replace('<h2>', '<p>');
+  title = title.replace('</h2>', '</p>');
+  title = title.replace('<h3>', '<p>');
+  title = title.replace('</h3>', '</p>');
+  title = title.replace('<h4>', '<p>');
+  title = title.replace('</h4>', '</p>');
+  title = title.replace('<strong>', '<p>');
+  title = title.replace('</strong>', '</p>');
+  title = title.replace('<i>', '<p>');
+  title = title.replace('</i>', '</p>');
+  return title;
 }
