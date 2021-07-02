@@ -217,3 +217,98 @@ export async function getExamSubmissions(examId) {
     return { ...submission, ...developers[i], ...exams[k] };
   });
 }
+
+/**
+ * create new group in a company
+ */
+export async function createGroup({ companyId, name }) {
+  const company = getAttributeReference(collections.companies, companyId);
+  const { id } = await company
+    .collection(collections.groups)
+    .add({ name, total: 0, companyId });
+
+  await company.update({
+    groups: Firestore.FieldValue.arrayUnion({ id, name }),
+  });
+
+  return id;
+}
+
+/**
+ * delete group from company
+ */
+export async function removeGroup({ companyId, groupId }) {
+  const company = getAttributeReference(collections.companies, companyId);
+  await company.collection(collections.groups).doc(groupId).delete();
+
+  return true;
+}
+
+export async function getGroup({ companyId, groupId }) {
+  // get the group
+  const company = getAttributeReference(collections.companies, companyId);
+  const data = await company.collection(collections.groups).doc(groupId).get();
+  const group = transform(data);
+
+  // get members info in this group
+  const list = await Firestore()
+    .collection(collections.developers)
+    .where(Firestore.FieldPath.documentId(), 'in', group.members)
+    .get();
+  group.developers = list.docs.map((item) => transform(item));
+
+  return group;
+}
+
+export async function isGroupAvailable({ companyId, name }) {
+  const ref = getAttributeReference(collections.companies, companyId);
+  const found = await ref
+    .collection(collections.groups)
+    .where('name', '==', name)
+    .get();
+  return Boolean(found.empty);
+}
+
+/**
+ * add developer into group
+ */
+export async function addMemberIntoGroup({ developerId, companyId, groupId }) {
+  // add developer into group
+  const group = getAttributeReference(collections.companies, companyId)
+    .collection(collections.groups)
+    .doc(groupId);
+  await group.update({ members: Firestore.FieldValue.arrayUnion(developerId) });
+
+  // increase number of members
+  await group.update({ total: Firestore.FieldValue.increment(1) });
+
+  // add group into developer
+  await getAttributeReference(collections.developers, developerId).update({
+    groups: Firestore.FieldValue.arrayUnion({ companyId, groupId }),
+  });
+}
+
+/**
+ * add developer into group
+ */
+export async function removeMemberFromGroup({
+  developerId,
+  companyId,
+  groupId,
+}) {
+  // remove developer from group
+  const group = getAttributeReference(collections.companies, companyId)
+    .collection(collections.groups)
+    .doc(groupId);
+  await group.update({
+    members: Firestore.FieldValue.arrayRemove(developerId),
+  });
+
+  // decrease number of members
+  await group.update({ total: Firestore.FieldValue.increment(-1) });
+
+  // remove group from developer
+  await getAttributeReference(collections.developers, developerId).update({
+    groups: Firestore.FieldValue.arrayRemove({ companyId, groupId }),
+  });
+}

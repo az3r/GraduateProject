@@ -13,6 +13,7 @@ export const collections = {
   companies: 'Companies',
   participants: 'Participants',
   attributes: 'Attributes',
+  groups: 'Groups',
 };
 export const urls = {
   compiler: 'https://nmtuan.cf/',
