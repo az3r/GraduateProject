@@ -265,10 +265,7 @@ export async function getAllExamResults(developerId) {
     .orderBy('createdOn', 'desc')
     .get();
 
-  // filter out non-overdued submission
-  return submissions.docs
-    .map((submit) => transform(submit))
-    .filter((item) => !item.error);
+  return submissions.docs.map(transform);
 }
 
 export async function getExamResults(developerId, examId) {
@@ -279,10 +276,7 @@ export async function getExamResults(developerId, examId) {
     .orderBy('createdOn', 'desc')
     .get();
 
-  // filter out non-overdued submission
-  return snapshot.docs
-    .map((submit) => transform(submit))
-    .filter((item) => !item.error);
+  return snapshot.docs.map(transform);
 }
 
 export async function createExamSubmission(
@@ -350,11 +344,8 @@ export async function getExamsubmissionForGroup({ groupId, developerId }) {
       .where('examId', '==', exam.id)
       .get();
 
-    // filter out non-overdued submission
     if (snapshot.docs.length) {
-      const [submission] = snapshot.docs
-        .map(transform)
-        .filter((item) => !item.error);
+      const [submission] = snapshot.docs.map(transform);
       exam.submission = submission;
     }
   });
@@ -410,14 +401,13 @@ export async function createExamSubmissionV2({
   const margin = 100;
 
   const valid = startAt - margin <= now && now <= endAt + margin;
-  const error = valid ? undefined : 'submission overdued';
+  if (!valid) throw new Error('submission overdue');
 
   const { id } = await Firestore()
     .collection(collections.examSubmissions)
     .add({
       examId,
       developerId,
-      error,
       total,
       correct,
       results,
@@ -429,12 +419,11 @@ export async function createExamSubmissionV2({
   const ref = Firestore().collection(collections.developers).doc(developerId);
 
   // update total score
-  if (valid)
-    await ref.update({
-      examScore: Firestore.FieldValue.increment(score),
-    });
+  await ref.update({
+    examScore: Firestore.FieldValue.increment(score),
+  });
 
-  return { id, error };
+  return { id };
 }
 
 /** get all company and its groups of which developer is a member */
