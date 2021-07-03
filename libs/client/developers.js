@@ -376,21 +376,11 @@ export async function createExamObserver({ developerId, examId, duration }) {
   return data;
 }
 
-<<<<<<< HEAD
-export async function getExamObserver({ developerId, examId }) {
-  const observer = await Firestore()
-    .collection(collections.examObserver)
-    .where('developerId', '==', developerId)
-    .where('examId', '==', examId)
-    .get()
-    .then((snapshot) => (snapshot.empty ? undefined : snapshot.docs[0]));
-=======
 export async function getExamObserver(observerId) {
   const observer = await Firestore()
     .collection(collections.examObserver)
     .doc(observerId)
     .get();
->>>>>>> 397b834 (feat(developer): exam submission)
 
   return transform(observer);
 }
