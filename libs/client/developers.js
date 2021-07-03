@@ -360,8 +360,8 @@ export async function createExamObserver({ developerId, examId, duration }) {
   const data = {
     examId,
     developerId,
-    startAt: now,
-    endAt: now + duration * 1000,
+    startAt: now.seconds,
+    endAt: now.seconds + duration,
   };
 
   const { id } = await Firestore()
@@ -378,6 +378,33 @@ export async function getExamObserver(observerId) {
     .get();
 
   return transform(observer);
+}
+
+export async function getExamObserverByDeveloperIdAndExamId(
+  developerId,
+  examId
+) {
+  const observers = await Firestore()
+    .collection(collections.examObserver)
+    .where('developerId', '==', developerId)
+    .where('examId', '==', examId)
+    .get();
+
+  const transformedObservers = observers.docs.map((observer) =>
+    transform(observer)
+  );
+
+  if (transformedObservers.length === 0) {
+    return null;
+  } 
+    const { now } = await fetch('/api/time').then((response) =>
+      response.json()
+    );
+    return {
+      now: now.seconds,
+      observer: transformedObservers[0],
+    };
+  
 }
 
 // this does not depend on client's time but use server-side time to calculate submission time

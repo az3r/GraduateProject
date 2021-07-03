@@ -22,6 +22,7 @@
     <list default="true" id="73bd1854-2930-493b-bbd0-fb90442d9327" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/libs/client/developers.js" beforeDir="false" afterPath="$PROJECT_DIR$/libs/client/developers.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pages/examination/start/[id].jsx" beforeDir="false" afterPath="$PROJECT_DIR$/pages/examination/start/[id].jsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -59,14 +60,14 @@
     <property name="vue.rearranger.settings.migration" value="true" />
   </component>
   <component name="RecentsManager">
-    <key name="CopyFile.RECENT_KEYS">
-      <recent name="D:\OneDrive\Desktop\GraduateProject\Source\GraduateProject\public" />
-      <recent name="D:\OneDrive\Desktop\GraduateProject\Source\GraduateProject\components\YourProgress\Images" />
-    </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="D:\OneDrive\Desktop\GraduateProject\Source\GraduateProject\styles" />
       <recent name="D:\OneDrive\Desktop\GraduateProject\Source\GraduateProject\libs\server" />
       <recent name="D:\OneDrive\Desktop\GraduateProject\Source\GraduateProject\public" />
+    </key>
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="D:\OneDrive\Desktop\GraduateProject\Source\GraduateProject\public" />
+      <recent name="D:\OneDrive\Desktop\GraduateProject\Source\GraduateProject\components\YourProgress\Images" />
     </key>
   </component>
   <component name="RunManager">
@@ -188,7 +189,9 @@
       <workItem from="1624037965749" duration="911000" />
       <workItem from="1624073218588" duration="599000" />
       <workItem from="1622777102908" duration="6601000" />
-      <workItem from="1624360931753" duration="6693000" />
+      <workItem from="1624360931753" duration="7018000" />
+      <workItem from="1625199571128" duration="1362000" />
+      <workItem from="1625311806088" duration="10167000" />
     </task>
     <servers />
   </component>

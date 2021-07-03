@@ -26,6 +26,7 @@ import BackupIcon from '@material-ui/icons/Backup';
 import TimerIcon from '@material-ui/icons/Timer';
 import HTMLReactParser from 'html-react-parser';
 import { formatTimeOut, sendThanks } from '@client/business';
+// import { node } from 'prop-types';
 
 
 const TestProblemCoding = dynamic(() => import('../../../components/Examinations/TestProblemCoding'), {
@@ -144,7 +145,7 @@ export default function Start({ user, examId, exam }) {
   const submit = async () => {
     // Stop saving timeout to localStorage
     setIsSubmitted(true);
-    localStorage.removeItem(`${user.id}${examId}Timeout`);
+    // localStorage.removeItem(`${user.id}${examId}Timeout`);
 
     MySwal.fire({
       title: 'Please Wait !',
@@ -245,32 +246,35 @@ export default function Start({ user, examId, exam }) {
     localStorage.setItem(`${user.id}${examId}isSolvedProblems`, JSON.stringify(isSolvedProblemsDump));
   }
 
+
   let time;
   useEffect(() => {
     setWindowHeight(window.innerHeight);
     setWindowWidth(window.innerWidth);
 
-    time = setTimeout(async () => {
-      if(isSubmited === false){
-        if(timeOut === 0) {
-          await submit();
+    if(timeOut !== exam.duration){
+      time = setTimeout(async () => {
+        if(isSubmited === false){
+          if(timeOut === 0) {
+            await submit();
+          }
+          else{
+            // Save timeout into local storage
+            // const timeOutLocalStorage = {
+            //   timeOut,
+            //   date: Date.now(),
+            // };
+            // localStorage.setItem(`${user.id}${examId}Timeout`, JSON.stringify(timeOutLocalStorage));
+            setTimeOut(timeOut - 1);
+          }
         }
         else{
-          // Save timeout into local storage
-          const timeOutLocalStorage = {
-            timeOut,
-            date: Date.now(),
-          };
-          localStorage.setItem(`${user.id}${examId}Timeout`, JSON.stringify(timeOutLocalStorage));
-          setTimeOut(timeOut - 1);
+          // localStorage.removeItem(`${user.id}${examId}Timeout`);
+          // Stop time of setTimeout and remove timeout from local storage
+          clearTimeout(time);
         }
-      }
-      else{
-        localStorage.removeItem(`${user.id}${examId}Timeout`);
-        // Stop time of setTimeout and remove timeout from local storage
-        clearTimeout(time);
-      }
-    }, 1000);
+      }, 1000);
+    }
   }, [timeOut]);
 
   useEffect(() => {
@@ -281,16 +285,34 @@ export default function Start({ user, examId, exam }) {
       setIsSolvedProblems(isSolvedProblemsObject);
     }
 
+    async function observerExam() {
+      const result = await developers.getExamObserverByDeveloperIdAndExamId(user.id, examId);
+
+      if(result === null){
+        await developers.createExamObserver({developerId: user.id, examId, duration: exam.duration});
+        setTimeOut(timeOut - 1);
+      }
+      else{
+        clearTimeout(time);
+        const timeOutTemp = Math.ceil(result.observer.endAt - result.now) < 0 ? 0 : (Math.ceil(result.observer.endAt - result.now) - 1);
+        setTimeOut(timeOutTemp);
+      }
+    }
+
+    observerExam();
 
     // Get timeout from local storage
-    const timeOutLocalStorage = localStorage.getItem(`${user.id}${examId}Timeout`);
-    if(timeOutLocalStorage !== null){
-      clearTimeout(time);
-      const timeOutObject = JSON.parse(timeOutLocalStorage);
-      const timeOutTemp = (timeOutObject.timeOut - Math.ceil((Date.now() - timeOutObject.date) / 1000)) < 0 ? 0 : (timeOutObject.timeOut - Math.ceil((Date.now() - timeOutObject.date) / 1000));
-      setTimeOut(timeOutTemp);
-    }
+    // const timeOutLocalStorage = localStorage.getItem(`${user.id}${examId}Timeout`);
+    // if(timeOutLocalStorage !== null){
+    //   clearTimeout(time);
+    // const timeOutObject = JSON.parse(timeOutLocalStorage);
+    // const timeOutTemp = (timeOutObject.timeOut - Math.ceil((Date.now() - timeOutObject.date) / 1000)) < 0 ? 0 : (timeOutObject.timeOut - Math.ceil((Date.now() - timeOutObject.date) / 1000));
+    // setTimeOut(timeOutTemp);
+    // }
+
+
   }, []);
+
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
