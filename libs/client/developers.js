@@ -325,3 +325,28 @@ export async function getExams(companyId, developerId) {
     .get();
   return snapshot.docs.map((doc) => transform(doc));
 }
+
+/** get all exam submissions for a company */
+export async function getExamsubmissionForCompany({ companyId, developerId }) {
+  // get all exams made by a company
+  const exams = await Firestore()
+    .collection(collections.exams)
+    .where('companyId', '==', companyId)
+    .orderBy('createdOn', 'desc')
+    .get()
+    .then((snapshot) => snapshot.docs.map(transform));
+
+  // get all exams' submissions for developer
+  const results =
+    exams.map((exam) => {
+      const { id } = exam;
+      exam.submission = Firestore()
+        .collection(collections.examSubmissions)
+        .where('developerId', '==', developerId)
+        .where('examId', '==', id)
+        .get()
+        .then(transform);
+      return exam;
+    }) || [];
+  return results;
+}
