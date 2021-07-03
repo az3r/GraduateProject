@@ -513,9 +513,7 @@ export async function getCompanyAndGroup(developerId, companyId) {
   const groupIds = [...new Set(list.map((item) => item.groupId))];
 
   // get list of groups
-  const groups = await Firestore()
-    .collection(collections.companies)
-    .doc(companyId)
+  const groups = await getAttributeReference(collections.companies, companyId)
     .collection(collections.groups)
     .where(Firestore.FieldPath.documentId(), 'in', groupIds)
     .get()
