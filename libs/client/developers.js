@@ -353,7 +353,7 @@ export async function getExamsubmissionForGroup({
 
   // filter out exams which don't invite developer
   const developerInvitedExams = exams.filter((item) =>
-    item.invited.includes(developerEmail)
+    item.invited?.includes(developerEmail)
   );
 
   await Promise.all(
@@ -415,15 +415,12 @@ export async function getExamObserverByDeveloperIdAndExamId(
 
   if (transformedObservers.length === 0) {
     return null;
-  } 
-    const { now } = await fetch('/api/time').then((response) =>
-      response.json()
-    );
-    return {
-      now: now.seconds,
-      observer: transformedObservers[0],
-    };
-  
+  }
+  const { now } = await fetch('/api/time').then((response) => response.json());
+  return {
+    now: now.seconds,
+    observer: transformedObservers[0],
+  };
 }
 
 // this does not depend on client's time but use server-side time to calculate submission time
@@ -474,9 +471,9 @@ export async function createExamSubmissionV2({
   return { id };
 }
 
-/** get all company and its groups of which developer is a member */
+/** get all company  of which developer is a member */
 export async function getCompany(developerId) {
-  // get develoeprId, companyId, groupId relation
+  // get developerId, companyId, groupId relation
   const list = await Firestore()
     .collection(collections.developerGroups)
     .where('developerId', '==', developerId)
@@ -502,7 +499,7 @@ export async function getCompany(developerId) {
 }
 /** get all company and its groups of which developer is a member */
 export async function getCompanyAndGroup(developerId, companyId) {
-  // get develoeprId, companyId, groupId relation
+  // get developerId, companyId, groupId relation
   const list = await Firestore()
     .collection(collections.developerGroups)
     .where('developerId', '==', developerId)
