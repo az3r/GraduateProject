@@ -348,6 +348,7 @@ export async function getExamsubmissionForGroup({
       exam.invited = await getAttributeReference(collections.exams, item.id)
         .get()
         .then((snapshot) => snapshot.get('invited'));
+      return exam;
     })
   );
 
@@ -509,7 +510,7 @@ export async function getCompanyAndGroup(developerId, companyId) {
     .then((snapshot) => snapshot.docs.map((item) => item.data()));
 
   // get list of unique groupIds
-  const groupIds = [...new Set(list.map((item) => item.groupIds))];
+  const groupIds = [...new Set(list.map((item) => item.groupId))];
 
   // get list of groups
   const groups = await Firestore()
