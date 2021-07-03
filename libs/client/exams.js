@@ -251,21 +251,15 @@ export async function remove(id) {
 }
 
 export async function addGroupToInvited({ examId, groupId }) {
-  await Firestore()
-    .collection(collections.exams)
-    .doc(examId)
-    .update({
-      invitedGroup: Firestore.FieldValue.arrayUnion(groupId),
-    });
+  await getAttributeReference(collections.exams, examId).update({
+    invitedGroup: Firestore.FieldValue.arrayUnion(groupId),
+  });
 }
 
 export async function removeGroupFromInvited({ examId, groupId }) {
-  await Firestore()
-    .collection(collections.exams)
-    .doc(examId)
-    .update({
-      invitedGroup: Firestore.FieldValue.arrayRemove(groupId),
-    });
+  await getAttributeReference(collections.exams, examId).update({
+    invitedGroup: Firestore.FieldValue.arrayRemove(groupId),
+  });
 }
 
 export async function getInvitedGroups(examId) {

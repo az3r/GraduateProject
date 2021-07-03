@@ -328,29 +328,48 @@ export async function getExams(companyId, developerId) {
 }
 
 /** get all exam submissions for a group */
-export async function getExamsubmissionForGroup({ groupId, developerId }) {
-  // get all exams which has invited groupId
-  const exams = await Firestore()
+export async function getExamsubmissionForGroup({
+  companyId,
+  developerEmail,
+  developerId,
+}) {
+  // get all exams made by companyId
+  const list = await Firestore()
     .collection(collections.exams)
-    .where('invitedGroup', 'array-contains', groupId)
-    .get()
-    .then((snapshot) => snapshot.docs.map(transform));
+    .where('companyId', '==', companyId)
+    .orderBy('createdOn', 'desc')
+    .get();
+  if (list.empty) return [];
 
-  const tasks = exams.map(async (exam) => {
-    // get developer's submission for this exam (if exist)
-    const snapshot = await Firestore()
-      .collection(collections.examSubmissions)
-      .where('developerId', '==', developerId)
-      .where('examId', '==', exam.id)
-      .get();
+  // get exams with its invited developers
+  const exams = await Promise.all(
+    list.docs.map(async (item) => {
+      const exam = transform(item);
+      exam.invited = await getAttributeReference(collections.exams, item.id)
+        .get()
+        .then((snapshot) => snapshot.get('invited'));
+    })
+  );
 
-    if (snapshot.docs.length) {
-      const [submission] = snapshot.docs.map(transform);
-      exam.submission = submission;
-    }
-  });
-  await Promise.all(tasks);
-  return exams;
+  // filter out exams which don't invite developer
+  const developerInvitedExams = exams.filter((item) =>
+    item.invited.includes(developerEmail)
+  );
+
+  await Promise.all(
+    developerInvitedExams.map(async (item) => {
+      // get submission if possible
+      const [submission] = await Firestore()
+        .collection(collections.examSubmissions)
+        .where('examId', '==', item.id)
+        .where('developerId', '==', developerId)
+        .get()
+        .then((snapshot) => snapshot.docs.map(transform));
+      item.submission = submission;
+    })
+  );
+
+  return developerInvitedExams;
 }
 
 /** create an exam observer who keeps track of developer's current time */
@@ -427,7 +446,9 @@ export async function createExamSubmissionV2({
   // threshold for valid submission in case of slow network
   const margin = 100;
 
-  const valid = startAt - margin <= now && now <= endAt + margin;
+  const valid =
+    startAt.seconds - margin <= now.seconds &&
+    now.seconds <= endAt.seconds + margin;
   if (!valid) throw new Error('submission overdue');
 
   const { id } = await Firestore()
@@ -439,7 +460,7 @@ export async function createExamSubmissionV2({
       correct,
       results,
       score,
-      time: Math.round((endAt - now) / 1000),
+      time: endAt.seconds - now.seconds,
       createdOn: Firestore.Timestamp.now(),
     });
 
@@ -454,7 +475,7 @@ export async function createExamSubmissionV2({
 }
 
 /** get all company and its groups of which developer is a member */
-export async function getCompanyAndGroup(developerId) {
+export async function getCompany(developerId) {
   // get develoeprId, companyId, groupId relation
   const list = await Firestore()
     .collection(collections.developerGroups)
@@ -466,19 +487,78 @@ export async function getCompanyAndGroup(developerId) {
   // get list of unique companyIds
   const companyIds = [...new Set(list.map((item) => item.companyId))];
 
+  // get list of companies
+  const companies = await Promise.all(
+    companyIds.map(async (id) =>
+      Firestore()
+        .collection(collections.companies)
+        .doc(id)
+        .get()
+        .then(transform)
+    )
+  );
+
+  return companies || [];
+}
+/** get all company and its groups of which developer is a member */
+export async function getCompanyAndGroup(developerId, companyId) {
+  // get develoeprId, companyId, groupId relation
+  const list = await Firestore()
+    .collection(collections.developerGroups)
+    .where('developerId', '==', developerId)
+    .where('companyId', '==', companyId)
+    .orderBy('createdOn', 'desc')
+    .get()
+    .then((snapshot) => snapshot.docs.map((item) => item.data()));
+
   // get list of unique groupIds
   const groupIds = [...new Set(list.map((item) => item.groupIds))];
 
-  // get list of companies
-  const companies = await companyIds.map((id) =>
-    Firestore().collection(collections.companies).doc(id).get().then(transform)
+  // get list of groups
+  const groups = await Firestore()
+    .collection(collections.companies)
+    .doc(companyId)
+    .collection(collections.groups)
+    .where(Firestore.FieldPath.documentId(), 'in', groupIds)
+    .get()
+    .then((snapshot) => snapshot.docs.map(transform));
+
+  return groups || [];
+}
+
+/*
+export async function getExamsubmissionForGroup({ companyId, developerEmail }) {
+  // get all exams made by companyId
+  const list = await Firestore()
+    .collection(collections.exams)
+    .where('companyId', '==', companyId)
+    .orderBy('createdOn', 'desc')
+    .get();
+  if (list.empty) return [];
+
+  // get exams with its invited developers
+  const exams = await Promise.all(
+    list.docs.map(async (item) => {
+      const exam = transform(item);
+      exam.invited = await getAttributeReference(collections.exams, item.id)
+        .get()
+        .then((snapshot) => snapshot.get('invited'));
+    })
   );
 
-  companies.forEach((company) => {
-    // each company has a group field which contains list of groups,
-    // get all groups having this developer as a member
-    const { groups } = company;
-    company.groups = groups.filter((item) => groupIds.includes(item));
-  });
-  return companies;
+  // filter out exams which don't invite developer
+  const developerInvitedExams = exams.filter((item) =>
+    item.invited.includes(developerEmail)
+  );
+
+  await Promise.all(developerInvitedExams.map(async item => {
+    const submission = Firestore().collection(collections.examSubmissions).where('examId','==',item.id)
+    .where('companyId','==',companyId)
+    .where()
+
+  }));
+
+  return developerInvitedExams
 }
+
+ */
