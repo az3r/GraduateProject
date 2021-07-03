@@ -240,10 +240,12 @@ export async function createGroup({ companyId, name }) {
 export async function removeGroup({ companyId, groupId }) {
   const company = getAttributeReference(collections.companies, companyId);
   await company.collection(collections.groups).doc(groupId).delete();
-
   return true;
 }
 
+/**
+ * get group's details and its members
+ */
 export async function getGroup({ companyId, groupId }) {
   // get the group
   const company = getAttributeReference(collections.companies, companyId);
@@ -311,4 +313,28 @@ export async function removeMemberFromGroup({
   await getAttributeReference(collections.developers, developerId).update({
     groups: Firestore.FieldValue.arrayRemove({ companyId, groupId }),
   });
+}
+
+/** get a list of invitable developers */
+export async function getInvitableDeveloperForGroup({ companyId, groupId }) {
+  const company = await getAttributeReference(collections.companies, companyId)
+    .get()
+    .then((snapshot) => transform(snapshot));
+
+  const group = await getAttributeReference(collections.companies, companyId)
+    .collection(collections.groups)
+    .doc(groupId)
+    .get()
+    .then((snapshot) => transform(snapshot));
+
+  // get a list of developers who are either contributors or members of current group
+  const contributors = company.members || [];
+  const members = group.members || [];
+  const filteredDevelopers = contributors.concat(members);
+
+  const developers = await Firestore()
+    .collection(collections.developers)
+    .where(Firestore.FieldPath.documentId(), 'in', filteredDevelopers)
+    .get();
+  return developers.docs.map((item) => transform(item));
 }
