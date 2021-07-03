@@ -264,7 +264,11 @@ export async function getAllExamResults(developerId) {
     .where('developerId', '==', developerId)
     .orderBy('createdOn', 'desc')
     .get();
-  return submissions.docs.map((submit) => transform(submit));
+
+  // filter out overdued submission
+  return submissions.docs
+    .map((submit) => transform(submit))
+    .filter((item) => Boolean(item.error));
 }
 
 export async function getExamResults(developerId, examId) {
@@ -275,7 +279,10 @@ export async function getExamResults(developerId, examId) {
     .orderBy('createdOn', 'desc')
     .get();
 
-  return snapshot.docs.map((doc) => transform(doc));
+  // filter out overdued submission
+  return snapshot.docs
+    .map((submit) => transform(submit))
+    .filter((item) => Boolean(item.error));
 }
 
 export async function createExamSubmission(
@@ -349,4 +356,81 @@ export async function getExamsubmissionForCompany({ companyId, developerId }) {
       return exam;
     }) || [];
   return results;
+}
+
+/** create an exam observer who keeps track of developer's current time */
+export async function createExamObserver({ developerId, examId, duration }) {
+  // duration is in second while we store in millisecond
+  const { now } = await fetch('/api/time').then((response) => response.json());
+  const data = {
+    examId,
+    developerId,
+    startAt: now,
+    endAt: now + duration * 1000,
+  };
+
+  const { id } = await Firestore()
+    .collection(collections.examObserver)
+    .add(data);
+  data.id = id;
+  return data;
+}
+
+export async function getExamObserver({ developerId, examId }) {
+  const observer = await Firestore()
+    .collection(collections.examObserver)
+    .where('developerId', '==', developerId)
+    .where('examId', '==', examId)
+    .get()
+    .then((snapshot) => (snapshot.empty ? undefined : snapshot.docs[0]));
+
+  return transform(observer);
+}
+
+// this does not depend on client's time but use server-side time to calculate submission time
+export async function createExamSubmissionV2({
+  developerId,
+  examId,
+  observer,
+  total,
+  correct,
+  results,
+  score,
+}) {
+  if (!developerId) throw new Error(`invalid developerId: ${developerId}`);
+  if (!examId) throw new Error(`invalid examId: ${examId}`);
+  if (!observer) throw new Error(`invalid observer: ${observer}`);
+
+  const { now } = await fetch('/api/time').then((response) => response.json());
+  const { startAt, endAt } = observer;
+
+  // threshold for valid submission in case of slow network
+  const margin = 100;
+
+  const valid = startAt - margin <= now && now <= endAt + margin;
+  const error = valid ? undefined : 'submission overdued';
+
+  const { id } = await Firestore()
+    .collection(collections.examSubmissions)
+    .add({
+      examId,
+      developerId,
+      error,
+      total,
+      correct,
+      results,
+      score,
+      time: Math.round((endAt - now) / 1000),
+      createdOn: Firestore.Timestamp.now(),
+    });
+
+  const ref = Firestore().collection(collections.developers).doc(developerId);
+
+  // update total score
+  if (valid)
+    await ref.update({
+      examScore: Firestore.FieldValue.increment(score),
+    });
+
+  return { id, error };
 }
