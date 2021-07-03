@@ -15,6 +15,7 @@ export const collections = {
   attributes: 'Attributes',
   groups: 'Groups',
   examObserver: 'ExamObservers',
+  developerGroups: 'DeveloperGroups',
 };
 export const urls = {
   compiler: 'https://nmtuan.cf/',

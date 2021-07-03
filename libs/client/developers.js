@@ -265,10 +265,10 @@ export async function getAllExamResults(developerId) {
     .orderBy('createdOn', 'desc')
     .get();
 
-  // filter out overdued submission
+  // filter out non-overdued submission
   return submissions.docs
     .map((submit) => transform(submit))
-    .filter((item) => Boolean(item.error));
+    .filter((item) => !item.error);
 }
 
 export async function getExamResults(developerId, examId) {
@@ -279,10 +279,10 @@ export async function getExamResults(developerId, examId) {
     .orderBy('createdOn', 'desc')
     .get();
 
-  // filter out overdued submission
+  // filter out non-overdued submission
   return snapshot.docs
     .map((submit) => transform(submit))
-    .filter((item) => Boolean(item.error));
+    .filter((item) => !item.error);
 }
 
 export async function createExamSubmission(
@@ -333,29 +333,33 @@ export async function getExams(companyId, developerId) {
   return snapshot.docs.map((doc) => transform(doc));
 }
 
-/** get all exam submissions for a company */
-export async function getExamsubmissionForCompany({ companyId, developerId }) {
-  // get all exams made by a company
+/** get all exam submissions for a group */
+export async function getExamsubmissionForGroup({ groupId, developerId }) {
+  // get all exams which has invited groupId
   const exams = await Firestore()
     .collection(collections.exams)
-    .where('companyId', '==', companyId)
-    .orderBy('createdOn', 'desc')
+    .where('invitedGroup', 'array-contains', groupId)
     .get()
     .then((snapshot) => snapshot.docs.map(transform));
 
-  // get all exams' submissions for developer
-  const results =
-    exams.map((exam) => {
-      const { id } = exam;
-      exam.submission = Firestore()
-        .collection(collections.examSubmissions)
-        .where('developerId', '==', developerId)
-        .where('examId', '==', id)
-        .get()
-        .then(transform);
-      return exam;
-    }) || [];
-  return results;
+  const tasks = exams.map(async (exam) => {
+    // get developer's submission for this exam (if exist)
+    const snapshot = await Firestore()
+      .collection(collections.examSubmissions)
+      .where('developerId', '==', developerId)
+      .where('examId', '==', exam.id)
+      .get();
+
+    // filter out non-overdued submission
+    if (snapshot.docs.length) {
+      const [submission] = snapshot.docs
+        .map(transform)
+        .filter((item) => !item.error);
+      exam.submission = submission;
+    }
+  });
+  await Promise.all(tasks);
+  return exams;
 }
 
 /** create an exam observer who keeps track of developer's current time */
@@ -431,4 +435,34 @@ export async function createExamSubmissionV2({
     });
 
   return { id, error };
+}
+
+/** get all company and its groups of which developer is a member */
+export async function getCompanyAndGroup(developerId) {
+  // get develoeprId, companyId, groupId relation
+  const list = await Firestore()
+    .collection(collections.developerGroups)
+    .where('developerId', '==', developerId)
+    .orderBy('createdOn', 'desc')
+    .get()
+    .then((snapshot) => snapshot.docs.map((item) => item.data()));
+
+  // get list of unique companyIds
+  const companyIds = [...new Set(list.map((item) => item.companyId))];
+
+  // get list of unique groupIds
+  const groupIds = [...new Set(list.map((item) => item.groupIds))];
+
+  // get list of companies
+  const companies = await companyIds.map((id) =>
+    Firestore().collection(collections.companies).doc(id).get().then(transform)
+  );
+
+  companies.forEach((company) => {
+    // each company has a group field which contains list of groups,
+    // get all groups having this developer as a member
+    const { groups } = company;
+    company.groups = groups.filter((item) => groupIds.includes(item));
+  });
+  return companies;
 }

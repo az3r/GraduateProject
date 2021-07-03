@@ -284,9 +284,12 @@ export async function addMemberIntoGroup({ developerId, companyId, groupId }) {
   // increase number of members
   await group.update({ total: Firestore.FieldValue.increment(1) });
 
-  // add group into developer
-  await getAttributeReference(collections.developers, developerId).update({
-    groups: Firestore.FieldValue.arrayUnion({ companyId, groupId }),
+  // store relations
+  await Firestore().collection(collections.developerGroups).add({
+    developerId,
+    companyId,
+    groupId,
+    createdOn: Firestore.Timestamp.now(),
   });
 }
 
@@ -309,10 +312,14 @@ export async function removeMemberFromGroup({
   // decrease number of members
   await group.update({ total: Firestore.FieldValue.increment(-1) });
 
-  // remove group from developer
-  await getAttributeReference(collections.developers, developerId).update({
-    groups: Firestore.FieldValue.arrayRemove({ companyId, groupId }),
-  });
+  // remove relations
+  await Firestore()
+    .collection(collections.developerGroups)
+    .where('developerId', '==', developerId)
+    .where('companyId', '==', companyId)
+    .where('groupId', '==', groupId)
+    .get()
+    .then((snapshot) => snapshot.docs.forEach((item) => item.ref.delete()));
 }
 
 /** get a list of invitable developers */
