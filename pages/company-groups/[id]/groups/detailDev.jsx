@@ -10,17 +10,17 @@ import {
   getGroupIds,
 } from '@libs/client/developers';
 import DetailDevGroup from '@components/CompanyGroups/DetailGroup/Groups/detailDev';
+import { useRouter } from 'next/router';
 
 export default function Index({ user, developer, exams, isDev }) {
-  // const router = useRouter();
-  // const { id, idGroup } = router.query;
+  const router = useRouter();
+  const { id, idGroup } = router.query;
   useEffect(() => {
-    console.log(user, developer, exams, isDev);
-    // if (!developer) {
-    //   router.replace(`/company-groups/${id}/groups/${idGroup}`);
-    // } else if (!user) {
-    //   router.replace('/login');
-    // }
+    if (!developer) {
+      router.replace(`/company-groups/${id}/groups/${idGroup}`);
+    } else if (!user) {
+      router.replace('/login');
+    }
   },[]);
   return (
     <>

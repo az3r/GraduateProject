@@ -72,7 +72,6 @@ const useStyles = makeStyles({
 });
 
 export default function DetailDevGroup({ user, developer, exams, isDev }) {
-  console.log("XXX",user, developer);
   const [open, setOpen] = useState(false);
   const [open2, setOpen2] = useState(false);
   const router = useRouter();
