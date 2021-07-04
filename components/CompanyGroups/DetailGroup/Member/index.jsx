@@ -116,7 +116,7 @@ export default function GroupMember({ user, company }) {
         </Link>
         <Typography color="textPrimary">Current group</Typography>
 
-        <Typography color="textPrimary">Group members</Typography>
+        <Typography color="textPrimary">Contributors</Typography>
       </Breadcrumbs>
       <br />
       <Divider />

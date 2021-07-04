@@ -253,13 +253,23 @@ export async function getGroup({ companyId, groupId }) {
   const group = transform(data);
 
   // get members info in this group
-  const list = await Firestore()
-    .collection(collections.developers)
-    .where(Firestore.FieldPath.documentId(), 'in', group.members)
-    .get();
-  group.developers = list.docs.map((item) => transform(item));
+  if (group.members) {
+    const list = await Firestore()
+      .collection(collections.developers)
+      .where(Firestore.FieldPath.documentId(), 'in', group.members)
+      .get();
 
+    group.developers = list.docs.map((item) => transform(item));
+  }
   return group;
+}
+
+export async function getGroups(companyId) {
+  const company = getAttributeReference(collections.companies, companyId);
+  const data = await company.collection(collections.groups).get();
+  const groups = data.docs.map((doc) => transform(doc));
+
+  return groups;
 }
 
 export async function isGroupAvailable({ companyId, name }) {
@@ -341,7 +351,7 @@ export async function getInvitableDeveloperForGroup({ companyId, groupId }) {
 
   const developers = await Firestore()
     .collection(collections.developers)
-    .where(Firestore.FieldPath.documentId(), 'in', filteredDevelopers)
+    .where(Firestore.FieldPath.documentId(), 'not-in', filteredDevelopers)
     .get();
   return developers.docs.map((item) => transform(item));
 }

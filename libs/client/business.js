@@ -1,7 +1,8 @@
 import emailjs from 'emailjs-com';
 // eslint-disable-next-line import/no-cycle
-import { getInvitedDevelopers } from './exams';
-import { getAll } from './developers';
+import { getGroupInvited, getInvitedDevelopers } from './exams';
+import { get, getAll } from './developers';
+import { getGroups } from './companies';
 
 export default function getTestCaseFromInputAndOutput(input, output, score) {
   let cases = [];
@@ -116,6 +117,22 @@ export async function getUsersForInvitation(examId) {
   return modifiedUsers;
 }
 
+export async function getGroupsForInvitation(examId, companyId) {
+  const invitedGroups = (await getGroupInvited(examId)) || [];
+  const groups = await getGroups(companyId);
+  const modifiedGroupss = groups.map((value) => {
+    const isInvited =
+      invitedGroups.filter((invitedGroup) => invitedGroup === value.id).length >
+        0 || false;
+    return {
+      id: value.id,
+      name: value.name,
+      isInvited,
+    };
+  });
+  return modifiedGroupss;
+}
+
 export function sendInvitation(
   toName,
   examinerName,
@@ -188,4 +205,14 @@ export function getScoreOfCases(objects) {
     score += objects[i].score;
   }
   return score;
+}
+
+export async function checkIsBothContributorAndMember(uid, companyId) {
+  if (uid === companyId) return true;
+
+  const detailUser = await get(uid);
+  if (detailUser.companies?.includes(companyId)) {
+    return true;
+  }
+  return false;
 }

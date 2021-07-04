@@ -256,6 +256,12 @@ export async function addGroupToInvited({ examId, groupId }) {
   });
 }
 
+export async function getGroupInvited(examId) {
+  const exam = await getAttributeReference(collections.exams, examId).get();
+  const data = transform(exam);
+  return data.invitedGroup;
+}
+
 export async function removeGroupFromInvited({ examId, groupId }) {
   await getAttributeReference(collections.exams, examId).update({
     invitedGroup: Firestore.FieldValue.arrayRemove(groupId),

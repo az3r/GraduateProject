@@ -166,7 +166,7 @@ export default function DetailMember({ questions, exams }) {
           <Typography className={classes.linkStyle}>Current group</Typography>
         </Link>
         <Link href={`/company-groups/${id}/members`}>
-          <Typography className={classes.linkStyle}>Group members</Typography>
+          <Typography className={classes.linkStyle}>Contributors</Typography>
         </Link>
         <Typography color="textPrimary">Member</Typography>
       </Breadcrumbs>

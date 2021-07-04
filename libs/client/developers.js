@@ -366,7 +366,7 @@ export async function getExamsubmissionForGroup({
         .where('developerId', '==', developerId)
         .get()
         .then((snapshot) => snapshot.docs.map(transform));
-      item.submission = submission;
+      item.submission = submission || null;
     })
   );
 
@@ -522,39 +522,17 @@ export async function getCompanyAndGroup(developerId, companyId) {
   return groups || [];
 }
 
-/*
-export async function getExamsubmissionForGroup({ companyId, developerEmail }) {
-  // get all exams made by companyId
+export async function getGroupIds(developerId, companyId) {
+  // get developerId, companyId, groupId relation
   const list = await Firestore()
-    .collection(collections.exams)
+    .collection(collections.developerGroups)
+    .where('developerId', '==', developerId)
     .where('companyId', '==', companyId)
     .orderBy('createdOn', 'desc')
-    .get();
-  if (list.empty) return [];
+    .get()
+    .then((snapshot) => snapshot.docs.map((item) => item.data()));
 
-  // get exams with its invited developers
-  const exams = await Promise.all(
-    list.docs.map(async (item) => {
-      const exam = transform(item);
-      exam.invited = await getAttributeReference(collections.exams, item.id)
-        .get()
-        .then((snapshot) => snapshot.get('invited'));
-    })
-  );
-
-  // filter out exams which don't invite developer
-  const developerInvitedExams = exams.filter((item) =>
-    item.invited.includes(developerEmail)
-  );
-
-  await Promise.all(developerInvitedExams.map(async item => {
-    const submission = Firestore().collection(collections.examSubmissions).where('examId','==',item.id)
-    .where('companyId','==',companyId)
-    .where()
-
-  }));
-
-  return developerInvitedExams
+  // get list of unique groupIds
+  const groupIds = [...new Set(list.map((item) => item.groupId))];
+  return groupIds;
 }
-
- */

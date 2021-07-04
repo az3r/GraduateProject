@@ -4,10 +4,10 @@ import { parseCookies } from '@libs/client/cookies';
 import CompanyGroups from '@components/CompanyGroups';
 import AppLayout from '@components/Layout';
 import { find } from '@libs/client/users';
-import { get } from '@libs/client/developers';
 import { getGroupsDetail } from '@libs/client/companies';
+import { get, getCompany } from '@libs/client/developers';
 
-export default function Index({ companyGroups }) {
+export default function Index({ user, companyGroups }) {
   return (
     <>
       <Head>
@@ -15,7 +15,7 @@ export default function Index({ companyGroups }) {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <AppLayout>
-        <CompanyGroups companyGroups={companyGroups} />
+        <CompanyGroups user={user} companyGroups={companyGroups} />
       </AppLayout>
     </>
   );
@@ -27,20 +27,23 @@ export async function getServerSideProps({ req }) {
   if (Object.keys(cookies).length !== 0) {
     if (cookies.user) {
       const user = await find(JSON.parse(cookies.user).uid);
-      if(user.role === 'company')
-      {
+      if (user.role === 'company') {
         return {
           props: {
             companyGroups: [user],
-            },
+            user
+          },
         };
       }
       const detailUser = await get(user.id);
       const companies = await getGroupsDetail(detailUser.companies);
+      const groups = await getCompany(user.id);
+      const companyGroups = [...new Set(companies.concat(groups))];
       return {
         props: {
-          companyGroups: companies,
-          },
+          companyGroups,
+          user
+        },
       };
     }
   }
