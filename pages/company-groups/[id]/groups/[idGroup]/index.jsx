@@ -6,19 +6,22 @@ import AppLayout from '@components/Layout';
 import DetailGroup from '@components/CompanyGroups/DetailGroup/Groups/detail';
 import { find } from '@libs/client/users';
 import { get, getGroupIds } from '@libs/client/developers';
-import { getGroup, getInvitableDeveloperForGroup } from '@libs/client/companies';
+import {
+  getGroup,
+  getInvitableDeveloperForGroup,
+} from '@libs/client/companies';
 
 export default function Index({ user, group, developers, isDev }) {
   const router = useRouter();
   const { id } = router.query;
   useEffect(() => {
-    if (!user) {
-      router.replace('/login');
-    }
     if (!group) {
       router.replace(`/company-groups/${id}/groups`);
     }
-  });
+    else if (!user) {
+      router.replace('/login');
+    }
+  },[]);
   return (
     <>
       <Head>
@@ -26,7 +29,14 @@ export default function Index({ user, group, developers, isDev }) {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <AppLayout>
-        {group ? <DetailGroup user={user} group={group} developers={developers} isDev={isDev}/> : null}
+        {group ? (
+          <DetailGroup
+            user={user}
+            group={group}
+            developers={developers}
+            isDev={isDev}
+          />
+        ) : null}
       </AppLayout>
     </>
   );
@@ -42,12 +52,15 @@ export async function getServerSideProps({ req, query }) {
       if (user.role === 'company') {
         if (id === user.id) {
           const group = await getGroup({ companyId: id, groupId: idGroup });
-          const developers = await getInvitableDeveloperForGroup({companyId: id, groupId: idGroup });
+          const developers = await getInvitableDeveloperForGroup({
+            companyId: id,
+            groupId: idGroup,
+          });
           return {
             props: {
               user,
               group,
-              developers
+              developers,
             },
           };
         }
@@ -60,12 +73,15 @@ export async function getServerSideProps({ req, query }) {
       const detailUser = await get(user.id);
       if (detailUser.companies?.includes(id)) {
         const group = await getGroup({ companyId: id, groupId: idGroup });
-        const developers = await getInvitableDeveloperForGroup({companyId: id, groupId: idGroup });
+        const developers = await getInvitableDeveloperForGroup({
+          companyId: id,
+          groupId: idGroup,
+        });
         return {
           props: {
             user,
             group,
-            developers
+            developers,
           },
         };
       }
@@ -77,7 +93,7 @@ export async function getServerSideProps({ req, query }) {
             user,
             group,
             isDev: true,
-            developers: []
+            developers: [],
           },
         };
       }

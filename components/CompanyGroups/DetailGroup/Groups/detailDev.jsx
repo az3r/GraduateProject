@@ -20,7 +20,7 @@ import DialogContent from '@material-ui/core/DialogContent';
 import ErrorOutlineIcon from '@material-ui/icons/ErrorOutline';
 import CheckCircleOutlineIcon from '@material-ui/icons/CheckCircleOutline';
 import { useRouter } from 'next/router';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { removeMemberFromGroup } from '@libs/client/companies';
 import Link from 'next/link';
 import dateFormat from 'dateformat';
@@ -77,9 +77,7 @@ export default function DetailDevGroup({ user, developer, exams, isDev }) {
   const router = useRouter();
   const classes = useStyles();
   const { id, idGroup, uid } = router.query;
-  console.log(`/company-groups/${id}/groups/${idGroup}`);
-  useEffect(() => {}, []);
-
+  
   const handleClickOpen = () => {
     setOpen(true);
   };

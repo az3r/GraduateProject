@@ -12,16 +12,16 @@ import {
 import DetailDevGroup from '@components/CompanyGroups/DetailGroup/Groups/detailDev';
 
 export default function Index({ user, developer, exams, isDev }) {
+  console.log(user, developer);
   const router = useRouter();
   const { id, idGroup } = router.query;
   useEffect(() => {
-    if (!user) {
-      router.replace('/login');
-    }
     if (!developer) {
       router.replace(`/company-groups/${id}/groups/${idGroup}`);
+    } else if (!user) {
+      router.replace('/login');
     }
-  });
+  },[]);
   return (
     <>
       <Head>
@@ -30,7 +30,12 @@ export default function Index({ user, developer, exams, isDev }) {
       </Head>
       <AppLayout>
         {developer ? (
-          <DetailDevGroup user={user} developer={developer} exams={exams} isDev={isDev} />
+          <DetailDevGroup
+            user={user}
+            developer={developer}
+            exams={exams}
+            isDev={isDev}
+          />
         ) : null}
       </AppLayout>
     </>
