@@ -253,7 +253,7 @@ export async function getGroup({ companyId, groupId }) {
   const group = transform(data);
 
   // get members info in this group
-  if (group.members) {
+  if (group?.members) {
     const list = await Firestore()
       .collection(collections.developers)
       .where(Firestore.FieldPath.documentId(), 'in', group.members)
