@@ -1,4 +1,5 @@
 import { collections } from '@utils/constants';
+import { getAttributeReference } from '@utils/firestore';
 import { Firestore, FirebaseAuth } from './firebase';
 import { find } from './users';
 
@@ -42,8 +43,16 @@ export async function setupAccount({ id, username, avatar, email, role }) {
   // create user document
   const collection =
     role === 'developer' ? collections.developers : collections.companies;
-  const ref = Firestore().collection(collection).doc(id);
-  await ref.set({
+
+  const batch = Firestore().batch();
+
+  // user's private attributes
+  const attribute = getAttributeReference(collection, id);
+  batch.set(attribute, { parent: id });
+
+  // user's public attributes
+  const developer = Firestore().collection(collection).doc(id);
+  batch.set(developer, {
     id,
     name: username,
     email,
@@ -52,11 +61,7 @@ export async function setupAccount({ id, username, avatar, email, role }) {
     createdOn: Firestore.Timestamp.now(),
   });
 
-  // user's private attributes
-  await ref
-    .collection(collections.attributes)
-    .doc(collections.attributes)
-    .set({ parent: id });
+  await batch.commit();
 
   return {
     id,
