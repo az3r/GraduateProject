@@ -48,7 +48,7 @@ export async function getServerSideProps({ req, query }) {
   if (Object.keys(cookies).length !== 0) {
     if (cookies.user) {
       const user = await find(JSON.parse(cookies.user).uid);
-      const { id, uid, idGroup } = query;
+      const { id, idGroup, uid } = query;
       if (user.role === 'company') {
         if (id === user.id) {
           const developer = await get(uid);
