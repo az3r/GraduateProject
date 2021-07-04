@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import Head from 'next/head';
 import { parseCookies } from '@libs/client/cookies';
-import { useRouter } from 'next/router';
+// import { useRouter } from 'next/router';
 import AppLayout from '@components/Layout';
 import { find } from '@libs/client/users';
 import {
@@ -12,15 +12,15 @@ import {
 import DetailDevGroup from '@components/CompanyGroups/DetailGroup/Groups/detailDev';
 
 export default function Index({ user, developer, exams, isDev }) {
-  console.log(user, developer);
-  const router = useRouter();
-  const { id, idGroup } = router.query;
+  // const router = useRouter();
+  // const { id, idGroup } = router.query;
   useEffect(() => {
-    if (!developer) {
-      router.replace(`/company-groups/${id}/groups/${idGroup}`);
-    } else if (!user) {
-      router.replace('/login');
-    }
+    console.log(user, developer, exams, isDev);
+    // if (!developer) {
+    //   router.replace(`/company-groups/${id}/groups/${idGroup}`);
+    // } else if (!user) {
+    //   router.replace('/login');
+    // }
   },[]);
   return (
     <>
