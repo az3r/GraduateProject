@@ -15,7 +15,7 @@ export default function Index({ user, company, groups, isDev }) {
     if (!user) {
       router.replace('/login');
     }
-  });
+  },[]);
   return (
     <>
       <Head>

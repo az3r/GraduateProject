@@ -72,11 +72,14 @@ const useStyles = makeStyles({
 });
 
 export default function DetailDevGroup({ user, developer, exams, isDev }) {
+  console.log("XXX",user, developer);
   const [open, setOpen] = useState(false);
   const [open2, setOpen2] = useState(false);
   const router = useRouter();
   const classes = useStyles();
-  const { id, idGroup, uid } = router.query;
+  const { id, idGroup : group, uid } = router.query;
+
+  console.log("ỦL",  `/company-groups/${id}/groups/${group}`)
   
   const handleClickOpen = () => {
     setOpen(true);
@@ -86,7 +89,7 @@ export default function DetailDevGroup({ user, developer, exams, isDev }) {
     await removeMemberFromGroup({
       developerId: uid,
       companyId: id,
-      groupId: idGroup,
+      groupId: group,
     });
     setOpen(false);
     setOpen2(true);
@@ -98,7 +101,7 @@ export default function DetailDevGroup({ user, developer, exams, isDev }) {
 
   const handleClose2 = () => {
     setOpen2(false);
-    router.replace(`/company-groups/${id}/groups/${idGroup}`);
+    router.replace(`/company-groups/${id}/groups/${group}`);
   };
 
   return (
@@ -113,7 +116,7 @@ export default function DetailDevGroup({ user, developer, exams, isDev }) {
         <Link href={`/company-groups/${id}/groups`}>
           <Typography className={classes.linkStyle}>Groups</Typography>
         </Link>
-        <Link href={`/company-groups/${id}/groups/${idGroup}`}>
+        <Link href={`/company-groups/${id}/groups/${group}`}>
           <Typography className={classes.linkStyle}>Detail group</Typography>
         </Link>
         <Typography color="textPrimary">Detail member</Typography>
