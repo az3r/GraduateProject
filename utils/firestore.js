@@ -7,15 +7,17 @@ import { collections } from '@utils/constants';
  * @param attributes document reference to document's private attributes
  */
 export function transform(document, attributes) {
-  if (!document && !document.exists) return undefined;
-  const data = document.data();
-  data.id = document.id;
-  if (data !== undefined && data.createdOn)
-    data.createdOn = data.createdOn.toMillis();
-  if (data !== undefined && data.modifiedAt)
-    data.modifiedAt = data.modifiedAt.toMillis();
-  if (attributes?.exists) Object.assign(data, attributes.data());
-  return data;
+  if (document?.exists) {
+    const data = document.data();
+    data.id = document.id;
+    if (data !== undefined && data.createdOn)
+      data.createdOn = data.createdOn.toMillis();
+    if (data !== undefined && data.modifiedAt)
+      data.modifiedAt = data.modifiedAt.toMillis();
+    if (attributes?.exists) Object.assign(data, attributes.data());
+    return data;
+  }
+  return null;
 }
 
 /**
