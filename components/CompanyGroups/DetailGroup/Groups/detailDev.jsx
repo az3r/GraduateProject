@@ -78,8 +78,6 @@ export default function DetailDevGroup({ user, developer, exams, isDev }) {
   const router = useRouter();
   const classes = useStyles();
   const { id, idGroup : group, uid } = router.query;
-
-  console.log("ỦL",  `/company-groups/${id}/groups/${group}`)
   
   const handleClickOpen = () => {
     setOpen(true);
@@ -116,7 +114,7 @@ export default function DetailDevGroup({ user, developer, exams, isDev }) {
         <Link href={`/company-groups/${id}/groups`}>
           <Typography className={classes.linkStyle}>Groups</Typography>
         </Link>
-        <Link href={`/company-groups/${id}/groups/${group}`}>
+        <Link href={`/company-groups/${id}/groups/detail?idGroup=${group}`}>
           <Typography className={classes.linkStyle}>Detail group</Typography>
         </Link>
         <Typography color="textPrimary">Detail member</Typography>

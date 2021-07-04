@@ -329,7 +329,7 @@ export default function AddMember({ user, group, developers, isDev }) {
                         color="primary"
                         variant="contained"
                         style={{ float: 'right' }}
-                        href={`/company-groups/${id}/groups/${idGroup}/detail?uid=${value.id}`}
+                        href={`/company-groups/${id}/groups/detailDev?idGroup=${idGroup}&uid=${value.id}`}
                         target="_blank"
                         disabled={isDev ? user.id !== value.id : false}
                       >

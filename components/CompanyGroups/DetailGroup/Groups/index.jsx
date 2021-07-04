@@ -237,7 +237,7 @@ export default function Groups({ user, groups }) {
                 </CardContent>
               </CardActionArea>
               <CardActions>
-                <Link href={`/company-groups/${id}/groups/${item.id}`}>
+                <Link href={`/company-groups/${id}/groups/detail?idGroup=${item.id}`}>
                   <Button size="small" color="primary" variant="outlined">
                     Details
                   </Button>
