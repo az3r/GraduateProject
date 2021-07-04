@@ -29,7 +29,7 @@ export default function Index({ user, questions, exams }) {
         {!user ? (
           <CircularProgress />
         ) : (
-          <DetailMember questions={questions} exams={exams} />
+          <DetailMember user={user} questions={questions} exams={exams} />
         )}
       </AppLayout>
     </>

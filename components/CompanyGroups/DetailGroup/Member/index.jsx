@@ -168,7 +168,7 @@ export default function GroupMember({ user, company }) {
           </CardContent>
         </CardActionArea>
         <CardActions>
-          <Link href={`/company-groups/${id}/members/${company.id}`}>
+          <Link href={`/company-groups/${id}/members/detail?idMem=${company.id}`}>
             <Button size="small" color="primary" variant="outlined">
               Contributions
             </Button>
@@ -199,7 +199,7 @@ export default function GroupMember({ user, company }) {
               </CardContent>
             </CardActionArea>
             <CardActions>
-              <Link href={`/company-groups/${id}/members/${item.id}`}>
+              <Link href={`/company-groups/${id}/members/detail?idMem=${item.id}`}>
                 <Button size="small" color="primary" variant="outlined">
                   Contributions
                 </Button>
