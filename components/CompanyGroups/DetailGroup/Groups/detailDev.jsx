@@ -77,7 +77,7 @@ export default function DetailDevGroup({ user, developer, exams, isDev }) {
   const router = useRouter();
   const classes = useStyles();
   const { id, idGroup, uid } = router.query;
-
+  console.log(`/company-groups/${id}/groups/${idGroup}`);
   useEffect(() => {}, []);
 
   const handleClickOpen = () => {
@@ -187,7 +187,7 @@ export default function DetailDevGroup({ user, developer, exams, isDev }) {
                   scope="row"
                   className={classes.linkStyle}
                 >
-                  <MLink target="_blank" href={`/examination/${item.id}`}>
+                  <MLink target="_blank" href={isDev ? `/examination/${item.id}` : `/company-groups/${id}/examinations/detail?exam=${item.id}`}>
                     <div className={classes.titleCol}>{item.title}</div>
                   </MLink>
                 </TableCell>
