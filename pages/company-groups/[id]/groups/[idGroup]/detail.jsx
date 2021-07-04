@@ -48,12 +48,11 @@ export async function getServerSideProps({ req, query }) {
   if (Object.keys(cookies).length !== 0) {
     if (cookies.user) {
       const user = await find(JSON.parse(cookies.user).uid);
-      const { id, idGroup, uid } = query;
       if (user.role === 'company') {
-        if (id === user.id) {
-          const developer = await get(uid);
+        if (query.id === user.id) {
+          const developer = await get(query.uid);
           const exams = await getExamsubmissionForGroup({
-            companyId: id,
+            companyId: query.id,
             developerEmail: developer.email,
             developerId: developer.id,
           });
@@ -72,10 +71,10 @@ export async function getServerSideProps({ req, query }) {
         };
       }
       const detailUser = await get(user.id);
-      if (detailUser.companies?.includes(id)) {
-        const developer = await get(uid);
+      if (detailUser.companies?.includes(query.id)) {
+        const developer = await get(query.uid);
         const exams = await getExamsubmissionForGroup({
-          companyId: id,
+          companyId: query.id,
           developerEmail: developer.email,
           developerId: developer.id,
         });
@@ -87,12 +86,12 @@ export async function getServerSideProps({ req, query }) {
           },
         };
       }
-      const groups = await getGroupIds(user.id, id);
-      if (groups.includes(idGroup)) {
-        const developer = await get(uid);
+      const groups = await getGroupIds(user.id, query.id);
+      if (groups.includes(query.idGroup)) {
+        const developer = await get(query.uid);
         if (developer.id === user.id) {
           const exams = await getExamsubmissionForGroup({
-            companyId: id,
+            companyId: query.id,
             developerEmail: developer.email,
             developerId: developer.id,
           });
