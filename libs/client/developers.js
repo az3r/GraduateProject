@@ -264,7 +264,8 @@ export async function getAllExamResults(developerId) {
     .where('developerId', '==', developerId)
     .orderBy('createdOn', 'desc')
     .get();
-  return submissions.docs.map((submit) => transform(submit));
+
+  return submissions.docs.map(transform);
 }
 
 export async function getExamResults(developerId, examId) {
@@ -275,7 +276,7 @@ export async function getExamResults(developerId, examId) {
     .orderBy('createdOn', 'desc')
     .get();
 
-  return snapshot.docs.map((doc) => transform(doc));
+  return snapshot.docs.map(transform);
 }
 
 export async function createExamSubmission(
@@ -324,4 +325,214 @@ export async function getExams(companyId, developerId) {
     .orderBy('createdOn', 'desc')
     .get();
   return snapshot.docs.map((doc) => transform(doc));
+}
+
+/** get all exam submissions for a group */
+export async function getExamsubmissionForGroup({
+  companyId,
+  developerEmail,
+  developerId,
+}) {
+  // get all exams made by companyId
+  const list = await Firestore()
+    .collection(collections.exams)
+    .where('companyId', '==', companyId)
+    .orderBy('createdOn', 'desc')
+    .get();
+  if (list.empty) return [];
+
+  // get exams with its invited developers
+  const exams = await Promise.all(
+    list.docs.map(async (item) => {
+      const exam = transform(item);
+      exam.invited = await getAttributeReference(collections.exams, item.id)
+        .get()
+        .then((snapshot) => snapshot.get('invited'));
+      return exam;
+    })
+  );
+
+  // filter out exams which don't invite developer
+  const developerInvitedExams = exams.filter((item) =>
+    item.invited?.includes(developerEmail)
+  );
+
+  await Promise.all(
+    developerInvitedExams.map(async (item) => {
+      // get submission if possible
+      const [submission] = await Firestore()
+        .collection(collections.examSubmissions)
+        .where('examId', '==', item.id)
+        .where('developerId', '==', developerId)
+        .get()
+        .then((snapshot) => snapshot.docs.map(transform));
+      item.submission = submission || null;
+    })
+  );
+
+  return developerInvitedExams;
+}
+
+/** create an exam observer who keeps track of developer's current time */
+export async function createExamObserver({ developerId, examId, duration }) {
+  // duration is in second while we store in millisecond
+  const { now } = await fetch('/api/time').then((response) => response.json());
+  const data = {
+    examId,
+    developerId,
+    startAt: now.seconds,
+    endAt: now.seconds + duration,
+  };
+
+  const { id } = await Firestore()
+    .collection(collections.examObserver)
+    .add(data);
+  data.id = id;
+  return data;
+}
+
+export async function getExamObserver(observerId) {
+  const observer = await Firestore()
+    .collection(collections.examObserver)
+    .doc(observerId)
+    .get();
+
+  return transform(observer);
+}
+
+export async function getExamObserverByDeveloperIdAndExamId(
+  developerId,
+  examId
+) {
+  const observers = await Firestore()
+    .collection(collections.examObserver)
+    .where('developerId', '==', developerId)
+    .where('examId', '==', examId)
+    .get();
+
+  const transformedObservers = observers.docs.map((observer) =>
+    transform(observer)
+  );
+
+  if (transformedObservers.length === 0) {
+    return null;
+  }
+  const { now } = await fetch('/api/time').then((response) => response.json());
+  return {
+    now: now.seconds,
+    observer: transformedObservers[0],
+  };
+}
+
+// this does not depend on client's time but use server-side time to calculate submission time
+export async function createExamSubmissionV2({
+  developerId,
+  examId,
+  observer,
+  total,
+  correct,
+  results,
+  score,
+}) {
+  if (!developerId) throw new Error(`invalid developerId: ${developerId}`);
+  if (!examId) throw new Error(`invalid examId: ${examId}`);
+  if (!observer) throw new Error(`invalid observer: ${observer}`);
+
+  const { now } = await fetch('/api/time').then((response) => response.json());
+  const { startAt, endAt } = observer;
+
+  // threshold for valid submission in case of slow network
+  const margin = 100;
+
+  const valid =
+    startAt.seconds - margin <= now.seconds &&
+    now.seconds <= endAt.seconds + margin;
+  if (!valid) throw new Error('submission overdue');
+
+  const { id } = await Firestore()
+    .collection(collections.examSubmissions)
+    .add({
+      examId,
+      developerId,
+      total,
+      correct,
+      results,
+      score,
+      time: endAt.seconds - now.seconds,
+      createdOn: Firestore.Timestamp.now(),
+    });
+
+  const ref = Firestore().collection(collections.developers).doc(developerId);
+
+  // update total score
+  await ref.update({
+    examScore: Firestore.FieldValue.increment(score),
+  });
+
+  return { id };
+}
+
+/** get all company  of which developer is a member */
+export async function getCompany(developerId) {
+  // get developerId, companyId, groupId relation
+  const list = await Firestore()
+    .collection(collections.developerGroups)
+    .where('developerId', '==', developerId)
+    .orderBy('createdOn', 'desc')
+    .get()
+    .then((snapshot) => snapshot.docs.map((item) => item.data()));
+
+  // get list of unique companyIds
+  const companyIds = [...new Set(list.map((item) => item.companyId))];
+
+  // get list of companies
+  const companies = await Promise.all(
+    companyIds.map(async (id) =>
+      Firestore()
+        .collection(collections.companies)
+        .doc(id)
+        .get()
+        .then(transform)
+    )
+  );
+
+  return companies || [];
+}
+/** get all company and its groups of which developer is a member */
+export async function getCompanyAndGroup(developerId, companyId) {
+  // get developerId, companyId, groupId relation
+  const list = await Firestore()
+    .collection(collections.developerGroups)
+    .where('developerId', '==', developerId)
+    .where('companyId', '==', companyId)
+    .orderBy('createdOn', 'desc')
+    .get()
+    .then((snapshot) => snapshot.docs.map((item) => item.data()));
+
+  // get list of unique groupIds
+  const groupIds = [...new Set(list.map((item) => item.groupId))];
+
+  // get list of groups
+  const groups = await getAttributeReference(collections.companies, companyId)
+    .collection(collections.groups)
+    .where(Firestore.FieldPath.documentId(), 'in', groupIds)
+    .get()
+    .then((snapshot) => snapshot.docs.map(transform));
+
+  return groups || [];
+}
+
+export async function getGroupIds(developerId, companyId) {
+  // get developerId, companyId, groupId relation
+  const list = await Firestore()
+    .collection(collections.developerGroups)
+    .where('developerId', '==', developerId)
+    .where('companyId', '==', companyId)
+    .orderBy('createdOn', 'desc')
+    .get()
+    .then((snapshot) => snapshot.docs.map((item) => item.data()));
+
+  // get list of unique groupIds
+  const groupIds = [...new Set(list.map((item) => item.groupId))];
+  return groupIds;
 }

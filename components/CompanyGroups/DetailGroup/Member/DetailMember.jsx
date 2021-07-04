@@ -27,7 +27,6 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
 import { removeDevelopers } from '@libs/client/companies';
-import { FirebaseAuth } from '@libs/client/firebase';
 
 const useStyles = makeStyles({
   outlinedInput: {
@@ -55,7 +54,7 @@ const useStyles = makeStyles({
 });
 
 const ITEMS_PER_PAGE = 10;
-export default function DetailMember({ questions, exams }) {
+export default function DetailMember({ user, questions, exams }) {
   const [listToShow, setListToShow] = useState([]);
   const [searchKey, setSearchKey] = useState('');
   const [type, setType] = useState(0);
@@ -166,7 +165,7 @@ export default function DetailMember({ questions, exams }) {
           <Typography className={classes.linkStyle}>Current group</Typography>
         </Link>
         <Link href={`/company-groups/${id}/members`}>
-          <Typography className={classes.linkStyle}>Group members</Typography>
+          <Typography className={classes.linkStyle}>Contributors</Typography>
         </Link>
         <Typography color="textPrimary">Member</Typography>
       </Breadcrumbs>
@@ -265,7 +264,7 @@ export default function DetailMember({ questions, exams }) {
         />
       </Box>
       <Divider />
-      {FirebaseAuth().currentUser.uid === id ? (
+      {user.id === id ? (
         <Box m={5} display="flex" justifyContent="center">
           <Button
             onClick={handleClickOpen}

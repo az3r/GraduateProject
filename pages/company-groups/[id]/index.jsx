@@ -55,7 +55,7 @@ export async function getServerSideProps({ req, query }) {
         };
       }
       const detailUser = await get(user.id);
-      if (detailUser.companies.includes(id)) {
+      if (detailUser.companies?.includes(id)) {
         const company = await getCompany(id);
         return {
           props: {

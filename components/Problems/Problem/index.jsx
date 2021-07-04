@@ -232,8 +232,6 @@ export default function Problem({problem, user}) {  // { problemSubmissionHistor
         runtime: problem.runtime
       });
 
-      console.dir(response);
-
       if (response.failed === 0) {
         setRunCodeResult(response.results);
         setRunCodeStatus("Accepted");

@@ -21,6 +21,7 @@ import DetailTab from './DetailTab';
 import InvitationTab from './InvitationTab';
 import ParticipantsTab from './ParticipantsTab';
 import CommentsTab from './CommentsTab';
+import InviteGroups from './InviteGroups';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -129,6 +130,7 @@ export default function DetailExamination({ user, examProp }) {
               >
                 <Tab label="Detail" />
                 <Tab label="Invitation" />
+                <Tab label="Groups" />
                 <Tab label="Participants" />
                 <Tab label="Comments" />
               </Tabs>
@@ -144,9 +146,12 @@ export default function DetailExamination({ user, examProp }) {
                 <InvitationTab examination={examination} />
               </TabPanel>
               <TabPanel value={value} index={2}>
-                <ParticipantsTab examination={examination} />
+                <InviteGroups examination={examination} />
               </TabPanel>
               <TabPanel value={value} index={3}>
+                <ParticipantsTab examination={examination} />
+              </TabPanel>
+              <TabPanel value={value} index={4}>
                 <CommentsTab/>
               </TabPanel>
             </Paper>

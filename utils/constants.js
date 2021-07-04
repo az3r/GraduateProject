@@ -13,6 +13,9 @@ export const collections = {
   companies: 'Companies',
   participants: 'Participants',
   attributes: 'Attributes',
+  groups: 'Groups',
+  examObserver: 'ExamObservers',
+  developerGroups: 'DeveloperGroups',
 };
 export const urls = {
   compiler: 'https://nmtuan.cf/',

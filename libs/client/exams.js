@@ -249,3 +249,30 @@ export async function remove(id) {
     .doc(id)
     .update({ deleted: true });
 }
+
+export async function addGroupToInvited({ examId, groupId }) {
+  await getAttributeReference(collections.exams, examId).update({
+    invitedGroup: Firestore.FieldValue.arrayUnion(groupId),
+  });
+}
+
+export async function getGroupInvited(examId) {
+  const exam = await getAttributeReference(collections.exams, examId).get();
+  const data = transform(exam);
+  return data.invitedGroup;
+}
+
+export async function removeGroupFromInvited({ examId, groupId }) {
+  await getAttributeReference(collections.exams, examId).update({
+    invitedGroup: Firestore.FieldValue.arrayRemove(groupId),
+  });
+}
+
+export async function getInvitedGroups(examId) {
+  const attributes = await getAttributeReference(
+    collections.exams,
+    examId
+  ).get();
+
+  return attributes.get('invitedGroup') || [];
+}

@@ -217,3 +217,141 @@ export async function getExamSubmissions(examId) {
     return { ...submission, ...developers[i], ...exams[k] };
   });
 }
+
+/**
+ * create new group in a company
+ */
+export async function createGroup({ companyId, name }) {
+  const company = getAttributeReference(collections.companies, companyId);
+  const { id } = await company
+    .collection(collections.groups)
+    .add({ name, total: 0, companyId });
+
+  await company.update({
+    groups: Firestore.FieldValue.arrayUnion({ id, name }),
+  });
+
+  return id;
+}
+
+/**
+ * delete group from company
+ */
+export async function removeGroup({ companyId, groupId }) {
+  const company = getAttributeReference(collections.companies, companyId);
+  await company.collection(collections.groups).doc(groupId).delete();
+  return true;
+}
+
+/**
+ * get group's details and its members
+ */
+export async function getGroup({ companyId, groupId }) {
+  // get the group
+  const company = getAttributeReference(collections.companies, companyId);
+  const data = await company.collection(collections.groups).doc(groupId).get();
+  const group = transform(data);
+
+  // get members info in this group
+  if (group?.members) {
+    const list = await Firestore()
+      .collection(collections.developers)
+      .where(Firestore.FieldPath.documentId(), 'in', group.members)
+      .get();
+
+    group.developers = list.docs.map((item) => transform(item));
+  }
+  return group;
+}
+
+export async function getGroups(companyId) {
+  const company = getAttributeReference(collections.companies, companyId);
+  const data = await company.collection(collections.groups).get();
+  const groups = data.docs.map((doc) => transform(doc));
+
+  return groups;
+}
+
+export async function isGroupAvailable({ companyId, name }) {
+  const ref = getAttributeReference(collections.companies, companyId);
+  const found = await ref
+    .collection(collections.groups)
+    .where('name', '==', name)
+    .get();
+  return Boolean(found.empty);
+}
+
+/**
+ * add developer into group
+ */
+export async function addMemberIntoGroup({ developerId, companyId, groupId }) {
+  // add developer into group
+  const group = getAttributeReference(collections.companies, companyId)
+    .collection(collections.groups)
+    .doc(groupId);
+  await group.update({ members: Firestore.FieldValue.arrayUnion(developerId) });
+
+  // increase number of members
+  await group.update({ total: Firestore.FieldValue.increment(1) });
+
+  // store relations
+  await Firestore().collection(collections.developerGroups).add({
+    developerId,
+    companyId,
+    groupId,
+    createdOn: Firestore.Timestamp.now(),
+  });
+}
+
+/**
+ * add developer into group
+ */
+export async function removeMemberFromGroup({
+  developerId,
+  companyId,
+  groupId,
+}) {
+  // remove developer from group
+  const group = getAttributeReference(collections.companies, companyId)
+    .collection(collections.groups)
+    .doc(groupId);
+  await group.update({
+    members: Firestore.FieldValue.arrayRemove(developerId),
+  });
+
+  // decrease number of members
+  await group.update({ total: Firestore.FieldValue.increment(-1) });
+
+  // remove relations
+  await Firestore()
+    .collection(collections.developerGroups)
+    .where('developerId', '==', developerId)
+    .where('companyId', '==', companyId)
+    .where('groupId', '==', groupId)
+    .get()
+    .then((snapshot) => snapshot.docs.forEach((item) => item.ref.delete()));
+}
+
+/** get a list of invitable developers */
+export async function getInvitableDeveloperForGroup({ companyId, groupId }) {
+  const company = await getAttributeReference(collections.companies, companyId)
+    .get()
+    .then((snapshot) => transform(snapshot));
+
+  const group = await getAttributeReference(collections.companies, companyId)
+    .collection(collections.groups)
+    .doc(groupId)
+    .get()
+    .then((snapshot) => transform(snapshot));
+
+  // get a list of developers who are either contributors or members of current group
+  const contributors = company.members || [];
+  const members = group.members || [];
+  const filteredDevelopers = contributors.concat(members);
+
+  const developers = await Firestore()
+    .collection(collections.developers)
+    .where(Firestore.FieldPath.documentId(), 'not-in', filteredDevelopers)
+    .get();
+  return developers.docs.map((item) => transform(item));
+}

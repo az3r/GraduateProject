@@ -103,7 +103,7 @@ export default function GroupGeneral({ company }) {
               />
               <CardContent>
                 <Typography variant="h4">{company.members?.length || 0}</Typography>
-                <Typography variant="h6">Members</Typography>
+                <Typography variant="h6">Contributors</Typography>
               </CardContent>
             </Card>
             <Card className={clsx(classes.cardRoot, classes.card2)}>
