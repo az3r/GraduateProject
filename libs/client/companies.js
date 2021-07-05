@@ -349,9 +349,13 @@ export async function getInvitableDeveloperForGroup({ companyId, groupId }) {
   const members = group.members || [];
   const filteredDevelopers = contributors.concat(members);
 
-  const developers = await Firestore()
-    .collection(collections.developers)
-    .where(Firestore.FieldPath.documentId(), 'not-in', filteredDevelopers)
-    .get();
+  if (filteredDevelopers.length > 0) {
+    const developers = await Firestore()
+      .collection(collections.developers)
+      .where(Firestore.FieldPath.documentId(), 'not-in', filteredDevelopers)
+      .get();
+    return developers.docs.map((item) => transform(item));
+  }
+  const developers = await Firestore().collection(collections.developers).get();
   return developers.docs.map((item) => transform(item));
 }
