@@ -3,16 +3,16 @@ import 'firebase/auth';
 import 'firebase/firestore';
 import 'firebase/storage';
 
-// initialize firebase app for browser
+const config = {
+  apiKey: 'AIzaSyCReQZnej1675Dg71u3BG5bNEn10vrMdjA',
+  authDomain: 'online-code-exercise.firebaseapp.com',
+  projectId: 'online-code-exercise',
+  storageBucket: 'online-code-exercise.appspot.com',
+  messagingSenderId: '522789307318',
+  appId: '1:522789307318:web:9afdbda5c00ea81654b717',
+};
 if (firebase.apps.length === 0) {
-  firebase.initializeApp({
-    apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
-    authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN,
-    projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
-    storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET,
-    messagingSenderId: process.env.NEXT_PUBLIC_MESSAGING_SENDER_ID,
-    appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID,
-  });
+  firebase.initializeApp(config);
 }
 
 const Firestore = firebase.firestore;
